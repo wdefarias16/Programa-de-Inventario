@@ -1,40 +1,19 @@
-import tkinter
-from tkinter import ttk
-import customtkinter
+import customtkinter as ctk
 
-customtkinter.set_appearance_mode("Dark")
-customtkinter.set_default_color_theme("blue")
+# Configuración inicial
+ventana = ctk.CTk()
+ventana.geometry("400x200")
+ventana.title("Separar Widgets con pack")
 
-root = customtkinter.CTk()
-root.geometry("250x300")
-root.title("Treeview x Customtkinter")
+# Frame contenedor
+frame = ctk.CTkFrame(ventana, width=400, height=100, corner_radius=0)
+frame.pack(fill="x", pady=20)
 
-frame_1 = customtkinter.CTkFrame(master=root)
-frame_1.pack(pady=20, padx=20, fill="both", expand=True)
+# Widgets dentro del frame
+widget_izquierda = ctk.CTkLabel(frame, text="Izquierda", fg_color="blue")
+widget_izquierda.pack(side="left", padx=20)
 
-label = customtkinter.CTkLabel(master=frame_1, text="Treeview")
-label.grid(pady=10)
+widget_derecha = ctk.CTkLabel(frame, text="Derecha", fg_color="green")
+widget_derecha.pack(side="right", padx=20)
 
-# Treeview Customisation (theme colors are selected)
-bg_color = root._apply_appearance_mode(customtkinter.ThemeManager.theme["CTkFrame"]["fg_color"])
-text_color = root._apply_appearance_mode(customtkinter.ThemeManager.theme["CTkLabel"]["text_color"])
-selected_color = root._apply_appearance_mode(customtkinter.ThemeManager.theme["CTkButton"]["fg_color"])
-
-treestyle = ttk.Style()
-treestyle.theme_use('default')
-treestyle.configure("Treeview", background=bg_color, foreground=text_color, fieldbackground=bg_color, borderwidth=0)
-treestyle.map('Treeview', background=[('selected', bg_color)], foreground=[('selected', selected_color)])
-
-# Treeview widget data
-treeview = ttk.Treeview(frame_1, height=6, show="tree")
-treeview.grid(padx=10)
-treeview.insert('', '0', 'i1', text='Python')
-treeview.insert('', '1', 'i2', text='Customtkinter')
-treeview.insert('', '2', 'i3', text='Tkinter')
-treeview.insert('i2', 'end', 'Frame', text='Frame')
-treeview.insert('i2', 'end', 'Label', text='Label')
-treeview.insert('i3', 'end', 'Treeview', text='Treeview')
-treeview.move('i2', 'i1', 'end')
-treeview.move('i3', 'i1', 'end')
-
-root.mainloop()
+ventana.mainloop()

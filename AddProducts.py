@@ -64,23 +64,37 @@ class AddProductsTab(ctk.CTkFrame):
         cantidad_entry.pack(fill='x',padx=5,pady=5)
 
         # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
-        entry_frame = ctk.CTkFrame(self,fg_color=app_colors[0],corner_radius=0)
+        entry_frame = ctk.CTkFrame(self,
+                                   fg_color=app_colors[0],
+                                   corner_radius=0)
         entry_frame.pack(expand=True,fill='both',side='left')
 
-        codigo_label = ctk.CTkLabel(entry_frame,anchor='w',text='Codigo')
+        codigo_label = ctk.CTkLabel(entry_frame,
+                                    anchor='w',
+                                    text='Codigo')
         codigo_label.pack(fill='x',padx=5,pady=5)
 
-        linea_label = ctk.CTkLabel(entry_frame,anchor='w',text='Linea')
+        linea_label = ctk.CTkLabel(entry_frame,
+                                   anchor='w',
+                                   text='Linea')
         linea_label.pack(fill='x',padx=5,pady=5)
 
-        grupo_label = ctk.CTkLabel(entry_frame,anchor='w',text='Grupo')
+        grupo_label = ctk.CTkLabel(entry_frame,
+                                   anchor='w',
+                                   text='Grupo')
         grupo_label.pack(fill='x',padx=5,pady=5)
 
-        nombre_label = ctk.CTkLabel(entry_frame,anchor='w',text='Nombre')
+        nombre_label = ctk.CTkLabel(entry_frame,
+                                    anchor='w',
+                                    text='Nombre')
         nombre_label.pack(fill='x',padx=5,pady=5)
 
-        precio_label = ctk.CTkLabel(entry_frame,anchor='w',text='Precio')
+        precio_label = ctk.CTkLabel(entry_frame,
+                                    anchor='w',
+                                    text='Precio')
         precio_label.pack(fill='x',padx=5,pady=5)
 
-        cantidad_label = ctk.CTkLabel(entry_frame,anchor='w',text='Cantidad')
+        cantidad_label = ctk.CTkLabel(entry_frame,
+                                      anchor='w',
+                                      text='Cantidad')
         cantidad_label.pack(fill='x',padx=5,pady=5)

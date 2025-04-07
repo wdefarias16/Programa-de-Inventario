@@ -8,6 +8,8 @@ fonts = [('Roboto light',25),('Roboto light',15)]
 app_colors = ['#eaeaea','#1d1d1d','#1c9bac','#166c78','#5d5d5d']
 ctk.set_appearance_mode('light')
 
+
+
 # VENTANA PRINCIPAL (APLICACION)
 class App(ctk.CTk):
     def __init__(self): 
@@ -32,6 +34,9 @@ class App(ctk.CTk):
         self.dashboard.destroy()
         self.login_frame = LoginFrame(self, success_callback=self.LoginSuccess)
         self.login_frame.pack(expand=True,fill='both')
+
+    def Salir(self):
+        pass
 
 if __name__ == '__main__':
     inv = Inventory()

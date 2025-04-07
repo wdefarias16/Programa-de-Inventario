@@ -3,6 +3,9 @@ import customtkinter as ctk
 from tkinter import ttk
 from PIL import Image, ImageTk
 from AddProducts import*
+from Inicio import*
+import datetime
+from threading import Timer
 
 fonts = [('Roboto light',25),('Roboto light',15)]
 app_colors = ['#eaeaea','#1d1d1d','#1c9bac','#166c78','#5d5d5d']
@@ -92,12 +95,9 @@ class MainFrame(ctk.CTkFrame):
         self.head_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=app_colors[0])
         self.head_frame.pack(expand=True,fill='both')
 
-        head_inv = ctk.CTkLabel(self.head_frame,
-                                text='Inicio',
-                                bg_color=app_colors[0],
-                                font=fonts[0],
-                                height=10)
-        head_inv.pack(pady=30,padx=40,fill='x')
+
+        inicio_frame = Inicio(self.head_frame)
+        inicio_frame.pack(expand=True, fill='both')
 
         return self.head_frame
 
@@ -161,6 +161,8 @@ class MainFrame(ctk.CTkFrame):
                                 font=fonts[0])
         head_inv.place(x=50,y=40,anchor='nw')
         return self.head_frame
+    
+
 
     # CAMBIO DE FRAMES
     def SwitchFrame(self,new_frame):
