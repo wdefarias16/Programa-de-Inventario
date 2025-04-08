@@ -2,20 +2,30 @@ import customtkinter as ctk
 import tkinter as tk
 from style import FONTS, APP_COLORS, APPEARANCE_MODE
 
-lineas_grupos ={
-    '001':{
-        'linea':'Bebidas',
-        'grupo':['Jugos','Alcohol','Refrescos']
-    },
-    '002':{
-        'linea':'Almuerzos',
-        'grupo':['Pizzas','Hamburguesas','Parrillas']
-    }
-}
 
-nombre_lineas = [dato['linea']for dato in lineas_grupos.values()]
 
-class LineasGrupos(ctk.CTkFrame):
+class LineasGrupos():
+    def __init__(self):
+    
+        self.lineas_grupos = {'001': {'linea': 'Bebidas',
+                                 'grupo': ['Jugos', 'Alcohol', 'Refrescos']},
+                         '002': {'linea': 'Almuerzos',
+                                 'grupo': ['Pizzas', 'Hamburguesas', 'Parrillas']}}
+
+
+    def GetLineNames(self):
+        nombre_lineas = [f"{codigo} - {dato['linea']}" for codigo, dato in self.lineas_grupos.items()]
+        return nombre_lineas
+    
+
+    def AddLineGroup(self,codigo,linea,grupo):
+        pass
+
+# OBTENER NOMBRES DE LINEA
+
+
+class LineasGruposProg(ctk.CTkFrame):
+
     def __init__(self,parent):
         super().__init__(parent)
 
@@ -76,3 +86,11 @@ class LineasGrupos(ctk.CTkFrame):
         # LABEL NOMBRE DE GRUPO
         label_grup_nom = ctk.CTkLabel(self,text='Agregar grupo',font=FONTS[1])
         label_grup_nom.grid(row=6,column=3,sticky='w',padx=5)
+
+        # BOTON AGREGAR - BOTON AGREGAR - BOTON AGREGAR - BOTON AGREGAR - BOTON AGREGAR - BOTON AGREGAR - BOTON AGREGAR - BOTON AGREGAR - 
+        
+        add_btn = ctk.CTkButton(self,text='Agregar',font=FONTS[0])
+        add_btn.grid(row=8,column=4)
+
+lineas = LineasGrupos()
+nombre_lineas= lineas.GetLineNames()

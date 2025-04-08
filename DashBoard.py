@@ -138,7 +138,7 @@ class MainFrame(ctk.CTkFrame):
         carga_productos.pack(expand=True,fill='both')
 
         # TAB CARGA DE LINEAS Y GRUPOS
-        carga_lin_gru = LineasGrupos(tabs.tab("Carga de lineas y grupos"))
+        carga_lin_gru = LineasGruposProg(tabs.tab("Carga de lineas y grupos"))
         carga_lin_gru.pack(expand=True,fill='both')
 
         return self.head_frame

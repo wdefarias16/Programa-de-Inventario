@@ -4,7 +4,7 @@ from DashBoard import*
 from Login import*
 from style import FONTS, APP_COLORS, APPEARANCE_MODE
 
-ctk.set_appearance_mode(APPEARANCE_MODE)
+
 
 # VENTANA PRINCIPAL (APLICACION)
 class App(ctk.CTk):
@@ -35,6 +35,7 @@ class App(ctk.CTk):
         pass
 
 if __name__ == '__main__':
+    ctk.set_appearance_mode(APPEARANCE_MODE)
     inv = Inventory()
     Load_Inventory()
     
