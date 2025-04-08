@@ -1,28 +1,27 @@
 import customtkinter as ctk
 import tkinter as tk
 from ProductDataBase import*
+from style import FONTS, APP_COLORS, APPEARANCE_MODE
 
-fonts = [('Roboto light',25),('Roboto light',15)]
-app_colors = ['#eaeaea','#1d1d1d','#1c9bac','#166c78','#5d5d5d']
 
 class AddProductsTab(ctk.CTkFrame):
     def __init__(self,parent):
         super().__init__(parent)
         
         # TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - 
-        title_frame = ctk.CTkFrame(self,corner_radius=5,fg_color=app_colors[3])
+        title_frame = ctk.CTkFrame(self,corner_radius=5,fg_color=APP_COLORS[3])
         title_frame.pack(fill='x')
 
         title = ctk.CTkLabel(title_frame,
                              text='Carga de productos',
                              bg_color='transparent',
-                             text_color=app_colors[0],
+                             text_color=APP_COLORS[0],
                              height=50,
-                             font=fonts[0])
+                             font=FONTS[0])
         title.pack()
 
         # ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - 
-        entry_frame = ctk.CTkFrame(self,fg_color=app_colors[0],corner_radius=5)
+        entry_frame = ctk.CTkFrame(self,fg_color=APP_COLORS[0],corner_radius=5)
         entry_frame.pack(expand=True,fill='both',side='left')
 
 
@@ -65,7 +64,7 @@ class AddProductsTab(ctk.CTkFrame):
 
         # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
         entry_frame = ctk.CTkFrame(self,
-                                   fg_color=app_colors[0],
+                                   fg_color=APP_COLORS[0],
                                    corner_radius=0)
         entry_frame.pack(expand=True,fill='both',side='left')
 

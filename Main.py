@@ -2,13 +2,13 @@ import customtkinter as ctk
 from ProductDataBase import*
 from DashBoard import*
 from Login import*
+from style import FONTS, APP_COLORS, APPEARANCE_MODE
 
 
-fonts = [('Roboto light',25),('Roboto light',15)]
-app_colors = ['#eaeaea','#1d1d1d','#1c9bac','#166c78','#5d5d5d']
-ctk.set_appearance_mode('light')
 
 
+
+ctk.set_appearance_mode(APPEARANCE_MODE)
 
 # VENTANA PRINCIPAL (APLICACION)
 class App(ctk.CTk):
