@@ -4,10 +4,6 @@ from DashBoard import*
 from Login import*
 from style import FONTS, APP_COLORS, APPEARANCE_MODE
 
-
-
-
-
 ctk.set_appearance_mode(APPEARANCE_MODE)
 
 # VENTANA PRINCIPAL (APLICACION)

@@ -8,10 +8,6 @@ import datetime
 from threading import Timer
 from style import FONTS, APP_COLORS, APPEARANCE_MODE
 
-
-
-
-
 class MainFrame(ctk.CTkFrame):
     def __init__(self,parent,lockscreen_callback):
         super().__init__(parent)
@@ -93,7 +89,7 @@ class MainFrame(ctk.CTkFrame):
                                      )
         lockscreen_btn.pack(side='bottom',padx=5,pady=5)
 
-
+    # INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - 
     def InicioFrame(self):
         self.head_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLORS[0])
         self.head_frame.pack(expand=True,fill='both')
@@ -132,8 +128,9 @@ class MainFrame(ctk.CTkFrame):
                               segmented_button_unselected_hover_color=APP_COLORS[2],
                               text_color=APP_COLORS[0])
         tabs.pack(expand=True,fill='both')
+        tabs.add("Listado de productos")
         tabs.add("Carga de productos")
-        tabs.add("Lista de productos")
+        tabs.add("Carga de lineas y grupos")
 
         carga_productos = AddProductsTab(tabs.tab("Carga de productos"))
         carga_productos.pack(expand=True,fill='both')
