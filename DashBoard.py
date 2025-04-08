@@ -3,6 +3,7 @@ import customtkinter as ctk
 from tkinter import ttk
 from PIL import Image, ImageTk
 from AddProducts import*
+from CargaLineasGrupos import*
 from Inicio import*
 import datetime
 from threading import Timer
@@ -132,8 +133,13 @@ class MainFrame(ctk.CTkFrame):
         tabs.add("Carga de productos")
         tabs.add("Carga de lineas y grupos")
 
+        # TAB CARGA DE PRODUCTOS
         carga_productos = AddProductsTab(tabs.tab("Carga de productos"))
         carga_productos.pack(expand=True,fill='both')
+
+        # TAB CARGA DE LINEAS Y GRUPOS
+        carga_lin_gru = LineasGrupos(tabs.tab("Carga de lineas y grupos"))
+        carga_lin_gru.pack(expand=True,fill='both')
 
         return self.head_frame
     
