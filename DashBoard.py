@@ -2,7 +2,7 @@ import tkinter as tk
 import customtkinter as ctk
 from tkinter import ttk
 from PIL import Image, ImageTk
-from AddProducts import*
+from CargaProductos import*
 from CargaLineasGrupos import*
 from Inicio import*
 import datetime
@@ -34,10 +34,11 @@ class MainFrame(ctk.CTkFrame):
                                      fg_color=APP_COLORS[2],
                                      hover_color=APP_COLORS[3],
                                      image=inic_btn_image,
+                                     corner_radius=0,
                                      compound='left',
                                      anchor='w',
                                      command=lambda: self.SwitchFrame(self.InicioFrame))
-        inic_btn.pack(fill='x',padx=5,pady=5,side='top')
+        inic_btn.pack(fill='x',pady=5,side='top')
 
         # BOTON INVENTARIO - BOTON INVENTARIO - BOTON INVENTARIO - BOTON INVENTARIO - BOTON INVENTARIO - BOTON INVENTARIO
         inv_btn_image=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_inventario_light.png"), size=(30,30),
@@ -47,10 +48,11 @@ class MainFrame(ctk.CTkFrame):
                                      fg_color=APP_COLORS[2],
                                      hover_color=APP_COLORS[3],
                                      image=inv_btn_image,
+                                     corner_radius=0,
                                      compound='left',
                                      anchor='w',
                                      command=lambda: self.SwitchFrame(self.InventarioFrame))
-        invt_btn.pack(fill='x',padx=5,pady=5,side='top')
+        invt_btn.pack(fill='x',pady=5,side='top')
         
         # BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION
         fact_btn_image=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_fact_light.png"), size=(30,30),
@@ -60,10 +62,11 @@ class MainFrame(ctk.CTkFrame):
                                      fg_color=APP_COLORS[2],
                                      hover_color=APP_COLORS[3],
                                      image=fact_btn_image,
+                                     corner_radius=0,
                                      compound='left',
                                      anchor='w',
                                      command=lambda: self.SwitchFrame(self.FacturacionFrame))
-        fact_btn.pack(fill='x',padx=5,pady=5,side='top')
+        fact_btn.pack(fill='x',pady=5,side='top')
 
         # BOTON CUENTAS - BOTON CUENTAS - BOTON CUENTAS - BOTON CUENTAS - BOTON CUENTAS - BOTON CUENTAS - BOTON CUENTAS
         cuentas_btn_image=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_cuentas_light.png"), size=(30,30),
@@ -73,10 +76,11 @@ class MainFrame(ctk.CTkFrame):
                                      fg_color=APP_COLORS[2],
                                      hover_color=APP_COLORS[3],
                                      image=cuentas_btn_image,
+                                     corner_radius=0,
                                      compound='left',
                                      anchor='w',
                                      command=lambda: self.SwitchFrame(self.CuentasFrame))
-        cuentas_btn.pack(fill='x',padx=5,pady=5,side='top')
+        cuentas_btn.pack(fill='x',pady=5,side='top')
 
         # BOTON DE BLOQUEAR O CERRAR SESION -  BOTON DE BLOQUEAR O CERRAR SESION - BOTON DE BLOQUEAR O CERRAR SESION 
         lock_btn_image=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_lock_light.png"), size=(30,30),
@@ -84,11 +88,12 @@ class MainFrame(ctk.CTkFrame):
         lockscreen_btn=ctk.CTkButton(buttons_frame,
                                      text='',
                                      image=lock_btn_image,
+                                     corner_radius=0,
                                      fg_color=APP_COLORS[2],
                                      hover_color=APP_COLORS[3],
                                      command=lambda: self.lockscreen_callback()
                                      )
-        lockscreen_btn.pack(side='bottom',padx=5,pady=5)
+        lockscreen_btn.pack(side='bottom',pady=5)
 
     # INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - 
     def InicioFrame(self):

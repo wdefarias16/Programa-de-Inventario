@@ -4,7 +4,6 @@ from tkinter import messagebox
 import json,os
 from style import FONTS, APP_COLORS, APPEARANCE_MODE
 
-
 class LineasGrupos():
     def __init__(self,filename = 'Data/Lineas.json'):
     
@@ -73,7 +72,7 @@ class LineasGruposProg(ctk.CTkFrame):
                              text_color=APP_COLORS[0],
                              height=50,
                              font=FONTS[0])
-        title.pack()
+        title.pack(pady=5)
 
         # LINEAS - LINEAS - LINEAS - LINEAS - LINEAS - LINEAS - LINEAS - LINEAS - LINEAS - LINEAS - LINEAS - 
         
@@ -125,11 +124,7 @@ class LineasGruposProg(ctk.CTkFrame):
                                  font=FONTS[0])
         addl_btn.grid(row=3,column=2)
 
-
-
-
         # GRUPOS - GRUPOS - GRUPOS - GRUPOS - GRUPOS - GRUPOS - GRUPOS - GRUPOS - GRUPOS - GRUPOS - GRUPOS - 
-        
         group_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLORS[0])
         group_frame.pack(expand=True,fill='both',side='left')
 
@@ -189,9 +184,5 @@ class LineasGruposProg(ctk.CTkFrame):
             return
         
         self.line_manager.Add_Group(codigo,grupo)
-
-            
-
-   
 
 LINE_MANAGER = LineasGrupos()
