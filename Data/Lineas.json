@@ -1,0 +1,13 @@
+{
+    "001": {
+        "linea": "Bebidas",
+        "grupo": [
+            "Refrescos",
+            "Jugos"
+        ]
+    },
+    "002": {
+        "linea": "Almuerzos",
+        "grupo": []
+    }
+}
