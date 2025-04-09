@@ -4,6 +4,7 @@ from tkinter import ttk
 from PIL import Image, ImageTk
 from CargaProductos import*
 from CargaLineasGrupos import*
+from CargaProveedores import*
 from Inicio import*
 import datetime
 from threading import Timer
@@ -137,6 +138,8 @@ class MainFrame(ctk.CTkFrame):
         tabs.add("Listado de productos")
         tabs.add("Carga de productos")
         tabs.add("Carga de líneas y grupos")
+        tabs.add("Carga de proveedores")
+
 
         # TAB CARGA DE PRODUCTOS
         carga_productos = AddProductsTab(tabs.tab("Carga de productos"))
@@ -145,6 +148,9 @@ class MainFrame(ctk.CTkFrame):
         # TAB CARGA DE LINEAS Y GRUPOS
         carga_lin_gru = LineasGruposProg(tabs.tab("Carga de líneas y grupos"),line_manager=LINE_MANAGER)
         carga_lin_gru.pack(expand=True,fill='both')
+
+        carga_proveedores = ProveedoresProg(tabs.tab("Carga de proveedores"),prov_manager=PROV_MANAGER)
+        carga_proveedores.pack(expand=True,fill='both')
 
         return self.head_frame
     

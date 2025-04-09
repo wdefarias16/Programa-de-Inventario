@@ -1,5 +1,6 @@
 import customtkinter as ctk
 import tkinter as tk
+from tkinter import ttk
 from ProductDataBase import*
 from style import FONTS, APP_COLORS, APPEARANCE_MODE
 
@@ -144,3 +145,6 @@ class AddProductsTab(ctk.CTkFrame):
                                    corner_radius=5,
                                    fg_color=APP_COLORS[5])
         tree_frame.pack(expand=True,fill='both',side='left',pady=5)
+
+        treeview = ttk.Treeview(tree_frame)
+        treeview.pack(expand=True,fill='both',padx=10,pady=10)
