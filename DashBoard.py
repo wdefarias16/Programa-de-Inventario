@@ -142,7 +142,7 @@ class MainFrame(ctk.CTkFrame):
 
 
         # TAB CARGA DE PRODUCTOS
-        carga_productos = AddProductsTab(tabs.tab("Carga de productos"))
+        carga_productos = CargaProductosProg(tabs.tab("Carga de productos"))
         carga_productos.pack(expand=True,fill='both')
 
         # TAB CARGA DE LINEAS Y GRUPOS

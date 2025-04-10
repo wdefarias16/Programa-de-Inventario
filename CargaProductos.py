@@ -5,7 +5,7 @@ from ProductDataBase import*
 from style import FONTS, APP_COLORS, APPEARANCE_MODE
 
 
-class AddProductsTab(ctk.CTkFrame):
+class CargaProductosProg(ctk.CTkFrame):
     def __init__(self,parent):
         super().__init__(parent)
         
