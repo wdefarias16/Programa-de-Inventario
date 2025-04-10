@@ -1,23 +1,8 @@
 {
     "001": {
-        "linea": "Bebidas",
+        "linea": "SAKDJF",
         "grupo": [
-            "Refrescos",
-            "Jugos"
+            "SDF"
         ]
-    },
-    "002": {
-        "linea": "Almuerzos",
-        "grupo": []
-    },
-    "003": {
-        "linea": "Desayunos",
-        "grupo": [
-            "Arepas"
-        ]
-    },
-    "004": {
-        "linea": "Cenas",
-        "grupo": []
     }
 }

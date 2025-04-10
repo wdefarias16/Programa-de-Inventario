@@ -1,26 +1,6 @@
 import json,os
 from tkinter import messagebox
 
-Inventario = {}
-
-# CARGAR EL ARCHIVO DE DATOS
-def Load_Inventory():
-    global Inventario
-    # CREAR LA CARPETA DATA SI NO EXISTE
-    if not os.path.exists('Data'):
-        os.makedirs('Data')
-    # VERIFICAR SI EXISTE EL ARCHIVO DE DATOS / CARGAR EL ARCHIVO DE DATOS
-    try:
-        with open('Data/Inventario.json','r') as InventoryData_JsonFile:
-            Inventario = json.load(InventoryData_JsonFile)
-    except FileNotFoundError:
-        Save_Inventory()
-
-# GUARDAR EL ARCHIVO DE DATOS
-def Save_Inventory():
-    with open('Data/Inventario.json','w') as InventoryData_JsonFile:
-        json.dump(Inventario,InventoryData_JsonFile,indent=4)
-
 # CLASE PRODUCTOS
 class Product():
     def __init__(self,codigo,linea,grupo,proveedor,nombre,precio,cantidad):
@@ -46,9 +26,31 @@ class Product():
 
 # CLASE INVENTARIO
 class Inventory():
-    def __init__(self):
+    def __init__(self,filename = 'Data/Inventario.json'):
 
+            self.filename = filename
             self.inventario = {}
+            self.Load_Inventory()
+
+# CARGAR EL ARCHIVO DE DATOS
+    def Load_Inventory(self):
+        global Inventario
+        # CREAR LA CARPETA DATA SI NO EXISTE
+        if not os.path.exists('Data'):  
+        os.makedirs('Data')
+        # VERIFICAR SI EXISTE EL ARCHIVO DE DATOS / CARGAR EL ARCHIVO DE DATOS
+        try:
+            with open(self.filename,'r') as file:
+                self.inventario = json.load(file)
+        except FileNotFoundError:
+            self.Save_Inventory()
+
+# GUARDAR EL ARCHIVO DE DATOS
+    def Save_Inventory(self):
+        with open(self.filename,'w') as file:
+            json.dump(self.inventario,file,indent=4)
+
+
 
     def AddProduct(self,product):
         global Inventario
