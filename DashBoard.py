@@ -2,18 +2,18 @@ import tkinter as tk
 import customtkinter as ctk
 from tkinter import ttk
 from PIL import Image, ImageTk
-from AddProducts import*
+from CargaProductos import*
+from CargaLineasGrupos import*
+from CargaProveedores import*
 from Inicio import*
 import datetime
 from threading import Timer
-
-fonts = [('Roboto light',25),('Roboto light',15)]
-app_colors = ['#eaeaea','#1d1d1d','#1c9bac','#166c78','#5d5d5d']
+from style import FONTS, APP_COLORS, APPEARANCE_MODE
 
 class MainFrame(ctk.CTkFrame):
     def __init__(self,parent,lockscreen_callback):
         super().__init__(parent)
-
+        
         # ASIGNAR EL CALLBACK PARA LA PANTALLA DE BLOQUEO
         self.lockscreen_callback = lockscreen_callback
         # CREA EL MENU DE BOTONES Y MUESTRA DE PRIMERA INSTANCIA EL MENU DE INVENTARIO
@@ -24,7 +24,7 @@ class MainFrame(ctk.CTkFrame):
     def ButtonsFrame(self):
         
         # CREA EL FRAME DONDE ESTARAN LOS BOTONES DEL DASHBOARD
-        buttons_frame = ctk.CTkFrame(self,corner_radius=0,width=50,fg_color=app_colors[2])
+        buttons_frame = ctk.CTkFrame(self,corner_radius=0,width=50,fg_color=APP_COLORS[2])
         buttons_frame.pack(side='left',fill='y')
         
         # BOTON INICIO - BOTON INICIO - BOTON INICIO - BOTON INICIO - BOTON INICIO - BOTON INICIO - BOTON INICIO - 
@@ -32,52 +32,56 @@ class MainFrame(ctk.CTkFrame):
                                    dark_image=Image.open(r"Recursos\Iconos\btn_inicio_dark.png"))
         inic_btn = ctk.CTkButton(buttons_frame,
                                      text='Inicio',
-                                     fg_color=app_colors[2],
-                                     hover_color=app_colors[3],
+                                     fg_color=APP_COLORS[2],
+                                     hover_color=APP_COLORS[3],
                                      image=inic_btn_image,
+                                     corner_radius=0,
                                      compound='left',
                                      anchor='w',
                                      command=lambda: self.SwitchFrame(self.InicioFrame))
-        inic_btn.pack(fill='x',padx=5,pady=5,side='top')
+        inic_btn.pack(fill='x',pady=5,side='top')
 
         # BOTON INVENTARIO - BOTON INVENTARIO - BOTON INVENTARIO - BOTON INVENTARIO - BOTON INVENTARIO - BOTON INVENTARIO
         inv_btn_image=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_inventario_light.png"), size=(30,30),
                                    dark_image=Image.open(r"Recursos\Iconos\btn_inventario_dark.png"))
         invt_btn = ctk.CTkButton(buttons_frame,
                                      text='Inventario',
-                                     fg_color=app_colors[2],
-                                     hover_color=app_colors[3],
+                                     fg_color=APP_COLORS[2],
+                                     hover_color=APP_COLORS[3],
                                      image=inv_btn_image,
+                                     corner_radius=0,
                                      compound='left',
                                      anchor='w',
                                      command=lambda: self.SwitchFrame(self.InventarioFrame))
-        invt_btn.pack(fill='x',padx=5,pady=5,side='top')
+        invt_btn.pack(fill='x',pady=5,side='top')
         
         # BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION
         fact_btn_image=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_fact_light.png"), size=(30,30),
                                    dark_image=Image.open(r"Recursos\Iconos\btn_fact_dark.png"))
         fact_btn = ctk.CTkButton(buttons_frame,
                                      text='Facturacion',
-                                     fg_color=app_colors[2],
-                                     hover_color=app_colors[3],
+                                     fg_color=APP_COLORS[2],
+                                     hover_color=APP_COLORS[3],
                                      image=fact_btn_image,
+                                     corner_radius=0,
                                      compound='left',
                                      anchor='w',
                                      command=lambda: self.SwitchFrame(self.FacturacionFrame))
-        fact_btn.pack(fill='x',padx=5,pady=5,side='top')
+        fact_btn.pack(fill='x',pady=5,side='top')
 
         # BOTON CUENTAS - BOTON CUENTAS - BOTON CUENTAS - BOTON CUENTAS - BOTON CUENTAS - BOTON CUENTAS - BOTON CUENTAS
         cuentas_btn_image=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_cuentas_light.png"), size=(30,30),
                                    dark_image=Image.open(r"Recursos\Iconos\btn_cuentas_dark.png"))
         cuentas_btn = ctk.CTkButton(buttons_frame,
                                      text='Cuentas',
-                                     fg_color=app_colors[2],
-                                     hover_color=app_colors[3],
+                                     fg_color=APP_COLORS[2],
+                                     hover_color=APP_COLORS[3],
                                      image=cuentas_btn_image,
+                                     corner_radius=0,
                                      compound='left',
                                      anchor='w',
                                      command=lambda: self.SwitchFrame(self.CuentasFrame))
-        cuentas_btn.pack(fill='x',padx=5,pady=5,side='top')
+        cuentas_btn.pack(fill='x',pady=5,side='top')
 
         # BOTON DE BLOQUEAR O CERRAR SESION -  BOTON DE BLOQUEAR O CERRAR SESION - BOTON DE BLOQUEAR O CERRAR SESION 
         lock_btn_image=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_lock_light.png"), size=(30,30),
@@ -85,14 +89,16 @@ class MainFrame(ctk.CTkFrame):
         lockscreen_btn=ctk.CTkButton(buttons_frame,
                                      text='',
                                      image=lock_btn_image,
-                                     fg_color=app_colors[2],
-                                     hover_color=app_colors[3],
+                                     corner_radius=0,
+                                     fg_color=APP_COLORS[2],
+                                     hover_color=APP_COLORS[3],
                                      command=lambda: self.lockscreen_callback()
                                      )
-        lockscreen_btn.pack(side='bottom',padx=5,pady=5)
+        lockscreen_btn.pack(side='bottom',pady=5)
 
+    # INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - 
     def InicioFrame(self):
-        self.head_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=app_colors[0])
+        self.head_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLORS[0])
         self.head_frame.pack(expand=True,fill='both')
 
 
@@ -107,58 +113,69 @@ class MainFrame(ctk.CTkFrame):
         self.head_frame = ctk.CTkFrame(self,
                                        height=600,
                                        corner_radius=0,
-                                       fg_color=app_colors[0])
+                                       fg_color=APP_COLORS[0])
         self.head_frame.pack(expand=True,fill='both')
 
 
         head_inv = ctk.CTkLabel(self.head_frame,
                                 text='Inventario',
-                                bg_color=app_colors[0],
-                                text_color=app_colors[1],
-                                font=fonts[0],
+                                bg_color=APP_COLORS[0],
+                                text_color=APP_COLORS[1],
+                                font=FONTS[0],
                                 height=10)
         head_inv.pack(pady=30,padx=40,fill='both',expand=True)
 
         # PESTANAS - PESTANAS - PESTANAS - PESTANAS - PESTANAS - PESTANAS - PESTANAS - PESTANAS - PESTANAS - 
         tabs = ctk.CTkTabview(self.head_frame,height=800,
-                              fg_color=app_colors[0],
-                              segmented_button_fg_color=app_colors[0],
-                              segmented_button_selected_color=app_colors[2],
-                              segmented_button_selected_hover_color=app_colors[3],
-                              segmented_button_unselected_color=app_colors[3],
-                              segmented_button_unselected_hover_color=app_colors[2],
-                              text_color=app_colors[0])
+                              fg_color=APP_COLORS[0],
+                              segmented_button_fg_color=APP_COLORS[0],
+                              segmented_button_selected_color=APP_COLORS[2],
+                              segmented_button_selected_hover_color=APP_COLORS[3],
+                              segmented_button_unselected_color=APP_COLORS[3],
+                              segmented_button_unselected_hover_color=APP_COLORS[2],
+                              text_color=APP_COLORS[0])
         tabs.pack(expand=True,fill='both')
+        tabs.add("Listado de productos")
         tabs.add("Carga de productos")
-        tabs.add("Lista de productos")
+        tabs.add("Carga de líneas y grupos")
+        tabs.add("Carga de proveedores")
 
-        carga_productos = AddProductsTab(tabs.tab("Carga de productos"))
+
+        # TAB CARGA DE PRODUCTOS
+        carga_productos = CargaProductosProg(tabs.tab("Carga de productos"))
         carga_productos.pack(expand=True,fill='both')
+
+        # TAB CARGA DE LINEAS Y GRUPOS
+        carga_lin_gru = LineasGruposProg(tabs.tab("Carga de líneas y grupos"),line_manager=LINE_MANAGER)
+        carga_lin_gru.pack(expand=True,fill='both')
+
+        carga_proveedores = ProveedoresProg(tabs.tab("Carga de proveedores"),prov_manager=PROV_MANAGER)
+        carga_proveedores.pack(expand=True,fill='both')
 
         return self.head_frame
     
 
     # CREAR EL FRAME DE FACTURACION - CREAR EL FRAME DE FACTURACION - CREAR EL FRAME DE FACTURACION - CREAR EL FRAME DE FACTURACION
     def FacturacionFrame(self):
-        self.head_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=app_colors[0])
+        self.head_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLORS[0])
         self.head_frame.pack(expand=True,fill='both')
 
         head_inv = ctk.CTkLabel(self.head_frame,
                                 text='Facturación',
-                                bg_color=app_colors[0],
-                                font=fonts[0])
+                                bg_color=APP_COLORS[0],
+                                font=FONTS[0])
         head_inv.place(x=50,y=40,anchor='nw')
         return self.head_frame
 
     # CREAR EL FRAME DE CUENTAS - CREAR EL FRAME DE CUENTAS - CREAR EL FRAME DE CUENTAS - CREAR EL FRAME DE CUENTAS
     def CuentasFrame(self):
-        self.head_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=app_colors[0])
+        self.head_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLORS[0])
         self.head_frame.pack(expand=True,fill='both')
 
         head_inv = ctk.CTkLabel(self.head_frame,
                                 text='Cuentas',
-                                bg_color=app_colors[0],
-                                font=fonts[0])
+                                bg_color=APP_COLORS[0],
+                                font=FONTS[0])
         head_inv.place(x=50,y=40,anchor='nw')
         return self.head_frame
     

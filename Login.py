@@ -2,9 +2,7 @@
 import customtkinter as ctk
 import tkinter as tk
 import json, os, bcrypt
-
-fonts = [('Roboto light',25),('Roboto light',15)]
-app_colors = ['#eaeaea','#1d1d1d','#1c9bac','#166c78','#5d5d5d']
+from style import FONTS, APP_COLORS, APPEARANCE_MODE
 
 # LEER EL ARCHIVO DE USUARIOS   
 def ReadUsersData():
@@ -45,13 +43,13 @@ class Users():
 # LOGIN FRAME
 class LoginFrame(ctk.CTkFrame):
     def __init__(self,parent,success_callback):
-        super().__init__(parent,bg_color=app_colors[0])
+        super().__init__(parent,bg_color=APP_COLORS[0])
         self.success_callback = success_callback
         self.CreateWidgets()
         
     # WIDGETS
     def CreateWidgets(self):
-        label_wc = ctk.CTkLabel(self,text='Bienvenido',font=fonts[0],text_color=app_colors[4])
+        label_wc = ctk.CTkLabel(self,text='Bienvenido',font=FONTS[0],text_color=APP_COLORS[4])
         label_wc.place(anchor='center',relx=0.5,rely=0.3)
         
         self.user_var = tk.StringVar()
@@ -78,7 +76,7 @@ class LoginFrame(ctk.CTkFrame):
         add_button.place(anchor='center',relx=0.575,rely=0.6)
         
         self.label_var = tk.StringVar(value='Ingresa tus credenciales')
-        label_accses = ctk.CTkLabel(self,textvariable=self.label_var,font=fonts[1],text_color=app_colors[4])
+        label_accses = ctk.CTkLabel(self,textvariable=self.label_var,font=FONTS[1],text_color=APP_COLORS[4])
         label_accses.place(anchor='center',relx=0.5,rely=0.7)
         
     # ACCESO DEL LOGIN

@@ -1,0 +1,23 @@
+{
+    "001": {
+        "linea": "Bebidas",
+        "grupo": [
+            "Refrescos",
+            "Jugos"
+        ]
+    },
+    "002": {
+        "linea": "Almuerzos",
+        "grupo": []
+    },
+    "003": {
+        "linea": "Desayunos",
+        "grupo": [
+            "Arepas"
+        ]
+    },
+    "004": {
+        "linea": "Cenas",
+        "grupo": []
+    }
+}

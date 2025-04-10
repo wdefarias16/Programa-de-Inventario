@@ -23,11 +23,12 @@ def Save_Inventory():
 
 # CLASE PRODUCTOS
 class Product():
-    def __init__(self,codigo,linea,grupo,nombre,precio,cantidad):
+    def __init__(self,codigo,linea,grupo,proveedor,nombre,precio,cantidad):
 
         self.codigo = codigo
         self.linea = linea
         self.grupo = grupo
+        self.proveedor = proveedor
         self.nombre = nombre
         self.precio = precio
         self.cantidad = cantidad
@@ -37,6 +38,7 @@ class Product():
             'codigo':self.codigo,
             'linea':self.linea,
             'grupo':self.grupo,
+            'proveedor':self.proveedor,
             'nombre':self.nombre,
             'precio':self.precio,
             'cantidad':self.cantidad
@@ -45,8 +47,8 @@ class Product():
 # CLASE INVENTARIO
 class Inventory():
     def __init__(self):
-            global Inventario
-            self.products = Inventario
+
+            self.inventario = {}
 
     def AddProduct(self,product):
         global Inventario
