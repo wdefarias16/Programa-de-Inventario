@@ -28,9 +28,9 @@ class Product():
 class Inventory():
     def __init__(self,filename = 'Data/Inventario.json'):
 
-            self.filename = filename
-            self.inventario = {}
-            self.Load_Inventory()
+        self.filename = filename
+        self.inventario = {}
+        self.Load_Inventory()
 
 # CARGAR EL ARCHIVO DE DATOS
     def Load_Inventory(self):
@@ -50,8 +50,6 @@ class Inventory():
         with open(self.filename,'w') as file:
             json.dump(self.inventario,file,indent=4)
 
-
-
     def AddProduct(self,product):
         global Inventario
         if product.codigo in Inventario:
@@ -60,5 +58,5 @@ class Inventory():
          
         Inventario[product.codigo] = product.ToDict()
         self.products =  Inventario
-        Save_Inventory()
+        self.Save_Inventory()
         messagebox.showinfo(f'El producto {product.nombre} agregado con exito.')
