@@ -32,6 +32,10 @@ class LineasGrupos():
 
     def GetLineNames(self):
         return [f"{codigo} - {info['linea']}" for codigo, info in self.lineas_grupos.items()]
+    def GetGroupNames(self):
+        return [grupo for value in self.lineas_grupos.values() for grupo in value.get('grupo',[])]
+    
+
     
     def Add_Line(self,codigo,linea,grupo=None):
         if codigo in self.lineas_grupos:
@@ -54,6 +58,21 @@ class LineasGrupos():
         self.Save_Lines()
         messagebox.showinfo('Info',f'El grupo {grupo} se ha cargado correctamente a la linea {codigo}')
         return True
+
+    def CheckLine(self,codigo):
+
+        if codigo not in self.lineas_grupos:
+            messagebox.showerror('Error de Línea',f'El codigo {codigo} no pertenece a ninguna linea cargada.')
+            return False
+        return True
+    
+    def Checkgrupo(self,grupo):
+        
+        if grupo not in self.grupos:
+            messagebox.showerror('Error de grupo',f'El grupo {grupo} no pertenece a ningun grupo cargado.')
+            return False
+        return True
+
 
 # PROGRAMA DE CARGA DE LINEAS Y GRUPOS - PROGRAMA DE CARGA DE LINEAS Y GRUPOS - PROGRAMA DE CARGA DE LINEAS Y GRUPOS
 class LineasGruposProg(ctk.CTkFrame):
@@ -185,4 +204,3 @@ class LineasGruposProg(ctk.CTkFrame):
         
         self.line_manager.Add_Group(codigo,grupo)
 
-LINE_MANAGER = LineasGrupos()

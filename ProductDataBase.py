@@ -1,6 +1,7 @@
 import json,os
 from tkinter import messagebox
 
+
 # CLASE PRODUCTOS
 class Product():
     def __init__(self,codigo,linea,grupo,proveedor,nombre,precio,cantidad):
@@ -37,7 +38,7 @@ class Inventory():
         global Inventario
         # CREAR LA CARPETA DATA SI NO EXISTE
         if not os.path.exists('Data'):  
-        os.makedirs('Data')
+            os.makedirs('Data')
         # VERIFICAR SI EXISTE EL ARCHIVO DE DATOS / CARGAR EL ARCHIVO DE DATOS
         try:
             with open(self.filename,'r') as file:
@@ -51,12 +52,11 @@ class Inventory():
             json.dump(self.inventario,file,indent=4)
 
     def AddProduct(self,product):
-        global Inventario
-        if product.codigo in Inventario:
-            messagebox.showinfo(f'El producto con el codigo {product.codigo} ya existe.')
+
+        if product['codigo'] in self.inventario:
+            messagebox.showinfo('Producto existente',f'El producto con el codigo {product['codigo']} ya existe.')
             return
          
-        Inventario[product.codigo] = product.ToDict()
-        self.products =  Inventario
+        self.inventario[product['codigo']] = product
         self.Save_Inventory()
-        messagebox.showinfo(f'El producto {product.nombre} agregado con exito.')
+        messagebox.showinfo('Producto agregado',f'El producto {product['codigo']} ha sido agregado.')

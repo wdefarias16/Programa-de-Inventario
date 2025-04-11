@@ -128,4 +128,3 @@ class ProveedoresProg(ctk.CTkFrame):
     
 
 
-PROV_MANAGER = Proveedores()

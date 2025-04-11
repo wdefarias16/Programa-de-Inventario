@@ -2,6 +2,9 @@ import customtkinter as ctk
 import tkinter as tk
 from tkinter import ttk
 from ProductDataBase import*
+from DataBaseInitFiles import INVENTARIO, LINE_MANAGER
+
+
 from style import FONTS, APP_COLORS, APPEARANCE_MODE
 
 
@@ -35,39 +38,39 @@ class CargaProductosProg(ctk.CTkFrame):
             entry_frame.columnconfigure(columns,weight=1)
         
         # ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - 
-        codigo_var = tk.StringVar()
+        self.codigo_var = tk.StringVar()
         codigo_entry = ctk.CTkEntry(entry_frame,
-                                    textvariable=codigo_var)
+                                    textvariable=self.codigo_var)
         codigo_entry.grid(row=3,column=3,columnspan=2,sticky='we')
 
-        linea_var = tk.StringVar()
+        self.linea_var = tk.StringVar()
         linea_entry = ctk.CTkEntry(entry_frame,
-                                   textvariable=linea_var)
+                                   textvariable=self.linea_var)
         linea_entry.grid(row=4,column=3,columnspan=2,sticky='we')
 
-        grupo_var = tk.StringVar()
+        self.grupo_var = tk.StringVar()
         grupo_entry = ctk.CTkEntry(entry_frame,
-                                   textvariable=grupo_var)
+                                   textvariable=self.grupo_var)
         grupo_entry.grid(row=5,column=3,columnspan=2,sticky='we')
 
-        prove_var = tk.StringVar()
+        self.prove_var = tk.StringVar()
         prove_entry = ctk.CTkEntry(entry_frame,
-                                   textvariable=prove_var)
+                                   textvariable=self.prove_var)
         prove_entry.grid(row=6,column=3,columnspan=2,sticky='we')
 
-        nombre_var = tk.StringVar()
+        self.nombre_var = tk.StringVar()
         nombre_entry = ctk.CTkEntry(entry_frame,
-                                    textvariable=nombre_var)
+                                    textvariable=self.nombre_var)
         nombre_entry.grid(row=7,column=3,columnspan=2,sticky='we')
 
-        precio_var = tk.DoubleVar()
+        self.precio_var = tk.DoubleVar()
         precio_entry = ctk.CTkEntry(entry_frame,
-                                    textvariable=precio_var)
+                                    textvariable=self.precio_var)
         precio_entry.grid(row=8,column=3,columnspan=2,sticky='we')
 
-        canti_var = tk.IntVar()
+        self.canti_var = tk.IntVar()
         canti_entry = ctk.CTkEntry(entry_frame,
-                                   textvariable=canti_var)
+                                   textvariable=self.canti_var)
         canti_entry.grid(row=9,column=3,columnspan=2,sticky='we')
 
         # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
@@ -121,10 +124,12 @@ class CargaProductosProg(ctk.CTkFrame):
         canti_label.grid(row=9,column=5,columnspan=2,sticky='w',padx=5)
 
         # MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - 
-        lin_menu = ctk.CTkOptionMenu(entry_frame)
+        lin_menu = ctk.CTkOptionMenu(entry_frame,
+                                     values=LINE_MANAGER.GetLineNames())
         lin_menu.grid(row=4,column=1,columnspan=2,sticky='we',padx=5)
 
-        grup_menu = ctk.CTkOptionMenu(entry_frame)
+        grup_menu = ctk.CTkOptionMenu(entry_frame,
+                                      values=LINE_MANAGER.GetGroupNames())
         grup_menu.grid(row=5,column=1,columnspan=2,sticky='we',padx=5)
 
         prov_menu = ctk.CTkOptionMenu(entry_frame)
@@ -137,7 +142,8 @@ class CargaProductosProg(ctk.CTkFrame):
         add_foto_btn.grid(row=11,column=1,columnspan=2,sticky='we',padx=5)
 
         guardar_btn = ctk.CTkButton(entry_frame,
-                                     text='Agregar')
+                                     text='Agregar',
+                                     command=self.AgregarProducto)
         guardar_btn.grid(row=11,column=3,columnspan=2,sticky='we')
         
         # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
@@ -148,3 +154,18 @@ class CargaProductosProg(ctk.CTkFrame):
 
         treeview = ttk.Treeview(tree_frame)
         treeview.pack(expand=True,fill='both',padx=10,pady=10)
+
+        # FUNCION BOTONES - FUNCION BOTONES - FUNCION BOTONES - FUNCION BOTONES - FUNCION BOTONES
+
+    def AgregarProducto(self):
+        codigo = self.codigo_var.get()
+        linea = self.linea_var.get()
+        grupo = self.grupo_var.get()
+        prove = self.prove_var.get()
+        nombre = self.nombre_var.get()
+        precio = self.precio_var.get()
+        canti = self.canti_var.get()
+
+        if LINE_MANAGER.CheckLine(linea) and LINE_MANAGER.Checkgrupo(grupo):
+            producto = Product(codigo,linea,grupo,prove,nombre,precio,canti)
+            INVENTARIO.AddProduct(producto.ToDict())

@@ -5,6 +5,7 @@ from PIL import Image, ImageTk
 from CargaProductos import*
 from CargaLineasGrupos import*
 from CargaProveedores import*
+from DataBaseInitFiles import*
 from Inicio import*
 import datetime
 from threading import Timer
