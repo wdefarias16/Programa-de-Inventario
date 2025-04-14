@@ -1,0 +1,12 @@
+{
+    "001": {
+        "linea": "Linea 1",
+        "grupo": [
+            "Grupo 01",
+            "Grupo 02",
+            "Grupo 03",
+            "Grupo 04",
+            "Grupo 05"
+        ]
+    }
+}
