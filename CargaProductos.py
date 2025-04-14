@@ -2,7 +2,7 @@ import customtkinter as ctk
 import tkinter as tk
 from tkinter import ttk
 from ProductDataBase import*
-from DataBaseInitFiles import INVENTARIO, LINE_MANAGER
+from Database import INVENTARIO, LINE_MANAGER
 
 
 from style import FONTS, APP_COLORS, APPEARANCE_MODE
