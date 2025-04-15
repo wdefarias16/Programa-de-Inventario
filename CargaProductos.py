@@ -2,7 +2,6 @@ import customtkinter as ctk
 import tkinter as tk
 from tkinter import ttk
 from ProductDataBase import*
-<<<<<<< HEAD
 from Database import INVENTARIO, LINE_MANAGER, PROV_MANAGER
 from style import FONTS, APP_COLORS, APPEARANCE_MODE
 
@@ -10,18 +9,6 @@ class CargaProductosProg(ctk.CTkFrame):
     def __init__(self,parent):
         super().__init__(parent)
 
-=======
-from Database import INVENTARIO, LINE_MANAGER,PROV_MANAGER
-
-
-from style import FONTS, APP_COLORS, APPEARANCE_MODE
-
-
-class CargaProductosProg(ctk.CTkFrame):
-    def __init__(self,parent):
-        super().__init__(parent)
-        self.codigoActualLinea = '000'
->>>>>>> e62cb9d98ca936f8e9e8418f5bfb85b59b0bdf81
         # TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - 
         title_frame = ctk.CTkFrame(self,corner_radius=5,fg_color=APP_COLORS[3])
         title_frame.pack(fill='x')
@@ -47,7 +34,6 @@ class CargaProductosProg(ctk.CTkFrame):
         for columns in range(8):
             entry_frame.columnconfigure(columns,weight=1)
         
-<<<<<<< HEAD
         # MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - 
         self.lineas = LINE_MANAGER.GetLineNames()
         self.codigoActualLinea = self.lineas[0].split(" - ")[0]
@@ -57,19 +43,6 @@ class CargaProductosProg(ctk.CTkFrame):
                                      command=self.SelectLinMenu)
         lin_menu.grid(row=4,column=1,columnspan=2,sticky='we',padx=5)
 
-=======
-        
-        # MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - 
-        self.lineas = LINE_MANAGER.GetLineNames()
-        self.lin_var = tk.StringVar(value=self.lineas[0])
-        lin_menu = ctk.CTkOptionMenu(entry_frame,
-                                     values=self.lineas,
-                                     command=self.SelectLinMenu,
-                                     variable=self.lin_var)
-        lin_menu.grid(row=4,column=1,columnspan=2,sticky='we',padx=5)
-
-
->>>>>>> e62cb9d98ca936f8e9e8418f5bfb85b59b0bdf81
         self.grup_menu = ctk.CTkOptionMenu(entry_frame,
                                       values=LINE_MANAGER.GetGroupNames(self.codigoActualLinea),
                                       command=self.SelectGruMenu)
@@ -86,10 +59,6 @@ class CargaProductosProg(ctk.CTkFrame):
                                     textvariable=self.codigo_var)
         codigo_entry.grid(row=3,column=3,columnspan=2,sticky='we')
 
-<<<<<<< HEAD
-=======
-        self.linea_var = tk.StringVar()
->>>>>>> e62cb9d98ca936f8e9e8418f5bfb85b59b0bdf81
         linea_entry = ctk.CTkEntry(entry_frame,
                                    textvariable=self.lin_var)
         linea_entry.grid(row=4,column=3,columnspan=2,sticky='we')
@@ -169,10 +138,6 @@ class CargaProductosProg(ctk.CTkFrame):
                                     text_color=APP_COLORS[4])
         canti_label.grid(row=9,column=5,columnspan=2,sticky='w',padx=5)
 
-<<<<<<< HEAD
-=======
-
->>>>>>> e62cb9d98ca936f8e9e8418f5bfb85b59b0bdf81
         # BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - 
 
         add_foto_btn = ctk.CTkButton(entry_frame,
@@ -190,7 +155,6 @@ class CargaProductosProg(ctk.CTkFrame):
                                    fg_color=APP_COLORS[5])
         tree_frame.pack(expand=True,fill='both',side='left',pady=5)
 
-<<<<<<< HEAD
         self.treeview = ttk.Treeview(tree_frame,
                                 columns=('Linea','Grupo','Proveedor','Nombre','Precio','Cantidad'))
         self.treeview.pack(expand=True,fill='both',padx=10,pady=10)
@@ -223,13 +187,6 @@ class CargaProductosProg(ctk.CTkFrame):
 
     # FUNCION BOTONES - FUNCION BOTONES - FUNCION BOTONES - FUNCION BOTONES - FUNCION BOTONES
     # FUNCION BOTON AGREGAR PRODUCTO
-=======
-        treeview = ttk.Treeview(tree_frame)
-        treeview.pack(expand=True,fill='both',padx=10,pady=10)
-
-        # FUNCION BOTONES - FUNCION BOTONES - FUNCION BOTONES - FUNCION BOTONES - FUNCION BOTONES
-
->>>>>>> e62cb9d98ca936f8e9e8418f5bfb85b59b0bdf81
     def AgregarProducto(self):
         codigo = self.codigo_var.get()
         linea = self.lin_var.get().split(" - ")[0].strip()
@@ -239,19 +196,12 @@ class CargaProductosProg(ctk.CTkFrame):
         precio = self.precio_var.get()
         canti = self.canti_var.get()
 
-<<<<<<< HEAD
         if LINE_MANAGER.CheckLine(linea) and LINE_MANAGER.CheckGrupo(grupo):
             producto = Product(codigo,linea,grupo,prove,nombre,precio,canti)
             INVENTARIO.AddProduct(producto.ToDict())
             self.treeview.insert("",'end',text=codigo,values=(linea,grupo,prove,nombre,precio,canti))
 
     # AYUDA DE SELECCION DE LINEAS
-=======
-        if LINE_MANAGER.CheckLine(linea) and LINE_MANAGER.Checkgrupo(grupo):
-            producto = Product(codigo,linea,grupo,prove,nombre,precio,canti)
-            INVENTARIO.AddProduct(producto.ToDict())
-
->>>>>>> e62cb9d98ca936f8e9e8418f5bfb85b59b0bdf81
     def SelectLinMenu(self,opcion):
         self.codigoActualLinea = opcion.split(" - ")[0]
         self.lin_var.set(self.codigoActualLinea)
@@ -259,7 +209,6 @@ class CargaProductosProg(ctk.CTkFrame):
         nuevos_grupos = LINE_MANAGER.GetGroupNames(self.codigoActualLinea)
         self.grup_menu.configure(values=nuevos_grupos)
     
-<<<<<<< HEAD
     # AYUDA DE SELECCION DE GRUPOS
     def SelectGruMenu(self,opcion):
         self.grupo_var.set(opcion)
@@ -281,11 +230,5 @@ class CargaProductosProg(ctk.CTkFrame):
                                                                 producto['nombre'],
                                                                 producto['precio'],
                                                                 producto['cantidad']))
-=======
-    def SelectGruMenu(self,opcion):
-        self.grupo_var.set(opcion)
-
-    def SelectProvMenu(self,opcion):
-        codigo = opcion.split(" - ")[0]
-        self.prove_var.set(codigo)
->>>>>>> e62cb9d98ca936f8e9e8418f5bfb85b59b0bdf81
+            #Prueba
+            
