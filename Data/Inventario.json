@@ -1,5 +1,4 @@
 {
-<<<<<<< HEAD
     "0001": {
         "codigo": "0001",
         "linea": "001",
@@ -62,15 +61,32 @@
         "nombre": "Producto 7",
         "precio": 25.0,
         "cantidad": 1200
-=======
-    "454554": {
-        "codigo": "454554",
+    },
+    "0008": {
+        "codigo": "0008",
+        "linea": "002",
+        "grupo": "Grupo 2.1",
+        "proveedor": "P02",
+        "nombre": "Producto 8",
+        "precio": 100.0,
+        "cantidad": 20
+    },
+    "0009": {
+        "codigo": "0009",
+        "linea": "002",
+        "grupo": "Grupo 2.1",
+        "proveedor": "P02",
+        "nombre": "ARROZ ",
+        "precio": 2.0,
+        "cantidad": 100
+    },
+    "1034": {
+        "codigo": "1034",
         "linea": "001",
-        "grupo": "Grupo 1.2",
-        "proveedor": "001",
-        "nombre": "fghfgh",
-        "precio": 120.0,
-        "cantidad": 12
->>>>>>> e62cb9d98ca936f8e9e8418f5bfb85b59b0bdf81
+        "grupo": "Grupo 1.1",
+        "proveedor": "P01",
+        "nombre": "BOMBILLO",
+        "precio": 2.0,
+        "cantidad": 5
     }
 }

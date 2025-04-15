@@ -150,37 +150,64 @@ class CargaProductosProg(ctk.CTkFrame):
         guardar_btn.grid(row=11,column=3,columnspan=2,sticky='we')
         
         # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
+        # FRAME DEL TREEVIEW
         tree_frame = ctk.CTkFrame(self,
                                    corner_radius=5,
                                    fg_color=APP_COLORS[5])
         tree_frame.pack(expand=True,fill='both',side='left',pady=5)
 
+        # TREEVIEW
         self.treeview = ttk.Treeview(tree_frame,
+                                     style='Custom.Treeview',
                                 columns=('Linea','Grupo','Proveedor','Nombre','Precio','Cantidad'))
         self.treeview.pack(expand=True,fill='both',padx=10,pady=10)
 
+        # CODIGO
         self.treeview.heading('#0',text='Codigo')
         self.treeview.column('#0',width=50,anchor='center')
 
+        # LINEA
         self.treeview.heading('Linea',text='Linea')
         self.treeview.column('Linea',width=50,anchor='center')
 
+        # GRUPO
         self.treeview.heading('Grupo',text='Grupo')
         self.treeview.column('Grupo',width=50,anchor='center')
 
+        # PROVEEDOR
         self.treeview.heading('Proveedor',text='Proveedor')
         self.treeview.column('Proveedor',width=50,anchor='center')
 
+        # NOMBRE
         self.treeview.heading('Nombre',text='Nombre')
         self.treeview.column('Nombre',width=150,anchor='center')
 
+        # PRECIO
         self.treeview.heading('Precio',text='Precio')
         self.treeview.column('Precio',width=100,anchor='center')
 
+        #PRECIO
         self.treeview.heading('Cantidad',text='Cantidad')
         self.treeview.column('Cantidad',width=100,anchor='center')
 
+        style = ttk.Style()
+        style.configure(
+            'Custom.Treeview',
+            background = APP_COLORS[0],
+            foreground = APP_COLORS[1],
+            rowheight = 30,
+            font = FONTS[2],
+            fieldbackground = APP_COLORS[0])
         
+        style.configure(
+            'Custom.Treeview.Heading',
+            background = APP_COLORS[1],
+            foreground = APP_COLORS[1],
+            font = FONTS[1])
+
+
+
+        # LISTAR TODOS LOS PRODUCTOS CARGADOS AL INICIO DEL PROGRAMA
         self.ListInventory()
 
 
@@ -231,4 +258,4 @@ class CargaProductosProg(ctk.CTkFrame):
                                                                 producto['precio'],
                                                                 producto['cantidad']))
             #Prueba
-            
+

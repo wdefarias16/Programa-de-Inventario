@@ -1,15 +1,11 @@
 {
-<<<<<<< HEAD
     "P01": {
         "proveedor": "Proveedor 1"
     },
     "P02": {
-=======
-    "001": {
-        "proveedor": "Proveedor 1"
-    },
-    "002": {
->>>>>>> e62cb9d98ca936f8e9e8418f5bfb85b59b0bdf81
         "proveedor": "Proveedor 2"
+    },
+    "1": {
+        "proveedor": "WILLIAM"
     }
 }

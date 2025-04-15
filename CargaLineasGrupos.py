@@ -98,12 +98,12 @@ class LineasGrupos():
         return True
     
     # CHEQUEA SI EL GRUPO PERTENECE A ALGUNO PREVIAMENTE CARGADO
-<<<<<<< HEAD
+
+
+
     def CheckGrupo(self,grupo):
-=======
-    def Checkgrupo(self,grupo):
->>>>>>> e62cb9d98ca936f8e9e8418f5bfb85b59b0bdf81
-        
+
+
         for datos in self.lineas_grupos.values():
             if grupo in datos.get("grupo", []):
                 return True
