@@ -2,7 +2,10 @@ import json,os
 from tkinter import messagebox
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> e62cb9d98ca936f8e9e8418f5bfb85b59b0bdf81
 # CLASE PRODUCTOS
 class Product():
     def __init__(self,codigo,linea,grupo,proveedor,nombre,precio,cantidad):
@@ -61,7 +64,10 @@ class Inventory():
         self.inventario[product['codigo']] = product
         self.Save_Inventory()
         messagebox.showinfo('Producto agregado',f"El producto {product['codigo']} ha sido agregado.")
+<<<<<<< HEAD
 
 # OBTENER EL INVENTARIO
     def GetInventory(self):
         return self.inventario
+=======
+>>>>>>> e62cb9d98ca936f8e9e8418f5bfb85b59b0bdf81

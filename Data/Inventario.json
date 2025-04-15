@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "0001": {
         "codigo": "0001",
         "linea": "001",
@@ -61,5 +62,15 @@
         "nombre": "Producto 7",
         "precio": 25.0,
         "cantidad": 1200
+=======
+    "454554": {
+        "codigo": "454554",
+        "linea": "001",
+        "grupo": "Grupo 1.2",
+        "proveedor": "001",
+        "nombre": "fghfgh",
+        "precio": 120.0,
+        "cantidad": 12
+>>>>>>> e62cb9d98ca936f8e9e8418f5bfb85b59b0bdf81
     }
 }

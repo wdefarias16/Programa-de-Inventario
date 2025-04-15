@@ -15,6 +15,7 @@
     "002": {
         "linea": "Linea 2",
         "grupo": [
+<<<<<<< HEAD
             "Grupo 2.1"
         ]
     },
@@ -24,6 +25,14 @@
             "Grupo 3.1",
             "Grupo 3.2",
             "Grupo 3.3"
+=======
+            "Grupo 2.1",
+            "Grupo 2.2",
+            "Grupo 2.3",
+            "Grupo 2.4",
+            "Grupo 2.5",
+            "Grupo 2.6"
+>>>>>>> e62cb9d98ca936f8e9e8418f5bfb85b59b0bdf81
         ]
     }
 }
