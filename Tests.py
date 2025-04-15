@@ -1,3 +1,21 @@
+<<<<<<< HEAD
+from customtkinter import *
+
+# Inicializar la ventana
+root = CTk()
+root.title("Ejemplo CTkOptionMenu")
+
+# Función a ejecutar al seleccionar una opción
+def mostrar_seleccion(opcion):
+    print(f"Has seleccionado: {opcion}")
+
+# Crear el CTkOptionMenu
+opciones = ["Opción 1", "Opción 2", "Opción 3"]
+menu_opciones = CTkOptionMenu(root, values=opciones, command=mostrar_seleccion)
+menu_opciones.pack(pady=20)
+
+root.mainloop()
+=======
 import os
 import json
 import customtkinter as ctk
@@ -166,3 +184,4 @@ if __name__ == "__main__":
     app.pack(expand=True, fill='both')
 
     root.mainloop()
+>>>>>>> 0cc25e7d4c0cd6e94ffe2d4c9fe3e901c1db2a9c

@@ -32,9 +32,16 @@ class LineasGrupos():
 
     def GetLineNames(self):
         return [f"{codigo} - {info['linea']}" for codigo, info in self.lineas_grupos.items()]
+<<<<<<< HEAD
+    
+    def GetGroupNames(self):
+        return [grupo for value in self.lineas_grupos.values() for grupo in value.get('grupo',[])]
+        
+=======
     def GetGroupNames(self):
         return [grupo for value in self.lineas_grupos.values() for grupo in value.get('grupo',[])]
     
+>>>>>>> 0cc25e7d4c0cd6e94ffe2d4c9fe3e901c1db2a9c
 
     
     def Add_Line(self,codigo,linea,grupo=None):
