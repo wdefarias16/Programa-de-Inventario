@@ -9,7 +9,23 @@ class LineasGrupos():
     
         self.filename = filename
         self.lineas_grupos = {}
-        self.Load_Lines()
+        self.Iniciar_File()
+
+    # INICIA EL ARCHIVO CON UN VALOR NEUTRAL
+    def Iniciar_File(self):
+        if not os.path.exists('Data'):
+            os.makedirs('Data')
+        if not os.path.exists(self.filename):            
+                self.lineas_grupos = {
+                    "000": {"linea": "sin linea", "grupo":[]}
+                }
+                self.Save_Lines()
+        else:
+            self.Load_Lines()
+            if "000" not in self.lineas_grupos:
+                self.lineas_grupos["000"] = {"linea": "sin linea", "grupo":[]}
+                self.Save_Lines()
+
 
     # CARGAR EL ARCHIVO DE DATOS
     def Load_Lines(self):
@@ -23,27 +39,33 @@ class LineasGrupos():
         except FileNotFoundError:
             self.lineas_grupos={}
             self.Save_Lines()
+        except json.JSONDecodeError as e:
+            messagebox.showerror("Error JSON", f"Error al leer el archivo JSON: {e}")
+            self.lineas_grupos = {"000": {"linea": "sin linea", "grupo":[]}}
+            self.Save_Lines()
 
     # GUARDAR EL ARCHIVO DE DATOS
     def Save_Lines(self):
-        with open(self.filename,'w') as file:
-            json.dump(self.lineas_grupos,file,indent=4)
+        directory = os.path.dirname(self.filename)
+        if directory and not os.path.exists(directory):
+            os.makedirs(directory)
+        with open(self.filename, 'w') as file:
+            json.dump(self.lineas_grupos, file, indent=4)
 
-
+    # RETORNA LOS NOMBRES DE LINEA EN FORMATO (CODIGO - NOMBRE)
     def GetLineNames(self):
         return [f"{codigo} - {info['linea']}" for codigo, info in self.lineas_grupos.items()]
-<<<<<<< HEAD
-    
-    def GetGroupNames(self):
-        return [grupo for value in self.lineas_grupos.values() for grupo in value.get('grupo',[])]
-        
-=======
-    def GetGroupNames(self):
-        return [grupo for value in self.lineas_grupos.values() for grupo in value.get('grupo',[])]
-    
->>>>>>> 0cc25e7d4c0cd6e94ffe2d4c9fe3e901c1db2a9c
 
     
+    # RETORNA LOS GRUPOS
+    def GetGroupNames(self,codigo):
+        grupos=[]
+        linea = self.lineas_grupos[codigo]
+        for grupo in linea['grupo']:
+            grupos.append(grupo)
+        return grupos
+        
+    # AGREGA UNA LINEA A LA BASE DE DATOS
     def Add_Line(self,codigo,linea,grupo=None):
         if codigo in self.lineas_grupos:
             messagebox.showerror('Error',f'El codigo de línea {codigo} ya se encuentra en la base de datos')
@@ -56,6 +78,7 @@ class LineasGrupos():
         messagebox.showinfo('Info',f'La linea {codigo} se ha cargado correctamente')
         return True
 
+    # AGREGA UN GRUPO A LA BASE DE DATOS
     def Add_Group(self,codigo,grupo):
         if codigo not in self.lineas_grupos:
             messagebox.showerror('Error',f'La línea con codigo {codigo} no existe')
@@ -66,6 +89,7 @@ class LineasGrupos():
         messagebox.showinfo('Info',f'El grupo {grupo} se ha cargado correctamente a la linea {codigo}')
         return True
 
+    # CHEQUEA SI EL CODIGO DE LINEA PERTENECE A LA ALGUNA PREVIAMENTE CARGADA
     def CheckLine(self,codigo):
 
         if codigo not in self.lineas_grupos:
@@ -73,12 +97,15 @@ class LineasGrupos():
             return False
         return True
     
+    # CHEQUEA SI EL GRUPO PERTENECE A ALGUNO PREVIAMENTE CARGADO
     def Checkgrupo(self,grupo):
         
-        if grupo not in self.grupos:
-            messagebox.showerror('Error de grupo',f'El grupo {grupo} no pertenece a ningun grupo cargado.')
-            return False
-        return True
+        for datos in self.lineas_grupos.values():
+            if grupo in datos.get("grupo", []):
+                return True
+        messagebox.showerror('Error de grupo', f'El grupo {grupo} no pertenece a ningún grupo cargado.')
+        return False
+
 
 
 # PROGRAMA DE CARGA DE LINEAS Y GRUPOS - PROGRAMA DE CARGA DE LINEAS Y GRUPOS - PROGRAMA DE CARGA DE LINEAS Y GRUPOS

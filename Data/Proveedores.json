@@ -1,5 +1,8 @@
 {
     "001": {
         "proveedor": "Proveedor 1"
+    },
+    "002": {
+        "proveedor": "Proveedor 2"
     }
 }

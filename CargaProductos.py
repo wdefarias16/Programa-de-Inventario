@@ -2,7 +2,7 @@ import customtkinter as ctk
 import tkinter as tk
 from tkinter import ttk
 from ProductDataBase import*
-from Database import INVENTARIO, LINE_MANAGER
+from Database import INVENTARIO, LINE_MANAGER,PROV_MANAGER
 
 
 from style import FONTS, APP_COLORS, APPEARANCE_MODE
@@ -11,7 +11,7 @@ from style import FONTS, APP_COLORS, APPEARANCE_MODE
 class CargaProductosProg(ctk.CTkFrame):
     def __init__(self,parent):
         super().__init__(parent)
-        
+        self.codigoActualLinea = '000'
         # TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - 
         title_frame = ctk.CTkFrame(self,corner_radius=5,fg_color=APP_COLORS[3])
         title_frame.pack(fill='x')
@@ -37,27 +37,27 @@ class CargaProductosProg(ctk.CTkFrame):
         for columns in range(8):
             entry_frame.columnconfigure(columns,weight=1)
         
-<<<<<<< HEAD
         
         # MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - 
         self.lineas = LINE_MANAGER.GetLineNames()
         self.lin_var = tk.StringVar(value=self.lineas[0])
         lin_menu = ctk.CTkOptionMenu(entry_frame,
                                      values=self.lineas,
+                                     command=self.SelectLinMenu,
                                      variable=self.lin_var)
         lin_menu.grid(row=4,column=1,columnspan=2,sticky='we',padx=5)
 
 
-        grup_menu = ctk.CTkOptionMenu(entry_frame,
-                                      values=LINE_MANAGER.GetGroupNames(),
-                                      command=self.SelectLinMenu)
-        grup_menu.grid(row=5,column=1,columnspan=2,sticky='we',padx=5)
+        self.grup_menu = ctk.CTkOptionMenu(entry_frame,
+                                      values=LINE_MANAGER.GetGroupNames(self.codigoActualLinea),
+                                      command=self.SelectGruMenu)
+        self.grup_menu.grid(row=5,column=1,columnspan=2,sticky='we',padx=5)
 
-        prov_menu = ctk.CTkOptionMenu(entry_frame)
+        prov_menu = ctk.CTkOptionMenu(entry_frame,
+                                      values=PROV_MANAGER.GetProvNames(),
+                                      command=self.SelectProvMenu)
         prov_menu.grid(row=6,column=1,columnspan=2,sticky='we',padx=5)
         
-=======
->>>>>>> 0cc25e7d4c0cd6e94ffe2d4c9fe3e901c1db2a9c
         # ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - 
         self.codigo_var = tk.StringVar()
         codigo_entry = ctk.CTkEntry(entry_frame,
@@ -66,11 +66,7 @@ class CargaProductosProg(ctk.CTkFrame):
 
         self.linea_var = tk.StringVar()
         linea_entry = ctk.CTkEntry(entry_frame,
-<<<<<<< HEAD
                                    textvariable=self.lin_var)
-=======
-                                   textvariable=self.linea_var)
->>>>>>> 0cc25e7d4c0cd6e94ffe2d4c9fe3e901c1db2a9c
         linea_entry.grid(row=4,column=3,columnspan=2,sticky='we')
 
         self.grupo_var = tk.StringVar()
@@ -148,20 +144,6 @@ class CargaProductosProg(ctk.CTkFrame):
                                     text_color=APP_COLORS[4])
         canti_label.grid(row=9,column=5,columnspan=2,sticky='w',padx=5)
 
-<<<<<<< HEAD
-=======
-        # MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - 
-        lin_menu = ctk.CTkOptionMenu(entry_frame,
-                                     values=LINE_MANAGER.GetLineNames())
-        lin_menu.grid(row=4,column=1,columnspan=2,sticky='we',padx=5)
-
-        grup_menu = ctk.CTkOptionMenu(entry_frame,
-                                      values=LINE_MANAGER.GetGroupNames())
-        grup_menu.grid(row=5,column=1,columnspan=2,sticky='we',padx=5)
-
-        prov_menu = ctk.CTkOptionMenu(entry_frame)
-        prov_menu.grid(row=6,column=1,columnspan=2,sticky='we',padx=5)
->>>>>>> 0cc25e7d4c0cd6e94ffe2d4c9fe3e901c1db2a9c
 
         # BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - 
 
@@ -187,7 +169,7 @@ class CargaProductosProg(ctk.CTkFrame):
 
     def AgregarProducto(self):
         codigo = self.codigo_var.get()
-        linea = self.linea_var.get()
+        linea = self.lin_var.get().split(" - ")[0].strip()
         grupo = self.grupo_var.get()
         prove = self.prove_var.get()
         nombre = self.nombre_var.get()
@@ -196,11 +178,18 @@ class CargaProductosProg(ctk.CTkFrame):
 
         if LINE_MANAGER.CheckLine(linea) and LINE_MANAGER.Checkgrupo(grupo):
             producto = Product(codigo,linea,grupo,prove,nombre,precio,canti)
-<<<<<<< HEAD
             INVENTARIO.AddProduct(producto.ToDict())
 
     def SelectLinMenu(self,opcion):
+        self.codigoActualLinea = opcion.split(" - ")[0]
+        self.lin_var.set(self.codigoActualLinea)
+        
+        nuevos_grupos = LINE_MANAGER.GetGroupNames(self.codigoActualLinea)
+        self.grup_menu.configure(values=nuevos_grupos)
+    
+    def SelectGruMenu(self,opcion):
         self.grupo_var.set(opcion)
-=======
-            INVENTARIO.AddProduct(producto.ToDict())
->>>>>>> 0cc25e7d4c0cd6e94ffe2d4c9fe3e901c1db2a9c
+
+    def SelectProvMenu(self,opcion):
+        codigo = opcion.split(" - ")[0]
+        self.prove_var.set(codigo)

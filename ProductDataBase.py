@@ -54,9 +54,9 @@ class Inventory():
     def AddProduct(self,product):
 
         if product['codigo'] in self.inventario:
-            messagebox.showinfo('Producto existente',f'El producto con el codigo {product['codigo']} ya existe.')
+            messagebox.showinfo('Producto existente',f"El producto con el codigo {product['codigo']} ya existe.")
             return
          
         self.inventario[product['codigo']] = product
         self.Save_Inventory()
-        messagebox.showinfo('Producto agregado',f'El producto {product['codigo']} ha sido agregado.')
+        messagebox.showinfo('Producto agregado',f"El producto {product['codigo']} ha sido agregado.")

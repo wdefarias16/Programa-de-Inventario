@@ -1,1 +1,11 @@
-{}
+{
+    "454554": {
+        "codigo": "454554",
+        "linea": "001",
+        "grupo": "Grupo 1.2",
+        "proveedor": "001",
+        "nombre": "fghfgh",
+        "precio": 120.0,
+        "cantidad": 12
+    }
+}
