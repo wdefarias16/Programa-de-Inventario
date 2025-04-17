@@ -26,7 +26,6 @@ class LineasGrupos():
                 self.lineas_grupos["000"] = {"linea": "sin linea", "grupo":[]}
                 self.Save_Lines()
 
-
     # CARGAR EL ARCHIVO DE DATOS
     def Load_Lines(self):
         # CREAR LA CARPETA DATA SI NO EXISTE
@@ -56,7 +55,6 @@ class LineasGrupos():
     def GetLineNames(self):
         return [f"{codigo} - {info['linea']}" for codigo, info in self.lineas_grupos.items()]
 
-    
     # RETORNA LOS GRUPOS
     def GetGroupNames(self,codigo):
         grupos=[]
@@ -98,27 +96,18 @@ class LineasGrupos():
         return True
     
     # CHEQUEA SI EL GRUPO PERTENECE A ALGUNO PREVIAMENTE CARGADO
-
-
-
     def CheckGrupo(self,grupo):
-
-
         for datos in self.lineas_grupos.values():
             if grupo in datos.get("grupo", []):
                 return True
         messagebox.showerror('Error de grupo', f'El grupo {grupo} no pertenece a ningún grupo cargado.')
         return False
 
-
-
 # PROGRAMA DE CARGA DE LINEAS Y GRUPOS - PROGRAMA DE CARGA DE LINEAS Y GRUPOS - PROGRAMA DE CARGA DE LINEAS Y GRUPOS
 class LineasGruposProg(ctk.CTkFrame):
     def __init__(self,parent,line_manager:LineasGrupos):
         super().__init__(parent)
-
         self.line_manager = line_manager
-
         # TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - 
         title_frame = ctk.CTkFrame(self,corner_radius=5,fg_color=APP_COLORS[3])
         title_frame.pack(fill='x')
@@ -132,7 +121,6 @@ class LineasGruposProg(ctk.CTkFrame):
         title.pack(pady=5)
 
         # LINEAS - LINEAS - LINEAS - LINEAS - LINEAS - LINEAS - LINEAS - LINEAS - LINEAS - LINEAS - LINEAS - 
-        
         lines_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLORS[0])
         lines_frame.pack(expand=True,fill='both',side='left')
         
@@ -190,7 +178,6 @@ class LineasGruposProg(ctk.CTkFrame):
         for columns in range(5):
             group_frame.columnconfigure(columns,weight=1)
 
-
         # TITULO DE GRUPO
         label_grup = ctk.CTkLabel(group_frame,text='Grupos',font=FONTS[0])
         label_grup.grid(row=0,column=2,sticky='wn',pady=20)
@@ -241,4 +228,3 @@ class LineasGruposProg(ctk.CTkFrame):
             return
         
         self.line_manager.Add_Group(codigo,grupo)
-

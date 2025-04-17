@@ -160,7 +160,7 @@ class CargaProductosProg(ctk.CTkFrame):
         self.treeview = ttk.Treeview(tree_frame,
                                      style='Custom.Treeview',
                                 columns=('Linea','Grupo','Proveedor','Nombre','Precio','Cantidad'))
-        self.treeview.pack(expand=True,fill='both',padx=10,pady=10)
+        self.treeview.pack(side='left',expand=True,fill='both',padx=10,pady=10)
 
         # CODIGO
         self.treeview.heading('#0',text='Codigo')
@@ -190,6 +190,7 @@ class CargaProductosProg(ctk.CTkFrame):
         self.treeview.heading('Cantidad',text='Cantidad')
         self.treeview.column('Cantidad',width=100,anchor='center')
 
+        # CONFIGURACION VISUAL DEL TV
         style = ttk.Style()
         style.configure(
             'Custom.Treeview',
@@ -204,7 +205,13 @@ class CargaProductosProg(ctk.CTkFrame):
             background = APP_COLORS[1],
             foreground = APP_COLORS[1],
             font = FONTS[1])
-
+        
+        # SCROLLBAR DEL TV
+        scrollbar = ctk.CTkScrollbar(tree_frame,
+                                     orientation='vertical',
+                                     command=self.treeview.yview)
+        scrollbar.pack(side='left',fill='y')
+        self.treeview.configure(yscrollcommand=scrollbar.set)
 
 
         # LISTAR TODOS LOS PRODUCTOS CARGADOS AL INICIO DEL PROGRAMA
@@ -226,6 +233,7 @@ class CargaProductosProg(ctk.CTkFrame):
         if LINE_MANAGER.CheckLine(linea) and LINE_MANAGER.CheckGrupo(grupo):
             producto = Product(codigo,linea,grupo,prove,nombre,precio,canti)
             INVENTARIO.AddProduct(producto.ToDict())
+            # SE AGREGA EL NUEVO PRODUCTO AL TREEVIEW
             self.treeview.insert("",'end',text=codigo,values=(linea,grupo,prove,nombre,precio,canti))
 
     # AYUDA DE SELECCION DE LINEAS
@@ -245,7 +253,7 @@ class CargaProductosProg(ctk.CTkFrame):
         codigo = opcion.split(" - ")[0]
         self.prove_var.set(codigo)
 
-
+    # LISTA TOD0 EL INVENTARIO AL COMIENZO DEL PROGRAMA
     def ListInventory(self):
         self.inventario = INVENTARIO.GetInventory()
 
@@ -257,5 +265,5 @@ class CargaProductosProg(ctk.CTkFrame):
                                                                 producto['nombre'],
                                                                 producto['precio'],
                                                                 producto['cantidad']))
-            #Prueba
+
 

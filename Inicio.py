@@ -54,6 +54,3 @@ class Inicio(ctk.CTkFrame):
         hora = datetime.datetime.now()
         self.date_time.configure(text=hora.strftime("%d-%m-%Y %H:%M:%S"))
         self.after(1000,self.Date_Time)
-
-
-

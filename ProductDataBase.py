@@ -5,7 +5,6 @@ from tkinter import messagebox
 # CLASE PRODUCTOS
 class Product():
     def __init__(self,codigo,linea,grupo,proveedor,nombre,precio,cantidad):
-
         self.codigo = codigo
         self.linea = linea
         self.grupo = grupo
@@ -14,6 +13,7 @@ class Product():
         self.precio = precio
         self.cantidad = cantidad
     
+    # REGRESA EL DICCIONARIO DE UN PRODUCTO
     def ToDict(self):
         return{
             'codigo':self.codigo,
@@ -28,7 +28,6 @@ class Product():
 # CLASE INVENTARIO
 class Inventory():
     def __init__(self,filename = 'Data/Inventario.json'):
-
         self.filename = filename
         self.inventario = {}
         self.Load_Inventory()
@@ -52,11 +51,9 @@ class Inventory():
             json.dump(self.inventario,file,indent=4)
 
     def AddProduct(self,product):
-
         if product['codigo'] in self.inventario:
             messagebox.showinfo('Producto existente',f"El producto con el codigo {product['codigo']} ya existe.")
             return
-         
         self.inventario[product['codigo']] = product
         self.Save_Inventory()
         messagebox.showinfo('Producto agregado',f"El producto {product['codigo']} ha sido agregado.")

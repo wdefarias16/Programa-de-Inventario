@@ -21,6 +21,14 @@ class MainFrame(ctk.CTkFrame):
         self.ButtonsFrame()
         self.current_frame = self.InicioFrame()
 
+        self.winfo_toplevel().bind("<Control-Q>", self.ctrl_q_callback)
+        self.winfo_toplevel().bind("<Control-q>", self.ctrl_q_callback)
+    
+    def ctrl_q_callback(self, event):
+        # Verificamos que el dashboard esté activo consultando el atributo en la App
+        if self.master.dashboard_activo:
+            self.lockscreen_callback()
+
     # MENU DE BOTONES       
     def ButtonsFrame(self):
         

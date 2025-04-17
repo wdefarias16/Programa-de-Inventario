@@ -8,9 +8,9 @@ from style import FONTS, APP_COLORS, APPEARANCE_MODE
 class App(ctk.CTk):
     def __init__(self): 
         super().__init__()
-
         self.title('Sistema')
         self.geometry('1000x500')
+        self.dashboard_activo = False
     
         # FRAME DE LOGIN
         self.login_frame = LoginFrame(self, success_callback=self.LoginSuccess)
@@ -23,9 +23,13 @@ class App(ctk.CTk):
         self.login_frame.destroy()
         self.dashboard=MainFrame(self,lockscreen_callback = self.LockWindow)
         self.dashboard.pack(expand=True, fill='both')
+        self.dashboard_activo = True
 
     def LockWindow(self):
+        if not self.dashboard_activo:
+            return
         self.dashboard.destroy()
+        self.dashboard_activo = False
         self.login_frame = LoginFrame(self, success_callback=self.LoginSuccess)
         self.login_frame.pack(expand=True,fill='both')
 

@@ -1,40 +1,28 @@
 import tkinter as tk
 from tkinter import ttk
 
-def on_select(event):
-    selected_items = tree.selection()
-    for item in selected_items:
-        item_data = tree.item(item)
-        print("Seleccionado:", item_data)
-
 root = tk.Tk()
-root.title("Ejemplo de Treeview")
 
-# Configurar el Treeview
-tree = ttk.Treeview(root, columns=("col1", "col2"))
-tree.heading("#0", text="Nombre")
-tree.column("#0", width=150, anchor="w")
-tree.heading("col1", text="Descripción")
-tree.column("col1", width=100, anchor="center")
-tree.heading("col2", text="Valor")
-tree.column("col2", width=80, anchor="center")
-tree.bind("<<TreeviewSelect>>", on_select)
+# Crear el Treeview
+tree = ttk.Treeview(root, columns=("Col1", "Col2"))
+tree.heading("#0", text="Índice")
+tree.heading("Col1", text="Columna 1")
+tree.heading("Col2", text="Columna 2")
+tree.grid(row=0, column=0, sticky="nsew")  # Ubicar el Treeview
 
-# Insertar datos a nivel raíz
-folder1 = tree.insert("", "end", text="Carpeta 1", values=("Info Carpeta", "001"))
-folder2 = tree.insert("", "end", text="Carpeta 2", values=("Otro Info", "002"))
+# Añadir algunos datos de ejemplo
+for i in range(20):
+    tree.insert("", "end", text=f"Item {i+1}", values=(f"Dato1-{i+1}", f"Dato2-{i+1}"))
 
-# Insertar datos con jerarquía (ítems hijos)
-tree.insert(folder1, "end", text="Archivo 1A.txt", values=("Detalle A", "101"))
-tree.insert(folder1, "end", text="Archivo 1B.txt", values=("Detalle B", "102"))
-tree.insert(folder2, "end", text="Documento 2A.pdf", values=("Detalle C", "201"))
+# Crear el Scrollbar directamente vinculado al Treeview
+scrollbar = ttk.Scrollbar(root, orient="vertical", command=tree.yview)
+scrollbar.grid(row=0, column=1, sticky="ns")  # Ubicar el Scrollbar al lado del Treeview
 
-# Agregar scrollbar vertical
-vsb = ttk.Scrollbar(root, orient="vertical", command=tree.yview)
-tree.configure(yscrollcommand=vsb.set)
+# Asociar el Treeview con el Scrollbar
+tree.configure(yscrollcommand=scrollbar.set)
 
-# Posicionar widgets
-tree.pack(side="left", expand=True, fill="both")
-vsb.pack(side="right", fill="y")
+# Ajustar el diseño de la ventana principal
+root.grid_rowconfigure(0, weight=1)
+root.grid_columnconfigure(0, weight=1)
 
 root.mainloop()

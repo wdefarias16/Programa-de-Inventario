@@ -24,16 +24,17 @@ def SaveUsersData():
 # CLASE USUARIOS
 class Users():
     def __init__(self,user,password):
-
         self.user = user
         self.password = self.HashPassword(password)
 
+    # ENCRIPTAR CONTRASENA
     def HashPassword(self, plain_text_password):
         password_bytes = plain_text_password.encode('utf-8')
         salt = bcrypt.gensalt()
         hashed_password = bcrypt.hashpw(password_bytes,salt)
         return hashed_password.decode('utf-8')
     
+    # CHEQUEAR CONTRASENA
     def CheckPassword(self, plain_text_password):
         return bcrypt.checkpw(
             plain_text_password.encode('utf-8'),
@@ -49,9 +50,11 @@ class LoginFrame(ctk.CTkFrame):
         
     # WIDGETS
     def CreateWidgets(self):
+        # MENSAJE BIENVENIDO
         label_wc = ctk.CTkLabel(self,text='Bienvenido',font=FONTS[0],text_color=APP_COLORS[4])
         label_wc.place(anchor='center',relx=0.5,rely=0.3)
         
+        # ENTRADA USUARIO
         self.user_var = tk.StringVar()
         login_entry = ctk.CTkEntry(self,placeholder_text='Usuario',
                                    width=280,
@@ -59,7 +62,9 @@ class LoginFrame(ctk.CTkFrame):
                                    corner_radius=5,
                                    border_color='#fff')
         login_entry.place(anchor='center',relx=0.5,rely=0.4)
+        
 
+        # ENTRADA CONTRASENA
         self.password_var = tk.StringVar()
         password_entry = ctk.CTkEntry(self,placeholder_text='Contraseña',
                                       width=280,
@@ -68,16 +73,25 @@ class LoginFrame(ctk.CTkFrame):
                                       show='•',
                                       border_color='#fff')
         password_entry.place(anchor='center',relx=0.5,rely=0.48)
+        password_entry.bind("<Return>",lambda event:self.Access())
 
+        # BOTON ENTRAR
         enter_button = ctk.CTkButton(self,text='Entrar',command=self.Access)
         enter_button.place(anchor='center',relx=0.425,rely=0.6)
 
+        # BOTON AGREGAR USUARIO
         add_button = ctk.CTkButton(self,text='Agregar usuario',command=self.AddUser)
         add_button.place(anchor='center',relx=0.575,rely=0.6)
         
+        
+        # MENSAJE INFERIOR
         self.label_var = tk.StringVar(value='Ingresa tus credenciales')
         label_accses = ctk.CTkLabel(self,textvariable=self.label_var,font=FONTS[1],text_color=APP_COLORS[4])
         label_accses.place(anchor='center',relx=0.5,rely=0.7)
+
+        # INICIAR EL PROGRAMA CON LA ENTRADA DE USUARIO ACTIVA
+        login_entry.after(100, lambda: login_entry.focus_set())
+
         
     # ACCESO DEL LOGIN
     def Access(self):
