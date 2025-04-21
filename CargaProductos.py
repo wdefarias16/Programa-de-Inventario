@@ -154,13 +154,33 @@ class CargaProductosProg(ctk.CTkFrame):
         tree_frame = ctk.CTkFrame(self,
                                    corner_radius=5,
                                    fg_color=APP_COLORS[5])
-        tree_frame.pack(expand=True,fill='both',side='left',pady=5)
+        tree_frame.pack(expand=True,fill='both',side='right',pady=5) 
+        # GRID SETUP
 
+        tree_frame.rowconfigure(0,weight=1)
+        tree_frame.rowconfigure((1,2),weight=4)
+        tree_frame.columnconfigure((0,1,2),weight=4)
+        tree_frame.columnconfigure(3,weight=1)     
+   
+        # BARRA DE BUSQUEDA
+        self.search_bar_var = tk.StringVar()
+        search_bar = ctk.CTkEntry(tree_frame,
+                                  width=200,
+                                  textvariable=self.search_bar_var)
+        search_bar.grid(row=0,column=2,sticky='we')
+        search_bar.bind("<Return>",lambda event:self.BuscarProducto())
+
+        # BOTON RESTABLECER
+        refresh_btn = ctk.CTkButton(tree_frame,
+                                    text='Refresh',
+                                    command=self.ListInventory)
+        refresh_btn.grid(row=0,column=1,sticky='we')
+        
         # TREEVIEW
         self.treeview = ttk.Treeview(tree_frame,
                                      style='Custom.Treeview',
                                 columns=('Linea','Grupo','Proveedor','Nombre','Precio','Cantidad'))
-        self.treeview.pack(side='left',expand=True,fill='both',padx=10,pady=10)
+        self.treeview.grid(row=1,column=0,sticky='nswe',padx=10,pady=10,rowspan=2,columnspan=3)
 
         # CODIGO
         self.treeview.heading('#0',text='Codigo')
@@ -210,7 +230,7 @@ class CargaProductosProg(ctk.CTkFrame):
         scrollbar = ctk.CTkScrollbar(tree_frame,
                                      orientation='vertical',
                                      command=self.treeview.yview)
-        scrollbar.pack(side='left',fill='y')
+        scrollbar.grid(row=1,column=3,sticky='ns',padx=5,pady=5,rowspan=2)
         self.treeview.configure(yscrollcommand=scrollbar.set)
 
 
@@ -235,6 +255,7 @@ class CargaProductosProg(ctk.CTkFrame):
             INVENTARIO.AddProduct(producto.ToDict())
             # SE AGREGA EL NUEVO PRODUCTO AL TREEVIEW
             self.treeview.insert("",'end',text=codigo,values=(linea,grupo,prove,nombre,precio,canti))
+            self.inventario = INVENTARIO.GetInventory()
 
     # AYUDA DE SELECCION DE LINEAS
     def SelectLinMenu(self,opcion):
@@ -265,5 +286,20 @@ class CargaProductosProg(ctk.CTkFrame):
                                                                 producto['nombre'],
                                                                 producto['precio'],
                                                                 producto['cantidad']))
-
+            
+    def BuscarProducto(self):
+        codigo = self.search_bar_var.get()
+        if codigo not in self.inventario:
+            messagebox.showerror('Error de busqueda',f'El producto con codigo {codigo} no existe')
+        else:
+            for item in self.treeview.get_children():
+                self.treeview.delete(item)
+            producto = self.inventario[codigo]
+            self.treeview.insert("",'end',text=producto['codigo'],values=(
+                                                                producto['linea'],
+                                                                producto['grupo'],
+                                                                producto['proveedor'],
+                                                                producto['nombre'],
+                                                                producto['precio'],
+                                                                producto['cantidad']))
 
