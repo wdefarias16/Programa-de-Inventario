@@ -58,6 +58,20 @@ class Inventory():
         self.Save_Inventory()
         messagebox.showinfo('Producto agregado',f"El producto {product['codigo']} ha sido agregado.")
 
+    def EditProduct(self,product):
+        if product['codigo'] in self.inventario:
+            self.inventario[product['codigo']] = product
+            self.Save_Inventory()
+            messagebox.showinfo('Producto modificado',f"El producto {product['codigo']} ha sido modificado.")
+
+    def DelProduct(self,codigo):
+        if codigo in self.inventario:
+            del self.inventario[codigo]
+            self.Save_Inventory()
+            messagebox.showinfo('Producto Eliminado',"El producto ha sido Eliminado.")
+
+
+
 # OBTENER EL INVENTARIO
     def GetInventory(self):
         return self.inventario

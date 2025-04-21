@@ -1,20 +1,11 @@
 {
-    "0001": {
-        "codigo": "0001",
-        "linea": "001",
-        "grupo": "Grupo 1.1",
-        "proveedor": "P01",
-        "nombre": "Producto 1",
-        "precio": 100.0,
-        "cantidad": 120
-    },
     "0002": {
         "codigo": "0002",
         "linea": "001",
         "grupo": "Grupo 1.1",
         "proveedor": "P01",
         "nombre": "Producto 2",
-        "precio": 245.0,
+        "precio": 320.0,
         "cantidad": 1000
     },
     "0003": {
@@ -80,85 +71,13 @@
         "precio": 2.0,
         "cantidad": 100
     },
-    "1034": {
-        "codigo": "1034",
+    "0001": {
+        "codigo": "0001",
         "linea": "001",
         "grupo": "Grupo 1.1",
         "proveedor": "P01",
-        "nombre": "BOMBILLO",
-        "precio": 2.0,
-        "cantidad": 5
-    },
-    "454645": {
-        "codigo": "454645",
-        "linea": "002",
-        "grupo": "Grupo 2.1",
-        "proveedor": "1",
-        "nombre": "a",
-        "precio": 10.0,
-        "cantidad": 100
-    },
-    "4546kl": {
-        "codigo": "4546kl",
-        "linea": "002",
-        "grupo": "Grupo 2.1",
-        "proveedor": "1",
-        "nombre": "a",
-        "precio": 10.0,
-        "cantidad": 100
-    },
-    "gh": {
-        "codigo": "gh",
-        "linea": "002",
-        "grupo": "Grupo 2.1",
-        "proveedor": "1",
-        "nombre": "a",
-        "precio": 10.0,
-        "cantidad": 100
-    },
-    "df": {
-        "codigo": "df",
-        "linea": "002",
-        "grupo": "Grupo 2.1",
-        "proveedor": "1",
-        "nombre": "a",
-        "precio": 10.0,
-        "cantidad": 100
-    },
-    "asd": {
-        "codigo": "asd",
-        "linea": "002",
-        "grupo": "Grupo 2.1",
-        "proveedor": "1",
-        "nombre": "a",
-        "precio": 10.0,
-        "cantidad": 100
-    },
-    "asdd": {
-        "codigo": "asdd",
-        "linea": "002",
-        "grupo": "Grupo 2.1",
-        "proveedor": "1",
-        "nombre": "a",
-        "precio": 10.0,
-        "cantidad": 100
-    },
-    "asdsad": {
-        "codigo": "asdsad",
-        "linea": "002",
-        "grupo": "Grupo 2.1",
-        "proveedor": "1",
-        "nombre": "a",
-        "precio": 10.0,
-        "cantidad": 100
-    },
-    "69": {
-        "codigo": "69",
-        "linea": "001",
-        "grupo": "Grupo 1.2",
-        "proveedor": "1",
-        "nombre": "Sexo",
-        "precio": 69.0,
-        "cantidad": 69
+        "nombre": "Producto 1",
+        "precio": 100.0,
+        "cantidad": 120
     }
 }
