@@ -151,5 +151,14 @@
         "nombre": "a",
         "precio": 10.0,
         "cantidad": 100
+    },
+    "69": {
+        "codigo": "69",
+        "linea": "001",
+        "grupo": "Grupo 1.2",
+        "proveedor": "1",
+        "nombre": "Sexo",
+        "precio": 69.0,
+        "cantidad": 69
     }
 }
