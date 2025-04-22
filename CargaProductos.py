@@ -204,6 +204,8 @@ class CargaProductosProg(ctk.CTkFrame):
                                      style='Custom.Treeview',
                                 columns=('Linea','Grupo','Proveedor','Nombre','Precio','Cantidad'))
         self.treeview.grid(row=1,column=0,sticky='nswe',padx=10,pady=10,rowspan=2,columnspan=3)
+        # EVENTO DE SELECCIONAR PRODUCTO
+        self.treeview.bind("<<TreeviewSelect>>",self.ClickTreeview)
 
         # CODIGO
         self.treeview.heading('#0',text='Codigo')
@@ -277,6 +279,7 @@ class CargaProductosProg(ctk.CTkFrame):
             # SE AGREGA EL NUEVO PRODUCTO AL TREEVIEW
             self.treeview.insert("",'end',text=codigo,values=(linea,grupo,prove,nombre,precio,canti))
             self.inventario = INVENTARIO.GetInventory()
+            self.Restablecer()
 
     # AYUDA DE SELECCION DE LINEAS
     def SelectLinMenu(self,opcion):
@@ -385,3 +388,13 @@ class CargaProductosProg(ctk.CTkFrame):
             self.nombre_var.set('')
             self.precio_var.set(0.0)
             self.canti_var.set(0)
+
+    def ClickTreeview(self,event):
+        item_id = self.treeview.selection()
+        info = self.treeview.item(item_id)
+        self.search_bar_var.set(info['text'])
+        if info['text'] in self.inventario:
+            self.BuscarProducto()
+
+
+        

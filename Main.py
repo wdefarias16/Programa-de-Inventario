@@ -9,7 +9,7 @@ class App(ctk.CTk):
     def __init__(self): 
         super().__init__()
         self.title('Sistema')
-        self.geometry('1000x500')
+        self.geometry('1000x500')   
         self.dashboard_activo = False
     
         # FRAME DE LOGIN

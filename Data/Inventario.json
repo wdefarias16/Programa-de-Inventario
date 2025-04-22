@@ -97,5 +97,14 @@
         "nombre": "Producto 11",
         "precio": 52.0,
         "cantidad": 6
+    },
+    "0012": {
+        "codigo": "0012",
+        "linea": "003",
+        "grupo": "Grupo 3.3",
+        "proveedor": "P02",
+        "nombre": "Producto 12",
+        "precio": 23.56,
+        "cantidad": 120
     }
 }
