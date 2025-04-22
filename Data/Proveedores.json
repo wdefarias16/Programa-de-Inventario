@@ -1,12 +1,6 @@
 {
-    "P01": {
-        "proveedor": "Proveedor 1"
-    },
     "P02": {
         "proveedor": "Proveedor 2"
-    },
-    "1": {
-        "proveedor": "WILLIAM"
     },
     "P03": {
         "proveedor": "Proveedor 3"
@@ -34,5 +28,8 @@
     },
     "P011": {
         "proveedor": "Proveedor 11"
+    },
+    "P012": {
+        "proveedor": "Proveedor 12"
     }
 }

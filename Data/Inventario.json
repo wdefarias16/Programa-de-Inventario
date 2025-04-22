@@ -5,7 +5,7 @@
         "grupo": "Grupo 1.1",
         "proveedor": "P01",
         "nombre": "Producto 2",
-        "precio": 450.0,
+        "precio": 45.0,
         "cantidad": 1000
     },
     "0003": {
@@ -23,7 +23,7 @@
         "grupo": "Grupo 2.1",
         "proveedor": "P02",
         "nombre": "Producto 4",
-        "precio": 600.0,
+        "precio": 60.0,
         "cantidad": 24
     },
     "0005": {
@@ -32,7 +32,7 @@
         "grupo": "Grupo 3.3",
         "proveedor": "P02",
         "nombre": "Producto 5",
-        "precio": 159.0,
+        "precio": 19.99,
         "cantidad": 343
     },
     "0006": {
@@ -41,7 +41,7 @@
         "grupo": "Grupo 2.1",
         "proveedor": "P02",
         "nombre": "Producto 6",
-        "precio": 450.0,
+        "precio": 49.99,
         "cantidad": 120
     },
     "0007": {
@@ -55,8 +55,8 @@
     },
     "0008": {
         "codigo": "0008",
-        "linea": "002",
-        "grupo": "Grupo 2.1",
+        "linea": "005",
+        "grupo": "Grupo 5.1",
         "proveedor": "P02",
         "nombre": "Producto 8",
         "precio": 100.0,
@@ -75,7 +75,7 @@
         "codigo": "0001",
         "linea": "002",
         "grupo": "Grupo 2.1",
-        "proveedor": "1",
+        "proveedor": "P011",
         "nombre": "Producto 1",
         "precio": 100.0,
         "cantidad": 120
@@ -86,7 +86,7 @@
         "grupo": "Grupo 2.1",
         "proveedor": "P02",
         "nombre": "Producto 10",
-        "precio": 150.0,
+        "precio": 15.0,
         "cantidad": 153
     },
     "0011": {
@@ -95,16 +95,7 @@
         "grupo": "Grupo 1.1",
         "proveedor": "P02",
         "nombre": "Producto 11",
-        "precio": 52.0,
+        "precio": 63.5,
         "cantidad": 6
-    },
-    "0012": {
-        "codigo": "0012",
-        "linea": "003",
-        "grupo": "Grupo 3.3",
-        "proveedor": "P02",
-        "nombre": "Producto 12",
-        "precio": 23.56,
-        "cantidad": 120
     }
 }

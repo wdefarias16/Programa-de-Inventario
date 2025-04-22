@@ -35,3 +35,14 @@ class Proveedores():
         self.Save_Prov()
         messagebox.showinfo('Info',f'El proveedor {codigo} se ha cargado correctamente')
         return True
+# MODIFICAR PROVEEDOR
+    def Mod_Prov(self,codigo,nombre):
+        self.proveedores[codigo]={'proveedor': nombre}
+        self.Save_Prov()
+        messagebox.showinfo('Info',f'El proveedor {codigo} ha sido modificado.')
+# ELIMINAR PROVEEDOR
+    def Del_Prov(self,codigo):
+        if codigo in self.proveedores:
+            del self.proveedores[codigo]
+        self.Save_Prov()
+        messagebox.showinfo('Info',f'El proveedor {codigo} ha sido eliminado.')
