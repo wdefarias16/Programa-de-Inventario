@@ -91,22 +91,17 @@ class LineasGrupos():
 
     # CHEQUEA SI EL CODIGO DE LINEA PERTENECE A LA ALGUNA PREVIAMENTE CARGADA
     def CheckLine(self,codigo):
-
         if codigo not in self.lineas_grupos:
             messagebox.showerror('Error de Línea',f'El codigo {codigo} no pertenece a ninguna linea cargada.')
             return False
         return True
     
     # CHEQUEA SI EL GRUPO PERTENECE A ALGUNO PREVIAMENTE CARGADO
-    def CheckGrupo(self,grupo):
-        
-        for datos in self.lineas_grupos.values():
-            if grupo in datos.get("grupo", []):
-                return True
-        messagebox.showerror('Error de grupo', f'El grupo {grupo} no pertenece a ningún grupo cargado.')
+    def CheckGrupo(self,codigo,grupo):    
+        if grupo in self.lineas_grupos[codigo]['grupo']:
+            return True
+        messagebox.showerror('Error de carga', f'El grupo {grupo} no pertenece a la línea {codigo}.')
         return False
-
-
 
 # PROGRAMA DE CARGA DE LINEAS Y GRUPOS - PROGRAMA DE CARGA DE LINEAS Y GRUPOS - PROGRAMA DE CARGA DE LINEAS Y GRUPOS
 class LineasGruposProg(ctk.CTkFrame):
@@ -128,7 +123,6 @@ class LineasGruposProg(ctk.CTkFrame):
         title.pack(pady=5)
 
         # LINEAS - LINEAS - LINEAS - LINEAS - LINEAS - LINEAS - LINEAS - LINEAS - LINEAS - LINEAS - LINEAS - 
-        
         lines_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLORS[0])
         lines_frame.pack(expand=True,fill='both',side='left')
         
@@ -237,4 +231,3 @@ class LineasGruposProg(ctk.CTkFrame):
             return
         
         self.line_manager.Add_Group(codigo,grupo)
-

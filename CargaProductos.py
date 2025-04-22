@@ -260,8 +260,6 @@ class CargaProductosProg(ctk.CTkFrame):
         # LISTAR TODOS LOS PRODUCTOS CARGADOS AL INICIO DEL PROGRAMA
         self.ListInventory()
 
-
-
     # FUNCION BOTONES - FUNCION BOTONES - FUNCION BOTONES - FUNCION BOTONES - FUNCION BOTONES
     # FUNCION BOTON AGREGAR PRODUCTO
     def AgregarProducto(self):
@@ -273,7 +271,7 @@ class CargaProductosProg(ctk.CTkFrame):
         precio = self.precio_var.get()
         canti = self.canti_var.get()
 
-        if LINE_MANAGER.CheckLine(linea) and LINE_MANAGER.CheckGrupo(grupo):
+        if LINE_MANAGER.CheckLine(linea) and LINE_MANAGER.CheckGrupo(linea,grupo):
             producto = Product(codigo,linea,grupo,prove,nombre,precio,canti)
             INVENTARIO.AddProduct(producto.ToDict())
             # SE AGREGA EL NUEVO PRODUCTO AL TREEVIEW
@@ -353,7 +351,7 @@ class CargaProductosProg(ctk.CTkFrame):
         nombre = self.nombre_var.get()
         precio = self.precio_var.get()
         canti = self.canti_var.get()
-        if LINE_MANAGER.CheckLine(linea) and LINE_MANAGER.CheckGrupo(grupo):
+        if LINE_MANAGER.CheckLine(linea) and LINE_MANAGER.CheckGrupo(linea,grupo):
             producto = Product(self.mod_codi,linea,grupo,prove,nombre,precio,canti)
             INVENTARIO.EditProduct(producto.ToDict())
             self.ListInventory()

@@ -5,7 +5,7 @@
         "grupo": "Grupo 1.1",
         "proveedor": "P01",
         "nombre": "Producto 2",
-        "precio": 320.0,
+        "precio": 450.0,
         "cantidad": 1000
     },
     "0003": {
@@ -67,17 +67,35 @@
         "linea": "002",
         "grupo": "Grupo 2.1",
         "proveedor": "P02",
-        "nombre": "ARROZ ",
+        "nombre": "Producto 9",
         "precio": 2.0,
         "cantidad": 100
     },
     "0001": {
         "codigo": "0001",
-        "linea": "001",
-        "grupo": "Grupo 1.1",
-        "proveedor": "P01",
-        "nombre": "Producto 1",
+        "linea": "002",
+        "grupo": "Grupo 2.1",
+        "proveedor": "1",
+        "nombre": "Producto 3562",
         "precio": 100.0,
         "cantidad": 120
+    },
+    "0010": {
+        "codigo": "0010",
+        "linea": "002",
+        "grupo": "Grupo 2.1",
+        "proveedor": "P02",
+        "nombre": "Producto 10",
+        "precio": 150.0,
+        "cantidad": 153
+    },
+    "0011": {
+        "codigo": "0011",
+        "linea": "001",
+        "grupo": "Grupo 1.1",
+        "proveedor": "P02",
+        "nombre": "Producto 11",
+        "precio": 52.0,
+        "cantidad": 6
     }
 }
