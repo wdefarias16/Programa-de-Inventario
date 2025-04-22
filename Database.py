@@ -1,6 +1,6 @@
-from ProductDataBase import Inventory
-from CargaLineasGrupos import LineasGrupos
-from CargaProveedores import Proveedores
+from InventarioProductos import Inventory
+from LineasGrupos import LineasGrupos
+from Proveedores import Proveedores
 
 INVENTARIO = Inventory()
 LINE_MANAGER = LineasGrupos()

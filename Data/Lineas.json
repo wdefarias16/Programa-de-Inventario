@@ -25,5 +25,31 @@
             "Grupo 3.2",
             "Grupo 3.3"
         ]
+    },
+    "004": {
+        "linea": "Linea 4",
+        "grupo": [
+            "Grupo 4.1"
+        ]
+    },
+    "005": {
+        "linea": "Linea 5",
+        "grupo": [
+            "Grupo 5.1"
+        ]
+    },
+    "006": {
+        "linea": "Linea 6",
+        "grupo": []
+    },
+    "007": {
+        "linea": "Linea 7",
+        "grupo": []
+    },
+    "008": {
+        "linea": "Linea 8",
+        "grupo": [
+            "G 8.1"
+        ]
     }
 }

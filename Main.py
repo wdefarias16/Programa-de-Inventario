@@ -1,5 +1,4 @@
 import customtkinter as ctk
-from ProductDataBase import*
 from DashBoard import*
 from Login import*
 from style import FONTS, APP_COLORS, APPEARANCE_MODE

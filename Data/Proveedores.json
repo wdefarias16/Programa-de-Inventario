@@ -7,5 +7,32 @@
     },
     "1": {
         "proveedor": "WILLIAM"
+    },
+    "P03": {
+        "proveedor": "Proveedor 3"
+    },
+    "P04": {
+        "proveedor": "Proveedor 4"
+    },
+    "P05": {
+        "proveedor": "Proveedor 5"
+    },
+    "P06": {
+        "proveedor": "Proveedor 6"
+    },
+    "P07": {
+        "proveedor": "Proveedor 7"
+    },
+    "P08": {
+        "proveedor": "Proveedor 8"
+    },
+    "P09": {
+        "proveedor": "Proveedor 9"
+    },
+    "P010": {
+        "proveedor": "Proveedor 10"
+    },
+    "P011": {
+        "proveedor": "Proveedor 11"
     }
 }

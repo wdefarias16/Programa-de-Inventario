@@ -68,7 +68,7 @@
         "grupo": "Grupo 2.1",
         "proveedor": "P02",
         "nombre": "Producto 9",
-        "precio": 2.0,
+        "precio": 2.5,
         "cantidad": 100
     },
     "0001": {
@@ -76,7 +76,7 @@
         "linea": "002",
         "grupo": "Grupo 2.1",
         "proveedor": "1",
-        "nombre": "Producto 3562",
+        "nombre": "Producto 1",
         "precio": 100.0,
         "cantidad": 120
     },
