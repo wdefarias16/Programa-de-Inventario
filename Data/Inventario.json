@@ -59,7 +59,7 @@
         "grupo": "Grupo 5.1",
         "proveedor": "P02",
         "nombre": "Producto 8",
-        "precio": 100.0,
+        "precio": 10.0,
         "cantidad": 20
     },
     "0009": {
@@ -97,5 +97,14 @@
         "nombre": "Producto 11",
         "precio": 63.5,
         "cantidad": 6
+    },
+    "00015": {
+        "codigo": "00015",
+        "linea": "003",
+        "grupo": "Grupo 3.2",
+        "proveedor": "P05",
+        "nombre": "PRoducto",
+        "precio": 10.0,
+        "cantidad": 5
     }
 }

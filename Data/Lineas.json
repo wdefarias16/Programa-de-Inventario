@@ -3,15 +3,6 @@
         "linea": "sin linea",
         "grupo": []
     },
-    "001": {
-        "linea": "Linea 1",
-        "grupo": [
-            "Grupo 1.1",
-            "Grupo 1.2",
-            "Grupo 1.3",
-            "Grupo 1.4"
-        ]
-    },
     "002": {
         "linea": "Linea 2",
         "grupo": [
@@ -43,5 +34,15 @@
         "grupo": [
             "Grupo 6.1"
         ]
+    },
+    "007": {
+        "linea": "bombillo",
+        "grupo": [
+            "b1"
+        ]
+    },
+    "20": {
+        "linea": "linea20",
+        "grupo": []
     }
 }
