@@ -142,10 +142,11 @@ class ProveedoresProg(ctk.CTkFrame):
         nuevos_provs = PROV_MANAGER.GetProvNames()
         self.lin_menu.configure(values=nuevos_provs)
         self.Restablecer()
-# COMANDO ILIMINAR PROVEEDOR
+# COMANDO ELIMINAR PROVEEDOR
     def Eliminar(self):
         codigo = self.CodigoEntradaVar.get()
-        answer = messagebox.askyesno('Atencion','¿Desea eliminar el proveedor?')
+        answer = messagebox.askyesno('¡Atención!','¿Está seguro que desea eliminar '
+                                     f'el proveedor {codigo}?')
         if answer:
             PROV_MANAGER.Del_Prov(codigo)
             nuevos_provs = PROV_MANAGER.GetProvNames()

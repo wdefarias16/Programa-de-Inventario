@@ -41,15 +41,5 @@
     "006": {
         "linea": "Linea 6",
         "grupo": []
-    },
-    "007": {
-        "linea": "Linea 7",
-        "grupo": []
-    },
-    "008": {
-        "linea": "Linea 8",
-        "grupo": [
-            "G 8.1"
-        ]
     }
 }
