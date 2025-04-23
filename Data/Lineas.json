@@ -40,6 +40,8 @@
     },
     "006": {
         "linea": "Linea 6",
-        "grupo": []
+        "grupo": [
+            "Grupo 6.1"
+        ]
     }
 }
