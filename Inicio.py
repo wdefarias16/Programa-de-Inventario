@@ -8,9 +8,6 @@ from style import FONTS, APP_COLORS, APPEARANCE_MODE
 class Inicio(ctk.CTkFrame):
     def __init__(self,parent):
         super().__init__(parent)
-        self.configure(bg_color=APP_COLORS[0])
-
-        self.lightmode = True
 
         title_frame = ctk.CTkFrame(self,corner_radius=0,bg_color=APP_COLORS[0])
         title_frame.pack(expand=True,fill='both')

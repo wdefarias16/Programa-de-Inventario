@@ -7,6 +7,7 @@ from CargaLineasGrupos import*
 from CargaProveedores import*
 from Database import*
 from Inicio import*
+from InventarioMenu import*
 import datetime
 from threading import Timer
 from style import FONTS, APP_COLORS, APPEARANCE_MODE
@@ -18,7 +19,6 @@ class MainFrame(ctk.CTkFrame):
         # ASIGNAR EL CALLBACK PARA LA PANTALLA DE BLOQUEO
         self.lockscreen_callback = lockscreen_callback
         # CREA EL MENU DE BOTONES Y MUESTRA DE PRIMERA INSTANCIA EL MENU DE INVENTARIO
-        self.ButtonsFrame()
         self.current_frame = self.InicioFrame()
 
         self.winfo_toplevel().bind("<Control-Q>", self.ctrl_q_callback)
@@ -30,10 +30,19 @@ class MainFrame(ctk.CTkFrame):
             self.lockscreen_callback()
 
     # MENU DE BOTONES       
-    def ButtonsFrame(self):
+    ''' def ButtonsFrame(self):'''
         
+
+# FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - 
+# INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - 
+    def InicioFrame(self):
+        ################################
         # CREA EL FRAME DONDE ESTARAN LOS BOTONES DEL DASHBOARD
-        self.buttons_frame = ctk.CTkFrame(self,corner_radius=0,width=50,fg_color=APP_COLORS[2])
+
+        self.main_frame = ctk.CTkFrame(self)
+        self.main_frame.pack(expand=True,fill='both')
+
+        self.buttons_frame = ctk.CTkFrame(self.main_frame,corner_radius=0,width=50,fg_color=APP_COLORS[2])
         self.buttons_frame.pack(side='left',fill='y')
         
         # BOTON INICIO - BOTON INICIO - BOTON INICIO - BOTON INICIO - BOTON INICIO - BOTON INICIO - BOTON INICIO - 
@@ -126,54 +135,55 @@ class MainFrame(ctk.CTkFrame):
                                      command=lambda: self.lockscreen_callback()
                                      )
         lockscreen_btn.pack(side='bottom',pady=5)
-# FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - 
-# INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - 
-    def InicioFrame(self):
         
-        self.head_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLORS[0])
-        self.head_frame.pack(expand=True,fill='both')
+        ##################################
+        title_frame = ctk.CTkFrame(self.main_frame,corner_radius=0,bg_color=APP_COLORS[0])
+        title_frame.pack(expand=True,fill='both')
+        title=ctk.CTkLabel(title_frame,
+                           text='PROGRAMA DE GESTION Y VENTAS',
+                           bg_color='transparent',
+                           font=FONTS[0])
+        title.pack(fill='x')
 
+        buss_name_frame = ctk.CTkFrame(self.main_frame,corner_radius=0,bg_color=APP_COLORS[0])
+        buss_name_frame.pack(expand=True,fill='both')
+        buss_name=ctk.CTkLabel(buss_name_frame,
+                               text='NOMBRE DE LA EMPRESA',
+                               bg_color='transparent',
+                               font=FONTS[0])
+        buss_name.pack(fill='x')
 
-        inicio_frame = Inicio(self.head_frame)
-        inicio_frame.pack(expand=True, fill='both')
+        # WIDGETS - WIDGETS - WIDGETS - WIDGETS - WIDGETS - WIDGETS - WIDGETS - WIDGETS - WIDGETS - 
+        widget_frame = ctk.CTkFrame(self.main_frame,corner_radius=0,bg_color=APP_COLORS[0])
+        widget_frame.pack(fill='x')
 
-        return self.head_frame
+        # BOTON SALIR
+        exit_btn = ctk.CTkButton(widget_frame,
+                                 text='Salir',                                 
+                                 fg_color=APP_COLORS[2],
+                                 hover_color=APP_COLORS[3])
+        exit_btn.pack(side='left',pady=5,padx=5)
+
+        # RELOJ
+        self.date_time = ctk.CTkLabel(widget_frame,
+                                      text='',
+                                      font=FONTS[1],
+                                      height=10,
+                                      )
+        self.date_time.pack(side='right',pady=5,padx=10)
+        self.Date_Time()
+        return self.main_frame
+
 
 # CREAR EL FRAME DE INVENTARIO - CREAR EL FRAME DE INVENTARIO - CREAR EL FRAME DE INVENTARIO - CREAR EL FRAME DE INVENTARIO
+# listados # consultas # ajustes #entrasdas de inventario
     def InventarioFrame(self):
-        # listados # consultas # ajustes #entrasdas de inventario
         self.buttons_frame.destroy()
-    # MENU DE PROGRAMAS - # MENU DE PROGRAMAS - # MENU DE PROGRAMAS - # MENU DE PROGRAMAS - # MENU DE PROGRAMAS - 
-    # FRAME
-        menu_frame = ctk.CTkFrame(self)
-        menu_frame.pack(fill='x')
-    # BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - 
-    # CARGA DE PRODUCTOS
-        carga_pro_btn = ctk.CTkButton(menu_frame,
-                                      text='Carga de productos')
-        carga_pro_btn.pack(side='left')
-    # CARGA LINEAS Y GRUPOS
-        carga_lin_btn = ctk.CTkButton(menu_frame,
-                                      text='Carga de lineas y grupos')
-        carga_lin_btn.pack(side='left')
-    # INVENTARIO
-    # FRAME
-        self.head_frame = ctk.CTkFrame(self,
-                                       height=600,
-                                       corner_radius=0,
-                                       fg_color=APP_COLORS[0])
-        self.head_frame.pack(expand=True,fill='both')
-    # TITULO
-        head_inv = ctk.CTkLabel(self.head_frame,
-                                text='Inventario',
-                                bg_color=APP_COLORS[0],
-                                text_color=APP_COLORS[1],
-                                font=FONTS[0],
-                                height=10)
-        head_inv.pack(pady=30,padx=40,fill='both',expand=True)
-
-
-        return self.head_frame
+        self.Inventario_Menu = InventarioMenu(self)
+        self.Inventario_Menu.pack(expand=True,fill='both')
+        self.GoBack('Inventario')
+    # REGRESAR EL FRAME
+        return self.Inventario_Menu
     
 
     # CREAR EL FRAME DE FACTURACION - CREAR EL FRAME DE FACTURACION - CREAR EL FRAME DE FACTURACION - CREAR EL FRAME DE FACTURACION
@@ -226,5 +236,19 @@ class MainFrame(ctk.CTkFrame):
 
     # CAMBIO DE FRAMES
     def SwitchFrame(self,new_frame):
+        self.go_back_frame.destroy()
         self.current_frame.destroy()
         self.current_frame = new_frame()
+
+    def GoBack(self,info):
+        self.go_back_frame = ctk.CTkFrame(self)
+        self.go_back_frame.pack(side='bottom',fill='x')
+        button = ctk.CTkButton(self.go_back_frame,text='Ir atras',command=lambda:self.SwitchFrame(self.InicioFrame))
+        button.pack(side='left')
+        label = ctk.CTkLabel(self.go_back_frame,text=f'{info} - Programa de gestion')
+        label.pack(side='left',padx=20)
+
+    def Date_Time(self):
+        hora = datetime.datetime.now()
+        self.date_time.configure(text=hora.strftime("%d-%m-%Y %H:%M:%S"))
+        self.after(1000,self.Date_Time)
