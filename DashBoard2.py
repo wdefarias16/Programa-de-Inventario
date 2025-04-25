@@ -19,11 +19,20 @@ class MainFrame(ctk.CTkFrame):
     # MUESTRA EL INICIO
         self.current_frame = self.InicioFrame()
     # BARRA INFERIOR
-        self.go_back_frame = ctk.CTkFrame(self)
+        self.go_back_frame = ctk.CTkFrame(self,
+                                          corner_radius=0,
+                                          fg_color=APP_COLORS[2])
         self.go_back_frame.pack(side='bottom',fill='x')
-        button = ctk.CTkButton(self.go_back_frame,text='Ir atras',command=lambda:self.SwitchFrame(self.InicioFrame))
+        button = ctk.CTkButton(self.go_back_frame,text='Ir atras',
+                               corner_radius=0,
+                               command=lambda:self.SwitchFrame(self.InicioFrame),
+                               fg_color=APP_COLORS[2],
+                               hover_color=APP_COLORS[3],
+                               text_color=APP_COLORS[0])
         button.pack(side='left')
         self.barra_inf_label = ctk.CTkLabel(self.go_back_frame,
+                                            fg_color=APP_COLORS[2],
+                                            text_color=APP_COLORS[0],
                                             text='Programa de gestion')
         self.barra_inf_label.pack(side='left',padx=20)
     # RELOJ
@@ -58,19 +67,6 @@ class MainFrame(ctk.CTkFrame):
 
         self.buttons_frame = ctk.CTkFrame(self.main_frame,corner_radius=0,width=50,fg_color=APP_COLORS[2])
         self.buttons_frame.pack(side='left',fill='y')
-    # BOTON INICIO - BOTON INICIO - BOTON INICIO - BOTON INICIO - BOTON INICIO - BOTON INICIO - BOTON INICIO - 
-        inic_btn_image=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_inicio_light.png"), size=(30,30),
-                                   dark_image=Image.open(r"Recursos\Iconos\btn_inicio_dark.png"))
-        inic_btn = ctk.CTkButton(self.buttons_frame,
-                                     text='Inicio',
-                                     fg_color=APP_COLORS[2],
-                                     hover_color=APP_COLORS[3],
-                                     image=inic_btn_image,
-                                     corner_radius=0,
-                                     compound='left',
-                                     anchor='w',
-                                     command=lambda: self.SwitchFrame(self.InicioFrame))
-        inic_btn.pack(fill='x',pady=5,side='top')
     # BOTON INVENTARIO - BOTON INVENTARIO - BOTON INVENTARIO - BOTON INVENTARIO - BOTON INVENTARIO - BOTON INVENTARIO
         inv_btn_image=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_inventario_light.png"), size=(30,30),
                                    dark_image=Image.open(r"Recursos\Iconos\btn_inventario_dark.png"))
@@ -143,7 +139,7 @@ class MainFrame(ctk.CTkFrame):
                                      )
         lockscreen_btn.pack(side='bottom',pady=5)
     # INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - 
-        title_frame = ctk.CTkFrame(self.main_frame,corner_radius=0,bg_color=APP_COLORS[0])
+        title_frame = ctk.CTkFrame(self.main_frame,corner_radius=0,fg_color=APP_COLORS[0])
         title_frame.pack(expand=True,fill='both')
         title=ctk.CTkLabel(title_frame,
                            text='PROGRAMA DE GESTION Y VENTAS',
@@ -151,7 +147,7 @@ class MainFrame(ctk.CTkFrame):
                            font=FONTS[0])
         title.pack(fill='x')
 
-        buss_name_frame = ctk.CTkFrame(self.main_frame,corner_radius=0,bg_color=APP_COLORS[0])
+        buss_name_frame = ctk.CTkFrame(self.main_frame,corner_radius=0,fg_color=APP_COLORS[0])
         buss_name_frame.pack(expand=True,fill='both')
         buss_name=ctk.CTkLabel(buss_name_frame,
                                text='NOMBRE DE LA EMPRESA',
