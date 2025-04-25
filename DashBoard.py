@@ -6,7 +6,6 @@ from CargaProductos import*
 from CargaLineasGrupos import*
 from CargaProveedores import*
 from Database import*
-from Inicio import*
 import datetime
 from threading import Timer
 from style import FONTS, APP_COLORS, APPEARANCE_MODE
