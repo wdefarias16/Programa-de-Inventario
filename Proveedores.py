@@ -46,3 +46,9 @@ class Proveedores():
             del self.proveedores[codigo]
         self.Save_Prov()
         messagebox.showinfo('Info',f'El proveedor {codigo} ha sido eliminado.')
+# CHEQUEAR UN PROVEEDOR
+    def ChechProv(self,codigo):
+        if codigo in self.proveedores:
+            return True
+        else:
+            messagebox.showerror('Error',f'Agregue un codigo de proveedor válido.')

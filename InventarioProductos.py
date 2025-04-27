@@ -49,9 +49,12 @@ class Inventory():
         if product['codigo'] in self.inventario:
             messagebox.showinfo('Producto existente',f"El producto con el codigo {product['codigo']} ya existe.")
             return
-        self.inventario[product['codigo']] = product
-        self.Save_Inventory()
-        messagebox.showinfo('Producto agregado',f"El producto {product['codigo']} ha sido agregado.")
+        elif product['codigo'] == '':
+            messagebox.showerror('Error',f"Agregue un codigo de producto.")
+        else:
+            self.inventario[product['codigo']] = product
+            self.Save_Inventory()
+            messagebox.showinfo('Producto agregado',f"El producto {product['codigo']} ha sido agregado.")
 # EDITAR PRODUCTO
     def EditProduct(self,product):
         if product['codigo'] in self.inventario:
@@ -67,3 +70,16 @@ class Inventory():
 # OBTENER EL INVENTARIO
     def GetInventory(self):
         return self.inventario
+# VERIFICAR EXITENCIA DE CCODIGO
+    def CheckCode(self,codigo):
+        if codigo not in self.inventario:
+            return True
+        else:
+            messagebox.showerror('Error',f'El codigo {codigo}, ya se encuentra en la base de datos.')
+            return False
+    def CheckName(self,name):
+        if name == '':
+            messagebox.showerror('Error',f'Ingrese un nombre de producto')
+            return False
+        else:
+            return True

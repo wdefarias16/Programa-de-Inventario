@@ -7,9 +7,10 @@ from Database import LINE_MANAGER
 
 # PROGRAMA DE CARGA DE LINEAS Y GRUPOS - PROGRAMA DE CARGA DE LINEAS Y GRUPOS - PROGRAMA DE CARGA DE LINEAS Y GRUPOS
 class LineasGruposProg(ctk.CTkFrame):
-    def __init__(self,parent):
+    def __init__(self,parent,GoBack_CB):
         super().__init__(parent)
         self.nombre_grupo = ''
+        self.GoBack_CB = GoBack_CB
     # TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - 
         title_frame = ctk.CTkFrame(self,corner_radius=5,fg_color=APP_COLORS[3])
         title_frame.pack(fill='x')
@@ -194,6 +195,8 @@ class LineasGruposProg(ctk.CTkFrame):
             LINE_MANAGER.Del_Linea(codigo)
             self.lin_menu.configure(values=LINE_MANAGER.GetLineNames())
             self.Restablecer()
+
+
 # AL SELECCIONAR LINEA
     def SelectLinea(self,opcion):
         codigo = opcion.split(' - ')[0]

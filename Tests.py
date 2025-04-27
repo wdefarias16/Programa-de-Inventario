@@ -1,30 +1,11 @@
-import tkinter as tk
-from tkinter import ttk
+import customtkinter as ctk
 
-def obtener_info(event):
-    # Obtener el ID del ítem seleccionado
-    item_id = tree.selection()[0]
-    # Obtener la información del ítem
-    info = tree.item(item_id)
-    print("Texto:", info["text"])
-    print("Valores:", info["values"])
+root = ctk.CTk()
+root.geometry("300x200")
+root.title("Ejemplo de Placeholder en CTkEntry")
 
-# Crear ventana principal
-root = tk.Tk()
-root.title("TreeView Ejemplo")
-
-# Crear TreeView
-tree = ttk.Treeview(root, columns=("Columna1", "Columna2"), show="headings")
-tree.heading("Columna1", text="Columna 1")
-tree.heading("Columna2", text="Columna 2")
-
-# Agregar ítems
-tree.insert("", "end", text="Item1", values=("Valor1", "Valor2"))
-tree.insert("", "end", text="Item2", values=("Valor3", "Valor4"))
-
-tree.pack()
-
-# Asociar evento de selección
-tree.bind("<<TreeviewSelect>>", obtener_info)
+# Crear un CTkEntry con placeholder_text
+entry = ctk.CTkEntry(root, placeholder_text="Ingresa tu texto aquí", width=200)
+entry.pack(pady=20)
 
 root.mainloop()

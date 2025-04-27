@@ -12,10 +12,11 @@ from threading import Timer
 from style import FONTS, APP_COLORS, APPEARANCE_MODE
 
 class MainFrame(ctk.CTkFrame):
-    def __init__(self,parent,lockscreen_callback):
+    def __init__(self,parent,lockscreen_callback,Inventario_CB):
         super().__init__(parent)
     # ASIGNAR EL CALLBACK PARA LA PANTALLA DE BLOQUEO
         self.lockscreen_callback = lockscreen_callback
+        self.Inventario_CB = Inventario_CB
     # MUESTRA EL INICIO
         self.current_frame = self.InicioFrame()
     # BARRA INFERIOR
@@ -23,13 +24,7 @@ class MainFrame(ctk.CTkFrame):
                                           corner_radius=0,
                                           fg_color=APP_COLORS[2])
         self.go_back_frame.pack(side='bottom',fill='x')
-        button = ctk.CTkButton(self.go_back_frame,text='Ir atras',
-                               corner_radius=0,
-                               command=lambda:self.SwitchFrame(self.InicioFrame),
-                               fg_color=APP_COLORS[2],
-                               hover_color=APP_COLORS[3],
-                               text_color=APP_COLORS[0])
-        button.pack(side='left')
+        
         self.barra_inf_label = ctk.CTkLabel(self.go_back_frame,
                                             fg_color=APP_COLORS[2],
                                             text_color=APP_COLORS[0],
@@ -43,18 +38,6 @@ class MainFrame(ctk.CTkFrame):
                                       )
         self.date_time.pack(side='right',pady=5,padx=10)
         self.Date_Time()
-    # COMANDO CERRAR SESION
-        self.winfo_toplevel().bind("<Control-Q>", self.ctrl_q_callback)
-        self.winfo_toplevel().bind("<Control-q>", self.ctrl_q_callback)
-        self.winfo_toplevel().bind("<F4>", self.F4_Pressed)
-    def ctrl_q_callback(self, event):
-        # Verificamos que el dashboard esté activo consultando el atributo en la App
-        if self.master.dashboard_activo:
-            self.lockscreen_callback()
-    def F4_Pressed(self,event):
-        self.SwitchFrame(self.InicioFrame)
-
-
 
 
 # FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - 
@@ -65,7 +48,7 @@ class MainFrame(ctk.CTkFrame):
         self.main_frame = ctk.CTkFrame(self)
         self.main_frame.pack(expand=True,fill='both')
 
-        self.buttons_frame = ctk.CTkFrame(self.main_frame,corner_radius=0,width=50,fg_color=APP_COLORS[2])
+        self.buttons_frame = ctk.CTkFrame(self.main_frame,corner_radius=0,width=70,fg_color=APP_COLORS[2])
         self.buttons_frame.pack(side='left',fill='y')
     # BOTON INVENTARIO - BOTON INVENTARIO - BOTON INVENTARIO - BOTON INVENTARIO - BOTON INVENTARIO - BOTON INVENTARIO
         inv_btn_image=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_inventario_light.png"), size=(30,30),
@@ -78,7 +61,7 @@ class MainFrame(ctk.CTkFrame):
                                      corner_radius=0,
                                      compound='left',
                                      anchor='w',
-                                     command=lambda: self.SwitchFrame(self.InventarioFrame))
+                                     command=lambda: self.Inventario_CB())
         invt_btn.pack(fill='x',pady=5,side='top') 
     # BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION
         fact_btn_image=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_fact_light.png"), size=(30,30),

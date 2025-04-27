@@ -1,8 +1,8 @@
 {
     "0002": {
         "codigo": "0002",
-        "linea": "001",
-        "grupo": "Grupo 1.1",
+        "linea": "002",
+        "grupo": "Grupo 2.1",
         "proveedor": "P01",
         "nombre": "Producto 2",
         "precio": 45.0,
@@ -48,9 +48,9 @@
         "codigo": "0007",
         "linea": "003",
         "grupo": "Grupo 3.3",
-        "proveedor": "P02",
-        "nombre": "Producto 7",
-        "precio": 25.0,
+        "proveedor": "P04",
+        "nombre": "Producto 777",
+        "precio": 2.0,
         "cantidad": 1200
     },
     "0008": {
@@ -59,14 +59,14 @@
         "grupo": "Grupo 5.1",
         "proveedor": "P02",
         "nombre": "Producto 8",
-        "precio": 10.0,
+        "precio": 1.0,
         "cantidad": 20
     },
     "0009": {
         "codigo": "0009",
-        "linea": "002",
-        "grupo": "Grupo 2.1",
-        "proveedor": "P02",
+        "linea": "005",
+        "grupo": "Grupo 5.1",
+        "proveedor": "P06",
         "nombre": "Producto 9",
         "precio": 2.5,
         "cantidad": 100
@@ -106,5 +106,50 @@
         "nombre": "PRoducto",
         "precio": 10.0,
         "cantidad": 5
+    },
+    "0020": {
+        "codigo": "0020",
+        "linea": "004",
+        "grupo": "Grupo 4.1",
+        "proveedor": "P06",
+        "nombre": "Pro",
+        "precio": 40.2,
+        "cantidad": 60
+    },
+    "31651": {
+        "codigo": "31651",
+        "linea": "002",
+        "grupo": "Grupo 2.1",
+        "proveedor": "P03",
+        "nombre": "Producto tal",
+        "precio": 10.0,
+        "cantidad": 10
+    },
+    "00023": {
+        "codigo": "00023",
+        "linea": "007",
+        "grupo": "b1",
+        "proveedor": "P03",
+        "nombre": "Objeto",
+        "precio": 45.0,
+        "cantidad": 96
+    },
+    "00236": {
+        "codigo": "00236",
+        "linea": "003",
+        "grupo": "Grupo 3.2",
+        "proveedor": "P05",
+        "nombre": "Guitarra",
+        "precio": 500.0,
+        "cantidad": 10
+    },
+    "51321": {
+        "codigo": "51321",
+        "linea": "003",
+        "grupo": "Grupo 3.3",
+        "proveedor": "P02",
+        "nombre": "Producto 2000",
+        "precio": 10.0,
+        "cantidad": 10
     }
 }
