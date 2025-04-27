@@ -1,48 +1,8 @@
 {
-    "000": {
-        "linea": "sin linea",
-        "grupo": []
-    },
-    "002": {
-        "linea": "Linea 2",
+    "001": {
+        "linea": "Faros",
         "grupo": [
-            "Grupo 2.1"
+            "Pantallas"
         ]
-    },
-    "003": {
-        "linea": "Linea 3",
-        "grupo": [
-            "Grupo 3.1",
-            "Grupo 3.2",
-            "Grupo 3.3"
-        ]
-    },
-    "004": {
-        "linea": "Linea 4",
-        "grupo": [
-            "Grupo 4.1"
-        ]
-    },
-    "005": {
-        "linea": "Linea 5",
-        "grupo": [
-            "Grupo 5.1"
-        ]
-    },
-    "006": {
-        "linea": "Linea 6",
-        "grupo": [
-            "Grupo 6.1"
-        ]
-    },
-    "007": {
-        "linea": "bombillo",
-        "grupo": [
-            "b1"
-        ]
-    },
-    "20": {
-        "linea": "linea20",
-        "grupo": []
     }
 }

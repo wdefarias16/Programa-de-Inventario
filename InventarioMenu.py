@@ -5,12 +5,13 @@ from style import*
 from Main import App
 
 class InventarioMenu(ctk.CTkFrame):
-    def __init__(self,parent,GoBack_CB,CargaPro_Prog,Lineas_Prog):
+    def __init__(self,parent,GoBack_CB,CargaPro_Prog,Lineas_Prog,Proveedores_Prog):
         super().__init__(parent)
     # CALLBACKS
         self.GoBack_CB =  GoBack_CB
         self.CargaPro_Prog = CargaPro_Prog
         self.Lineas_Prog = Lineas_Prog
+        self.Proveedores_Prog = Proveedores_Prog
 
         
     # MENU OPCIONES - MENU OPCIONES - MENU OPCIONES - MENU OPCIONES - MENU OPCIONES - 
@@ -58,7 +59,8 @@ class InventarioMenu(ctk.CTkFrame):
                                                text_color=APP_COLORS[4],
                                                font=FONTS[1],
                                                values=['Entradas de inventario',
-                                                       'Carga de líneas y grupos'])
+                                                       'Carga de líneas y grupos',
+                                                       'Carga de Proveedores'])
         self.entradas_menu.pack(side='left',padx=2)
     # BOTON IR ATRAS
         go_back_btn = ctk.CTkButton(frame_menu,
@@ -95,7 +97,10 @@ class InventarioMenu(ctk.CTkFrame):
     def Entradas(self,opcion):
         if opcion == 'Entradas de inventario':
             self.CargaPro_Prog()
-        if opcion == 'Carga de líneas y grupos':
+        elif opcion == 'Carga de líneas y grupos':
             self.Lineas_Prog()
+        elif opcion == 'Carga de Proveedores':
+            self.Proveedores_Prog()
+
 
 

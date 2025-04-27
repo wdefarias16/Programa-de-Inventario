@@ -7,8 +7,9 @@ from style import FONTS, APP_COLORS, APPEARANCE_MODE
 
 # PROGRAMA DE CARGA DE PROVEEDORES - PROGRAMA DE CARGA DE PROVEEDORES - PROGRAMA DE CARGA DE PROVEEDORES - 
 class ProveedoresProg(ctk.CTkFrame):
-    def __init__(self,parent):
+    def __init__(self,parent,GoBack_CB):
         super().__init__(parent)
+        self.GoBack_CB = GoBack_CB
     # TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - 
         title_frame = ctk.CTkFrame(self,corner_radius=5,fg_color=APP_COLORS[3])
         title_frame.pack(fill='x')
@@ -24,9 +25,9 @@ class ProveedoresProg(ctk.CTkFrame):
         prov_frame.pack(expand=True,fill='both',side='left')
     # GRID SETUP
         for rows in range(5):
-            prov_frame.rowconfigure(rows, weight=1)
+            prov_frame.rowconfigure(rows, weight=1,uniform='row')
         for columns in range(5):
-            prov_frame.columnconfigure(columns,weight=1)
+            prov_frame.columnconfigure(columns,weight=1,uniform='column')
     # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
     # LABEL DE DATOS
         label_lin = ctk.CTkLabel(prov_frame,
@@ -88,6 +89,14 @@ class ProveedoresProg(ctk.CTkFrame):
                                  hover_color=APP_COLORS[3],
                                  font=FONTS[1])
         self.del_btn.grid(row=4,column=2,padx=5,pady=5,sticky='nsew')
+    # VOLVER ATRAS 
+        self.del_btn = ctk.CTkButton(prov_frame,
+                                 command=lambda:self.GoBack_CB,
+                                 text='Volver Atrás',
+                                 fg_color=APP_COLORS[3],
+                                 hover_color=APP_COLORS[3],
+                                 font=FONTS[1])
+        self.del_btn.grid(row=0,column=1,padx=5,pady=5)
     # CANCELAR
         self.cancel_btn = ctk.CTkButton(prov_frame,
                                  command=self.Restablecer,

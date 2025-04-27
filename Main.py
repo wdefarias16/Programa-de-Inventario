@@ -3,12 +3,13 @@ from DashBoard2 import*
 from Login import*
 from CargaProductos import*
 from CargaLineasGrupos import*
+from CargaProveedores import*
 from InventarioMenu import*
 from style import FONTS, APP_COLORS, APPEARANCE_MODE
 
 # VENTANA PRINCIPAL (APLICACION)
 class App(ctk.CTk):
-    def __init__(self): 
+    def __init__(self):
         super().__init__()
         self.title('Sistema')
         self.geometry('1000x500')   
@@ -30,7 +31,9 @@ class App(ctk.CTk):
 # BLOQUEO Y DESBLOQUEO DE SESION
     def LoginSuccess(self):
         self.login_frame.destroy()
-        self.dashboard=MainFrame(self,lockscreen_callback = self.LockWindow,Inventario_CB=self.InventarioMenu)
+        self.dashboard=MainFrame(self,
+                                 lockscreen_callback = self.LockWindow,
+                                 Inventario_CB=self.InventarioMenu)
         self.dashboard.pack(expand=True, fill='both')
         self.dashboard_activo = True
     def LockWindow(self):
@@ -48,14 +51,16 @@ class App(ctk.CTk):
         self.current_prog = InventarioMenu(self,
                                            GoBack_CB = self.ReturnToDashboard,
                                            CargaPro_Prog = self.CargaProductosProg,
-                                           Lineas_Prog = self.CargaLineas)
+                                           Lineas_Prog = self.CargaLineas,
+                                           Proveedores_Prog = self.CargaProveedores)
         self.current_prog.pack(expand=True,fill='both')
     def GoBackInventario(self):
         self.current_prog.destroy()
         self.current_prog = InventarioMenu(self,
                                            GoBack_CB = self.ReturnToDashboard,
                                            CargaPro_Prog = self.CargaProductosProg,
-                                           Lineas_Prog = self.CargaLineas)
+                                           Lineas_Prog = self.CargaLineas,
+                                           Proveedores_Prog = self.CargaProveedores)
         self.current_prog.pack(expand=True,fill='both')
     # PROGRAMA DE CARGA DE PRODUCTOS
     def CargaProductosProg(self):
@@ -67,6 +72,12 @@ class App(ctk.CTk):
         self.current_prog.destroy()
         self.current_prog = LineasGruposProg(self,GoBack_CB=self.GoBackInventario)
         self.current_prog.pack(expand=True,fill='both')
+    # PROGRAMA DE CARGA DE PROVEEDORES
+    def CargaProveedores(self):
+        self.current_prog.destroy()
+        self.current_prog = ProveedoresProg(self,GoBack_CB=self.GoBackInventario)
+        self.current_prog.pack(expand=True,fill='both')
+
 # REGRESAR AL DASHBOARD
     def ReturnToDashboard(self):
         self.current_prog.destroy()

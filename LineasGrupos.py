@@ -11,15 +11,15 @@ class LineasGrupos():
     def Iniciar_File(self):
         if not os.path.exists('Data'):
             os.makedirs('Data')
-        if not os.path.exists(self.filename):            
+        if not os.path.exists(self.filename):
                 self.lineas_grupos = {
-                    "000": {"linea": "sin linea", "grupo":[]}
+                    "001": {"linea": "Linea 1", "grupo":[]}
                 }
                 self.Save_Lines()
         else:
             self.Load_Lines()
-            if "000" not in self.lineas_grupos:
-                self.lineas_grupos["000"] = {"linea": "sin linea", "grupo":[]}
+            if "001" not in self.lineas_grupos:
+                self.lineas_grupos["001"] = {"linea": "Linea 1", "grupo":[]}
                 self.Save_Lines()
 # CARGAR EL ARCHIVO DE DATOS
     def Load_Lines(self):
@@ -35,7 +35,7 @@ class LineasGrupos():
             self.Save_Lines()
         except json.JSONDecodeError as e:
             messagebox.showerror("Error JSON", f"Error al leer el archivo JSON: {e}")
-            self.lineas_grupos = {"000": {"linea": "sin linea", "grupo":[]}}
+            self.lineas_grupos = {"001": {"linea": "Linea 1", "grupo":[]}}
             self.Save_Lines()
 # GUARDAR EL ARCHIVO DE DATOS
     def Save_Lines(self):

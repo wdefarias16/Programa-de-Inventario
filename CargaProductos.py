@@ -98,7 +98,7 @@ class CargaProductosProg(ctk.CTkFrame):
         he_label.grid(row=2,column=3,columnspan=1,sticky='w')
     # CODIGO
         codigo_label = ctk.CTkLabel(self.entry_frame,
-                                    text='Codigo',
+                                    text='Código',
                                     font=FONTS[1],
                                     text_color=APP_COLORS[4])
         codigo_label.grid(row=3,column=5,columnspan=1,sticky='w',padx=5)
