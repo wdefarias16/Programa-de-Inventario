@@ -12,15 +12,22 @@ class LineasGrupos():
         if not os.path.exists('Data'):
             os.makedirs('Data')
         if not os.path.exists(self.filename):
-                self.lineas_grupos = {
-                    "001": {"linea": "Linea 1", "grupo":[]}
-                }
+                self.lineas_grupos = {"001": {"linea": "Linea 1",
+                                              "grupos": {"G001": {"nombre_grupo": "Grupo 1",
+                                                                  "porcentaje_1": 0.0,
+                                                                  "porcentaje_2": 0.0,
+                                                                  "porcentaje_3": 0.0}}}}
                 self.Save_Lines()
         else:
             self.Load_Lines()
             if "001" not in self.lineas_grupos:
-                self.lineas_grupos["001"] = {"linea": "Linea 1", "grupo":[]}
+                self.lineas_grupos["001"] = {"001": {"linea": "Linea 1",
+                                              "grupos": {"G001": {"nombre_grupo": "Grupo 1",
+                                                                  "porcentaje_1": 0.0,
+                                                                  "porcentaje_2": 0.0,
+                                                                  "porcentaje_3": 0.0}}}}
                 self.Save_Lines()
+
 # CARGAR EL ARCHIVO DE DATOS
     def Load_Lines(self):
     # CREAR LA CARPETA DATA SI NO EXISTE
@@ -35,7 +42,11 @@ class LineasGrupos():
             self.Save_Lines()
         except json.JSONDecodeError as e:
             messagebox.showerror("Error JSON", f"Error al leer el archivo JSON: {e}")
-            self.lineas_grupos = {"001": {"linea": "Linea 1", "grupo":[]}}
+            self.lineas_grupos = {"001": {"linea": "Linea 1",
+                                              "grupos": {"G001": {"nombre_grupo": "Grupo 1",
+                                                                  "porcentaje_1": 0.0,
+                                                                  "porcentaje_2": 0.0,
+                                                                  "porcentaje_3": 0.0}}}}
             self.Save_Lines()
 # GUARDAR EL ARCHIVO DE DATOS
     def Save_Lines(self):
@@ -48,12 +59,16 @@ class LineasGrupos():
     def GetLineNames(self):
         return [f"{codigo} - {info['linea']}" for codigo, info in self.lineas_grupos.items()]
 # RETORNA LOS GRUPOS DE UNA LINEA
-    def GetGroupNames(self,codigo):
-        grupos=[]
-        linea = self.lineas_grupos[codigo]
-        for grupo in linea['grupo']:
-            grupos.append(grupo)
-        return grupos    
+    def GetGroupNames(self, codigo):
+        lista_grupos = []
+        linea_data = self.lineas_grupos.get(codigo, {})
+        grupos = linea_data.get("grupos", {})
+        for grupo_id, grupo_data in grupos.items():
+            nombre_grupo = grupo_data.get("nombre_grupo", "Sin Nombre")
+            lista_grupos.append(f"{grupo_id} - {nombre_grupo}")
+        return lista_grupos
+
+    
 # AGREGA UNA LINEA A LA BASE DE DATOS
     def Add_Line(self,codigo,linea,grupo=None):
         if codigo in self.lineas_grupos:

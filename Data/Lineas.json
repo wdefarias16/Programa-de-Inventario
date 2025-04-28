@@ -1,29 +1,13 @@
 {
     "001": {
-        "linea": "Faros",
-        "grupo": [
-            "Pantallas"
-        ]
-    },
-    "002": {
-        "linea": "Rolineras",
-        "grupo": [
-            "PFI"
-        ]
-    },
-    "003": {
-        "linea": "El\u00e9ctricos",
-        "grupo": [
-            "Bobinas",
-            "Sensores"
-        ]
-    },
-    "004": {
-        "linea": "Empacaduras",
-        "grupo": []
-    },
-    "005": {
-        "linea": "Bombas",
-        "grupo": []
+        "linea": "Linea 1",
+        "grupos": {
+            "G001": {
+                "nombre_grupo": "Grupo 1",
+                "porcentaje_1": 0.0,
+                "porcentaje_2": 0.0,
+                "porcentaje_3": 0.0
+            }
+        }
     }
 }
