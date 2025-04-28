@@ -62,7 +62,7 @@ class MainFrame(ctk.CTkFrame):
                                      compound='left',
                                      anchor='w',
                                      command=lambda: self.Inventario_CB())
-        invt_btn.pack(fill='x',pady=5,side='top') 
+        invt_btn.pack(fill='x',pady=5,side='top',padx=10) 
     # BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION
         fact_btn_image=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_fact_light.png"), size=(30,30),
                                    dark_image=Image.open(r"Recursos\Iconos\btn_fact_dark.png"))
@@ -75,7 +75,7 @@ class MainFrame(ctk.CTkFrame):
                                      compound='left',
                                      anchor='w',
                                      command=lambda: self.SwitchFrame(self.FacturacionFrame))
-        fact_btn.pack(fill='x',pady=5,side='top')
+        fact_btn.pack(fill='x',pady=5,side='top',padx=10)
     # BOTON CUENTAS POR PAGAR - BOTON CUENTAS POR PAGAR - BOTON CUENTAS POR PAGAR - BOTON CUENTAS POR PAGAR - BOTON CUENTAS POR PAGAR - 
         cuentas_xp_btn_image=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_cuentas_light.png"), size=(30,30),
                                    dark_image=Image.open(r"Recursos\Iconos\btn_cuentas_dark.png"))
@@ -88,27 +88,33 @@ class MainFrame(ctk.CTkFrame):
                                      compound='left',
                                      anchor='w',
                                      command=lambda: self.SwitchFrame(self.CuentasXPFrame))
-        cuentas_xp_btn.pack(fill='x',pady=5,side='top')
+        cuentas_xp_btn.pack(fill='x',pady=5,side='top',padx=10)
     # BOTON CUENTAS POR COBRAR - BOTON CUENTAS POR COBRAR - BOTON CUENTAS POR COBRAR - BOTON CUENTAS POR COBRAR - 
-        cuentas_xp_btn = ctk.CTkButton(self.buttons_frame,
+        cuentas_xc_btn_image=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_cuentasPC_light.png"), size=(30,30),
+                                   dark_image=Image.open(r"Recursos\Iconos\btn_cuentasPC_dark.png"))
+        cuentas_xc_btn = ctk.CTkButton(self.buttons_frame,
                                      text='Cuentas por cobrar',
                                      fg_color=APP_COLORS[2],
                                      hover_color=APP_COLORS[3],
+                                     image=cuentas_xc_btn_image,
                                      corner_radius=0,
                                      compound='left',
                                      anchor='w',
                                      command=lambda: self.SwitchFrame(self.CuentasXCFrame))
-        cuentas_xp_btn.pack(fill='x',pady=5,side='top')
+        cuentas_xc_btn.pack(fill='x',pady=5,side='top',padx=10)
     # BOTON PROGRAMAS DE UTILIDAD - BOTON PROGRAMAS DE UTILIDAD - BOTON PROGRAMAS DE UTILIDAD - BOTON PROGRAMAS DE UTILIDAD -  
-        cuentas_xp_btn = ctk.CTkButton(self.buttons_frame,
+        pdutilidad_btn_image=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_PDUtilidad_light.png"), size=(30,30),
+                                   dark_image=Image.open(r"Recursos\Iconos\btn_PDUtilidad_dark.png"))
+        pdutilidad_btn = ctk.CTkButton(self.buttons_frame,
                                      text='Programas de utilidad',
                                      fg_color=APP_COLORS[2],
                                      hover_color=APP_COLORS[3],
+                                     image=pdutilidad_btn_image,
                                      corner_radius=0,
                                      compound='left',
                                      anchor='w',
                                      command=lambda: self.SwitchFrame(self.ProgrmasUFrame))
-        cuentas_xp_btn.pack(fill='x',pady=5,side='top')
+        pdutilidad_btn.pack(fill='x',pady=5,side='top',padx=10)
     # BOTON DE BLOQUEAR O CERRAR SESION -  BOTON DE BLOQUEAR O CERRAR SESION - BOTON DE BLOQUEAR O CERRAR SESION 
         lock_btn_image=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_lock_light.png"), size=(30,30),
                                    dark_image=Image.open(r"Recursos\Iconos\btn_lock_dark.png"))
