@@ -302,6 +302,21 @@ class CargaProductosProg(ctk.CTkFrame):
                                      hover_color=APP_COLORS[3],
                                      command=self.CancelMain)
             self.cancelar_btn.grid(row=3,column=6,sticky='wens',padx=4,pady=4)
+    def BuscarProductoNombre(self):
+        self.inventario = INVENTARIO.GetInventory()
+        for item in self.treeview.get_children():
+            self.treeview.delete(item)
+        busqueda = self.search_bar_var.get().lower()
+        resultados = INVENTARIO.BuscarNombres(busqueda)
+        for producto in resultados:
+            self.treeview.insert("", 'end',
+                                 text=producto['codigo'],
+                                 values=(producto['linea'],
+                                         producto['grupo'],
+                                         producto['proveedor'],
+                                         producto['nombre'],
+                                         producto['precio'],
+                                         producto['cantidad']))
 # COMANDO MODIFICAR PRODUCTO      
     def ModificarProducto(self):
         linea = self.lin_var.get().split(" - ")[0].strip()
@@ -398,7 +413,7 @@ class CargaProductosProg(ctk.CTkFrame):
                                   width=200,
                                   textvariable=self.search_bar_var)
         self.search_bar.grid(row=0,column=2,sticky='we',padx=5)
-        self.search_bar.bind("<Return>",lambda event:self.BuscarProducto())
+        self.search_bar.bind("<Return>",lambda event:self.BuscarProductoNombre())
     # BOTONES TREEVIEW     
     # CANCELAR
         cancel_btn = ctk.CTkButton(self.tree_frame,

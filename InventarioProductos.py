@@ -71,6 +71,11 @@ class Inventory():
     def GetInventory(self):
         return self.inventario
 # VERIFICAR EXITENCIA DE CCODIGO
+    def BuscarNombres(self,busqueda):
+        resultados = [
+        producto for producto in self.inventario.values()
+        if busqueda in producto["nombre"].lower()]
+        return resultados
     def CheckCode(self,codigo):
         if codigo not in self.inventario:
             return True

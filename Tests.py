@@ -1,11 +1,38 @@
-import customtkinter as ctk
+# Diccionario de productos
+productos = {
+    "001": {
+        "codigo": "001",
+        "linea": "001",
+        "grupo": "Pantallas",
+        "proveedor": "01",
+        "nombre": "Pantalla 109",
+        "precio": 10.0,
+        "cantidad": 100
+    },
+    "002": {
+        "codigo": "002",
+        "linea": "001",
+        "grupo": "Pantallas",
+        "proveedor": "01",
+        "nombre": "Pantalla 106",
+        "precio": 15.0,
+        "cantidad": 50
+    }
+}
 
-root = ctk.CTk()
-root.geometry("300x200")
-root.title("Ejemplo de Placeholder en CTkEntry")
+# Función para buscar productos por nombre
+def buscar_productos(productos, consulta):
+    consulta = consulta.lower()  # Convertir la consulta a minúsculas para búsqueda sin distinción de mayúsculas/minúsculas
+    resultados = [
+        producto for producto in productos.values()
+        if consulta in producto["nombre"].lower()
+    ]
+    return resultados
 
-# Crear un CTkEntry con placeholder_text
-entry = ctk.CTkEntry(root, placeholder_text="Ingresa tu texto aquí", width=200)
-entry.pack(pady=20)
+# Ejemplo de uso
+consulta = "pan"
+resultados = buscar_productos(productos, consulta)
 
-root.mainloop()
+# Imprimir resultados
+for producto in resultados:
+    print(f'Código: {producto["codigo"]}, Nombre: {producto["nombre"]}, Precio: {producto["precio"]}, Cantidad: {producto["cantidad"]}')

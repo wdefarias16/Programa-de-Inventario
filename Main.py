@@ -2,7 +2,7 @@ import customtkinter as ctk
 from DashBoard2 import*
 from Login import*
 from CargaProductos import*
-from CargaLineasGrupos import*
+from CargaLineasGrupos2 import*
 from CargaProveedores import*
 from InventarioMenu import*
 from style import FONTS, APP_COLORS, APPEARANCE_MODE

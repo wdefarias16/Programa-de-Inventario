@@ -19,6 +19,31 @@ class InventarioMenu(ctk.CTkFrame):
         frame_menu = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLORS[0])
         frame_menu.pack(side='top',fill='x')
     # OPCIONES - OPCIONES - OPCIONES - 
+    # LINEAS Y GRUPOS
+        self.lineas_menu = ctk.CTkOptionMenu(frame_menu,
+                                               command=self.Programas,
+                                               corner_radius=0,
+                                               button_color=APP_COLORS[0],
+                                               button_hover_color=APP_COLORS[6],
+                                               fg_color=APP_COLORS[0],
+                                               text_color=APP_COLORS[4],
+                                               font=FONTS[1],
+                                               values=['Líneas y grupos',
+                                                       'Carga de líneas y grupos',
+                                                       'Listado de las lineas y grupos'])
+        self.lineas_menu.pack(side='left',padx=2)
+    # MAESTRO DE INVENTARIO
+        self.maestro_inv_menu = ctk.CTkOptionMenu(frame_menu,
+                                               command=self.Programas,
+                                               corner_radius=0,
+                                               button_color=APP_COLORS[0],
+                                               button_hover_color=APP_COLORS[6],
+                                               fg_color=APP_COLORS[0],
+                                               text_color=APP_COLORS[4],
+                                               font=FONTS[1],
+                                               values=['Maestro de inventario',
+                                               'Carga de productos'])
+        self.maestro_inv_menu.pack(side='left',padx=2)
     # LISTADOS
         self.listados_menu = ctk.CTkOptionMenu(frame_menu,
                                                corner_radius=0,
@@ -51,16 +76,14 @@ class InventarioMenu(ctk.CTkFrame):
         self.ajustes_menu.pack(side='left',padx=2)
     # ENTRADAS DE INVENTARIO
         self.entradas_menu = ctk.CTkOptionMenu(frame_menu,
-                                               command=self.Entradas,
+                                               command=self.Programas,
                                                corner_radius=0,
                                                button_color=APP_COLORS[0],
                                                button_hover_color=APP_COLORS[6],
                                                fg_color=APP_COLORS[0],
                                                text_color=APP_COLORS[4],
                                                font=FONTS[1],
-                                               values=['Entradas de inventario',
-                                                       'Carga de líneas y grupos',
-                                                       'Carga de Proveedores'])
+                                               values=['Entradas de inventario'])
         self.entradas_menu.pack(side='left',padx=2)
     # BOTON IR ATRAS
         go_back_btn = ctk.CTkButton(frame_menu,
@@ -94,8 +117,8 @@ class InventarioMenu(ctk.CTkFrame):
     
 
 # COMANDOS MENUS
-    def Entradas(self,opcion):
-        if opcion == 'Entradas de inventario':
+    def Programas(self,opcion):
+        if opcion == 'Carga de productos':
             self.CargaPro_Prog()
         elif opcion == 'Carga de líneas y grupos':
             self.Lineas_Prog()
