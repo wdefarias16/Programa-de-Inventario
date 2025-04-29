@@ -35,9 +35,12 @@ class LineasGruposProg(ctk.CTkFrame):
             self.main_frame.columnconfigure(columns,weight=1,uniform='column')
 
     # ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - 
-        #CODIGO    
+        # CODIGO
+        validarlinea = self.register(self.ValidarCodigoLinea)  
         self.codigo_entry_var = tk.StringVar()
         self.codigo_entry = ctk.CTkEntry(self.main_frame,
+                                         validate = 'key',
+                                         validatecommand = (validarlinea,'%P'),
                                          textvariable=self.codigo_entry_var,
                                          fg_color=APP_COLORS[6])
         self.codigo_entry.grid(row=2,column=2,columnspan=2,sticky='we',padx=5)
@@ -194,10 +197,13 @@ class LineasGruposProg(ctk.CTkFrame):
         self.titulo_grupo_label.grid(row=7,column=2,columnspan=2,sticky='w')
     # ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - 
         # ENTRADA CODIGO GRUPO
+        validargrupo = self.register(self.ValidarCodigoGrupo)
         self.codigo_grupo_entry_var = tk.StringVar()
         self.codigo_grupo_entry = ctk.CTkEntry(self.main_frame,
-                                         textvariable=self.codigo_grupo_entry_var,
-                                         fg_color=APP_COLORS[6])
+                                        validate = 'key',
+                                        validatecommand = (validargrupo,'%P'),
+                                        textvariable=self.codigo_grupo_entry_var,
+                                        fg_color=APP_COLORS[6])
         self.codigo_grupo_entry.grid(row=8,column=2,columnspan=2,sticky='we',padx=5)
         # ENTRADA DESCRIPCION
         self.grupo_entry_var = tk.StringVar()
@@ -380,3 +386,17 @@ class LineasGruposProg(ctk.CTkFrame):
         self.mod_btn.configure(state='disabled',fg_color=APP_COLORS[3])
         self.del_btn.configure(state='disabled',fg_color=APP_COLORS[3])
         self.codigo_entry.configure(state='normal',fg_color=APP_COLORS[6])
+
+# VALIDAR LAS CARGAS DE CODIGO 
+    def ValidarCodigoLinea(self,texto):
+        if len(texto) > 3:
+            return False
+        if texto == '':
+            return True
+        return texto.isdigit()
+    def ValidarCodigoGrupo(self,texto):
+        if len(texto) > 2:
+            return False
+        if texto == '':
+            return True
+        return texto.isdigit()

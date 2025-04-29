@@ -86,7 +86,7 @@ class App(ctk.CTk):
         self.dashboard_activo = True
 # SALIR DEL PROGRAMA
     def Salir(self):
-        self.quit
+        self.quit()
 # ATAJOS
     def F4_Pressed(self,event):
         if self.dashboard_activo == False:
