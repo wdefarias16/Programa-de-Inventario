@@ -42,6 +42,14 @@
     },
     "004": {
         "linea": "Linea 4",
-        "grupo": {}
+        "grupo": {},
+        "grupos": {
+            "G401": {
+                "nombre_grupo": "Grupo 1",
+                "porcentaje_1": 20.0,
+                "porcentaje_2": 25.0,
+                "porcentaje_3": 30.0
+            }
+        }
     }
 }

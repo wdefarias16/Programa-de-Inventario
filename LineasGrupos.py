@@ -66,9 +66,11 @@ class LineasGrupos():
             nombre_grupo = grupo_data.get("nombre_grupo", "Sin Nombre")
             lista_grupos.append(f"{grupo_id} - {nombre_grupo}")
         return lista_grupos
+# RETORNA LOS PROCENTAJES DE UN GRUPO
     def GetPorcentajes(self,linea,grupo):
         porcentajes = self.lineas_grupos[linea]['grupos'][grupo]
         return porcentajes
+    
     
 # AGREGA UNA LINEA A LA BASE DE DATOS
     def Add_Line(self,codigo,linea,grupos=None):

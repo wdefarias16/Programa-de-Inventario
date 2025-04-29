@@ -1,16 +1,21 @@
 import json,os
 from tkinter import messagebox
+from LineasGrupos import*
 
 # CLASE PRODUCTOS - CLASE PRODUCTOS - CLASE PRODUCTOS - CLASE PRODUCTOS - CLASE PRODUCTOS - CLASE PRODUCTOS - CLASE PRODUCTOS - 
 class Product():
-    def __init__(self,codigo,linea,grupo,proveedor,nombre,precio,cantidad):
+    def __init__(self,codigo,linea,grupo,proveedor,nombre,costo,ubicacion1,ubicacion2,pv1,pv2,pv3):
         self.codigo = codigo
         self.linea = linea
         self.grupo = grupo
         self.proveedor = proveedor
         self.nombre = nombre
-        self.precio = precio
-        self.cantidad = cantidad
+        self.costo = costo
+        self.ubicacion1 = ubicacion1
+        self.ubicacion2 = ubicacion2
+        self.precio_venta_1 = pv1
+        self.precio_venta_2 = pv2
+        self.precio_venta_3 = pv3
 # REGRESA EL DICCIONARIO DE UN PRODUCTO
     def ToDict(self):
         return{
@@ -19,9 +24,12 @@ class Product():
             'grupo':self.grupo,
             'proveedor':self.proveedor,
             'nombre':self.nombre,
-            'precio':self.precio,
-            'cantidad':self.cantidad
-        }
+            'costo':self.costo,
+            'ubicacion1':self.ubicacion1,
+            'ubicacion2':self.ubicacion2,
+            'precio1':self.precio_venta_1,
+            'precio2':self.precio_venta_2,
+            'precio3':self.precio_venta_3}
 # CLASE INVENTARIO - CLASE INVENTARIO - CLASE INVENTARIO - CLASE INVENTARIO - CLASE INVENTARIO - CLASE INVENTARIO - 
 class Inventory():
     def __init__(self,filename = 'Data/Inventario.json'):

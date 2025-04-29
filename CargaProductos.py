@@ -32,7 +32,7 @@ class CargaProductosProg(ctk.CTkFrame):
     # GRID SETUP
         for rows in range(14):
             self.entry_frame.rowconfigure(rows,weight=1,uniform='row')
-        for columns in range(8):
+        for columns in range(10):
             self.entry_frame.columnconfigure(columns,weight=1,uniform='column')
     # MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - 
     # MENU LINEAS
@@ -58,37 +58,43 @@ class CargaProductosProg(ctk.CTkFrame):
         self.codigo_var = tk.StringVar()
         self.codigo_entry = ctk.CTkEntry(self.entry_frame,
                                          textvariable=self.codigo_var)
-        self.codigo_entry.grid(row=3,column=3,columnspan=2,sticky='we')
+        self.codigo_entry.grid(row=3,column=3,columnspan=3,sticky='we')
         self.codigo_entry.bind("<Return>",lambda event:self.BuscarProductoMain())
     # LINEA
         self.linea_entry = ctk.CTkEntry(self.entry_frame,
                                    textvariable=self.lin_var)
-        self.linea_entry.grid(row=4,column=3,columnspan=2,sticky='we')
+        self.linea_entry.grid(row=4,column=3,columnspan=3,sticky='we')
     # GRUPO
         self.grupo_var = tk.StringVar()
         self.grupo_entry = ctk.CTkEntry(self.entry_frame,
                                    textvariable=self.grupo_var)
-        self.grupo_entry.grid(row=5,column=3,columnspan=2,sticky='we')
+        self.grupo_entry.grid(row=5,column=3,columnspan=3,sticky='we')
     # PROVEEDOR
         self.prove_var = tk.StringVar()
         self.prove_entry = ctk.CTkEntry(self.entry_frame,
                                    textvariable=self.prove_var)
-        self.prove_entry.grid(row=6,column=3,columnspan=2,sticky='we')
+        self.prove_entry.grid(row=6,column=3,columnspan=3,sticky='we')
     # NOMBRE
         self.nombre_var = tk.StringVar()
         self.nombre_entry = ctk.CTkEntry(self.entry_frame,
                                     textvariable=self.nombre_var)
-        self.nombre_entry.grid(row=7,column=3,columnspan=2,sticky='we')
-    # PRECIO
-        self.precio_var = tk.DoubleVar()
-        self.precio_entry = ctk.CTkEntry(self.entry_frame,
-                                    textvariable=self.precio_var)
-        self.precio_entry.grid(row=8,column=3,columnspan=2,sticky='we')
-    # CANTIDAD
-        self.canti_var = tk.IntVar()
-        self.canti_entry = ctk.CTkEntry(self.entry_frame,
-                                   textvariable=self.canti_var)
-        self.canti_entry.grid(row=9,column=3,columnspan=2,sticky='we')
+        self.nombre_entry.grid(row=7,column=3,columnspan=3,sticky='we')
+    # COSTO
+        self.costo_var = tk.DoubleVar()
+        self.costo_entry = ctk.CTkEntry(self.entry_frame,
+                                    textvariable=self.costo_var)
+        self.costo_entry.grid(row=8,column=3,columnspan=3,sticky='we')
+    # UBICACION 1
+        self.ubi1_var = tk.StringVar()
+        self.ubi1_entry = ctk.CTkEntry(self.entry_frame,
+                                   textvariable=self.ubi1_var)
+        self.ubi1_entry.grid(row=9,column=3,columnspan=3,sticky='we')
+    # UBICACION 2
+        self.ubi2_var = tk.StringVar()
+        self.ubi2_entry = ctk.CTkEntry(self.entry_frame,
+                                   textvariable=self.ubi2_var)
+        self.ubi2_entry.grid(row=10,column=3,columnspan=3,sticky='we')
+    
     # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS
     # DATOS DE PRODUCTO
         he_label = ctk.CTkLabel(self.entry_frame,
@@ -101,57 +107,64 @@ class CargaProductosProg(ctk.CTkFrame):
                                     text='Código',
                                     font=FONTS[1],
                                     text_color=APP_COLORS[4])
-        codigo_label.grid(row=3,column=5,columnspan=1,sticky='w',padx=5)
+        codigo_label.grid(row=3,column=6,columnspan=1,sticky='w',padx=5)
     # LINEA
         linea_label = ctk.CTkLabel(self.entry_frame,
                                     text='Línea',
                                     font=FONTS[1],
                                     text_color=APP_COLORS[4])
-        linea_label.grid(row=4,column=5,columnspan=1,sticky='w',padx=5)
+        linea_label.grid(row=4,column=6,columnspan=1,sticky='w',padx=5)
     # GRUPO
         grupo_label = ctk.CTkLabel(self.entry_frame,
                                     text='Grupo',
                                     font=FONTS[1],
                                     text_color=APP_COLORS[4])
-        grupo_label.grid(row=5,column=5,columnspan=1,sticky='w',padx=5)
+        grupo_label.grid(row=5,column=6,columnspan=1,sticky='w',padx=5)
     # PROVEEDOR
         prove_label = ctk.CTkLabel(self.entry_frame,
-                                    text='Proveedor',
+                                    text='Proveedor Pricipal',
                                     font=FONTS[1],
                                     text_color=APP_COLORS[4])
-        prove_label.grid(row=6,column=5,columnspan=1,sticky='w',padx=5)
+        prove_label.grid(row=6,column=6,columnspan=1,sticky='w',padx=5)
     # NOMBRE
         nombre_label = ctk.CTkLabel(self.entry_frame,
                                     text='Nombre',
                                     font=FONTS[1],
                                     text_color=APP_COLORS[4])
-        nombre_label.grid(row=7,column=5,columnspan=1,sticky='w',padx=5)        
-    # PRECIO
-        precio_label = ctk.CTkLabel(self.entry_frame,
-                                    text='Precio',
+        nombre_label.grid(row=7,column=6,columnspan=1,sticky='w',padx=5)        
+    # COSTO
+        costo_label = ctk.CTkLabel(self.entry_frame,
+                                    text='Costo',
                                     font=FONTS[1],
                                     text_color=APP_COLORS[4])
-        precio_label.grid(row=8,column=5,columnspan=1,sticky='w',padx=5)
-    # CANTIDAD
-        canti_label = ctk.CTkLabel(self.entry_frame,
-                                    text='Cantidad',
+        costo_label.grid(row=8,column=6,columnspan=1,sticky='w',padx=5)
+    # UBICACION 1
+        ubi1_label = ctk.CTkLabel(self.entry_frame,
+                                    text='Ubicación 1',
                                     font=FONTS[1],
                                     text_color=APP_COLORS[4])
-        canti_label.grid(row=9,column=5,columnspan=1,sticky='w',padx=5)
+        ubi1_label.grid(row=9,column=6,columnspan=1,sticky='w',padx=5)
+    # UBICACION 2
+        ubi2_label = ctk.CTkLabel(self.entry_frame,
+                                    text='Ubicación 2',
+                                    font=FONTS[1],
+                                    text_color=APP_COLORS[4])
+        ubi2_label.grid(row=10,column=6,columnspan=1,sticky='w',padx=5)
+    
     # BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES -BOTONES - BOTONES - BOTONES
     # AGREGAR FOTO
         self.add_foto_btn = ctk.CTkButton(self.entry_frame,
                                      text='Agregar Foto',
                                      fg_color=APP_COLORS[2],
                                      hover_color=APP_COLORS[3])
-        self.add_foto_btn.grid(row=11,column=3,sticky='wens',padx=4,pady=4)
+        self.add_foto_btn.grid(row=12,column=3,sticky='wens',padx=4,pady=4)
     # GUARDAR
         self.guardar_btn = ctk.CTkButton(self.entry_frame,
                                      text='Agregar',
                                      fg_color=APP_COLORS[2],
                                      hover_color=APP_COLORS[3],
                                      command=self.AgregarProducto)
-        self.guardar_btn.grid(row=11,column=4,sticky='wens',padx=4,pady=4)
+        self.guardar_btn.grid(row=12,column=4,sticky='wens',padx=4,pady=4)
     # MODIFICAR
         self.modificar_btn = ctk.CTkButton(self.entry_frame,
                                      state='disabled',
@@ -159,7 +172,7 @@ class CargaProductosProg(ctk.CTkFrame):
                                      fg_color=APP_COLORS[3],
                                      hover_color=APP_COLORS[3],
                                      command=self.ModificarProducto)
-        self.modificar_btn.grid(row=12,column=3,sticky='wens',padx=4,pady=4)
+        self.modificar_btn.grid(row=13,column=3,sticky='wens',padx=4,pady=4)
     # ELIMINAR
         self.eliminar_btn = ctk.CTkButton(self.entry_frame,
                                      state='disabled',
@@ -167,7 +180,7 @@ class CargaProductosProg(ctk.CTkFrame):
                                      fg_color=APP_COLORS[3],
                                      hover_color=APP_COLORS[3],
                                      command=self.EliminarProducto)
-        self.eliminar_btn.grid(row=12,column=4,sticky='wens',padx=4,pady=4)
+        self.eliminar_btn.grid(row=13,column=4,sticky='wens',padx=4,pady=4)
     # BUSCAR PRODUCTO
         self.busqueda_btn = ctk.CTkButton(self.entry_frame,
                                      text='Buscar un Producto',
@@ -192,8 +205,8 @@ class CargaProductosProg(ctk.CTkFrame):
         grupo = self.grupo_var.get()
         prove = self.prove_var.get()
         nombre = self.nombre_var.get()
-        precio = self.precio_var.get()
-        canti = self.canti_var.get()
+        precio = self.costo_var.get()
+        canti = self.ubi1_var.get()
         if codigo == '':
             messagebox.showerror('Error',f"Agregue un codigo de producto.")
         elif precio <=0 or canti <= 0:
@@ -256,8 +269,8 @@ class CargaProductosProg(ctk.CTkFrame):
             self.grupo_var.set(producto['grupo'])
             self.prove_var.set(producto['proveedor'])
             self.nombre_var.set(producto['nombre'])
-            self.precio_var.set(producto['precio'])
-            self.canti_var.set(producto['cantidad'])
+            self.costo_var.set(producto['precio'])
+            self.ubi1_var.set(producto['cantidad'])
         # BLOQUEO DE ENTRADAS Y BOTONES
             self.mod_codi = self.codigo_entry.get()
             self.guardar_btn.configure(state='disabled',fg_color=APP_COLORS[3])
@@ -286,8 +299,8 @@ class CargaProductosProg(ctk.CTkFrame):
             self.grupo_var.set(producto['grupo'])
             self.prove_var.set(producto['proveedor'])
             self.nombre_var.set(producto['nombre'])
-            self.precio_var.set(producto['precio'])
-            self.canti_var.set(producto['cantidad'])
+            self.costo_var.set(producto['precio'])
+            self.ubi1_var.set(producto['cantidad'])
         # BLOQUEO DE ENTRADAS Y BOTONES
             self.mod_codi = self.codigo_entry.get()
             self.guardar_btn.configure(state='disabled',fg_color=APP_COLORS[3])
@@ -323,8 +336,8 @@ class CargaProductosProg(ctk.CTkFrame):
         grupo = self.grupo_var.get()
         prove = self.prove_var.get()
         nombre = self.nombre_var.get()
-        precio = self.precio_var.get()
-        canti = self.canti_var.get()
+        precio = self.costo_var.get()
+        canti = self.ubi1_var.get()
         if precio <=0 or canti <= 0:
             messagebox.showerror('Error',f'El precio ni la cantidad pueden ser menores o iguales a 0')
         elif nombre == '':
@@ -364,8 +377,8 @@ class CargaProductosProg(ctk.CTkFrame):
             self.grupo_var.set('')
             self.prove_var.set('')
             self.nombre_var.set('')
-            self.precio_var.set(0.0)
-            self.canti_var.set(0)
+            self.costo_var.set(0.0)
+            self.ubi1_var.set(0)
     def RestablecerMain(self):
             self.guardar_btn.configure(state='enabled',fg_color=APP_COLORS[2])
             self.add_foto_btn.configure(state='enabled',fg_color=APP_COLORS[2])
@@ -377,8 +390,8 @@ class CargaProductosProg(ctk.CTkFrame):
             self.grupo_var.set('')
             self.prove_var.set('')
             self.nombre_var.set('')
-            self.precio_var.set(0.0)
-            self.canti_var.set(0)
+            self.costo_var.set(0.0)
+            self.ubi1_var.set(0)
 # SELECIONAR PRODUCTO EN EL TREEVIEW
     def ClickTreeview(self,event):
         item_id = self.treeview.selection()
