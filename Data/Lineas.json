@@ -1,48 +1,47 @@
 {
-    "000": {
-        "linea": "sin linea",
-        "grupo": []
+    "001": {
+        "linea": "Linea 1",
+        "grupos": {
+            "G001": {
+                "nombre_grupo": "Grupo 1",
+                "porcentaje_1": 5.0,
+                "porcentaje_2": 10.0,
+                "porcentaje_3": 15.0
+            },
+            "G002": {
+                "nombre_grupo": "Grupo 2",
+                "porcentaje_1": 20.0,
+                "porcentaje_2": 25.0,
+                "porcentaje_3": 55.0
+            }
+        }
     },
     "002": {
         "linea": "Linea 2",
-        "grupo": [
-            "Grupo 2.1"
-        ]
+        "grupo": {},
+        "grupos": {
+            "G201": {
+                "nombre_grupo": "Grupo 1",
+                "porcentaje_1": 3.0,
+                "porcentaje_2": 5.0,
+                "porcentaje_3": 9.0
+            }
+        }
     },
     "003": {
         "linea": "Linea 3",
-        "grupo": [
-            "Grupo 3.1",
-            "Grupo 3.2",
-            "Grupo 3.3"
-        ]
+        "grupo": {},
+        "grupos": {
+            "G301": {
+                "nombre_grupo": "Grupo 1",
+                "porcentaje_1": 2.0,
+                "porcentaje_2": 5.0,
+                "porcentaje_3": 8.0
+            }
+        }
     },
     "004": {
         "linea": "Linea 4",
-        "grupo": [
-            "Grupo 4.1"
-        ]
-    },
-    "005": {
-        "linea": "Linea 5",
-        "grupo": [
-            "Grupo 5.1"
-        ]
-    },
-    "006": {
-        "linea": "Linea 6",
-        "grupo": [
-            "Grupo 6.1"
-        ]
-    },
-    "007": {
-        "linea": "bombillo",
-        "grupo": [
-            "b1"
-        ]
-    },
-    "20": {
-        "linea": "linea20",
-        "grupo": []
+        "grupo": {}
     }
 }

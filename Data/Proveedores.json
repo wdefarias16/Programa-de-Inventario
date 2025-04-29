@@ -1,23 +1,5 @@
 {
-    "P02": {
-        "proveedor": "Proveedor 2"
-    },
-    "P03": {
-        "proveedor": "Proveedor 3"
-    },
-    "P04": {
-        "proveedor": "Proveedor 4"
-    },
-    "P05": {
-        "proveedor": "Proveedor 5"
-    },
-    "P06": {
-        "proveedor": "Proveedor 6"
-    },
-    "P07": {
-        "proveedor": "Proveedor 7"
-    },
-    "P08": {
-        "proveedor": "Proveedor 8"
+    "01": {
+        "proveedor": "Mercaduo"
     }
 }

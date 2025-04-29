@@ -1,30 +1,38 @@
-import tkinter as tk
-from tkinter import ttk
+# Diccionario de productos
+productos = {
+    "001": {
+        "codigo": "001",
+        "linea": "001",
+        "grupo": "Pantallas",
+        "proveedor": "01",
+        "nombre": "Pantalla 109",
+        "precio": 10.0,
+        "cantidad": 100
+    },
+    "002": {
+        "codigo": "002",
+        "linea": "001",
+        "grupo": "Pantallas",
+        "proveedor": "01",
+        "nombre": "Pantalla 106",
+        "precio": 15.0,
+        "cantidad": 50
+    }
+}
 
-def obtener_info(event):
-    # Obtener el ID del ítem seleccionado
-    item_id = tree.selection()[0]
-    # Obtener la información del ítem
-    info = tree.item(item_id)
-    print("Texto:", info["text"])
-    print("Valores:", info["values"])
+# Función para buscar productos por nombre
+def buscar_productos(productos, consulta):
+    consulta = consulta.lower()  # Convertir la consulta a minúsculas para búsqueda sin distinción de mayúsculas/minúsculas
+    resultados = [
+        producto for producto in productos.values()
+        if consulta in producto["nombre"].lower()
+    ]
+    return resultados
 
-# Crear ventana principal
-root = tk.Tk()
-root.title("TreeView Ejemplo")
+# Ejemplo de uso
+consulta = "pan"
+resultados = buscar_productos(productos, consulta)
 
-# Crear TreeView
-tree = ttk.Treeview(root, columns=("Columna1", "Columna2"), show="headings")
-tree.heading("Columna1", text="Columna 1")
-tree.heading("Columna2", text="Columna 2")
-
-# Agregar ítems
-tree.insert("", "end", text="Item1", values=("Valor1", "Valor2"))
-tree.insert("", "end", text="Item2", values=("Valor3", "Valor4"))
-
-tree.pack()
-
-# Asociar evento de selección
-tree.bind("<<TreeviewSelect>>", obtener_info)
-
-root.mainloop()
+# Imprimir resultados
+for producto in resultados:
+    print(f'Código: {producto["codigo"]}, Nombre: {producto["nombre"]}, Precio: {producto["precio"]}, Cantidad: {producto["cantidad"]}')
