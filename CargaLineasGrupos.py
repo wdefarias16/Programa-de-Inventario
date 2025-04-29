@@ -9,9 +9,11 @@ from Database import LINE_MANAGER
 class LineasGruposProg(ctk.CTkFrame):
     def __init__(self,parent,GoBack_CB):
         super().__init__(parent)
-        self.nombre_grupo = ''
         self.GoBack_CB = GoBack_CB
-    # TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - 
+        self.configure(fg_color=APP_COLORS[0])
+        self.modo_agregar_grupo_activo = False
+        self.cancel_grupo_btn_active = False
+        # TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - 
         title_frame = ctk.CTkFrame(self,corner_radius=5,fg_color=APP_COLORS[3])
         title_frame.pack(fill='x')
         title = ctk.CTkLabel(title_frame,
@@ -20,251 +22,361 @@ class LineasGruposProg(ctk.CTkFrame):
                              text_color=APP_COLORS[0],
                              height=50,
                              font=FONTS[0])
-        title.pack(pady=5)
-    # LINEAS - LINEAS - LINEAS - LINEAS - LINEAS - LINEAS - LINEAS - LINEAS - LINEAS - LINEAS - LINEAS - LINEAS
-    # FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME -  
-        lines_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLORS[0])
-        lines_frame.pack(expand=True,fill='both',side='left')
-    # GRID CONFIG
-        for rows in range(5):
-            lines_frame.rowconfigure(rows, weight=1)
-        for columns in range(4):
-            lines_frame.columnconfigure(columns,weight=1)
-    #  LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
-    # TITULO DE LINEA
-        label_lin = ctk.CTkLabel(lines_frame,
-                                 text='Líneas',
-                                 corner_radius=5,
-                                 fg_color=APP_COLORS[4],
-                                 text_color=APP_COLORS[0],
-                                 font=FONTS[0])
-        label_lin.grid(row=0,column=0,columnspan=3,sticky='nwe',pady=20,padx=5)
-    # LABEL BUSCADOR DE LINEAS
-        label_lin_cod = ctk.CTkLabel(lines_frame,text='Buscador de líneas',font=FONTS[1])
-        label_lin_cod.grid(row=1,column=0,sticky='n',padx=5)
-    # LABEL CODIGO DE LINEA
-        label_lin_cod = ctk.CTkLabel(lines_frame,text='Código de línea',font=FONTS[1])
-        label_lin_cod.grid(row=1,column=2,sticky='sw',padx=5)
-    # LABEL NOMBRE DE LINEA
-        label_lin_nom = ctk.CTkLabel(lines_frame,text='Nombre de línea',font=FONTS[1])
-        label_lin_nom.grid(row=2,column=2,sticky='nw',padx=5)
-    # MENU - MENU - MENU - MENU - MENU - MENU - MENU - MENU - MENU - MENU - MENU - MENU - MENU - MENU - 
-        self.lin_menu = ctk.CTkOptionMenu(lines_frame,
-                                          command=self.SelectLinea,
-                                          values=LINE_MANAGER.GetLineNames())
-        self.lin_menu.grid(row=1,column=0,sticky='swe',pady=5)
-    # ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - 
-    # ENTRADA CODIGO DE LINEAS
-        self.codigo_lin_var = tk.StringVar()
-        self.lin_entry = ctk.CTkEntry(lines_frame,
-                                 textvariable=self.codigo_lin_var)
-        self.lin_entry.grid(row=1,column=1,sticky='swe',pady=5)
-    # ENTRADA NOMBRE DE LINEA
-        self.nombre_lin_var = tk.StringVar()
-        lin_entry_nom = ctk.CTkEntry(lines_frame,
-                                     textvariable=self.nombre_lin_var)
-        lin_entry_nom.grid(row=2,column=1,sticky='nwe')
-    # BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - 
-    # AGREGAR GRUPO
-        self.addl_btn = ctk.CTkButton(lines_frame,
-                                      command=self.AgregarLinea,
-                                      fg_color=APP_COLORS[2],
-                                      hover_color=APP_COLORS[3],
-                                      state='enabled',
-                                      text='Agregar',font=FONTS[1])
-        self.addl_btn.grid(row=3,column=0,columnspan=4,sticky='nswe',padx=5,pady=5)
-    # MODIFICAR
-        self.modl_btn = ctk.CTkButton(lines_frame,
-                                 command=self.ModificarLinea,
-                                 state='disabled',
-                                 fg_color=APP_COLORS[3],
-                                 hover_color=APP_COLORS[3],
-                                 text='Modificar',font=FONTS[1])
-        self.modl_btn.grid(row=4,column=0,columnspan=1,sticky='nsew',padx=5,pady=5)
-    # ELIMINAR
-        self.dell_btn = ctk.CTkButton(lines_frame,
-                                 command=self.EliminarLinea,
-                                 state='disabled',
-                                 fg_color=APP_COLORS[3],
-                                 hover_color=APP_COLORS[3],
-                                 text='Eliminar',font=FONTS[1])
-        self.dell_btn.grid(row=4,column=1,columnspan=1,sticky='nsew',padx=5,pady=5)
-    # CANCELAR
-        self.cancel_btn = ctk.CTkButton(lines_frame,
-                                 command=self.Restablecer,
-                                 state='disabled',
-                                 fg_color=APP_COLORS[3],
-                                 hover_color=APP_COLORS[3],
-                                 text='Cancelar',font=FONTS[1])
-        self.cancel_btn.grid(row=4,column=2,columnspan=2,sticky='nsew',padx=5,pady=5)
-    # GRUPOS - GRUPOS - GRUPOS - GRUPOS - GRUPOS - GRUPOS - GRUPOS - GRUPOS - GRUPOS - GRUPOS - GRUPOS -
-    # FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME -
-        group_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLORS[0])
-        group_frame.pack(expand=True,fill='both',side='left')
-    # GRID CONFIG
-        for rows in range(5):
-            group_frame.rowconfigure(rows, weight=1)
-        for columns in range(4):
-            group_frame.columnconfigure(columns,weight=1)
-    # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS -
-    # TITULO DE GRUPO
-        label_grupo = ctk.CTkLabel(group_frame,
-                                 text='Grupos',
-                                 corner_radius=5,
-                                 fg_color=APP_COLORS[4],
-                                 text_color=APP_COLORS[0],
-                                 font=FONTS[0])
-        label_grupo.grid(row=0,column=0,columnspan=3,sticky='nwe',pady=20,padx=5)
-    # LABEL CODIGO DE LINEA
-        label_grup_nom = ctk.CTkLabel(group_frame,text='Línea',font=FONTS[1])
-        label_grup_nom.grid(row=1,column=2,sticky='sw',pady=5,padx=5)
-    # LABEL NOMBRE DE GRUPO
-        label_grup_nom = ctk.CTkLabel(group_frame,text='Nombre de grupo',font=FONTS[1])
-        label_grup_nom.grid(row=2,column=2,sticky='nw',padx=5)
-    # MENU - MENU - MENU - MENU - MENU - MENU - MENU - MENU - MENU - MENU - MENU - MENU - MENU - MENU -
-        self.lineas = LINE_MANAGER.GetLineNames()
-        self.codigoActualLinea = self.lineas[0].split(" - ")[0]
-        self.grup_menu = ctk.CTkOptionMenu(group_frame,
-                                           command=self.SelectGrupo,
-                                           values=LINE_MANAGER.GetGroupNames(self.codigoActualLinea))
-        self.grup_menu.grid(row=1,column=0,sticky='swe',pady=5)
-    # ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS -
-    # ENTRADA DE LINEA
-        lin_grup_entry = ctk.CTkEntry(group_frame,
-                                      state='disabled',
-                                      fg_color=APP_COLORS[7],
-                                      textvariable=self.codigo_lin_var)
-        lin_grup_entry.grid(row=1,column=1,sticky='swe',pady=5)
-    # ENTRADA DE GRUPO
-        self.nombre_grupo_var = tk.StringVar()
-        grup_entry = ctk.CTkEntry(group_frame,textvariable=self.nombre_grupo_var)
-        grup_entry.grid(row=2,column=1,sticky='nwe')
-    # BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - 
-    # AGREGAR GRUPO
-        self.addg_btn = ctk.CTkButton(group_frame,
-                                 command=self.AgregarGrupo,
-                                 state='disabled',
-                                 fg_color=APP_COLORS[3],
-                                 hover_color=APP_COLORS[3],
-                                 text='Agregar',font=FONTS[1])
-        self.addg_btn.grid(row=3,column=0,columnspan=4,sticky='nswe',padx=10,pady=5)
-    # MODIFICAR
-        self.modg_btn = ctk.CTkButton(group_frame,
-                                 command=self.ModificarGrupo,
-                                 state='disabled',
-                                 fg_color=APP_COLORS[3],
-                                 hover_color=APP_COLORS[3],
-                                 text='Modificar',font=FONTS[1])
-        self.modg_btn.grid(row=4,column=0,columnspan=2,sticky='nsew',padx=10,pady=5)
-    # ELIMINAR
-        self.delg_btn = ctk.CTkButton(group_frame,
-                                 command=self.EliminarGrupo,
-                                 state='disabled',
-                                 fg_color=APP_COLORS[3],
-                                 hover_color=APP_COLORS[3],
-                                 text='Eliminar',font=FONTS[1])
-        self.delg_btn.grid(row=4,column=2,columnspan=2,sticky='nsew',padx=10,pady=5)
-# FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - 
-# COMANDO BOTON AGREGAR LINEA
+        title.pack(pady=10)
+    # MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - 
+        self.main_frame = ctk.CTkFrame(self,
+                                       corner_radius=0,
+                                       fg_color=APP_COLORS[0])
+        self.main_frame.pack(fill='both',expand=True)
+        # GRID SET UP
+        for rows in range(16):
+            self.main_frame.rowconfigure(rows,weight=1,uniform='row')
+        for columns in range(6):
+            self.main_frame.columnconfigure(columns,weight=1,uniform='column')
+
+    # ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - 
+        #CODIGO    
+        self.codigo_entry_var = tk.StringVar()
+        self.codigo_entry = ctk.CTkEntry(self.main_frame,
+                                         textvariable=self.codigo_entry_var,
+                                         fg_color=APP_COLORS[6])
+        self.codigo_entry.grid(row=2,column=2,columnspan=2,sticky='we',padx=5)
+        # NOMBRE - DESCRIPCION
+        self.nombre_entry_var = tk.StringVar()
+        self.nombre_entry = ctk.CTkEntry(self.main_frame,
+                                         textvariable=self.nombre_entry_var,
+                                         fg_color=APP_COLORS[6])
+        self.nombre_entry.grid(row=3,column=2,columnspan=2,sticky='we',padx=5)
+    # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
+        # TITULO LINEAS
+        self.titulo_line = ctk.CTkLabel(self.main_frame,
+                                        text='Cargar una línea',
+                                        font=FONTS[1])
+        self.titulo_line.grid(row=1,column=2,sticky='w')
+        # CODIGO
+        codigo_label = ctk.CTkLabel(self.main_frame,
+                                    text='Código de línea',
+                                    font=FONTS[1])
+        codigo_label.grid(row=2,column=4,columnspan=2,sticky='w')
+        # NOMBRE - DESCRIPCION
+        descrip_label = ctk.CTkLabel(self.main_frame,
+                                    text='Descripción',
+                                    font=FONTS[1])
+        descrip_label.grid(row=3,column=4,columnspan=2,sticky='w')
+    # OPTION MENU - OPTION MENU - OPTION MENU - OPTION MENU - OPTION MENU - OPTION MENU - OPTION MENU - 
+        self.line_menu = ctk.CTkOptionMenu(self.main_frame,
+                                           command=self.ClickOnMenu,
+                                           values=LINE_MANAGER.GetLineNames())
+        self.line_menu.grid(row=2,column=1,sticky='we')
+    # BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - 
+        # VOLVER ATRAS
+        self.goback_btn = ctk.CTkButton(self.main_frame,
+                                     text='Volver atrás',
+                                     command=self.GoBack_CB,
+                                     fg_color=APP_COLORS[4],
+                                     hover_color=APP_COLORS[3])
+        self.goback_btn.grid(row=0,column=0,sticky='we',padx=5,pady=5)
+        # AGREGAR
+        self.add_btn = ctk.CTkButton(self.main_frame,
+                                     text='Agregar',
+                                     command=self.AgregarLinea,
+                                     fg_color=APP_COLORS[2],
+                                     hover_color=APP_COLORS[3])
+        self.add_btn.grid(row=4,column=2,sticky='we',padx=5,pady=5)
+        # MODIFICAR
+        self.mod_btn = ctk.CTkButton(self.main_frame,
+                                     text='Modificar',
+                                     command=self.ModificarLinea,
+                                     state='disabled',
+                                     fg_color=APP_COLORS[3],
+                                     hover_color=APP_COLORS[3])
+        self.mod_btn.grid(row=5,column=2,sticky='we',padx=5,pady=5)
+        # ELIMINAR
+        self.del_btn = ctk.CTkButton(self.main_frame,
+                                     text='Eliminar',
+                                     command=self.EliminarLinea,
+                                     state='disabled',
+                                     fg_color=APP_COLORS[3],
+                                     hover_color=APP_COLORS[3])
+        self.del_btn.grid(row=5,column=3,sticky='we',padx=5,pady=5)
+# FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - 
+# FUNCIONES DE LINEA
+    # AGREGAR LINEA
     def AgregarLinea(self):
-    # OBTENER VALORES DE ENTRADA
-        codigo = self.codigo_lin_var.get()
-        nombre = self.nombre_lin_var.get()
-    # CHEQUEAR VALORES
-        if not codigo or not nombre:
-            messagebox.showerror('Error','Debe ingresar un codigo y nombre validos')
-            return
-        if LINE_MANAGER.Add_Line(codigo,nombre):
-            nuevas_lineas = LINE_MANAGER.GetLineNames()
-            self.lin_menu.configure(values=nuevas_lineas)
+        codigo = self.codigo_entry.get()
+        nombre = self.nombre_entry.get()
+        if codigo == '' or nombre == '':
+            messagebox.showerror('Error','Debe rellenar los campos')
         else:
-            messagebox.showerror('Error','No se pudo agregar la linea')
-# COMANDO MODIFICAR LINEA
-    def ModificarLinea(self):
-        codigo = self.codigo_lin_var.get()
-        linea = self.nombre_lin_var.get()
-        LINE_MANAGER.Mod_Linea(codigo,linea)
-        self.lin_menu.configure(values=LINE_MANAGER.GetLineNames())
-        self.Restablecer()
-# COMANDO ELIMINAR LINEA
+            if LINE_MANAGER.Add_Line(codigo,nombre):
+                self.line_menu.configure(values=LINE_MANAGER.GetLineNames())
+                self.Restablecer()
+    # ELIMINAR LINEA
     def EliminarLinea(self):
-        codigo = self.codigo_lin_var.get()
-        answer = messagebox.askyesno('¡Atención!',f'¿Está seguro que desea eliminar la linea {codigo}?'
+        codigo = self.codigo_entry.get()
+        answer = messagebox.askyesno('¡Atención!',f'Está seguro que desea eliminar la línea {codigo}?'
                                      '\nEsto Eliminará tambien todos sus grupos.')
         if answer:
             LINE_MANAGER.Del_Linea(codigo)
-            self.lin_menu.configure(values=LINE_MANAGER.GetLineNames())
+            self.line_menu.configure(values=LINE_MANAGER.GetLineNames())
             self.Restablecer()
-
-
-# AL SELECCIONAR LINEA
-    def SelectLinea(self,opcion):
-        codigo = opcion.split(' - ')[0]
-        self.codigo_lin_var.set(opcion.split(' - ')[0])
-        self.nombre_lin_var.set(opcion.split(' - ')[1])
-        nuevos_grupos = LINE_MANAGER.GetGroupNames(codigo)
-        self.grup_menu.configure(values=nuevos_grupos)
-    # MODO EDICION
-        # LINEAS
-        self.addl_btn.configure(state='disabled',fg_color=APP_COLORS[3])
-        self.modl_btn.configure(state='enabled',fg_color=APP_COLORS[2])
-        self.dell_btn.configure(state='enabled',fg_color=APP_COLORS[2])
-        self.cancel_btn.configure(state='enabled',fg_color=APP_COLORS[2])
-        self.lin_entry.configure(state='disabled',fg_color=APP_COLORS[7])
-        # GRUPOS
-        self.addg_btn.configure(state='enabled',fg_color=APP_COLORS[2],hover_color=APP_COLORS[3])
-        self.modg_btn.configure(state='enabled',fg_color=APP_COLORS[2])
-        self.delg_btn.configure(state='enabled',fg_color=APP_COLORS[2])
-# AL SELECCIONAR GRUPO
-    def SelectGrupo(self,opcion):
-        self.nombre_grupo = opcion
-        self.nombre_grupo_var.set(opcion)
-# COMANDO BOTON AGREGAR GRUPO
-    def AgregarGrupo(self):
-    # OBTENER VALORES DE ENTRADA
-        codigo = self.codigo_lin_var.get()
-        grupo = self.nombre_grupo_var.get()
-    # CHEQUEAR VALORES
-        if not codigo or not grupo:
-            messagebox.showerror('Error','Debe ingresar un codigo y nombre validos')
-            return
-        LINE_MANAGER.Add_Group(codigo,grupo)
-        nuevos_grupos = LINE_MANAGER.GetGroupNames(codigo)
-        self.grup_menu.configure(values=nuevos_grupos)
-# COMANDO MODIFICAR GRUPO
-    def ModificarGrupo(self):
-        codigo = self.codigo_lin_var.get()
-        nuevo_grupo = self.nombre_grupo_var.get()
-        antiguo_grupo = self.nombre_grupo
-        if not nuevo_grupo:
-            messagebox.showerror('Error','Debe ingresar un grupo valido')
-        else:
-            LINE_MANAGER.Mod_Grupo(codigo,nuevo_grupo,antiguo_grupo)
-            nuevos_grupos = LINE_MANAGER.GetGroupNames(codigo)
-            self.grup_menu.configure(values=nuevos_grupos)
-            self.nombre_grupo_var.set('')
-# COMANDO ELIMINAR GRUPO
-    def EliminarGrupo(self):
-        codigo = self.codigo_lin_var.get()
-        grupo = self.nombre_grupo_var.get()
-        answer = messagebox.askyesno('¡Atención!',f'¿Está seguro que desea eliminar el grupo {grupo}?')
+    # MODIFICAR LINEA
+    def ModificarLinea(self):
+        codigo = self.codigo_entry.get()
+        nombre = self.nombre_entry.get()
+        answer = messagebox.askyesno('¡Atención!',f'Está seguro que desea modificar la línea {codigo}?')
         if answer:
-            LINE_MANAGER.Eliminar_Grupo(codigo,grupo)
-            nuevos_grupos = LINE_MANAGER.GetGroupNames(codigo)
-            self.grup_menu.configure(values=nuevos_grupos)
-            self.nombre_grupo_var.set('')
-# RESTABLECER A MODO AGREGAR LINEA
+            LINE_MANAGER.Mod_Linea(codigo,nombre)
+            self.line_menu.configure(values=LINE_MANAGER.GetLineNames())
+            self.Restablecer()
+# FUNCIONES DE GRUPO
+    # AGREGAR GRUPO
+    def AgregarGrupo(self):
+        codigo = self.codigo_entry_var.get()
+        codigo_grupo = self.codigo_grupo_entry_var.get()
+        nombre_grupo = self.grupo_entry_var.get()
+        p1 = self.PorV1_entry_var.get()
+        p2 = self.PorV2_entry_var.get()
+        p3 = self.PorV3_entry_var.get()
+        if codigo_grupo == '' or nombre_grupo == '':
+            messagebox.showerror('Error de carga','Debe rellenar todos los campos')
+        elif p1 <= 0 or p2 <= 0 or p3 <= 0:
+            messagebox.showerror('Error de carga','Debe cargar los porcentajes.'
+                                 '\nNinguno puede ser menor o igual a 0')
+        else:
+            LINE_MANAGER.Add_Group(codigo,codigo_grupo,nombre_grupo,p1,p2,p3)
+        self.grupos_menu.configure(values=LINE_MANAGER.GetGroupNames(codigo))
+        self.LimpiarGrupo()
+    # MODIFICAR GRUPO
+    def ModificarGrupo(self):
+        linea = self.codigo_entry_var.get()
+        grupo = self.codigo_grupo_entry_var.get()
+        nombre_grupo = self.grupo_entry_var.get()
+        p1 = self.PorV1_entry_var.get()
+        p2 = self.PorV2_entry_var.get()
+        p3 = self.PorV3_entry_var.get()
+        LINE_MANAGER.Mod_Grupo(linea,grupo,nombre_grupo,p1,p2,p3)
+        self.grupos_menu.configure(values=LINE_MANAGER.GetGroupNames(linea))
+        self.LimpiarGrupo()
+    # ELIMINAR GRUPO
+    def EliminarGrupo(self):
+        linea = self.codigo_entry_var.get()
+        grupo = self.codigo_grupo_entry_var.get()
+        answer = messagebox.askyesno('¡Atención!',f'Está seguro que desea eliminar el grupo {grupo}?')
+        if answer:
+            LINE_MANAGER.Del_Group(linea,grupo)
+        self.grupos_menu.configure(values=LINE_MANAGER.GetGroupNames(linea))
+        self.LimpiarGrupo()
+
+# CLICK MENU
+    def ClickOnMenu(self,opcion):
+        self.ModoEdicion()
+        self.codigo_entry_var.set(opcion.split(' - ')[0])
+        self.nombre_entry_var.set(opcion.split(' - ')[1])
+    def ClickOnMenuGrupo(self,opcion):
+        linea = self.codigo_entry_var.get()
+        grupo = opcion.split(' - ')[0]
+        porcentajes = LINE_MANAGER.GetPorcentajes(linea,grupo)
+        self.codigo_grupo_entry_var.set(opcion.split(' - ')[0])
+        self.grupo_entry_var.set(opcion.split(' - ')[1])
+        self.PorV1_entry_var.set(porcentajes['porcentaje_1'])
+        self.PorV2_entry_var.set(porcentajes['porcentaje_2'])
+        self.PorV3_entry_var.set(porcentajes['porcentaje_3'])
+        self.ModoEdicionGrupo()
+# MODO AGREGAR GRUPO
+    def ModoAgregarGrupo(self):
+        self.modo_agregar_grupo_activo = True
+        self.addgrupo_btn.destroy()
+        # TITULO CARGA GRUPO
+        self.titulo_grupo_label = ctk.CTkLabel(self.main_frame,
+                                    text='Carga de grupo',
+                                    font=FONTS[1])
+        self.titulo_grupo_label.grid(row=7,column=2,columnspan=2,sticky='w')
+    # ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - 
+        # ENTRADA CODIGO GRUPO
+        self.codigo_grupo_entry_var = tk.StringVar()
+        self.codigo_grupo_entry = ctk.CTkEntry(self.main_frame,
+                                         textvariable=self.codigo_grupo_entry_var,
+                                         fg_color=APP_COLORS[6])
+        self.codigo_grupo_entry.grid(row=8,column=2,columnspan=2,sticky='we',padx=5)
+        # ENTRADA DESCRIPCION
+        self.grupo_entry_var = tk.StringVar()
+        self.grupo_entry = ctk.CTkEntry(self.main_frame,
+                                         textvariable=self.grupo_entry_var,
+                                         fg_color=APP_COLORS[6])
+        self.grupo_entry.grid(row=9,column=2,columnspan=2,sticky='we',padx=5)
+        # PORCENTAJE 1
+        self.PorV1_entry_var = tk.DoubleVar()
+        self.PorV1_entry = ctk.CTkEntry(self.main_frame,
+                                         textvariable=self.PorV1_entry_var,
+                                         fg_color=APP_COLORS[6])
+        self.PorV1_entry.grid(row=10,column=2,columnspan=2,sticky='we',padx=5)
+        # PORCENTAJE 2
+        self.PorV2_entry_var = tk.DoubleVar()
+        self.PorV2_entry = ctk.CTkEntry(self.main_frame,
+                                         textvariable=self.PorV2_entry_var,
+                                         fg_color=APP_COLORS[6])
+        self.PorV2_entry.grid(row=11,column=2,columnspan=2,sticky='we',padx=5)
+        # PORCENTAJE 3
+        self.PorV3_entry_var = tk.DoubleVar()
+        self.PorV3_entry = ctk.CTkEntry(self.main_frame,
+                                         textvariable=self.PorV3_entry_var,
+                                         fg_color=APP_COLORS[6])
+        self.PorV3_entry.grid(row=12,column=2,columnspan=2,sticky='we',padx=5)
+    # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
+        # CODIGO
+        self.codigoGrupo_label = ctk.CTkLabel(self.main_frame,
+                                    text='Código de grupo',
+                                    font=FONTS[1])
+        self.codigoGrupo_label.grid(row=8,column=4,columnspan=2,sticky='w')
+        # DESCRIPCION
+        self.nombreGrupo_label = ctk.CTkLabel(self.main_frame,
+                                    text='Descripción',
+                                    font=FONTS[1])
+        self.nombreGrupo_label.grid(row=9,column=4,columnspan=2,sticky='w')
+        # PDV1
+        self.pdv1_label = ctk.CTkLabel(self.main_frame,
+                                    text='% Porcentaje de venta 1',
+                                    font=FONTS[1])
+        self.pdv1_label.grid(row=10,column=4,columnspan=2,sticky='w')
+        # PDV2
+        self.pdv2_label = ctk.CTkLabel(self.main_frame,
+                                    text='% Porcentaje de venta 2',
+                                    font=FONTS[1])
+        self.pdv2_label.grid(row=11,column=4,columnspan=2,sticky='w')
+        # PDV3
+        self.pdv3_label = ctk.CTkLabel(self.main_frame,
+                                    text='% Porcentaje de venta 3',
+                                    font=FONTS[1])
+        self.pdv3_label.grid(row=12,column=4,columnspan=2,sticky='w')
+    # MENU DE GRUPOS
+        self.grupos_menu = ctk.CTkOptionMenu(self.main_frame,
+                                           command=self.ClickOnMenuGrupo,
+                                           values=LINE_MANAGER.GetGroupNames(self.codigo_entry.get()))
+        self.grupos_menu.grid(row=8,column=1,sticky='we')
+    # BOTONES
+        # BOTON AGREGAR
+        self.agregar_grupo_btn = ctk.CTkButton(self.main_frame,
+                                     text='Agregar',
+                                     command=self.AgregarGrupo,
+                                     state='enabled',
+                                     fg_color=APP_COLORS[2],
+                                     hover_color=APP_COLORS[3])
+        self.agregar_grupo_btn.grid(row=13,column=2,sticky='we',padx=5,pady=5)
+        # BOTON MODIFICAR
+        self.modificar_grupo_btn = ctk.CTkButton(self.main_frame,
+                                     text='Modificar',
+                                     command=self.ModificarGrupo,
+                                     state='disabled',
+                                     fg_color=APP_COLORS[3],
+                                     hover_color=APP_COLORS[3])
+        self.modificar_grupo_btn.grid(row=14,column=2,sticky='we',padx=5,pady=5)
+        # BOTON ELIMINAR
+        self.eliminar_grupo_btn = ctk.CTkButton(self.main_frame,
+                                     text='Eliminar',
+                                     command=self.EliminarGrupo,
+                                     state='disabled',
+                                     fg_color=APP_COLORS[3],
+                                     hover_color=APP_COLORS[3])
+        self.eliminar_grupo_btn.grid(row=14,column=3,sticky='we',padx=5,pady=5)
+    # BLOQUEO DE LINEAS
+        self.mod_btn.configure(state='disabled',fg_color=APP_COLORS[3])
+        self.del_btn.configure(state='disabled',fg_color=APP_COLORS[3])
+        self.nombre_entry.configure(state='disabled',fg_color=APP_COLORS[4])
+        self.line_menu.configure(state='disabled')
+        self.addgrupo_btn.destroy()
+# MODO EDICION LINEA
+    def ModoEdicion(self):
+        # BOTON CANCELAR
+        self.cancel_btn = ctk.CTkButton(self.main_frame,
+                                     text='Cancelar',
+                                     command=self.Restablecer,
+                                     state='enabled',
+                                     fg_color=APP_COLORS[2],
+                                     hover_color=APP_COLORS[3])
+        self.cancel_btn.grid(row=4,column=3,sticky='we',padx=5,pady=5)
+        # BOTON AGREGAR GRUPO
+        self.addgrupo_btn = ctk.CTkButton(self.main_frame,
+                                     text='Agregar grupo',
+                                     command=self.ModoAgregarGrupo,
+                                     state='enabled',
+                                     fg_color=APP_COLORS[2],
+                                     hover_color=APP_COLORS[3])
+        self.addgrupo_btn.grid(row=1,column=3,sticky='we',padx=5,pady=5)
+        self.add_btn.configure(state='disabled',fg_color=APP_COLORS[3])
+        self.mod_btn.configure(state='enabled',fg_color=APP_COLORS[2])
+        self.del_btn.configure(state='enabled',fg_color=APP_COLORS[2])
+        self.codigo_entry.configure(state='disabled',fg_color=APP_COLORS[4])
+# MODO EDICION GRUPO
+    def ModoEdicionGrupo(self):
+        # BOTON CANCELAR
+        self.cancel_grupo_btn_active = True
+        self.cancel_grupo_btn = ctk.CTkButton(self.main_frame,
+                                     text='Cancelar',
+                                     command=self.LimpiarGrupo,
+                                     state='enabled',
+                                     fg_color=APP_COLORS[2],
+                                     hover_color=APP_COLORS[3])
+        self.cancel_grupo_btn.grid(row=13,column=3,sticky='we',padx=5,pady=5)
+        # BOTONES
+        self.agregar_grupo_btn.configure(state='disabled',fg_color=APP_COLORS[3])
+        self.modificar_grupo_btn.configure(state='enabled',fg_color=APP_COLORS[2])
+        self.eliminar_grupo_btn.configure(state='enabled',fg_color=APP_COLORS[2])
+        # ENTRADA
+        self.codigo_grupo_entry.configure(state='disabled',fg_color=APP_COLORS[4])
+        
+
+# LIMPIAR GRUPO
+    def LimpiarGrupo(self):
+        self.cancel_grupo_btn.destroy()
+        self.codigo_grupo_entry.configure(state='normal',fg_color=APP_COLORS[6])
+        self.agregar_grupo_btn.configure(state='enabled',fg_color=APP_COLORS[2])
+        self.modificar_grupo_btn.configure(state='disabled',fg_color=APP_COLORS[3])
+        self.eliminar_grupo_btn.configure(state='disabled',fg_color=APP_COLORS[3])
+        self.codigo_grupo_entry_var.set('')
+        self.grupo_entry_var.set('')
+        self.PorV1_entry_var.set(0.0)
+        self.PorV2_entry_var.set(0.0)
+        self.PorV3_entry_var.set(0.0)
+
+# RESTABLECER LOS CAMPOS DE GRUPO
+    def RestablecerGrupo(self):
+        # LABELS
+        self.titulo_grupo_label.destroy()
+        self.codigoGrupo_label.destroy()
+        self.nombreGrupo_label.destroy()
+        self.pdv1_label.destroy()
+        self.pdv2_label.destroy()
+        self.pdv3_label.destroy()
+        # ENTRADAS
+        self.grupo_entry.destroy()
+        self.codigo_grupo_entry.destroy()
+        self.PorV1_entry.destroy()
+        self.PorV2_entry.destroy()
+        self.PorV3_entry.destroy()
+        # MENU
+        self.grupos_menu.destroy()
+        # BOTONES
+        self.agregar_grupo_btn.destroy()
+        self.modificar_grupo_btn.destroy()
+        self.eliminar_grupo_btn.destroy()
+        self.mod_btn.configure(state='enabled',fg_color=APP_COLORS[2])
+        self.del_btn.configure(state='enabled',fg_color=APP_COLORS[2])
+        self.nombre_entry.configure(state='normal',fg_color=APP_COLORS[6])
+        self.line_menu.configure(state='enabled')
+# RESTABLECER LOS CAMPOS
     def Restablecer(self):
-        # LINEAS
-        self.lin_entry.configure(state='normal',fg_color=APP_COLORS[6])
-        self.addl_btn.configure(state='enabled',fg_color=APP_COLORS[2])
-        self.modl_btn.configure(state='disaled',fg_color=APP_COLORS[3])
-        self.dell_btn.configure(state='disaled',fg_color=APP_COLORS[3])
-        self.cancel_btn.configure(state='disaled',fg_color=APP_COLORS[3])
-        self.codigo_lin_var.set('')
-        self.nombre_lin_var.set('')
-        # GRUPOS
-        self.addg_btn.configure(state='disaled',fg_color=APP_COLORS[3])
-        self.modg_btn.configure(state='disaled',fg_color=APP_COLORS[3])
-        self.delg_btn.configure(state='disaled',fg_color=APP_COLORS[3])
-        self.nombre_grupo_var.set('')
+        if self.modo_agregar_grupo_activo == True:
+            self.RestablecerGrupo()
+            self.modo_agregar_grupo_activo = False
+        if self.cancel_grupo_btn_active == True:
+            self.cancel_grupo_btn.destroy()
+            self.cancel_grupo_btn_active = False
+        self.cancel_btn.destroy()
+        self.addgrupo_btn.destroy()
+        self.codigo_entry_var.set('')
+        self.nombre_entry_var.set('')
+        self.add_btn.configure(state='enabled',fg_color=APP_COLORS[2])
+        self.mod_btn.configure(state='disabled',fg_color=APP_COLORS[3])
+        self.del_btn.configure(state='disabled',fg_color=APP_COLORS[3])
+        self.codigo_entry.configure(state='normal',fg_color=APP_COLORS[6])

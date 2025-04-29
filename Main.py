@@ -2,7 +2,7 @@ import customtkinter as ctk
 from DashBoard2 import*
 from Login import*
 from CargaProductos import*
-from CargaLineasGrupos2 import*
+from CargaLineasGrupos import*
 from CargaProveedores import*
 from InventarioMenu import*
 from style import FONTS, APP_COLORS, APPEARANCE_MODE
@@ -62,15 +62,15 @@ class App(ctk.CTk):
                                            Lineas_Prog = self.CargaLineas,
                                            Proveedores_Prog = self.CargaProveedores)
         self.current_prog.pack(expand=True,fill='both')
-    # PROGRAMA DE CARGA DE PRODUCTOS
-    def CargaProductosProg(self):
-        self.current_prog.destroy()
-        self.current_prog = CargaProductosProg(self,GoBack_CB=self.GoBackInventario)
-        self.current_prog.pack(expand=True,fill='both')
     # PROGRAMA DE CARGA DE LINEAS Y GRUPOS
     def CargaLineas(self):
         self.current_prog.destroy()
         self.current_prog = LineasGruposProg(self,GoBack_CB=self.GoBackInventario)
+        self.current_prog.pack(expand=True,fill='both')
+    # PROGRAMA DE CARGA DE PRODUCTOS
+    def CargaProductosProg(self):
+        self.current_prog.destroy()
+        self.current_prog = CargaProductosProg(self,GoBack_CB=self.GoBackInventario)
         self.current_prog.pack(expand=True,fill='both')
     # PROGRAMA DE CARGA DE PROVEEDORES
     def CargaProveedores(self):
