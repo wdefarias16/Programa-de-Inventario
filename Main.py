@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from DashBoard2 import*
+from DashBoard import*
 from Login import*
 from CargaProductos import*
 from CargaLineasGrupos import*
