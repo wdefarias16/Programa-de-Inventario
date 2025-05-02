@@ -70,6 +70,16 @@ class LineasGrupos():
     def GetPorcentajes(self,linea,grupo):
         porcentajes = self.lineas_grupos[linea]['grupos'][grupo]
         return porcentajes
+# RETORNAR LOS PRECIOS DEL PRODUCTO
+    def GetPrecios(self, linea, grupo, costo):
+        porcentajes = [
+        self.lineas_grupos[linea]["grupos"][grupo]['porcentaje_1'] / 100,
+        self.lineas_grupos[linea]["grupos"][grupo]['porcentaje_2'] / 100,
+        self.lineas_grupos[linea]["grupos"][grupo]['porcentaje_3'] / 100]
+
+        precios = [costo + (costo * porcentaje) for porcentaje in porcentajes]
+        return precios
+
     
     
 # AGREGA UNA LINEA A LA BASE DE DATOS
@@ -160,8 +170,9 @@ class LineasGrupos():
             return False
         return True
 # CHEQUEA SI EL GRUPO PERTENECE A LA LINEA
-    def CheckGrupo(self,codigo,grupo):    
-        if grupo in self.lineas_grupos[codigo]['grupo']:
+    def CheckGrupo(self, linea, grupo):    
+        if linea in self.lineas_grupos and "grupos" in self.lineas_grupos[linea] and grupo in self.lineas_grupos[linea]["grupos"]:
             return True
-        messagebox.showerror('Error de carga', f'El grupo {grupo} no pertenece a la línea {codigo}.')
+    
+        messagebox.showerror('Error de carga', f'El grupo {grupo} no pertenece a la línea {linea}.')
         return False

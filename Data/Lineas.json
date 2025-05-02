@@ -1,54 +1,31 @@
 {
     "001": {
-        "linea": "Linea 1",
+        "linea": "Electricos",
+        "grupo": {},
         "grupos": {
             "01": {
-                "nombre_grupo": "Grupo 1",
-                "porcentaje_1": 5.0,
-                "porcentaje_2": 10.0,
-                "porcentaje_3": 15.0
-            },
-            "02": {
-                "nombre_grupo": "Grupo 3 ",
+                "nombre_grupo": "Bobinas",
                 "porcentaje_1": 10.0,
                 "porcentaje_2": 15.0,
                 "porcentaje_3": 20.0
+            },
+            "02": {
+                "nombre_grupo": "Sensores",
+                "porcentaje_1": 30.0,
+                "porcentaje_2": 40.0,
+                "porcentaje_3": 50.0
             }
         }
     },
     "002": {
-        "linea": "Linea 2",
+        "linea": "Rolineras",
         "grupo": {},
         "grupos": {
             "01": {
-                "nombre_grupo": "Grupo 1",
-                "porcentaje_1": 50.0,
-                "porcentaje_2": 52.0,
-                "porcentaje_3": 55.0
-            }
-        }
-    },
-    "003": {
-        "linea": "Linea 3",
-        "grupo": {},
-        "grupos": {
-            "01": {
-                "nombre_grupo": "Grupo 1",
-                "porcentaje_1": 10.0,
-                "porcentaje_2": 15.0,
-                "porcentaje_3": 20.0
-            }
-        }
-    },
-    "004": {
-        "linea": "Linea 4",
-        "grupo": {},
-        "grupos": {
-            "01": {
-                "nombre_grupo": "g1",
-                "porcentaje_1": 10.0,
-                "porcentaje_2": 151.0,
-                "porcentaje_3": 2.0
+                "nombre_grupo": "PFI",
+                "porcentaje_1": 20.0,
+                "porcentaje_2": 25.0,
+                "porcentaje_3": 30.0
             }
         }
     }

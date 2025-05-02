@@ -1,119 +1,30 @@
 {
-    "001": {
-        "codigo": "001",
+    "A01": {
+        "codigo": "A01",
         "linea": "001",
-        "grupo": "Pantallas",
+        "grupo": "01",
         "proveedor": "01",
-        "nombre": "Pantalla 109",
-        "precio": 10.0,
-        "cantidad": 100
+        "nombre": "Bobina Chevrolet Aveo",
+        "costo": 40.0,
+        "ubicacion1": "A1",
+        "ubicacion2": "A2",
+        "precio1": 44.0,
+        "precio2": 46.0,
+        "precio3": 48.0,
+        "existencia": 0
     },
-    "002": {
-        "codigo": "002",
+    "A02": {
+        "codigo": "A02",
         "linea": "001",
-        "grupo": "Pantallas",
+        "grupo": "02",
         "proveedor": "01",
-        "nombre": "Pantalla 106",
-        "precio": 15.0,
-        "cantidad": 50
-    },
-    "003": {
-        "codigo": "003",
-        "linea": "002",
-        "grupo": "PFI",
-        "proveedor": "01",
-        "nombre": "Rolinera 608",
-        "precio": 5.0,
-        "cantidad": 50
-    },
-    "004": {
-        "codigo": "004",
-        "linea": "002",
-        "grupo": "PFI",
-        "proveedor": "01",
-        "nombre": "Rolinera 609",
-        "precio": 10.0,
-        "cantidad": 30
-    },
-    "005": {
-        "codigo": "005",
-        "linea": "002",
-        "grupo": "PFI",
-        "proveedor": "01",
-        "nombre": "Rolinera 610",
-        "precio": 7.5,
-        "cantidad": 45
-    },
-    "006": {
-        "codigo": "006",
-        "linea": "002",
-        "grupo": "PFI",
-        "proveedor": "01",
-        "nombre": "Rolinera 611",
-        "precio": 8.0,
-        "cantidad": 10
-    },
-    "007": {
-        "codigo": "007",
-        "linea": "003",
-        "grupo": "Bobinas",
-        "proveedor": "01",
-        "nombre": "Bobina Corsa",
-        "precio": 25.0,
-        "cantidad": 5
-    },
-    "008": {
-        "codigo": "008",
-        "linea": "003",
-        "grupo": "Bobinas",
-        "proveedor": "01",
-        "nombre": "Bobina Aveo",
-        "precio": 40.0,
-        "cantidad": 20
-    },
-    "009": {
-        "codigo": "009",
-        "linea": "003",
-        "grupo": "Bobinas",
-        "proveedor": "01",
-        "nombre": "Bobina Cruze",
-        "precio": 20.0,
-        "cantidad": 3
-    },
-    "0010": {
-        "codigo": "0010",
-        "linea": "003",
-        "grupo": "Bobinas",
-        "proveedor": "01",
-        "nombre": "Bobiba Optra",
-        "precio": 25.0,
-        "cantidad": 10
-    },
-    "0011": {
-        "codigo": "0011",
-        "linea": "003",
-        "grupo": "Sensores",
-        "proveedor": "01",
-        "nombre": "Sensor TPS Aveo",
-        "precio": 15.0,
-        "cantidad": 30
-    },
-    "0012": {
-        "codigo": "0012",
-        "linea": "003",
-        "grupo": "Sensores",
-        "proveedor": "01",
-        "nombre": "Sensor TPS Arauca",
-        "precio": 15.0,
-        "cantidad": 10
-    },
-    "0013": {
-        "codigo": "0013",
-        "linea": "003",
-        "grupo": "Sensores",
-        "proveedor": "01",
-        "nombre": "Sensor Map Aveo",
-        "precio": 20.0,
-        "cantidad": 5
+        "nombre": "Sensor IAC Chevrolet Aveo",
+        "costo": 20.0,
+        "ubicacion1": "",
+        "ubicacion2": "",
+        "precio1": 26.0,
+        "precio2": 28.0,
+        "precio3": 30.0,
+        "existencia": 0
     }
 }

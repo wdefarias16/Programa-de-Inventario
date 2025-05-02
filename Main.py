@@ -4,7 +4,8 @@ from Login import*
 from CargaProductos import*
 from CargaLineasGrupos import*
 from CargaProveedores import*
-from InventarioMenu import*
+from InventarioMenu2 import*
+from EntradaInventarios import*
 from style import FONTS, APP_COLORS, APPEARANCE_MODE
 
 # VENTANA PRINCIPAL (APLICACION)
@@ -12,7 +13,9 @@ class App(ctk.CTk):
     def __init__(self):
         super().__init__()
         self.title('Sistema')
-        self.geometry('1000x500')   
+        self.geometry('1920x1080')
+
+
         self.dashboard_activo = False
     # ATAJOS
         # ATAJO CERRAR SESION
@@ -52,7 +55,8 @@ class App(ctk.CTk):
                                            GoBack_CB = self.ReturnToDashboard,
                                            CargaPro_Prog = self.CargaProductosProg,
                                            Lineas_Prog = self.CargaLineas,
-                                           Proveedores_Prog = self.CargaProveedores)
+                                           Proveedores_Prog = self.CargaProveedores,
+                                           EntradasInv_prog = self.EntradasInventario)
         self.current_prog.pack(expand=True,fill='both')
     def GoBackInventario(self):
         self.current_prog.destroy()
@@ -60,7 +64,8 @@ class App(ctk.CTk):
                                            GoBack_CB = self.ReturnToDashboard,
                                            CargaPro_Prog = self.CargaProductosProg,
                                            Lineas_Prog = self.CargaLineas,
-                                           Proveedores_Prog = self.CargaProveedores)
+                                           Proveedores_Prog = self.CargaProveedores,
+                                           EntradasInv_prog = self.EntradasInventario)
         self.current_prog.pack(expand=True,fill='both')
     # PROGRAMA DE CARGA DE LINEAS Y GRUPOS
     def CargaLineas(self):
@@ -76,6 +81,11 @@ class App(ctk.CTk):
     def CargaProveedores(self):
         self.current_prog.destroy()
         self.current_prog = ProveedoresProg(self,GoBack_CB=self.GoBackInventario)
+        self.current_prog.pack(expand=True,fill='both')
+    # ENTRADAS DE INVENTARIO
+    def EntradasInventario(self):
+        self.current_prog.destroy()
+        self.current_prog = EntradasInventarioProg(self,GoBack_CB=self.GoBackInventario)
         self.current_prog.pack(expand=True,fill='both')
 
 # REGRESAR AL DASHBOARD
