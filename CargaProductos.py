@@ -308,7 +308,7 @@ class CargaProductosProg(ctk.CTkFrame):
             self.codigo_entry.configure(state='disabled',fg_color='#666')
             self.modificar_btn.configure(state='enabled',fg_color=APP_COLORS[2])
             self.eliminar_btn.configure(state='enabled',fg_color=APP_COLORS[2])
-            # CANCELAR
+        # CANCELAR
             self.cancelar_btn = ctk.CTkButton(self.entry_frame,
                                      text='Cancelar',
                                      fg_color=APP_COLORS[2],
@@ -379,6 +379,7 @@ class CargaProductosProg(ctk.CTkFrame):
             self.nombre_var.set('')
             self.costo_var.set(0.0)
             self.ubi1_var.set(0)
+            
     def RestablecerMain(self):
             self.guardar_btn.configure(state='enabled',fg_color=APP_COLORS[2])
             self.add_foto_btn.configure(state='enabled',fg_color=APP_COLORS[2])

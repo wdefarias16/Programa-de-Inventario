@@ -4,7 +4,7 @@ from LineasGrupos import*
 
 # CLASE PRODUCTOS - CLASE PRODUCTOS - CLASE PRODUCTOS - CLASE PRODUCTOS - CLASE PRODUCTOS - CLASE PRODUCTOS - CLASE PRODUCTOS - 
 class Product():
-    def __init__(self,codigo,linea,grupo,proveedor,nombre,costo,ubicacion1,ubicacion2,pv1,pv2,pv3):
+    def __init__(self,codigo,linea,grupo,proveedor,nombre,costo,ubicacion1,ubicacion2,pv1,pv2,pv3,existencia=0):
         self.codigo = codigo
         self.linea = linea
         self.grupo = grupo
@@ -16,6 +16,7 @@ class Product():
         self.precio_venta_1 = pv1
         self.precio_venta_2 = pv2
         self.precio_venta_3 = pv3
+        self.existencia = existencia
 # REGRESA EL DICCIONARIO DE UN PRODUCTO
     def ToDict(self):
         return{
@@ -29,7 +30,8 @@ class Product():
             'ubicacion2':self.ubicacion2,
             'precio1':self.precio_venta_1,
             'precio2':self.precio_venta_2,
-            'precio3':self.precio_venta_3}
+            'precio3':self.precio_venta_3,
+            'existencia':self.existencia}
 # CLASE INVENTARIO - CLASE INVENTARIO - CLASE INVENTARIO - CLASE INVENTARIO - CLASE INVENTARIO - CLASE INVENTARIO - 
 class Inventory():
     def __init__(self,filename = 'Data/Inventario.json'):
