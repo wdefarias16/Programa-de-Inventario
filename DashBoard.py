@@ -12,11 +12,12 @@ from threading import Timer
 from style import FONTS, APP_COLORS, APPEARANCE_MODE
 
 class MainFrame(ctk.CTkFrame):
-    def __init__(self,parent,lockscreen_callback,Inventario_CB):
+    def __init__(self,parent,lockscreen_callback,exit_callback,Inventario_CB):
         super().__init__(parent)
     # ASIGNAR EL CALLBACK PARA LA PANTALLA DE BLOQUEO
         self.lockscreen_callback = lockscreen_callback
         self.Inventario_CB = Inventario_CB
+        self.exit = exit_callback
     # MUESTRA EL INICIO
         self.current_frame = self.InicioFrame()
     # BARRA INFERIOR
@@ -48,9 +49,13 @@ class MainFrame(ctk.CTkFrame):
         self.main_frame = ctk.CTkFrame(self)
         self.main_frame.pack(expand=True,fill='both')
 
-        self.buttons_frame = ctk.CTkFrame(self.main_frame,corner_radius=0,width=70,fg_color=APP_COLORS[2])
-        self.buttons_frame.pack(side='left',fill='y')
-    # BOTON INVENTARIO - BOTON INVENTARIO - BOTON INVENTARIO - BOTON INVENTARIO - BOTON INVENTARIO - BOTON INVENTARIO
+        self.buttons_frame = ctk.CTkFrame(self.main_frame,corner_radius=0,fg_color=APP_COLORS[2])
+        self.buttons_frame.pack(side='left',fill='y',expand=False)
+        for rows in range(12):
+            self.buttons_frame.rowconfigure(rows,weight=1,uniform='row')
+        for columns in range(2):
+            self.buttons_frame.columnconfigure(columns,weight=1,uniform='column')
+        # BOTON INVENTARIO - BOTON INVENTARIO - BOTON INVENTARIO - BOTON INVENTARIO - BOTON INVENTARIO - BOTON INVENTARIO
         inv_btn_image=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_inventario_light.png"), size=(30,30),
                                    dark_image=Image.open(r"Recursos\Iconos\btn_inventario_dark.png"))
         invt_btn = ctk.CTkButton(self.buttons_frame,
@@ -58,12 +63,12 @@ class MainFrame(ctk.CTkFrame):
                                      fg_color=APP_COLORS[2],
                                      hover_color=APP_COLORS[3],
                                      image=inv_btn_image,
-                                     corner_radius=0,
+                                     corner_radius=10,
                                      compound='left',
                                      anchor='w',
                                      command=lambda: self.Inventario_CB())
-        invt_btn.pack(fill='x',pady=5,side='top',padx=10) 
-    # BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION
+        invt_btn.grid(row=0,column=0,columnspan=2,sticky='nswe',padx=15)
+        # BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION
         fact_btn_image=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_fact_light.png"), size=(30,30),
                                    dark_image=Image.open(r"Recursos\Iconos\btn_fact_dark.png"))
         fact_btn = ctk.CTkButton(self.buttons_frame,
@@ -71,12 +76,12 @@ class MainFrame(ctk.CTkFrame):
                                      fg_color=APP_COLORS[2],
                                      hover_color=APP_COLORS[3],
                                      image=fact_btn_image,
-                                     corner_radius=0,
+                                     corner_radius=10,
                                      compound='left',
                                      anchor='w',
                                      command=lambda: self.SwitchFrame(self.FacturacionFrame))
-        fact_btn.pack(fill='x',pady=5,side='top',padx=10)
-    # BOTON CUENTAS POR PAGAR - BOTON CUENTAS POR PAGAR - BOTON CUENTAS POR PAGAR - BOTON CUENTAS POR PAGAR - BOTON CUENTAS POR PAGAR - 
+        fact_btn.grid(row=1,column=0,columnspan=2,sticky='nswe',padx=15)
+        # BOTON CUENTAS POR PAGAR - BOTON CUENTAS POR PAGAR - BOTON CUENTAS POR PAGAR - BOTON CUENTAS POR PAGAR - BOTON CUENTAS POR PAGAR - 
         cuentas_xp_btn_image=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_cuentas_light.png"), size=(30,30),
                                    dark_image=Image.open(r"Recursos\Iconos\btn_cuentas_dark.png"))
         cuentas_xp_btn = ctk.CTkButton(self.buttons_frame,
@@ -84,12 +89,12 @@ class MainFrame(ctk.CTkFrame):
                                      fg_color=APP_COLORS[2],
                                      hover_color=APP_COLORS[3],
                                      image=cuentas_xp_btn_image,
-                                     corner_radius=0,
+                                     corner_radius=10,
                                      compound='left',
                                      anchor='w',
                                      command=lambda: self.SwitchFrame(self.CuentasXPFrame))
-        cuentas_xp_btn.pack(fill='x',pady=5,side='top',padx=10)
-    # BOTON CUENTAS POR COBRAR - BOTON CUENTAS POR COBRAR - BOTON CUENTAS POR COBRAR - BOTON CUENTAS POR COBRAR - 
+        cuentas_xp_btn.grid(row=2,column=0,columnspan=2,sticky='nswe',padx=15)
+        # BOTON CUENTAS POR COBRAR - BOTON CUENTAS POR COBRAR - BOTON CUENTAS POR COBRAR - BOTON CUENTAS POR COBRAR - 
         cuentas_xc_btn_image=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_cuentasPC_light.png"), size=(30,30),
                                    dark_image=Image.open(r"Recursos\Iconos\btn_cuentasPC_dark.png"))
         cuentas_xc_btn = ctk.CTkButton(self.buttons_frame,
@@ -97,12 +102,12 @@ class MainFrame(ctk.CTkFrame):
                                      fg_color=APP_COLORS[2],
                                      hover_color=APP_COLORS[3],
                                      image=cuentas_xc_btn_image,
-                                     corner_radius=0,
+                                     corner_radius=10,
                                      compound='left',
                                      anchor='w',
                                      command=lambda: self.SwitchFrame(self.CuentasXCFrame))
-        cuentas_xc_btn.pack(fill='x',pady=5,side='top',padx=10)
-    # BOTON PROGRAMAS DE UTILIDAD - BOTON PROGRAMAS DE UTILIDAD - BOTON PROGRAMAS DE UTILIDAD - BOTON PROGRAMAS DE UTILIDAD -  
+        cuentas_xc_btn.grid(row=3,column=0,columnspan=2,sticky='nswe',padx=15)
+        # BOTON PROGRAMAS DE UTILIDAD - BOTON PROGRAMAS DE UTILIDAD - BOTON PROGRAMAS DE UTILIDAD - BOTON PROGRAMAS DE UTILIDAD -  
         pdutilidad_btn_image=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_PDUtilidad_light.png"), size=(30,30),
                                    dark_image=Image.open(r"Recursos\Iconos\btn_PDUtilidad_dark.png"))
         pdutilidad_btn = ctk.CTkButton(self.buttons_frame,
@@ -110,23 +115,35 @@ class MainFrame(ctk.CTkFrame):
                                      fg_color=APP_COLORS[2],
                                      hover_color=APP_COLORS[3],
                                      image=pdutilidad_btn_image,
-                                     corner_radius=0,
+                                     corner_radius=10,
                                      compound='left',
                                      anchor='w',
                                      command=lambda: self.SwitchFrame(self.ProgrmasUFrame))
-        pdutilidad_btn.pack(fill='x',pady=5,side='top',padx=10)
-    # BOTON DE BLOQUEAR O CERRAR SESION -  BOTON DE BLOQUEAR O CERRAR SESION - BOTON DE BLOQUEAR O CERRAR SESION 
+        pdutilidad_btn.grid(row=4,column=0,columnspan=2,sticky='nswe',padx=15)
+        # BOTON DE BLOQUEAR O CERRAR SESION -  BOTON DE BLOQUEAR O CERRAR SESION - BOTON DE BLOQUEAR O CERRAR SESION 
         lock_btn_image=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_lock_light.png"), size=(30,30),
                                    dark_image=Image.open(r"Recursos\Iconos\btn_lock_dark.png"))
         lockscreen_btn=ctk.CTkButton(self.buttons_frame,
                                      text='',
                                      image=lock_btn_image,
-                                     corner_radius=0,
+                                     corner_radius=10,
                                      fg_color=APP_COLORS[2],
                                      hover_color=APP_COLORS[3],
                                      command=lambda: self.lockscreen_callback()
                                      )
-        lockscreen_btn.pack(side='bottom',pady=5)
+        lockscreen_btn.grid(row=11,column=0,columnspan=1,sticky='nswe',pady=10,padx=5)
+        # BOTON SALIR - BOTON SALIR - BOTON SALIR - BOTON SALIR - BOTON SALIR - BOTON SALIR - BOTON SALIR - 
+        exit_btn_image=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_exit_light.png"), size=(30,30),
+                                   dark_image=Image.open(r"Recursos\Iconos\btn_exit_dark.png"))
+        exit_btn=ctk.CTkButton(self.buttons_frame,
+                                     text='',
+                                     image=exit_btn_image,
+                                     corner_radius=10,
+                                     fg_color=APP_COLORS[2],
+                                     hover_color=APP_COLORS[3],
+                                     command=self.exit
+                                     )
+        exit_btn.grid(row=11,column=1,columnspan=1,sticky='nswe',pady=10,padx=5)
     # INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - 
         title_frame = ctk.CTkFrame(self.main_frame,corner_radius=0,fg_color=APP_COLORS[0])
         title_frame.pack(expand=True,fill='both')
@@ -212,3 +229,6 @@ class MainFrame(ctk.CTkFrame):
         hora = datetime.datetime.now()
         self.date_time.configure(text=hora.strftime("%d-%m-%Y %H:%M:%S"))
         self.after(1000,self.Date_Time)
+
+    
+        

@@ -13,9 +13,7 @@ class App(ctk.CTk):
     def __init__(self):
         super().__init__()
         self.title('Sistema')
-        self.geometry('1920x1080')
-
-
+        self.geometry('1000x500')
         self.dashboard_activo = False
     # ATAJOS
         # ATAJO CERRAR SESION
@@ -36,6 +34,7 @@ class App(ctk.CTk):
         self.login_frame.destroy()
         self.dashboard=MainFrame(self,
                                  lockscreen_callback = self.LockWindow,
+                                 exit_callback = self.Salir,
                                  Inventario_CB=self.InventarioMenu)
         self.dashboard.pack(expand=True, fill='both')
         self.dashboard_activo = True
@@ -91,12 +90,16 @@ class App(ctk.CTk):
 # REGRESAR AL DASHBOARD
     def ReturnToDashboard(self):
         self.current_prog.destroy()
-        self.dashboard=MainFrame(self,lockscreen_callback = self.LockWindow,Inventario_CB=self.InventarioMenu)
+        self.dashboard=MainFrame(self,lockscreen_callback = self.LockWindow,
+                                 exit_callback = self.Salir,
+                                 Inventario_CB=self.InventarioMenu)
         self.dashboard.pack(expand=True, fill='both')
         self.dashboard_activo = True
 # SALIR DEL PROGRAMA
     def Salir(self):
-        self.quit()
+        answer = messagebox.askyesno('Salir','¿Está seguro que desea salir de la aplicación?')
+        if answer:
+            self.quit()
 # ATAJOS
     def F4_Pressed(self,event):
         if self.dashboard_activo == False:
