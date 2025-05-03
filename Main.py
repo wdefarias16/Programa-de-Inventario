@@ -110,8 +110,5 @@ class App(ctk.CTk):
 # INNICIO DE LA APLICACION
 if __name__ == '__main__':
     ctk.set_appearance_mode(APPEARANCE_MODE)
-    
-    # INICIALIZAR LOS ARCHIVOS
-    ReadUsersData()
     # EJECUTAR LA APP   
     App()

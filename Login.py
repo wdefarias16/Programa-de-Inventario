@@ -3,120 +3,90 @@ import customtkinter as ctk
 import tkinter as tk
 import json, os, bcrypt
 from style import FONTS, APP_COLORS, APPEARANCE_MODE
-
-# LEER EL ARCHIVO DE USUARIOS   
-def ReadUsersData():
-    global users_database
-    if not os.path.exists('Data'):
-        os.makedirs('Data')
-    try:
-        with open('Data/UsersData.json','r') as UsersData_JsonFile:
-            users_database=json.load(UsersData_JsonFile)
-    except FileNotFoundError:
-        users_database = {}
-        SaveUsersData()
-
-# SALVAR EL ARCHIVO DE USUARIOS
-def SaveUsersData():
-    with open('Data/UsersData.json','w') as UsersData_JsonFile:
-        json.dump(users_database,UsersData_JsonFile,indent=4)
-
-# CLASE USUARIOS
-class Users():
-    def __init__(self,user,password):
-        self.user = user
-        self.password = self.HashPassword(password)
-
-    # ENCRIPTAR CONTRASENA
-    def HashPassword(self, plain_text_password):
-        password_bytes = plain_text_password.encode('utf-8')
-        salt = bcrypt.gensalt()
-        hashed_password = bcrypt.hashpw(password_bytes,salt)
-        return hashed_password.decode('utf-8')
-    
-    # CHEQUEAR CONTRASENA
-    def CheckPassword(self, plain_text_password):
-        return bcrypt.checkpw(
-            plain_text_password.encode('utf-8'),
-            self.password.encode('utf-8')
-        )
+from Database import USER_MANAGER
 
 # LOGIN FRAME
 class LoginFrame(ctk.CTkFrame):
     def __init__(self,parent,success_callback):
         super().__init__(parent,bg_color=APP_COLORS[0])
         self.success_callback = success_callback
-        self.CreateWidgets()
-        
-    # WIDGETS
-    def CreateWidgets(self):
-        # MENSAJE BIENVENIDO
-        label_wc = ctk.CTkLabel(self,text='Bienvenido',font=FONTS[0],text_color=APP_COLORS[4])
-        label_wc.place(anchor='center',relx=0.5,rely=0.3)
-        
+        self.Login()
+    # GRID SETUP
+        for rows in range(20):
+            self.rowconfigure(rows,weight=1,uniform='row')
+        for columns in range(6):
+            self.columnconfigure(columns,weight=1,uniform='columns')
+    # LOGIN
+    def Login(self):
+    # ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - 
         # ENTRADA USUARIO
         self.user_var = tk.StringVar()
-        login_entry = ctk.CTkEntry(self,placeholder_text='Usuario',
+        self.login_entry = ctk.CTkEntry(self,placeholder_text='Usuario',
                                    width=280,
                                    textvariable=self.user_var,
                                    corner_radius=5,
                                    border_color='#fff')
-        login_entry.place(anchor='center',relx=0.5,rely=0.4)
-        
-
+        self.login_entry.grid(row=7,column=2,columnspan=2,sticky='we')
+        # INICIAR EL PROGRAMA CON LA ENTRADA DE USUARIO ACTIVA
+        self.login_entry.after(100, lambda: self.login_entry.focus_set())
         # ENTRADA CONTRASENA
         self.password_var = tk.StringVar()
-        password_entry = ctk.CTkEntry(self,placeholder_text='Contraseña',
+        self.password_entry = ctk.CTkEntry(self,placeholder_text='Contraseña',
                                       width=280,
                                       textvariable=self.password_var,
                                       corner_radius=5,
                                       show='•',
                                       border_color='#fff')
-        password_entry.place(anchor='center',relx=0.5,rely=0.48)
-        password_entry.bind("<Return>",lambda event:self.Access())
-
-        # BOTON ENTRAR
-        enter_button = ctk.CTkButton(self,text='Entrar',command=self.Access)
-        enter_button.place(anchor='center',relx=0.425,rely=0.6)
-
-        # BOTON AGREGAR USUARIO
-        add_button = ctk.CTkButton(self,text='Agregar usuario',command=self.AddUser)
-        add_button.place(anchor='center',relx=0.575,rely=0.6)
-        
-        
+        self.password_entry.grid(row=9,column=2,columnspan=2,sticky='we')
+        self.password_entry.bind("<Return>",lambda event:self.Access())
+    # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
+        # MENSAJE BIENVENIDO
+        label_wc = ctk.CTkLabel(self,text='Bienvenido',font=FONTS[0],text_color=APP_COLORS[4])
+        label_wc.grid(row=3,column=2,columnspan=2,sticky='we')
+        # USUARIO
+        user_label = ctk.CTkLabel(self,text='Usuario',font=FONTS[1],text_color=APP_COLORS[4])
+        user_label.grid(row=6,column=2,columnspan=1,sticky='ws')
+        # CONTRASENA
+        password_label = ctk.CTkLabel(self,text='Contraseña',font=FONTS[1],text_color=APP_COLORS[4])
+        password_label.grid(row=8,column=2,columnspan=1,sticky='ws')
         # MENSAJE INFERIOR
         self.label_var = tk.StringVar(value='Ingresa tus credenciales')
         label_accses = ctk.CTkLabel(self,textvariable=self.label_var,font=FONTS[1],text_color=APP_COLORS[4])
-        label_accses.place(anchor='center',relx=0.5,rely=0.7)
+        label_accses.grid(row=13,column=2,columnspan=2,sticky='we')
+    # BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES -  
+        # BOTON ENTRAR
+        enter_button = ctk.CTkButton(self,
+                                     text='Entrar',
+                                     fg_color=APP_COLORS[2],
+                                     hover_color=APP_COLORS[3],
+                                     command=self.Access)
+        enter_button.grid(row=11,column=2,columnspan=1,sticky='we',padx=5)
+        # BOTON ENTRAR
+        adduser_button = ctk.CTkButton(self,
+                                     text='Agregar usuario',
+                                     fg_color=APP_COLORS[2],
+                                     hover_color=APP_COLORS[3],
+                                     command=self.AddUser)
+        adduser_button.grid(row=11,column=3,columnspan=1,sticky='we',padx=5)
 
-        # INICIAR EL PROGRAMA CON LA ENTRADA DE USUARIO ACTIVA
-        login_entry.after(100, lambda: login_entry.focus_set())
+        
+        
+
+        
 
         
     # ACCESO DEL LOGIN
     def Access(self):
         user = self.user_var.get()
         password = self.password_var.get()
+        if USER_MANAGER.Access(user,password):
+            self.label_var.set('Bienvenido')
+            self.after(500,self.success_callback)
+        else:
+            self.label_var.set('Acceso denegado')
 
-        # CHEQUEAR SI EL USUARIO ESTA EN LA BASE DE DATOS
-        if user in users_database:
-            stored_hash = users_database[user]
-            #SI ESTA EL USUARIO, SE PASA LA FUNCION SUCCESS_CALLBACK
-            if bcrypt.checkpw(password.encode('utf-8'),stored_hash.encode('utf-8')):
-                self.label_var.set('Bienvenido')
-                self.after(500,self.success_callback)
-                return
-        self.label_var.set('Acceso denegado')
-
-    # AÑADIR UN USUARIO
     def AddUser(self):
         user = self.user_var.get()
         password = self.password_var.get()
-        if user in users_database:
-            self.label_var.set(f'El usuario {user}, ya esta registrado')
-        else:
-            
-            new_user = Users(user,password)
-            users_database[user] = new_user.password
+        if USER_MANAGER.AddUser(user,password):
             self.label_var.set('Usuario agregado')
-            SaveUsersData()
