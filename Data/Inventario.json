@@ -5,12 +5,12 @@
         "grupo": "01",
         "proveedor": "01",
         "nombre": "Bobina Chevrolet Aveo",
-        "costo": 40.0,
+        "costo": 35.0,
         "ubicacion1": "A1",
         "ubicacion2": "A2",
-        "precio1": 44.0,
-        "precio2": 46.0,
-        "precio3": 48.0,
+        "precio1": 45.0,
+        "precio2": 41.18,
+        "precio3": 38.89,
         "existencia": 0
     },
     "A02": {
@@ -22,9 +22,9 @@
         "costo": 20.0,
         "ubicacion1": "",
         "ubicacion2": "",
-        "precio1": 26.0,
-        "precio2": 28.0,
-        "precio3": 30.0,
+        "precio1": 30.0,
+        "precio2": 25.0,
+        "precio3": 22.0,
         "existencia": 0
     }
 }

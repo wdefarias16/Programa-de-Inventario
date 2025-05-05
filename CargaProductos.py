@@ -244,6 +244,13 @@ class CargaProductosProg(ctk.CTkFrame):
                                        fg_color=APP_COLORS[4],
                                        hover_color=APP_COLORS[3])
         salir_btn.grid(row=0,column=0,sticky='nw',padx=5)
+    # CANCELAR
+        self.cancelar_btn = ctk.CTkButton(self.entry_frame,
+                                     text='Cancelar',
+                                     fg_color=APP_COLORS[2],
+                                     hover_color=APP_COLORS[3],
+                                     command=self.CancelMain)
+        self.cancelar_btn.grid(row=1,column=7,sticky='wens',padx=4,pady=4)
     
 # FUNCION BOTONES - FUNCION BOTONES - FUNCION BOTONES - FUNCION BOTONES - FUNCION BOTONES - FUNCION BOTONES
 # FUNCION BOTON AGREGAR PRODUCTO
@@ -279,7 +286,9 @@ class CargaProductosProg(ctk.CTkFrame):
         costo = self.costo_var.get()
         ubi1 = self.ubi1_var.get()
         ubi2 = self.ubi2_var.get()
+        
         precios = LINE_MANAGER.GetPrecios(linea,grupo,costo)
+        
         if costo <=0:
             messagebox.showerror('Error',f'El costo no puede ser menor o igual a 0')
         elif nombre == '':
@@ -325,7 +334,7 @@ class CargaProductosProg(ctk.CTkFrame):
                                          producto['proveedor'],
                                          producto['nombre'],
                                          producto['costo']))
-# BUSCAR UN PRODUCTO CON LA BARRA DE BUSQUEDA DE LA TABLA
+# BUSCAR UN PRODUCTO DESPUES DE DAR CLICK CON EL TREEVIEW
     def BuscarProducto(self):
         self.inventario = INVENTARIO.GetInventory()
         codigo = self.search_bar_var.get()
@@ -335,14 +344,6 @@ class CargaProductosProg(ctk.CTkFrame):
             for item in self.treeview.get_children():
                 self.treeview.delete(item)
             producto = self.inventario[codigo]
-        # MOSTRAR EN LISTA SOLO EL PRODUCTO ELEGIDO
-            self.treeview.insert("",'end',
-                                 text=producto['codigo'],
-                                 values=(producto['linea'],
-                                         producto['grupo'],
-                                         producto['proveedor'],
-                                         producto['nombre'],
-                                         producto['costo'],))
         # LLENAR LAS ENTRADAS CON LOS DATOS DE PRODUCTO ELEGIDO
             self.codigo_var.set(producto['codigo'])
             self.lin_var.set(producto['linea'])
@@ -360,16 +361,19 @@ class CargaProductosProg(ctk.CTkFrame):
             self.guardar_btn.configure(state='disabled',fg_color=APP_COLORS[3])
             self.add_foto_btn.configure(state='disabled',fg_color=APP_COLORS[3])
             self.codigo_entry.configure(state='disabled',fg_color='#666')
-            self.search_bar.configure(state='disabled',fg_color='#666')
             self.modificar_btn.configure(state='enabled',fg_color=APP_COLORS[2])
             self.eliminar_btn.configure(state='enabled',fg_color=APP_COLORS[2])
-            # CANCELAR
-            self.cancelar_btn = ctk.CTkButton(self.entry_frame,
-                                     text='Cancelar',
-                                     fg_color=APP_COLORS[2],
-                                     hover_color=APP_COLORS[3],
-                                     command=self.CancelMain)
-            self.cancelar_btn.grid(row=1,column=7,sticky='wens',padx=4,pady=4)
+
+        # MODIFICAR PRECIOS
+            self.modprecios_btn = ctk.CTkButton(self.entry_frame,
+                                         text='Modificar precios',
+                                         fg_color=APP_COLORS[2],
+                                         hover_color=APP_COLORS[3],
+                                         command=self.ModificarPrecios)
+            self.modprecios_btn.grid(row=10,column=2,sticky='nswe',padx=4,pady=4)
+
+
+
 # BUSCAR UN PRODUCTO POR LA ENTRADA PRINCIPAL CON CODIGO
     def BuscarProductoMain(self):
         self.inventario = INVENTARIO.GetInventory()
@@ -397,13 +401,8 @@ class CargaProductosProg(ctk.CTkFrame):
             self.codigo_entry.configure(state='disabled',fg_color='#666')
             self.modificar_btn.configure(state='enabled',fg_color=APP_COLORS[2])
             self.eliminar_btn.configure(state='enabled',fg_color=APP_COLORS[2])
-        # CANCELAR
-            self.cancelar_btn = ctk.CTkButton(self.entry_frame,
-                                     text='Cancelar',
-                                     fg_color=APP_COLORS[2],
-                                     hover_color=APP_COLORS[3],
-                                     command=self.CancelMain)
-            self.cancelar_btn.grid(row=1,column=7,sticky='wens',padx=4,pady=4)
+
+
 # BUSCAR UN PRODUCTO CON EL NOMBRE EN LA TABLA
     def BuscarProductoNombre(self):
         self.inventario = INVENTARIO.GetInventory()
@@ -421,12 +420,10 @@ class CargaProductosProg(ctk.CTkFrame):
                                          producto['costo']))
 # COMANDO CANCELAR
     def Cancel(self):
-        self.ListInventory()
         self.Restablecer()
-        self.cancelar_btn.destroy()
     def CancelMain(self):
         self.RestablecerMain()
-        self.cancelar_btn.destroy()
+
 # FUNCION RESTABLECER
     def Restablecer(self):
             self.guardar_btn.configure(state='enabled',fg_color=APP_COLORS[2])
@@ -435,6 +432,9 @@ class CargaProductosProg(ctk.CTkFrame):
             self.search_bar.configure(state='normal',fg_color='#fff')
             self.modificar_btn.configure(state='disabled',fg_color=APP_COLORS[3])
             self.eliminar_btn.configure(state='disabled',fg_color=APP_COLORS[3])
+            self.precio1_entry.configure(state='disabled')
+            self.precio2_entry.configure(state='disabled')
+            self.precio3_entry.configure(state='disabled')
             self.search_bar_var.set('')
             self.codigo_var.set('')
             self.lin_var.set('')
@@ -454,6 +454,9 @@ class CargaProductosProg(ctk.CTkFrame):
             self.codigo_entry.configure(state='normal',fg_color='#fff')
             self.modificar_btn.configure(state='disabled',fg_color=APP_COLORS[3])
             self.eliminar_btn.configure(state='disabled',fg_color=APP_COLORS[3])
+            self.precio1_entry.configure(state='disabled')
+            self.precio2_entry.configure(state='disabled')
+            self.precio3_entry.configure(state='disabled')
             self.codigo_var.set('')
             self.lin_var.set('')
             self.grupo_var.set('')
@@ -465,6 +468,79 @@ class CargaProductosProg(ctk.CTkFrame):
             self.precio1_var.set(0)
             self.precio2_var.set(0)
             self.precio3_var.set(0)
+# MODIFICAR PRECIOS
+    def ModificarPrecios(self):
+        self.precio1_entry.configure(state='normal')
+        self.precio2_entry.configure(state='normal')
+        self.precio3_entry.configure(state='normal')
+        self.codigo_entry.configure(state='disabled',fg_color='#666')
+        self.linea_entry.configure(state='disabled',fg_color='#666')
+        self.grupo_entry.configure(state='disabled',fg_color='#666')
+        self.prove_entry.configure(state='disabled',fg_color='#666')
+        self.nombre_entry.configure(state='disabled',fg_color='#666')
+        self.costo_entry.configure(state='disabled',fg_color='#666')
+        self.ubi1_entry.configure(state='disabled',fg_color='#666')
+        self.ubi2_entry.configure(state='disabled',fg_color='#666')
+        self.lin_menu.configure(state='disabled')
+        self.grup_menu.configure(state='disabled')
+        self.prov_menu.configure(state='disabled')
+
+        self.modprecios_btn.configure(state='enabled',
+                                   fg_color=APP_COLORS[2],
+                                   text='Guardar precios',
+                                   command=self.AceptarPrecios)
+        self.add_foto_btn.configure(state='disabled',fg_color=APP_COLORS[3])
+        self.modificar_btn.configure(state='disabled',fg_color=APP_COLORS[3])
+        self.eliminar_btn.configure(state='disabled',fg_color=APP_COLORS[3])
+        self.busqueda_btn.configure(state='disabled',fg_color=APP_COLORS[3])
+        self.cancelar_btn.configure(state='disabled',fg_color=APP_COLORS[3])
+    
+    def AceptarPrecios(self):
+        codigo = self.codigo_var.get()
+        p1 = self.precio1_var.get()
+        p2 = self.precio2_var.get()
+        p3 = self.precio3_var.get()
+ 
+        INVENTARIO.EditPrecio(codigo,p1,p2,p3)
+        self.inventario = INVENTARIO.GetInventory()
+        self.RestablecerModificarPrecios()
+    
+    def RestablecerModificarPrecios(self):
+
+        self.add_foto_btn.configure(state='enabled',fg_color=APP_COLORS[2])
+        self.busqueda_btn.configure(state='enabled',fg_color=APP_COLORS[2])
+        self.codigo_entry.configure(state='normal',fg_color='#fff')
+        self.modificar_btn.configure(state='disabled',fg_color=APP_COLORS[3])
+        self.eliminar_btn.configure(state='disabled',fg_color=APP_COLORS[3])
+
+        self.precio1_entry.configure(state='disabled')
+        self.precio2_entry.configure(state='disabled')
+        self.precio3_entry.configure(state='disabled')
+        self.codigo_entry.configure(state='normal',fg_color='#fff')
+        self.linea_entry.configure(state='normal',fg_color='#fff')
+        self.grupo_entry.configure(state='normal',fg_color='#fff')
+        self.prove_entry.configure(state='normal',fg_color='#fff')
+        self.nombre_entry.configure(state='normal',fg_color='#fff')
+        self.costo_entry.configure(state='normal',fg_color='#fff')
+        self.ubi1_entry.configure(state='normal',fg_color='#fff')
+        self.ubi2_entry.configure(state='normal',fg_color='#fff')
+
+        self.lin_menu.configure(state='enabled')
+        self.grup_menu.configure(state='enabled')
+        self.prov_menu.configure(state='enabled')
+        
+        self.codigo_var.set('')
+        self.lin_var.set('')
+        self.grupo_var.set('')
+        self.prove_var.set('')
+        self.nombre_var.set('')
+        self.costo_var.set(0.0)
+        self.ubi1_var.set('')
+        self.ubi2_var.set('')
+        self.precio1_var.set(0)
+        self.precio2_var.set(0)
+        self.precio3_var.set(0)
+
 # ACTUALIZAR CAMBIOS
     def Actualizar(self):
         self.lineas = LINE_MANAGER.GetLineNames()
@@ -496,10 +572,11 @@ class CargaProductosProg(ctk.CTkFrame):
     # CANCELAR
         cancel_btn = ctk.CTkButton(self.tree_frame,
                                     text='Cancelar',
-                                    command=self.Cancel,
+                                    command=self.ListInventory,
                                     fg_color=APP_COLORS[2],
                                     hover_color=APP_COLORS[3])
         cancel_btn.grid(row=0,column=1,sticky='w',padx=5)
+    
     # TREEVIEW
         self.treeview = ttk.Treeview(self.tree_frame,
                                      style='Custom.Treeview',
@@ -555,3 +632,4 @@ class CargaProductosProg(ctk.CTkFrame):
         if info['text'] in self.inventario:
             self.BuscarProducto()
         self.tree_frame.destroy()
+

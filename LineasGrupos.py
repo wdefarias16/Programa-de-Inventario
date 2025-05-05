@@ -72,12 +72,14 @@ class LineasGrupos():
         return porcentajes
 # RETORNAR LOS PRECIOS DEL PRODUCTO
     def GetPrecios(self, linea, grupo, costo):
-        porcentajes = [
-        self.lineas_grupos[linea]["grupos"][grupo]['porcentaje_1'] / 100,
-        self.lineas_grupos[linea]["grupos"][grupo]['porcentaje_2'] / 100,
-        self.lineas_grupos[linea]["grupos"][grupo]['porcentaje_3'] / 100]
+        
+        p1 = (100 - self.lineas_grupos[linea]["grupos"][grupo]['porcentaje_1'])/100
+        p2 = (100 - self.lineas_grupos[linea]["grupos"][grupo]['porcentaje_2'])/100
+        p3 = (100 - self.lineas_grupos[linea]["grupos"][grupo]['porcentaje_3'])/100
 
-        precios = [costo + (costo * porcentaje) for porcentaje in porcentajes]
+        porcentajes = [p1,p2,p3]
+        precios = [round((costo / porcentaje),2) for porcentaje in porcentajes]
+
         return precios
 
     

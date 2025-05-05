@@ -71,6 +71,13 @@ class Inventory():
             self.inventario[product['codigo']] = product
             self.Save_Inventory()
             messagebox.showinfo('Producto modificado',f"El producto {product['codigo']} ha sido modificado.")
+    def EditPrecio(self,codigo,p1,p2,p3):
+        if codigo in self.inventario:
+            self.inventario[codigo]['precio1'] = p1
+            self.inventario[codigo]['precio2'] = p2
+            self.inventario[codigo]['precio3'] = p3
+            self.Save_Inventory()
+            messagebox.showinfo('Producto modificado',f"Los precios del producto {codigo} han sido modificados.")
 # BORRAR PRODUCTO
     def DelProduct(self,codigo):
         if codigo in self.inventario:
