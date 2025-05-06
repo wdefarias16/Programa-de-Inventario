@@ -2,15 +2,15 @@
     "A01": {
         "codigo": "A01",
         "linea": "001",
-        "grupo": "01",
+        "grupo": "02",
         "proveedor": "01",
         "nombre": "Bobina Chevrolet Aveo",
-        "costo": 35.0,
+        "costo": 30.0,
         "ubicacion1": "A1",
         "ubicacion2": "A2",
-        "precio1": 45.0,
-        "precio2": 41.18,
-        "precio3": 38.89,
+        "precio1": 60.0,
+        "precio2": 50.0,
+        "precio3": 43.0,
         "existencia": 0
     },
     "A02": {
@@ -20,11 +20,11 @@
         "proveedor": "01",
         "nombre": "Sensor IAC Chevrolet Aveo",
         "costo": 20.0,
-        "ubicacion1": "",
-        "ubicacion2": "",
-        "precio1": 30.0,
-        "precio2": 25.0,
-        "precio3": 22.0,
+        "ubicacion1": "U1",
+        "ubicacion2": "U2",
+        "precio1": 40.0,
+        "precio2": 34.0,
+        "precio3": 28.57,
         "existencia": 0
     }
 }
