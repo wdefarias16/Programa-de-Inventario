@@ -6,18 +6,24 @@ from CargaProductos import*
 from CargaLineasGrupos import*
 from CargaProveedores import*
 from Database import*
-from InventarioMenu import*
+from Menu_Inventario import*
+from Menu_CuentasPorPagar import*
 import datetime
 from threading import Timer
 from style import FONTS, APP_COLORS, APPEARANCE_MODE
 
 class MainFrame(ctk.CTkFrame):
-    def __init__(self,parent,lockscreen_callback,exit_callback,Inventario_CB):
+    def __init__(self,parent,
+                 lockscreen_callback,
+                 exit_callback,
+                 Inventario_CB,
+                 CuentasPorPagar_CB):
         super().__init__(parent)
     # ASIGNAR EL CALLBACK PARA LA PANTALLA DE BLOQUEO
         self.lockscreen_callback = lockscreen_callback
-        self.Inventario_CB = Inventario_CB
         self.exit = exit_callback
+        self.Inventario_CB = Inventario_CB
+        self.CuentasPorPagar_CB = CuentasPorPagar_CB
     # MAIN FRAME GRID SETUP
         for rows in range(21):
             self.rowconfigure(rows, weight=1, uniform='row')
@@ -65,7 +71,7 @@ class MainFrame(ctk.CTkFrame):
                                      corner_radius=10,
                                      compound='left',
                                      anchor='w',
-                                     command=lambda: self.Inventario_CB())
+                                     command=self.Inventario_CB)
         invt_btn.grid(row=0,column=0,columnspan=2,sticky='nswe',padx=15)
         # BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION
         fact_btn_image=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_fact_light.png"), size=(30,30),
@@ -79,7 +85,7 @@ class MainFrame(ctk.CTkFrame):
                                      corner_radius=10,
                                      compound='left',
                                      anchor='w',
-                                     command=lambda: self.SwitchFrame(self.FacturacionFrame))
+                                     command=lambda: 0+0)
         fact_btn.grid(row=1,column=0,columnspan=2,sticky='nswe',padx=15)
         # BOTON CUENTAS POR PAGAR - BOTON CUENTAS POR PAGAR - BOTON CUENTAS POR PAGAR - BOTON CUENTAS POR PAGAR - BOTON CUENTAS POR PAGAR - 
         cuentas_xp_btn_image=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_cuentas_light.png"), size=(30,30),
@@ -93,7 +99,7 @@ class MainFrame(ctk.CTkFrame):
                                      corner_radius=10,
                                      compound='left',
                                      anchor='w',
-                                     command=lambda: self.SwitchFrame(self.CuentasXPFrame))
+                                     command=self.CuentasPorPagar_CB)
         cuentas_xp_btn.grid(row=2,column=0,columnspan=2,sticky='nswe',padx=15)
         # BOTON CUENTAS POR COBRAR - BOTON CUENTAS POR COBRAR - BOTON CUENTAS POR COBRAR - BOTON CUENTAS POR COBRAR - 
         cuentas_xc_btn_image=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_cuentasPC_light.png"), size=(30,30),

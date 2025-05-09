@@ -72,18 +72,12 @@ class LineasGrupos():
         return porcentajes
 # RETORNAR LOS PRECIOS DEL PRODUCTO
     def GetPrecios(self, linea, grupo, costo):
-        
         p1 = (100 - self.lineas_grupos[linea]["grupos"][grupo]['porcentaje_1'])/100
         p2 = (100 - self.lineas_grupos[linea]["grupos"][grupo]['porcentaje_2'])/100
         p3 = (100 - self.lineas_grupos[linea]["grupos"][grupo]['porcentaje_3'])/100
-
         porcentajes = [p1,p2,p3]
         precios = [round((costo / porcentaje),2) for porcentaje in porcentajes]
-
         return precios
-
-    
-    
 # AGREGA UNA LINEA A LA BASE DE DATOS
     def Add_Line(self,codigo,linea,grupos=None):
         if codigo in self.lineas_grupos:

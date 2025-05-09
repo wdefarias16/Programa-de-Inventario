@@ -4,7 +4,8 @@ from Login import*
 from CargaProductos import*
 from CargaLineasGrupos import*
 from CargaProveedores import*
-from InventarioMenu2 import*
+from Menu_Inventario import*
+from Menu_CuentasPorPagar import*
 from EntradaInventarios import*
 from style import FONTS, APP_COLORS, APPEARANCE_MODE
 
@@ -35,7 +36,8 @@ class App(ctk.CTk):
         self.dashboard=MainFrame(self,
                                  lockscreen_callback = self.LockWindow,
                                  exit_callback = self.Salir,
-                                 Inventario_CB=self.InventarioMenu)
+                                 Inventario_CB=self.InventarioMenu,
+                                 CuentasPorPagar_CB=self.CuentasPorPagarMenu)
         self.dashboard.pack(expand=True, fill='both')
         self.dashboard_activo = True
     def LockWindow(self):
@@ -54,7 +56,6 @@ class App(ctk.CTk):
                                            GoBack_CB = self.ReturnToDashboard,
                                            CargaPro_Prog = self.CargaProductosProg,
                                            Lineas_Prog = self.CargaLineas,
-                                           Proveedores_Prog = self.CargaProveedores,
                                            EntradasInv_prog = self.EntradasInventario)
         self.current_prog.pack(expand=True,fill='both')
     def GoBackInventario(self):
@@ -63,7 +64,6 @@ class App(ctk.CTk):
                                            GoBack_CB = self.ReturnToDashboard,
                                            CargaPro_Prog = self.CargaProductosProg,
                                            Lineas_Prog = self.CargaLineas,
-                                           Proveedores_Prog = self.CargaProveedores,
                                            EntradasInv_prog = self.EntradasInventario)
         self.current_prog.pack(expand=True,fill='both')
     # PROGRAMA DE CARGA DE LINEAS Y GRUPOS
@@ -76,23 +76,39 @@ class App(ctk.CTk):
         self.current_prog.destroy()
         self.current_prog = CargaProductosProg(self,GoBack_CB=self.GoBackInventario)
         self.current_prog.pack(expand=True,fill='both')
-    # PROGRAMA DE CARGA DE PROVEEDORES
-    def CargaProveedores(self):
-        self.current_prog.destroy()
-        self.current_prog = ProveedoresProg(self,GoBack_CB=self.GoBackInventario)
-        self.current_prog.pack(expand=True,fill='both')
     # ENTRADAS DE INVENTARIO
     def EntradasInventario(self):
         self.current_prog.destroy()
         self.current_prog = EntradasInventarioProg(self,GoBack_CB=self.GoBackInventario)
         self.current_prog.pack(expand=True,fill='both')
-
+# PROGRAMAS DE CUENTAS POR PAGAR - PROGRAMAS DE CUENTAS POR PAGAR - PROGRAMAS DE CUENTAS POR PAGAR - PROGRAMAS DE CUENTAS POR PAGAR - 
+    # MENU DE CUENTAS POR PAGAR
+    def CuentasPorPagarMenu(self):
+        self.dashboard.destroy()
+        self.dashboard_activo = False
+        self.current_prog = CuentasPorPagarMenu(self,
+                                           GoBack_CB = self.ReturnToDashboard,
+                                           Proveedores_Prog = self.CargaProveedores)
+        self.current_prog.pack(expand=True,fill='both')
+    def GoBackCuentasPP(self):
+        self.current_prog.destroy()
+        self.current_prog = CuentasPorPagarMenu(self,
+                                           GoBack_CB = self.ReturnToDashboard,
+                                           Proveedores_Prog = self.CargaProveedores)
+        self.current_prog.pack(expand=True,fill='both')
+    # PROGRAMA DE CARGA DE PROVEEDORES
+    def CargaProveedores(self):
+        self.current_prog.destroy()
+        self.current_prog = ProveedoresProg(self,GoBack_CB=self.GoBackCuentasPP)
+        self.current_prog.pack(expand=True,fill='both')
 # REGRESAR AL DASHBOARD
     def ReturnToDashboard(self):
         self.current_prog.destroy()
-        self.dashboard=MainFrame(self,lockscreen_callback = self.LockWindow,
+        self.dashboard=MainFrame(self,
+                                 lockscreen_callback = self.LockWindow,
                                  exit_callback = self.Salir,
-                                 Inventario_CB=self.InventarioMenu)
+                                 Inventario_CB=self.InventarioMenu,
+                                 CuentasPorPagar_CB=self.CuentasPorPagarMenu)
         self.dashboard.pack(expand=True, fill='both')
         self.dashboard_activo = True
 # SALIR DEL PROGRAMA

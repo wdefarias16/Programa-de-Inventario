@@ -6,13 +6,12 @@ from style import*
 
 
 class InventarioMenu(ctk.CTkFrame):
-    def __init__(self,parent,GoBack_CB,CargaPro_Prog,Lineas_Prog,Proveedores_Prog,EntradasInv_prog):
+    def __init__(self,parent,GoBack_CB,CargaPro_Prog,Lineas_Prog,EntradasInv_prog):
         super().__init__(parent)
     # CALLBACKS
         self.GoBack_CB =  GoBack_CB
         self.CargaPro_Prog = CargaPro_Prog
         self.Lineas_Prog = Lineas_Prog
-        self.Proveedores_Prog = Proveedores_Prog
         self.EntradasInv_prog = EntradasInv_prog
 
 
