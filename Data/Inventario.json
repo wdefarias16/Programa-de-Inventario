@@ -8,9 +8,9 @@
         "costo": 30.0,
         "ubicacion1": "A1",
         "ubicacion2": "A2",
-        "precio1": 60.0,
+        "precio1": 65.0,
         "precio2": 50.0,
-        "precio3": 43.0,
+        "precio3": 42.86,
         "existencia": 0
     },
     "A02": {
