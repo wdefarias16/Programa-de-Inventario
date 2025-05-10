@@ -1,5 +1,37 @@
 {
-    "01": {
-        "proveedor": "Mercaduo"
+    "001": {
+        "nombre": "Mercaduo",
+        "contacto": "000 000 0000",
+        "direccion1": "XXXXXX",
+        "direccion2": "XXX",
+        "ciudad": "xxx",
+        "telefono": "0000 000 0000",
+        "celular": "0000 000 0000",
+        "email": "xxxx@email.com",
+        "rif": "0 000000000-0"
+    },
+    "002": {
+        "codigo": "002",
+        "nombre": "Alejandro",
+        "contacto": "",
+        "direccion1": "",
+        "direccion2": "",
+        "ciudad": "",
+        "telefono": "",
+        "celular": "",
+        "email": "",
+        "rif": ""
+    },
+    "003": {
+        "codigo": "003",
+        "nombre": "Proveedor",
+        "contacto": "",
+        "direccion1": "",
+        "direccion2": "",
+        "ciudad": "",
+        "telefono": "",
+        "celular": "",
+        "email": "",
+        "rif": ""
     }
 }
