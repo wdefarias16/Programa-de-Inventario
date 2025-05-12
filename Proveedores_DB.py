@@ -3,20 +3,14 @@ import psycopg2
 
 class Proveedores:
     def __init__(self,dbname,user,password,host,port):
-        """
-        Initialize the connection to the PostgreSQL database.
-        Replace the default values with your database credentials.
-        """
         self.dbname = dbname
         self.user = user
         self.password = password
         self.host = host
         self.port = port
-
         # ABRE UNA CONEXION CON LA BASE DE DATOS
         self.conn = None
         self.connect_db()
-
 # CONECTARSE A LA BASE DE DATOS
     def connect_db(self):
         try:
@@ -81,7 +75,6 @@ class Proveedores:
                     WHERE codigo = %s;
                 """, (codigo,))
                 row = cur.fetchone()
-                print(row)
                 if row is None:
                     messagebox.showerror('Base de datos', f'El proveedor con codigo {codigo} no existe')
                     return None
@@ -101,7 +94,7 @@ class Proveedores:
                     }
                     return proveedor
         except Exception as e:
-            messagebox.showerror("Base de datos", f"Error al buscar proveedor: {str(e)}")
+            messagebox.showerror("Base de datos", f"Error al buscar el codigo de proveedor: {str(e)}")
             return None
 # DEVUELVE PROVEEDORES BUSCADOS POR NOMBRE
     def BuscarNombres(self, busqueda):
@@ -131,24 +124,19 @@ class Proveedores:
                     resultados.append(proveedor)
                 return resultados
         except Exception as e:
-            messagebox.showerror("Error", f"Error in the name search: {str(e)}")
+            messagebox.showerror("Error", f"Error al buscar nombre del proveedor: {str(e)}")
             return []
-
+# AGREGAR UN PROVEEDOR
     def Add_Prov(self, codigo, nombre, contacto='', direccion1='', direccion2='',
                  ciudad='', telefono='', celular='', email='', rif=''):
-        """
-        Insert a new provider into the database.
-        If a provider with the provided codigo already exists, an error is shown.
-        """
         try:
             with self.conn.cursor() as cur:
-                # Check if a provider with this codigo already exists
+                # CHEQUEAR SI EL PROVEEDOR YA EXISTE
                 cur.execute("SELECT 1 FROM proveedores WHERE codigo = %s;", (codigo,))
                 if cur.fetchone():
                     messagebox.showerror('Error', f'El proveedor {codigo} ya se encuentra en la base de datos')
                     return False
-
-                # Insert the new provider record
+                # GUARDAR EL PROVEEDOR
                 cur.execute("""
                     INSERT INTO proveedores (codigo, nombre, contacto, direccion1, direccion2, ciudad, telefono, celular, email, rif)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
@@ -158,15 +146,11 @@ class Proveedores:
                 return True
         except Exception as e:
             self.conn.rollback()
-            messagebox.showerror("Error", f"Error adding provider: {str(e)}")
+            messagebox.showerror("Base de datos", f"Error al agregar el proveedor: {str(e)}")
             return False
-
+# MODIFICAR UN PROVEEDOR
     def Mod_Prov(self, codigo, nombre, contacto='', direccion1='', direccion2='',
                  ciudad='', telefono='', celular='', email='', rif=''):
-        """
-        Modify the data for an existing provider.
-        Confirm the modification action via a messagebox.
-        """
         try:
             answer = messagebox.askyesno('¡Atención!', f'¿Está seguro que desea modificar el proveedor {codigo} con estos datos?')
             if answer:
@@ -188,13 +172,9 @@ class Proveedores:
                     messagebox.showinfo('Info', f'El proveedor {codigo} ha sido modificado.')
         except Exception as e:
             self.conn.rollback()
-            messagebox.showerror("Error", f"Error modifying provider: {str(e)}")
-
+            messagebox.showerror("Base de datos", f"Error al modificar el proveedor: {str(e)}")
+# ELIMINAR UN PROVEEDOR
     def Del_Prov(self, codigo):
-        """
-        Delete a provider from the database.
-        Prompts the user to confirm the deletion.
-        """
         try:
             answer = messagebox.askyesno('¡Atención!', f'¿Está seguro que desea eliminar el proveedor {codigo}?')
             if answer:
@@ -204,22 +184,17 @@ class Proveedores:
                     messagebox.showinfo('Info', f'El proveedor {codigo} ha sido eliminado.')
         except Exception as e:
             self.conn.rollback()
-            messagebox.showerror("Error", f"Error deleting provider: {str(e)}")
-
+            messagebox.showerror("Base de datos", f"Error al eliminar el proveedor: {str(e)}")
+# CHEQUEAR EL CODIGO DE UN PROVEEDOR
     def ChechProv(self, codigo):
-        """
-        Check if a provider exists in the database.
-        Returns True if the provider exists, False otherwise.
-        """
         try:
             with self.conn.cursor() as cur:
                 cur.execute("SELECT 1 FROM proveedores WHERE codigo = %s;", (codigo,))
                 return cur.fetchone() is not None
         except Exception as e:
-            messagebox.showerror("Error", f"Error checking provider: {str(e)}")
+            messagebox.showerror("Base de datos", f"Error al chequear codigo de proveedor: {str(e)}")
             return False
-
+# CIERRA LA CONEXION CON LA BASE DE DATOS SI EL OBJETO SE BORRA
     def __del__(self):
-        """Close the database connection when the object is deleted."""
         if self.conn:
             self.conn.close()
