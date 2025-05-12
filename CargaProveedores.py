@@ -1,10 +1,9 @@
 import customtkinter as ctk
 import tkinter as tk
 from tkinter import ttk
-import json,os
 from tkinter import messagebox
 from Database import PROV_MANAGER
-from style import FONTS, APP_COLORS, APPEARANCE_MODE
+from style import FONTS, APP_COLORS
 
 # PROGRAMA DE CARGA DE PROVEEDORES - PROGRAMA DE CARGA DE PROVEEDORES - PROGRAMA DE CARGA DE PROVEEDORES - 
 class ProveedoresProg(ctk.CTkFrame):

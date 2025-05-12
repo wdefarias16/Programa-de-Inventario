@@ -1,5 +1,5 @@
 -- Create the Suppliers table
-CREATE TABLE suppliers (
+CREATE TABLE proveedores (
     codigo VARCHAR(10) PRIMARY KEY,
     nombre VARCHAR(255) NOT NULL,
     contacto VARCHAR(255),
@@ -13,14 +13,14 @@ CREATE TABLE suppliers (
 );
 
 -- Create the Lines table
-CREATE TABLE lines (
+CREATE TABLE lineas (
     codigo VARCHAR(10) PRIMARY KEY,
     linea VARCHAR(255) NOT NULL
 );
 
 -- Create the Groups table
-CREATE TABLE groups (
-    id SERIAL PRIMARY KEY,
+CREATE TABLE grupos (
+    codigo SERIAL PRIMARY KEY,
     line_code VARCHAR(10) REFERENCES lines(codigo),
     nombre_grupo VARCHAR(255) NOT NULL,
     porcentaje_1 NUMERIC(10,2),
