@@ -372,9 +372,6 @@ class CargaProductosProg(ctk.CTkFrame):
                                          hover_color=APP_COLORS[3],
                                          command=self.ModificarPrecios)
             self.modprecios_btn.grid(row=10,column=2,sticky='nswe',padx=4,pady=4)
-
-
-
 # BUSCAR UN PRODUCTO POR LA ENTRADA PRINCIPAL CON CODIGO
     def BuscarProductoMain(self):
         self.inventario = INVENTARIO.GetInventory()

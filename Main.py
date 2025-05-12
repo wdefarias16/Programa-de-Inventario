@@ -8,6 +8,7 @@ from Menu_Inventario import*
 from Menu_CuentasPorPagar import*
 from EntradaInventarios import*
 from style import FONTS, APP_COLORS, APPEARANCE_MODE
+from DatabaseSetup import DATABASE_MANAGER
 
 # VENTANA PRINCIPAL (APLICACION)
 class App(ctk.CTk):
@@ -128,3 +129,4 @@ if __name__ == '__main__':
     ctk.set_appearance_mode(APPEARANCE_MODE)
     # EJECUTAR LA APP   
     App()
+    DATABASE_MANAGER()
