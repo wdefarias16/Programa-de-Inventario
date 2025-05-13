@@ -177,15 +177,15 @@ class LineasGruposProg(ctk.CTkFrame):
         self.codigo_entry_var.set(opcion.split(' - ')[0])
         self.nombre_entry_var.set(opcion.split(' - ')[1])
     def ClickOnMenuGrupo(self,opcion):
+        self.ModoEdicionGrupo()
         linea = self.codigo_entry_var.get()
         grupo = opcion.split(' - ')[0]
         porcentajes = LINE_MANAGER.GetPorcentajes(linea,grupo)
         self.codigo_grupo_entry_var.set(opcion.split(' - ')[0])
         self.grupo_entry_var.set(opcion.split(' - ')[1])
-        self.PorV1_entry_var.set(porcentajes['porcentaje_1'])
-        self.PorV2_entry_var.set(porcentajes['porcentaje_2'])
-        self.PorV3_entry_var.set(porcentajes['porcentaje_3'])
-        self.ModoEdicionGrupo()
+        self.PorV1_entry_var.set(porcentajes['porcentaje1'])
+        self.PorV2_entry_var.set(porcentajes['porcentaje2'])
+        self.PorV3_entry_var.set(porcentajes['porcentaje3'])
 # MODO AGREGAR GRUPO
     def ModoAgregarGrupo(self):
         self.modo_agregar_grupo_activo = True
@@ -315,6 +315,8 @@ class LineasGruposProg(ctk.CTkFrame):
         self.codigo_entry.configure(state='disabled',fg_color=APP_COLORS[4])
 # MODO EDICION GRUPO
     def ModoEdicionGrupo(self):
+        # ENTRADA
+        self.codigo_grupo_entry.configure(state='disabled',fg_color=APP_COLORS[4])
         # BOTON CANCELAR
         self.cancel_grupo_btn_active = True
         self.cancel_grupo_btn = ctk.CTkButton(self.main_frame,
@@ -328,8 +330,6 @@ class LineasGruposProg(ctk.CTkFrame):
         self.agregar_grupo_btn.configure(state='disabled',fg_color=APP_COLORS[3])
         self.modificar_grupo_btn.configure(state='enabled',fg_color=APP_COLORS[2])
         self.eliminar_grupo_btn.configure(state='enabled',fg_color=APP_COLORS[2])
-        # ENTRADA
-        self.codigo_grupo_entry.configure(state='disabled',fg_color=APP_COLORS[4])
         
 
 # LIMPIAR GRUPO

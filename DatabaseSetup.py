@@ -49,18 +49,21 @@ def InitTables():
             email VARCHAR(255),
             rif VARCHAR(50)
         );
-        
+        CREATE TABLE lineas(
+        codigo SERIAL PRIMARY KEY,
+        nombre VARCHAR(255) NOT NULL
         );
+        
         CREATE TABLE grupos (
             codigo SERIAL PRIMARY KEY,
-            linea VARCHAR(10) REFERENCES lineas(codigo),
+            linea VARCHAR(255) REFERENCES lineas(codigo),
             nombre VARCHAR(255) NOT NULL,
             porcentaje1 NUMERIC(10,2),
             porcentaje2 NUMERIC(10,2),
             porcentaje3 NUMERIC(10,2)
         );
         CREATE TABLE productos (
-            codigo VARCHAR(10) PRIMARY KEY,
+            codigo VARCHAR(255) PRIMARY KEY,
             linea VARCHAR(10) REFERENCES lines(codigo),
             grupo INT REFERENCES groups(id),
             proveedor VARCHAR(10) REFERENCES suppliers(codigo),
