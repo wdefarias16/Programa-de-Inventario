@@ -29,15 +29,16 @@ class LineasGrupos:
     def initialize_default(self):
         try:
             with self.conn.cursor() as cur:
-                cur.execute("SELECT codigo FROM lineas WHERE codigo = %s;", ("1",))
+                cur.execute("SELECT codigo FROM lineas WHERE codigo = %s;", ("001",))
                 if cur.fetchone() is None:
                     # Insertar línea por defecto
-                    cur.execute("INSERT INTO lineas (codigo, nombre) VALUES (%s, %s);", ("1", "Linea 1"))
+                    cur.execute("INSERT INTO lineas (codigo, nombre) VALUES (%s, %s);", ("001", "Linea 1"))
                     # Insertar grupo por defecto para la línea '001'
+                    # Se guarda el código del grupo concatenado: "001- G001"
                     cur.execute("""
                         INSERT INTO grupos (codigo, linea, nombre, porcentaje1, porcentaje2, porcentaje3)
                         VALUES (%s, %s, %s, %s, %s, %s);
-                    """, ("1", "1", "Grupo 1", 0.0, 0.0, 0.0))
+                    """, ("001-G001", "001", "Grupo 1", 0.0, 0.0, 0.0))
                     self.conn.commit()
         except Exception as e:
             self.conn.rollback()
@@ -55,28 +56,31 @@ class LineasGrupos:
             return []
 
     # RETORNA LOS NOMBRES DE GRUPO DE UNA LÍNEA
-    def GetGroupNames(self, codigo_linea):
+    def GetGroupNames(self, linea):
         try:
             with self.conn.cursor() as cur:
-                cur.execute("SELECT codigo, nombre FROM grupos WHERE linea = %s ORDER BY codigo;", (codigo_linea,))
+                cur.execute("SELECT codigo, nombre FROM grupos WHERE linea = %s ORDER BY codigo;", (linea,))
                 rows = cur.fetchall()
+                # Opcional: Si deseas mostrar solo la parte después del guion,
+                # usa: codigo.split('-')[1] en lugar de codigo
                 return [f"{codigo} - {nombre}" for codigo, nombre in rows]
         except Exception as e:
             messagebox.showerror("Base de datos", f"Error al obtener nombres de grupos: {str(e)}")
             return []
 
-    # RETORNA LOS PORCENTAJES DE UN GRUPO
-    def GetPorcentajes(self, linea, grupo_codigo):
+    # RETORNA LOS PORCENTAJES DE UN GRUPO; se espera que se pase el código interno del grupo (sin el prefijo de línea)
+    def GetPorcentajes(self, linea, codigo_grupo):
+        
         try:
             with self.conn.cursor() as cur:
                 cur.execute("""
                     SELECT porcentaje1, porcentaje2, porcentaje3 
                     FROM grupos 
                     WHERE linea = %s AND codigo = %s;
-                """, (linea, grupo_codigo))
+                """, (linea, codigo_grupo))
                 row = cur.fetchone()
                 if row is None:
-                    messagebox.showerror("Base de datos", f"No se encontró el grupo {grupo_codigo} en la línea {linea}")
+                    messagebox.showerror("Base de datos", f"No se encontró el grupo {codigo_grupo} en la línea {linea}")
                     return {}
                 porcentaje1, porcentaje2, porcentaje3 = row
                 return {
@@ -89,8 +93,8 @@ class LineasGrupos:
             return {}
 
     # CALCULA Y RETORNA LOS PRECIOS BASADOS EN LOS PORCENTAJES Y UN COSTO DADO
-    def GetPrecios(self, linea, grupo_codigo, costo):
-        porcentajes = self.GetPorcentajes(linea, grupo_codigo)
+    def GetPrecios(self, linea, codigo_grupo, costo):
+        porcentajes = self.GetPorcentajes(linea, codigo_grupo)
         if not porcentajes:
             return []
         try:
@@ -106,6 +110,8 @@ class LineasGrupos:
             return []
 
     # AGREGA UNA LÍNEA. Si se proporciona el diccionario 'grupos', se insertan también los grupos asociados.
+    # En 'grupos' se espera que la clave sea el código interno del grupo (por ejemplo "1", "2", etc.),
+    # y se combinará con el código de línea para generar el código único.
     def Add_Line(self, codigo, nombre, grupos=None):
         try:
             with self.conn.cursor() as cur:
@@ -118,13 +124,14 @@ class LineasGrupos:
                 
                 if grupos:
                     # Se espera que 'grupos' sea un diccionario del tipo:
-                    # { codigo_grupo: { "nombre_grupo": ..., "porcentaje1": ..., "porcentaje2": ..., "porcentaje3": ... }, ... }
-                    for codigo_grupo, data in grupos.items():
+                    # { codigo_interno: { "nombre_grupo": ..., "porcentaje1": ..., "porcentaje2": ..., "porcentaje3": ... }, ... }
+                    for codigo_interno, data in grupos.items():
+                        full_codigo = f"{codigo}-{codigo_interno}"
                         cur.execute("""
                             INSERT INTO grupos (codigo, linea, nombre, porcentaje1, porcentaje2, porcentaje3)
                             VALUES (%s, %s, %s, %s, %s, %s);
                         """, (
-                            codigo_grupo,
+                            full_codigo,
                             codigo,
                             data.get("nombre_grupo", ""),
                             data.get("porcentaje1", 0.0),
@@ -164,7 +171,7 @@ class LineasGrupos:
                 if not cur.fetchone():
                     messagebox.showerror('Error', f'No se encontró la línea {codigo}.')
                     return False
-                # Eliminar grupos asociados
+                # Eliminar grupos asociados a esa línea
                 cur.execute("DELETE FROM grupos WHERE linea = %s;", (codigo,))
                 cur.execute("DELETE FROM lineas WHERE codigo = %s;", (codigo,))
                 self.conn.commit()
@@ -175,8 +182,11 @@ class LineasGrupos:
             messagebox.showerror("Base de datos", f"Error al eliminar la línea: {str(e)}")
             return False
 
-    # AGREGA UN GRUPO A UNA LÍNEA EXISTENTE
-    def Add_Group(self, linea, codigo_grupo, nombre_grupo, porcentaje1, porcentaje2, porcentaje3):
+    # AGREGA UN GRUPO A UNA LÍNEA EXISTENTE.
+    # Aquí se recibe el *código interno del grupo* (por ejemplo, "1" o "2") 
+    # y se concatena con el código de la línea para formar el código único.
+    def Add_Group(self, linea, codigo_interno, nombre_grupo, porcentaje1, porcentaje2, porcentaje3):
+        full_codigo = f"{linea}.{codigo_interno}"
         try:
             with self.conn.cursor() as cur:
                 # Verificar que la línea exista
@@ -185,25 +195,26 @@ class LineasGrupos:
                     messagebox.showerror('Error', f'La línea con código {linea} no existe')
                     return False
 
-                # Verificar si el grupo ya existe en esa línea
-                cur.execute("SELECT 1 FROM grupos WHERE linea = %s AND codigo = %s;", (linea, codigo_grupo))
+                # Verificar si el grupo ya existe en esa línea (usando el código concatenado)
+                cur.execute("SELECT 1 FROM grupos WHERE linea = %s AND codigo = %s;", (linea, full_codigo))
                 if cur.fetchone():
-                    messagebox.showerror('Error', f'El grupo con código {codigo_grupo} ya existe en la línea {linea}')
+                    messagebox.showerror('Error', f'El grupo con código {full_codigo} ya existe en la línea {linea}')
                     return False
 
                 cur.execute("""
                     INSERT INTO grupos (codigo, linea, nombre, porcentaje1, porcentaje2, porcentaje3)
                     VALUES (%s, %s, %s, %s, %s, %s);
-                """, (codigo_grupo, linea, nombre_grupo, porcentaje1, porcentaje2, porcentaje3))
+                """, (full_codigo, linea, nombre_grupo, porcentaje1, porcentaje2, porcentaje3))
                 self.conn.commit()
-                messagebox.showinfo('Info', f'El grupo {codigo_grupo} - {nombre_grupo} se ha agregado correctamente a la línea {linea}')
+                messagebox.showinfo('Info', f'El grupo {full_codigo} - {nombre_grupo} se ha agregado correctamente a la línea {linea}')
                 return True
         except Exception as e:
             self.conn.rollback()
             messagebox.showerror("Base de datos", f"Error al agregar el grupo: {str(e)}")
             return False
 
-    # MODIFICA LOS DATOS DE UN GRUPO EXISTENTE
+    # MODIFICA LOS DATOS DE UN GRUPO EXISTENTE.
+    # Se utiliza el código interno (concatenado con la línea) para identificar el grupo.
     def Mod_Grupo(self, linea, codigo_grupo, nuevo_nombre, porcentaje1, porcentaje2, porcentaje3):
         try:
             with self.conn.cursor() as cur:
@@ -228,7 +239,8 @@ class LineasGrupos:
             messagebox.showerror("Base de datos", f"Error al modificar el grupo: {str(e)}")
             return False
 
-    # ELIMINA UN GRUPO DE UNA LÍNEA
+    # ELIMINA UN GRUPO DE UNA LÍNEA.
+    # Se identifica el grupo por medio de la concatenación del código de línea y el código interno.
     def Del_Group(self, linea, codigo_grupo):
         try:
             with self.conn.cursor() as cur:
@@ -265,15 +277,16 @@ class LineasGrupos:
             messagebox.showerror("Base de datos", f"Error al chequear la línea: {str(e)}")
             return False
 
-    # CHEQUEA SI UN GRUPO PERTENECE A LA LÍNEA
-    def CheckGrupo(self, linea, codigo_grupo):
+    # CHEQUEA SI UN GRUPO PERTENECE A LA LÍNEA usando el código interno
+    def CheckGrupo(self, linea, codigo_interno):
+        full_codigo = f"{linea}.{codigo_interno}"
         try:
             with self.conn.cursor() as cur:
-                cur.execute("SELECT 1 FROM grupos WHERE linea = %s AND codigo = %s;", (linea, codigo_grupo))
+                cur.execute("SELECT 1 FROM grupos WHERE linea = %s AND codigo = %s;", (linea, full_codigo))
                 if cur.fetchone():
                     return True
                 else:
-                    messagebox.showerror('Error de carga', f'El grupo {codigo_grupo} no pertenece a la línea {linea}.')
+                    messagebox.showerror('Error de carga', f'El grupo {full_codigo} no pertenece a la línea {linea}.')
                     return False
         except Exception as e:
             messagebox.showerror("Base de datos", f"Error al chequear el grupo: {str(e)}")

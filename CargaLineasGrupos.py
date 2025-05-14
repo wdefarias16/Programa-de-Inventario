@@ -181,7 +181,7 @@ class LineasGruposProg(ctk.CTkFrame):
         linea = self.codigo_entry_var.get()
         grupo = opcion.split(' - ')[0]
         porcentajes = LINE_MANAGER.GetPorcentajes(linea,grupo)
-        self.codigo_grupo_entry_var.set(opcion.split(' - ')[0])
+        self.codigo_grupo_entry_var.set(grupo)
         self.grupo_entry_var.set(opcion.split(' - ')[1])
         self.PorV1_entry_var.set(porcentajes['porcentaje1'])
         self.PorV2_entry_var.set(porcentajes['porcentaje2'])
