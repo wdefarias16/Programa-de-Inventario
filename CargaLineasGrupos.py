@@ -1,7 +1,6 @@
 import customtkinter as ctk
 import tkinter as tk
 from tkinter import messagebox
-import json,os
 from style import FONTS, APP_COLORS, APPEARANCE_MODE
 from Database import LINE_MANAGER
 
@@ -350,7 +349,6 @@ class LineasGruposProg(ctk.CTkFrame):
         self.PorV1_entry_var.set(0.0)
         self.PorV2_entry_var.set(0.0)
         self.PorV3_entry_var.set(0.0)
-
 # RESTABLECER LOS CAMPOS DE GRUPO
     def RestablecerGrupo(self):
         # LABELS
