@@ -1,90 +1,92 @@
 import psycopg2
 from psycopg2 import sql
 
-# DETALLES DE CONECCION 
+# DETALLES DE CONEXIÓN
 DB_NAME = "AppDatabase"
 DB_USER = "postgres"
 DB_PASSWORD = "admin1234"
-DB_HOST = "localhost"  
+DB_HOST = "localhost"
 DB_PORT = "5432"
 
-# CREAR LA BASE DE DATOS SI NO EXISTE
 def CreateDatabase():
     try:
-        conn = psycopg2.connect(dbname="postgres", user=DB_USER, password=DB_PASSWORD, host=DB_HOST, port=DB_PORT)
-        conn.autocommit = True
+        # Abrimos la conexión de forma manual para evitar el bloque de transacción del "with"
+        conn = psycopg2.connect(dbname="postgres", user=DB_USER, password=DB_PASSWORD, 
+                                host=DB_HOST, port=DB_PORT)
+        conn.autocommit = True  # Esto es imprescindible para CREATE DATABASE
+        
         cursor = conn.cursor()
-
-        # CHEQUEAR SI LA DB EXISTE
+        # Verificar si la base de datos ya existe
         cursor.execute(sql.SQL("SELECT 1 FROM pg_database WHERE datname = %s"), [DB_NAME])
         exists = cursor.fetchone()
 
         if not exists:
             cursor.execute(sql.SQL("CREATE DATABASE {}").format(sql.Identifier(DB_NAME)))
-            print(f"Database '{DB_NAME}' created successfully.")
+            print(f"La base de datos '{DB_NAME}' ha sido creada exitosamente.")
+            cursor.close()
+            conn.close()
+            # Inicializar las tablas una vez creada la base de datos
         else:
-            print(f"Database '{DB_NAME}' already exists.")
-
-        cursor.close()
-        conn.close()
+            print(f"La base de datos '{DB_NAME}' ya existe.")
+            cursor.close()
+            conn.close()
     except Exception as e:
-        print(f"Error creating database: {e}")
+        print(f"Error al conectarse a la base de datos: {repr(e)}")
 
-# SCRIPT SQL PARA CREAR LAS TABLAS
 def InitTables():
     try:
-        conn = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD, host=DB_HOST, port=DB_PORT)
-        cursor = conn.cursor()
-
-        create_tables_sql = """
-        CREATE TABLE IF NOT EXISTS proveedores (
-            codigo SERIAL PRIMARY KEY,
-            nombre VARCHAR(255) NOT NULL,
-            contacto VARCHAR(255),
-            direccion1 TEXT,
-            direccion2 TEXT,
-            ciudad VARCHAR(100),
-            telefono VARCHAR(50),
-            celular VARCHAR(50),
-            email VARCHAR(255),
-            rif VARCHAR(50)
-        );
-        CREATE TABLE lineas(
-        codigo SERIAL PRIMARY KEY,
-        nombre VARCHAR(255) NOT NULL
-        );
-        
-        CREATE TABLE grupos (
-            codigo SERIAL PRIMARY KEY,
-            linea VARCHAR(255) REFERENCES lineas(codigo),
-            nombre VARCHAR(255) NOT NULL,
-            porcentaje1 NUMERIC(10,2),
-            porcentaje2 NUMERIC(10,2),
-            porcentaje3 NUMERIC(10,2)
-        );
-        CREATE TABLE productos (
-            codigo VARCHAR(255) PRIMARY KEY,
-            linea VARCHAR(10) REFERENCES lines(codigo),
-            grupo INT REFERENCES groups(id),
-            proveedor VARCHAR(10) REFERENCES suppliers(codigo),
-            nombre VARCHAR(255) NOT NULL,
-            costo NUMERIC(10,2),
-            ubicacion1 VARCHAR(50),
-            ubicacion2 VARCHAR(50),
-            precio1 NUMERIC(10,2),
-            precio2 NUMERIC(10,2),
-            precio3 NUMERIC(10,2),
-            existencia INT DEFAULT 0
-        );
-        """
-
-        cursor.execute(create_tables_sql)
-        conn.commit()
-        print("Tablas inicializadas correctamente.")
-
-        cursor.close()
-        conn.close()
+        # Usamos with para la conexión en InitTables, ya que CREATE TABLE sí se puede ejecutar en un bloque de transacción
+        with psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD,
+                              host=DB_HOST, port=DB_PORT) as conn:
+            with conn.cursor() as cursor:
+                statements = [
+                    """CREATE TABLE proveedores (
+                        codigo SERIAL PRIMARY KEY,
+                        nombre VARCHAR(255) NOT NULL,
+                        contacto VARCHAR(255),
+                        direccion1 TEXT,
+                        direccion2 TEXT,
+                        ciudad VARCHAR(100),
+                        telefono VARCHAR(50),
+                        celular VARCHAR(50),
+                        email VARCHAR(255),
+                        rif VARCHAR(50)
+                    )""",
+                    """CREATE TABLE lineas (
+                        codigo SERIAL PRIMARY KEY,
+                        nombre VARCHAR(255) NOT NULL
+                    )""",
+                    # Se corrige el tipo de dato de 'linea' para que sea INT y coincida con lineas.codigo
+                    """CREATE TABLE grupos (
+                        codigo VARCHAR(10) PRIMARY KEY,
+                        linea INT REFERENCES lineas(codigo),
+                        nombre VARCHAR(255) NOT NULL,
+                        porcentaje1 NUMERIC(10,2),
+                        porcentaje2 NUMERIC(10,2),
+                        porcentaje3 NUMERIC(10,2)
+                    )""",
+                    """CREATE TABLE productos (
+                        codigo VARCHAR(255) PRIMARY KEY,
+                        linea INT REFERENCES lineas(codigo),
+                        grupo VARCHAR(10) REFERENCES grupos(codigo),
+                        proveedor INT REFERENCES proveedores(codigo),
+                        nombre VARCHAR(255) NOT NULL,
+                        costo NUMERIC(10,2),
+                        ubicacion1 VARCHAR(50),
+                        ubicacion2 VARCHAR(50),
+                        precio1 NUMERIC(10,2),
+                        precio2 NUMERIC(10,2),
+                        precio3 NUMERIC(10,2),
+                        existencia INT DEFAULT 0
+                    )"""
+                ]
+                
+                for stmt in statements:
+                    cursor.execute(stmt)
+                conn.commit()
+                print("Tablas inicializadas correctamente.")
     except Exception as e:
-        print(f"Error inicializando tablas: {e}")
+        print(f"Error al inicializar las tablas: {repr(e)}")
 
-DATABASE_MANAGER = CreateDatabase
+CreateDatabase()
+InitTables()

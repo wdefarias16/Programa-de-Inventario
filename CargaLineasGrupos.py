@@ -13,6 +13,7 @@ class LineasGruposProg(ctk.CTkFrame):
         self.configure(fg_color=APP_COLORS[0])
         self.modo_agregar_grupo_activo = False
         self.cancel_grupo_btn_active = False
+        self.addgrupo_btn_active = False
         # TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - 
         title_frame = ctk.CTkFrame(self,corner_radius=5,fg_color=APP_COLORS[3])
         title_frame.pack(fill='x')
@@ -141,15 +142,17 @@ class LineasGruposProg(ctk.CTkFrame):
         p1 = self.PorV1_entry_var.get()
         p2 = self.PorV2_entry_var.get()
         p3 = self.PorV3_entry_var.get()
-        if codigo_grupo == '' or nombre_grupo == '':
-            messagebox.showerror('Error de carga','Debe rellenar todos los campos')
+        if codigo_grupo == '' or len(codigo_grupo) != 2:
+            messagebox.showerror('Error de carga','Debe agregar un codigo de grupo y el formato debe ser "00".')
+        elif nombre_grupo == '':
+            messagebox.showerror('Error de carga','Debe agregar un nombre de grupo.')
         elif p1 <= 0 or p2 <= 0 or p3 <= 0:
             messagebox.showerror('Error de carga','Debe cargar los porcentajes.'
                                  '\nNinguno puede ser menor o igual a 0')
         else:
             LINE_MANAGER.Add_Group(codigo,codigo_grupo,nombre_grupo,p1,p2,p3)
-        self.grupos_menu.configure(values=LINE_MANAGER.GetGroupNames(codigo))
-        self.LimpiarGrupo()
+            self.grupos_menu.configure(values=LINE_MANAGER.GetGroupNames(codigo))
+            self.LimpiarGrupo()
     # MODIFICAR GRUPO
     def ModificarGrupo(self):
         linea = self.codigo_entry_var.get()
@@ -186,7 +189,7 @@ class LineasGruposProg(ctk.CTkFrame):
         self.PorV1_entry_var.set(porcentajes['porcentaje1'])
         self.PorV2_entry_var.set(porcentajes['porcentaje2'])
         self.PorV3_entry_var.set(porcentajes['porcentaje3'])
-# MODO AGREGAR GRUPO
+# MODO AGREGAR GRUPO - MODO AGREGAR GRUPO - MODO AGREGAR GRUPO - MODO AGREGAR GRUPO - MODO AGREGAR GRUPO - MODO AGREGAR GRUPO - 
     def ModoAgregarGrupo(self):
         self.modo_agregar_grupo_activo = True
         self.addgrupo_btn.destroy()
@@ -285,38 +288,6 @@ class LineasGruposProg(ctk.CTkFrame):
                                      fg_color=APP_COLORS[3],
                                      hover_color=APP_COLORS[3])
         self.eliminar_grupo_btn.grid(row=14,column=3,sticky='we',padx=5,pady=5)
-    # BLOQUEO DE LINEAS
-        self.mod_btn.configure(state='disabled',fg_color=APP_COLORS[3])
-        self.del_btn.configure(state='disabled',fg_color=APP_COLORS[3])
-        self.nombre_entry.configure(state='disabled',fg_color=APP_COLORS[4])
-        self.line_menu.configure(state='disabled')
-        self.addgrupo_btn.destroy()
-# MODO EDICION LINEA
-    def ModoEdicion(self):
-        # BOTON CANCELAR
-        self.cancel_btn = ctk.CTkButton(self.main_frame,
-                                     text='Cancelar',
-                                     command=self.Restablecer,
-                                     state='enabled',
-                                     fg_color=APP_COLORS[2],
-                                     hover_color=APP_COLORS[3])
-        self.cancel_btn.grid(row=4,column=3,sticky='we',padx=5,pady=5)
-        # BOTON AGREGAR GRUPO
-        self.addgrupo_btn = ctk.CTkButton(self.main_frame,
-                                     text='Agregar grupo',
-                                     command=self.ModoAgregarGrupo,
-                                     state='enabled',
-                                     fg_color=APP_COLORS[2],
-                                     hover_color=APP_COLORS[3])
-        self.addgrupo_btn.grid(row=1,column=3,sticky='we',padx=5,pady=5)
-        self.add_btn.configure(state='disabled',fg_color=APP_COLORS[3])
-        self.mod_btn.configure(state='enabled',fg_color=APP_COLORS[2])
-        self.del_btn.configure(state='enabled',fg_color=APP_COLORS[2])
-        self.codigo_entry.configure(state='disabled',fg_color=APP_COLORS[4])
-# MODO EDICION GRUPO
-    def ModoEdicionGrupo(self):
-        # ENTRADA
-        self.codigo_grupo_entry.configure(state='disabled',fg_color=APP_COLORS[4])
         # BOTON CANCELAR
         self.cancel_grupo_btn_active = True
         self.cancel_grupo_btn = ctk.CTkButton(self.main_frame,
@@ -326,6 +297,40 @@ class LineasGruposProg(ctk.CTkFrame):
                                      fg_color=APP_COLORS[2],
                                      hover_color=APP_COLORS[3])
         self.cancel_grupo_btn.grid(row=13,column=3,sticky='we',padx=5,pady=5)
+    # BLOQUEO DE LINEAS
+        self.mod_btn.configure(state='disabled',fg_color=APP_COLORS[3])
+        self.del_btn.configure(state='disabled',fg_color=APP_COLORS[3])
+        self.nombre_entry.configure(state='disabled',fg_color=APP_COLORS[4])
+        self.line_menu.configure(state='disabled')
+        self.addgrupo_btn.destroy()
+# MODO EDICION LINEA
+    def ModoEdicion(self):
+        # BOTON AGREGAR GRUPO
+        if  self.addgrupo_btn_active == False:
+            self.addgrupo_btn = ctk.CTkButton(self.main_frame,
+                                         text='Agregar-Modificar grupo',
+                                         command=self.ModoAgregarGrupo,
+                                         state='enabled',
+                                         fg_color=APP_COLORS[2],
+                                         hover_color=APP_COLORS[3])
+            self.addgrupo_btn.grid(row=1,column=3,sticky='we',padx=5,pady=5)
+            self.addgrupo_btn_active = True
+        # BOTON CANCELAR
+        self.cancel_btn = ctk.CTkButton(self.main_frame,
+                                     text='Cancelar',
+                                     command=self.Restablecer,
+                                     state='enabled',
+                                     fg_color=APP_COLORS[2],
+                                     hover_color=APP_COLORS[3])
+        self.cancel_btn.grid(row=4,column=3,sticky='we',padx=5,pady=5)
+        self.add_btn.configure(state='disabled',fg_color=APP_COLORS[3])
+        self.mod_btn.configure(state='enabled',fg_color=APP_COLORS[2])
+        self.del_btn.configure(state='enabled',fg_color=APP_COLORS[2])
+        self.codigo_entry.configure(state='disabled',fg_color=APP_COLORS[4])
+# MODO EDICION GRUPO
+    def ModoEdicionGrupo(self):
+        # ENTRADA
+        self.codigo_grupo_entry.configure(state='disabled',fg_color=APP_COLORS[4])
         # BOTONES
         self.agregar_grupo_btn.configure(state='disabled',fg_color=APP_COLORS[3])
         self.modificar_grupo_btn.configure(state='enabled',fg_color=APP_COLORS[2])
@@ -334,11 +339,12 @@ class LineasGruposProg(ctk.CTkFrame):
 
 # LIMPIAR GRUPO
     def LimpiarGrupo(self):
-        self.cancel_grupo_btn.destroy()
+        # BOTONES
         self.codigo_grupo_entry.configure(state='normal',fg_color=APP_COLORS[6])
         self.agregar_grupo_btn.configure(state='enabled',fg_color=APP_COLORS[2])
         self.modificar_grupo_btn.configure(state='disabled',fg_color=APP_COLORS[3])
         self.eliminar_grupo_btn.configure(state='disabled',fg_color=APP_COLORS[3])
+        # ENTRADAS
         self.codigo_grupo_entry_var.set('')
         self.grupo_entry_var.set('')
         self.PorV1_entry_var.set(0.0)
@@ -378,8 +384,10 @@ class LineasGruposProg(ctk.CTkFrame):
         if self.cancel_grupo_btn_active == True:
             self.cancel_grupo_btn.destroy()
             self.cancel_grupo_btn_active = False
+        if self.addgrupo_btn_active == True:
+            self.addgrupo_btn.destroy()
+            self.addgrupo_btn_active = False
         self.cancel_btn.destroy()
-        self.addgrupo_btn.destroy()
         self.codigo_entry_var.set('')
         self.nombre_entry_var.set('')
         self.add_btn.configure(state='enabled',fg_color=APP_COLORS[2])

@@ -216,9 +216,9 @@ class ProveedoresProg(ctk.CTkFrame):
         rif = self.rif_entry_var.get()
 
         if len(codigo) != 3 or codigo == '':
-            messagebox.showinfo('Atención',f'Debe agregar un codigo de proveedor y el formato debe ser "000".')
+            messagebox.showinfo('Atención','Debe agregar un codigo de proveedor y el formato debe ser "000".')
         elif nombre == '':
-            messagebox.showinfo('Atención',f'Debe agregar un nombre de proveedor.')
+            messagebox.showinfo('Atención','Debe agregar un nombre de proveedor.')
         else:
             PROV_MANAGER.Add_Prov(codigo,nombre,contacto,direccion1,direccion2,ciudad,telefono,celular,email,rif)
             self.Restablecer()

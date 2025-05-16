@@ -1,31 +1,10 @@
-import customtkinter as ctk
+def check_bom(filepath = 'C:\\Users\\Alejandro\\Desktop\\Programa-de-Inventario-master'):
+    with open(filepath, "rb") as f:
+        first_bytes = f.read(3)
+        if first_bytes == b'\xef\xbb\xbf':
+            print("El archivo tiene BOM.")
+        else:
+            print("El archivo no tiene BOM.")
 
-# Función para borrar el texto cuando el usuario hace clic
-def on_entry_click(event):
-    if entry.get() == "Usuario":
-        entry.delete(0, "end")
-
-def on_focus_out(event):
-    if entry.get() == "":
-        entry.insert(0, "Usuario")
-
-# Crear ventana
-root = ctk.CTk()
-root.geometry("300x200")
-
-# Crear Entry con texto predeterminado
-entry = ctk.CTkEntry(root)
-entry.insert(0, "Usuario")
-entry.pack(pady=20)
-
-password = ctk.CTkEntry(root)
-password.insert(0, "password")
-password.pack(pady=20)
-
-
-# Asociar eventos
-entry.bind("<FocusIn>", on_entry_click)
-entry.bind("<FocusOut>", on_focus_out)
-
-# Ejecutar la ventana
-root.mainloop()
+# Reemplaza 'tu_archivo.txt' por el nombre de tu archivo
+check_bom("Main.py")

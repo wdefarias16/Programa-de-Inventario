@@ -29,16 +29,15 @@ class LineasGrupos:
     def initialize_default(self):
         try:
             with self.conn.cursor() as cur:
-                cur.execute("SELECT codigo FROM lineas WHERE codigo = %s;", ("001",))
+                cur.execute("SELECT codigo FROM lineas WHERE codigo = %s;", ("1",))
                 if cur.fetchone() is None:
                     # Insertar línea por defecto
-                    cur.execute("INSERT INTO lineas (codigo, nombre) VALUES (%s, %s);", ("001", "Linea 1"))
-                    # Insertar grupo por defecto para la línea '001'
-                    # Se guarda el código del grupo concatenado: "001- G001"
+                    cur.execute("INSERT INTO lineas (codigo, nombre) VALUES (%s, %s);", ("1", "Linea 1"))
+
                     cur.execute("""
                         INSERT INTO grupos (codigo, linea, nombre, porcentaje1, porcentaje2, porcentaje3)
                         VALUES (%s, %s, %s, %s, %s, %s);
-                    """, ("001-G001", "001", "Grupo 1", 0.0, 0.0, 0.0))
+                    """, ("1.1", "1", "Grupo 1", 0.0, 0.0, 0.0))
                     self.conn.commit()
         except Exception as e:
             self.conn.rollback()

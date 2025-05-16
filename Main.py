@@ -8,7 +8,14 @@ from Menu_Inventario import*
 from Menu_CuentasPorPagar import*
 from EntradaInventarios import*
 from style import FONTS, APP_COLORS, APPEARANCE_MODE
-from DatabaseSetup import DATABASE_MANAGER
+import psycopg2
+from psycopg2 import sql
+
+DB_NAME = "AppDatabase"
+DB_USER = "postgres"
+DB_PASSWORD = "admin1234"
+DB_HOST = "localhost"
+DB_PORT = "5432"
 
 # VENTANA PRINCIPAL (APLICACION)
 class App(ctk.CTk):
@@ -124,9 +131,9 @@ class App(ctk.CTk):
     def ctrl_q_callback(self, event):
         if self.dashboard_activo:
             self.LockWindow()
+
 # INNICIO DE LA APLICACION
 if __name__ == '__main__':
     ctk.set_appearance_mode(APPEARANCE_MODE)
     # EJECUTAR LA APP   
     App()
-    DATABASE_MANAGER()
