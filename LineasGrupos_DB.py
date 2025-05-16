@@ -68,7 +68,7 @@ class LineasGrupos:
             return []
 
     # RETORNA LOS PORCENTAJES DE UN GRUPO; se espera que se pase el código interno del grupo (sin el prefijo de línea)
-    def GetPorcentajes(self, linea, codigo_grupo):
+    def GetPorcentajes(self, linea, grupo):
         
         try:
             with self.conn.cursor() as cur:
@@ -76,10 +76,10 @@ class LineasGrupos:
                     SELECT porcentaje1, porcentaje2, porcentaje3 
                     FROM grupos 
                     WHERE linea = %s AND codigo = %s;
-                """, (linea, codigo_grupo))
+                """, (linea, grupo))
                 row = cur.fetchone()
                 if row is None:
-                    messagebox.showerror("Base de datos", f"No se encontró el grupo {codigo_grupo} en la línea {linea}")
+                    messagebox.showerror("Base de datos", f"No se encontró el grupo {grupo} en la línea {linea}")
                     return {}
                 porcentaje1, porcentaje2, porcentaje3 = row
                 return {
@@ -92,8 +92,8 @@ class LineasGrupos:
             return {}
 
     # CALCULA Y RETORNA LOS PRECIOS BASADOS EN LOS PORCENTAJES Y UN COSTO DADO
-    def GetPrecios(self, linea, codigo_grupo, costo):
-        porcentajes = self.GetPorcentajes(linea, codigo_grupo)
+    def GetPrecios(self, linea, grupo, costo):
+        porcentajes = self.GetPorcentajes(linea, grupo)
         if not porcentajes:
             return []
         try:

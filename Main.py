@@ -131,7 +131,6 @@ class App(ctk.CTk):
     def ctrl_q_callback(self, event):
         if self.dashboard_activo:
             self.LockWindow()
-
 # INNICIO DE LA APLICACION
 if __name__ == '__main__':
     ctk.set_appearance_mode(APPEARANCE_MODE)

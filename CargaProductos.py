@@ -258,7 +258,7 @@ class CargaProductosProg(ctk.CTkFrame):
 # FUNCION BOTON AGREGAR PRODUCTO
     def AgregarProducto(self):
         codigo = self.codigo_var.get()
-        linea = self.lin_var.get().split(" - ")[0].strip()
+        linea = self.lin_var.get()
         grupo = self.grupo_var.get()
         prove = self.prove_var.get()
         nombre = self.nombre_var.get()
@@ -321,12 +321,12 @@ class CargaProductosProg(ctk.CTkFrame):
     def SelectProvMenu(self,opcion):
         codigo = opcion.split(" - ")[0]
         self.prove_var.set(codigo)
-# LISTA TOD0 EL INVENTARIO AL COMIENZO DEL PROGRAMA
+# LISTA TOD0 EL INVENTARIO EN EL TREEVIEW
     def ListInventory(self):
-        self.inventario = INVENTARIO.GetInventory()
+        inventario = INVENTARIO.GetInventory()
         for item in self.treeview.get_children():
                 self.treeview.delete(item)
-        for producto in self.inventario.values():
+        for producto in inventario.values():
             self.treeview.insert("",'end',
                                  text=producto['codigo'],
                                  values=(producto['linea'],
@@ -336,14 +336,14 @@ class CargaProductosProg(ctk.CTkFrame):
                                          producto['costo']))
 # BUSCAR UN PRODUCTO DESPUES DE DAR CLICK CON EL TREEVIEW
     def BuscarProducto(self):
-        self.inventario = INVENTARIO.GetInventory()
+        inventario = INVENTARIO.GetInventory()
         codigo = self.search_bar_var.get()
-        if codigo not in self.inventario:
+        if codigo not in inventario:
             messagebox.showerror('Error de busqueda',f'El producto con codigo {codigo} no existe')
         else:
             for item in self.treeview.get_children():
                 self.treeview.delete(item)
-            producto = self.inventario[codigo]
+            producto = inventario[codigo]
         # LLENAR LAS ENTRADAS CON LOS DATOS DE PRODUCTO ELEGIDO
             self.codigo_var.set(producto['codigo'])
             self.lin_var.set(producto['linea'])
