@@ -157,7 +157,7 @@ class Inventory:
 
     def GetInventory(self):
         """
-        Obtiene todos los productos de la tabla 'products' y los devuelve en forma de diccionario.
+        Obtiene todos los productos de la tabla 'productos' y los devuelve en forma de diccionario.
         Cada clave es el 'codigo' del producto.
         """
         try:
@@ -188,6 +188,53 @@ class Inventory:
         except Exception as e:
             messagebox.showerror('Error', f"Error obteniendo el inventario: {str(e)}")
             return {}
+    def GetCodigos(self):
+        """
+        Obtiene todos los codigos de producto productos de la tabla 'productos' y los devuelve en forma de lista.
+        """
+        try:
+            with self.conn.cursor() as cur:
+                cur.execute("""
+                    SELECT codigo FROM productos;
+                """)
+                rows = cur.fetchall()
+                inventory = [r[0] for r in rows]
+                return inventory
+        except Exception as e:
+            messagebox.showerror('Error', f"Error obteniendo el inventario: {str(e)}")
+            return {}
+        
+    def GetProducto(self,codigo):
+        """
+        Obtiene un  producto de la tabla 'productos' y los devuelve en forma de diccionario.
+        Cada clave es el 'codigo' del producto.
+        """
+        try:
+            with self.conn.cursor() as cur:
+                cur.execute("""
+                    SELECT codigo, linea, grupo, proveedor, nombre, costo, ubicacion1, ubicacion2, precio1, precio2, precio3, existencia 
+                    FROM productos WHERE codigo = %s;""", (codigo,))
+                row = cur.fetchone()
+                producto = {}
+                codigo, linea, grupo, proveedor, nombre, costo, ubicacion1, ubicacion2, precio1, precio2, precio3, existencia = row
+                producto = {
+                    'codigo': codigo,
+                    'linea': linea,
+                    'grupo': grupo,
+                    'proveedor': proveedor,
+                    'nombre': nombre,
+                    'costo': costo,
+                    'ubicacion1': ubicacion1,
+                    'ubicacion2': ubicacion2,
+                    'precio1': precio1,
+                    'precio2': precio2,
+                    'precio3': precio3,
+                    'existencia': existencia
+                }
+                return producto
+        except Exception as e:
+            messagebox.showerror('Error', f"Error obteniendo el inventario: {str(e)}")
+            return None
 
     def BuscarNombres(self, busqueda):
         """

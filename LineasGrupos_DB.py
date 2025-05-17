@@ -83,9 +83,9 @@ class LineasGrupos:
                     return {}
                 porcentaje1, porcentaje2, porcentaje3 = row
                 return {
-                    "porcentaje1": porcentaje1,
-                    "porcentaje2": porcentaje2,
-                    "porcentaje3": porcentaje3
+                    "porcentaje1": float(porcentaje1),
+                    "porcentaje2": float(porcentaje2),
+                    "porcentaje3": float(porcentaje3)
                 }
         except Exception as e:
             messagebox.showerror("Base de datos", f"Error al obtener porcentajes: {str(e)}")
@@ -277,15 +277,14 @@ class LineasGrupos:
             return False
 
     # CHEQUEA SI UN GRUPO PERTENECE A LA LÍNEA usando el código interno
-    def CheckGrupo(self, linea, codigo_interno):
-        full_codigo = f"{linea}.{codigo_interno}"
+    def CheckGrupo(self, linea, grupo):
         try:
             with self.conn.cursor() as cur:
-                cur.execute("SELECT 1 FROM grupos WHERE linea = %s AND codigo = %s;", (linea, full_codigo))
+                cur.execute("SELECT 1 FROM grupos WHERE linea = %s AND codigo = %s;", (linea, grupo))
                 if cur.fetchone():
                     return True
                 else:
-                    messagebox.showerror('Error de carga', f'El grupo {full_codigo} no pertenece a la línea {linea}.')
+                    messagebox.showerror('Error de carga', f'El grupo {grupo} no pertenece a la línea {linea}.')
                     return False
         except Exception as e:
             messagebox.showerror("Base de datos", f"Error al chequear el grupo: {str(e)}")
