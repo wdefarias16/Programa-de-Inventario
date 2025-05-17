@@ -2,7 +2,7 @@ import customtkinter as ctk
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
-from Database import PROV_MANAGER
+from DatabaseManager import PROV_MANAGER
 from style import FONTS, APP_COLORS
 
 # PROGRAMA DE CARGA DE PROVEEDORES - PROGRAMA DE CARGA DE PROVEEDORES - PROGRAMA DE CARGA DE PROVEEDORES - 

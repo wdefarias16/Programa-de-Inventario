@@ -6,7 +6,7 @@ from CargaLineasGrupos import*
 from CargaProveedores import*
 from Menu_Inventario import*
 from Menu_CuentasPorPagar import*
-from EntradaInventarios import*
+from EntradaInventario import*
 from style import FONTS, APP_COLORS, APPEARANCE_MODE
 import psycopg2
 from psycopg2 import sql
@@ -26,8 +26,8 @@ class App(ctk.CTk):
         self.dashboard_activo = False
     # ATAJOS
         # ATAJO CERRAR SESION
-        self.winfo_toplevel().bind("<Control-Q>", self.ctrl_q_callback)
-        self.winfo_toplevel().bind("<Control-q>", self.ctrl_q_callback)
+        self.winfo_toplevel().bind("<Control-Q>", self.CloseSession)
+        self.winfo_toplevel().bind("<Control-q>", self.CloseSession)
         # ATAJO VOLVER AL DASHBOARD
         self.winfo_toplevel().bind("<F4>", self.F4_Pressed)
     # INICIAR EN EL FRAME DE LOGIN
@@ -128,7 +128,7 @@ class App(ctk.CTk):
     def F4_Pressed(self,event):
         if self.dashboard_activo == False:
             self.ReturnToDashboard()
-    def ctrl_q_callback(self, event):
+    def CloseSession(self, event):
         if self.dashboard_activo:
             self.LockWindow()
 # INNICIO DE LA APLICACION

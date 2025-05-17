@@ -40,6 +40,7 @@ def InitTables():
                               host=DB_HOST, port=DB_PORT) as conn:
             with conn.cursor() as cursor:
                 statements = [
+                    # PROVEEDORES
                     """CREATE TABLE proveedores (
                         codigo SERIAL PRIMARY KEY,
                         nombre VARCHAR(255) NOT NULL,
@@ -52,11 +53,12 @@ def InitTables():
                         email VARCHAR(255),
                         rif VARCHAR(50)
                     )""",
+                    # LINEAS
                     """CREATE TABLE lineas (
                         codigo SERIAL PRIMARY KEY,
                         nombre VARCHAR(255) NOT NULL
                     )""",
-                    # Se corrige el tipo de dato de 'linea' para que sea INT y coincida con lineas.codigo
+                    # GRUPOS
                     """CREATE TABLE grupos (
                         codigo VARCHAR(10) PRIMARY KEY,
                         linea INT REFERENCES lineas(codigo),
@@ -65,6 +67,7 @@ def InitTables():
                         porcentaje2 NUMERIC(10,2),
                         porcentaje3 NUMERIC(10,2)
                     )""",
+                    # PRODUCTOS
                     """CREATE TABLE productos (
                         codigo VARCHAR(255) PRIMARY KEY,
                         linea INT REFERENCES lineas(codigo),
@@ -78,7 +81,30 @@ def InitTables():
                         precio2 NUMERIC(10,2),
                         precio3 NUMERIC(10,2),
                         existencia INT DEFAULT 0
-                    )"""
+                    )""",
+                    # ROLES DE USUARIO
+                    """CREATE TABLE roles (
+                        codigo SERIAL PRIMARY KEY,
+                        rol VARCHAR(50) UNIQUE NOT NULL
+                        )""",
+                    # AGREGAR LOS ROLES DE USUARIO
+                    """INSERT INTO roles (rol) VALUES 
+                        ('Administrador'), 
+                        ('Supervisor'), 
+                        ('Gerente'), 
+                        ('Vendedor')""",
+                    # USUARIOS
+                    """CREATE TABLE usuarios (
+                        codigo SERIAL PRIMARY KEY,
+                        nombre VARCHAR(100) NOT NULL,
+                        clave VARCHAR(255) NOT NULL,
+                        correo VARCHAR(255) UNIQUE,
+                        rol INT NOT NULL,
+                        estado BOOLEAN DEFAULT TRUE,
+                        FOREIGN KEY (rol) REFERENCES roles(codigo) ON DELETE RESTRICT  
+                    )""",
+                    """INSERT INTO usuarios (nombre,clave,correo,rol,estado) VALUES 
+                        ('admin','1234','wdefarias16@gmail.com','Administrador','true')"""
                 ]
                 
                 for stmt in statements:

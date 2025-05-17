@@ -5,7 +5,7 @@ from PIL import Image, ImageTk
 from CargaProductos import*
 from CargaLineasGrupos import*
 from CargaProveedores import*
-from Database import*
+from DatabaseManager import*
 from Menu_Inventario import*
 from Menu_CuentasPorPagar import*
 import datetime

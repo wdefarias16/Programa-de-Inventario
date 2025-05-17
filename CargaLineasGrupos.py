@@ -2,7 +2,7 @@ import customtkinter as ctk
 import tkinter as tk
 from tkinter import messagebox
 from style import FONTS, APP_COLORS, APPEARANCE_MODE
-from Database import LINE_MANAGER
+from DatabaseManager import LINE_MANAGER
 
 # PROGRAMA DE CARGA DE LINEAS Y GRUPOS - PROGRAMA DE CARGA DE LINEAS Y GRUPOS - PROGRAMA DE CARGA DE LINEAS Y GRUPOS
 class LineasGruposProg(ctk.CTkFrame):

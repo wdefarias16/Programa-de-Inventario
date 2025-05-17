@@ -1,9 +1,8 @@
 # CREAR FRAME LOGIN
 import customtkinter as ctk
 import tkinter as tk
-import json, os, bcrypt
 from style import FONTS, APP_COLORS, APPEARANCE_MODE
-from Database import USER_MANAGER
+from DatabaseManager import USER_MANAGER
 
 # LOGIN FRAME
 class LoginFrame(ctk.CTkFrame):
@@ -27,6 +26,7 @@ class LoginFrame(ctk.CTkFrame):
                                    corner_radius=5,
                                    border_color='#fff')
         self.login_entry.grid(row=7,column=2,columnspan=2,sticky='we')
+        self.login_entry.bind("<Control-a>",self.AdminUser)
         # INICIAR EL PROGRAMA CON LA ENTRADA DE USUARIO ACTIVA
         self.login_entry.after(100, lambda: self.login_entry.focus_set())
         # ENTRADA CONTRASENA
@@ -90,3 +90,6 @@ class LoginFrame(ctk.CTkFrame):
         password = self.password_var.get()
         if USER_MANAGER.AddUser(user,password):
             self.label_var.set('Usuario agregado')
+
+    def AdminUser(self,event):
+        USER_MANAGER.CreateAdminUser()

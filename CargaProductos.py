@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
 from InventarioProductos import*
-from Database import INVENTARIO, LINE_MANAGER, PROV_MANAGER
+from DatabaseManager import INVENTARIO, LINE_MANAGER, PROV_MANAGER
 from style import FONTS, APP_COLORS, APPEARANCE_MODE
 
 # PROGRAMA DE CARGA DE PRODUCTOS
@@ -276,9 +276,7 @@ class CargaProductosProg(ctk.CTkFrame):
                 producto = Product(
                 codigo, linea, grupo, prove, nombre, costo, ubi1, ubi2,
                 precios[0], precios[1], precios[2])
-
                 INVENTARIO.AddProduct(producto.ToDict())
-                self.inventario = INVENTARIO.GetInventory()
                 self.Restablecer()
 # COMANDO MODIFICAR PRODUCTO 
     def ModificarProducto(self):
@@ -300,7 +298,6 @@ class CargaProductosProg(ctk.CTkFrame):
                 self.mod_codi, linea, grupo, prove, nombre, costo, ubi1, ubi2,
                 precios[0], precios[1], precios[2])
                 INVENTARIO.EditProduct(producto.ToDict())
-                self.inventario = INVENTARIO.GetInventory()
                 self.Restablecer()
 # COMANDO ELIMINAR PRODUCTO
     def EliminarProducto(self):
