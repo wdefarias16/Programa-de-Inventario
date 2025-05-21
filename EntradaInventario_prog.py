@@ -1,7 +1,7 @@
 import customtkinter as ctk
 from tkcalendar import Calendar
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 from PIL import Image, ImageTk
 from DatabaseManager import INVENTARIO, LINE_MANAGER, PROV_MANAGER
 from style import*
@@ -98,13 +98,13 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                        command=self.abrir_calendario)
         btn_calendario.grid(row=4,column=6,sticky='w')
         # AGREGAR ENTRADA
-        btn_agregar_entrada = ctk.CTkButton(self.prog_frame,
+        self.btn_agregar_entrada = ctk.CTkButton(self.prog_frame,
                                             text="Agregar producto",
                                             width=25,
                                             fg_color=APP_COLORS[2],
                                             hover_color=APP_COLORS[3],
                                             command=self.BusquedaProducto)
-        btn_agregar_entrada.grid(row=4,column=9,columnspan=2,sticky='we',padx=5)
+        self.btn_agregar_entrada.grid(row=4,column=9,columnspan=2,sticky='we',padx=5)
     # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW
         self.treeview_entradas = ttk.Treeview(self.prog_frame,
                                      style='Custom.Treeview',
@@ -172,10 +172,12 @@ class EntradasInventarioProg(ctk.CTkFrame):
     def BusquedaProducto(self):
     # TREEVIEW - TREEVIEW
     # FRAME DEL TREEVIEW
+        self.btn_agregar_entrada.configure(state='disabled')
         self.tree_frame = ctk.CTkToplevel(self,
                                    fg_color=APP_COLORS[5])
         self.tree_frame.geometry('700x450')
         self.tree_frame.title('Busqueda de productos')
+        self.tree_frame.protocol("WM_DELETE_WINDOW", lambda: None)
         self.tree_frame.transient(self)
     # GRID SETUP
         for rows in range(10):
@@ -191,17 +193,18 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.search_bar.bind("<Return>",lambda event:self.BuscarProductoNombre())
     # CANTIDAD
         self.cantidad_var = tk.IntVar()
-        self.cantidad = ctk.CTkEntry(self.tree_frame,
-                                  width=200,
-                                  textvariable=self.cantidad_var)
-        self.cantidad.grid(row=1,column=4,columnspan=2,sticky='we',padx=5)
-        self.cantidad.bind("<Return>",lambda event:self.AgregarProducto())
+        self.cantidad_entry = ctk.CTkEntry(self.tree_frame,
+                                     state='disabled',
+                                     fg_color=APP_COLORS[4],
+                                     textvariable = self.cantidad_var)
+        self.cantidad_entry.grid(row=1,column=5,columnspan=2,sticky='we',padx=5)
+        self.cantidad_entry.bind("<Return>",lambda event:self.AgregarProducto())
     # LABEL
         label_cantidad = ctk.CTkLabel(self.tree_frame,
                              text='Cantidad del producto',
                              font=FONTS[1],
                                         text_color=APP_COLORS[4])
-        label_cantidad.grid(row=0,column=4,columnspan=3,sticky='w',padx=5)
+        label_cantidad.grid(row=0,column=5,columnspan=3,sticky='w',padx=5)
     # LABEL
         label = ctk.CTkLabel(self.tree_frame,
                              text='Busqueda por nombre',
@@ -265,6 +268,10 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.ListInventory()
 # LISTAR INVENTARIO DE LA BUSQUEDA DE PRODDUCTOS
     def ListInventory(self):
+        self.search_bar_var.set('')
+        self.cantidad_var.set('')
+        self.cantidad_entry.after(100, lambda: self.cantidad_entry.configure(state='disabled',fg_color=APP_COLORS[4]))
+        
         inventario = INVENTARIO.GetInventory()
         for item in self.treeview.get_children():
                 self.treeview.delete(item)
@@ -293,24 +300,29 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                          producto['costo']))
 # CLICK ON TREEVIEW
     def ClickTreeview(self,event):
-        inventario = INVENTARIO.GetCodigos()
         item_id = self.treeview.selection()
         info = self.treeview.item(item_id)
         codigo = info['text']
         self.search_bar_var.set(codigo)
+        self.cantidad_entry.configure(state='normal',fg_color=APP_COLORS[6])
+        self.cantidad_entry.focus_set()
         
         
     def AgregarProducto(self):
         inventario = INVENTARIO.GetCodigos()
         codigo = self.search_bar_var.get()
         cantidad = self.cantidad_var.get()
-        if codigo in inventario:
-            producto = INVENTARIO.GetProducto(codigo)
-            self.treeview_entradas.insert("",'end',
-                                 text=producto['codigo'],
-                                 values=(producto['nombre'],
-                                         producto['costo'],
-                                         cantidad))
-            self.tree_frame.destroy()
-        
-        
+        if cantidad <= 0:
+            messagebox.showerror('Error','Debe agregar la cantidad del producto')
+        else:
+            if codigo in inventario:
+                producto = INVENTARIO.GetProducto(codigo)
+                self.treeview_entradas.insert("",'end',
+                                     text=producto['codigo'],
+                                     values=(producto['nombre'],
+                                             producto['costo'],
+                                             cantidad))
+                self.btn_agregar_entrada.configure(state='enabled')
+                self.tree_frame.destroy()
+            else:
+                messagebox.showerror('Error',f'Producto con codigo {codigo} no se encuentra en la base de datos.')
