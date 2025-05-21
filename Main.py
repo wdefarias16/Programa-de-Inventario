@@ -1,12 +1,12 @@
 import customtkinter as ctk
 from DashBoard import*
 from Login import*
-from CargaProductos import*
-from CargaLineasGrupos import*
-from CargaProveedores import*
+from CargaProductos_prog import*
+from CargaLineasGrupos_prog import*
+from CargaProveedores_prog import*
 from Menu_Inventario import*
 from Menu_CuentasPorPagar import*
-from EntradaInventario import*
+from EntradaInventario_prog import*
 from style import FONTS, APP_COLORS, APPEARANCE_MODE
 import psycopg2
 from psycopg2 import sql

@@ -2,7 +2,7 @@ import customtkinter as ctk
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
-from InventarioProductos import*
+from InventarioProductos_DB import*
 from DatabaseManager import INVENTARIO, LINE_MANAGER, PROV_MANAGER
 from style import FONTS, APP_COLORS, APPEARANCE_MODE
 

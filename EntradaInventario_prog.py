@@ -24,3 +24,11 @@ class EntradasInventarioProg(ctk.CTkFrame):
                              height=50,
                              font=FONTS[0])
         title.pack(pady=10)
+    # PROG FRAME
+        prog_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLORS[0])
+        prog_frame.pack(expand=True,fill='both',side='left')
+    # GRID SETUP
+        for rows in range(18):
+            prog_frame.rowconfigure(rows, weight=1,uniform='row')
+        for columns in range(8):
+            prog_frame.columnconfigure(columns,weight=1,uniform='column')

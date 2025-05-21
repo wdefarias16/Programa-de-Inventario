@@ -2,9 +2,9 @@ import tkinter as tk
 import customtkinter as ctk
 from tkinter import ttk
 from PIL import Image, ImageTk
-from CargaProductos import*
-from CargaLineasGrupos import*
-from CargaProveedores import*
+from CargaProductos_prog import*
+from CargaLineasGrupos_prog import*
+from CargaProveedores_prog import*
 from DatabaseManager import*
 from Menu_Inventario import*
 from Menu_CuentasPorPagar import*
