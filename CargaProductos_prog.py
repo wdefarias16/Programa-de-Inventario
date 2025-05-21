@@ -42,18 +42,27 @@ class CargaProductosProg(ctk.CTkFrame):
         self.codigoActualLinea = self.lineas[0].split(" - ")[0]
         self.lin_var = tk.StringVar(value=self.lineas[0])
         self.lin_menu = ctk.CTkOptionMenu(self.entry_frame,
-                                     values=self.lineas,
-                                     command=self.SelectLinMenu)
+                                          values=self.lineas,
+                                          command=self.SelectLinMenu,
+                                          fg_color=APP_COLORS[2],
+                                          button_color=APP_COLORS[3],
+                                          button_hover_color=APP_COLORS[2])
         self.lin_menu.grid(row=3,column=1,columnspan=2,sticky='we',padx=5)
     # MENU GRUPO
         self.grup_menu = ctk.CTkOptionMenu(self.entry_frame,
-                                      values=LINE_MANAGER.GetGroupNames(self.codigoActualLinea),
-                                      command=self.SelectGruMenu)
+                                           values=LINE_MANAGER.GetGroupNames(self.codigoActualLinea),
+                                           command=self.SelectGruMenu,
+                                           fg_color=APP_COLORS[2],
+                                           button_color=APP_COLORS[3],
+                                           button_hover_color=APP_COLORS[2])
         self.grup_menu.grid(row=4,column=1,columnspan=2,sticky='we',padx=5)
     # MENU PROVEEDORES
         self.prov_menu = ctk.CTkOptionMenu(self.entry_frame,
-                                      values=PROV_MANAGER.GetProvNames(),
-                                      command=self.SelectProvMenu)
+                                           values=PROV_MANAGER.GetProvNames(),
+                                           command=self.SelectProvMenu,
+                                           fg_color=APP_COLORS[2],
+                                           button_color=APP_COLORS[3],
+                                           button_hover_color=APP_COLORS[2])
         self.prov_menu.grid(row=5,column=1,columnspan=2,sticky='we',padx=5)
     # ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - 
     # CODIGO
