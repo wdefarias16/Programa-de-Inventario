@@ -108,7 +108,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
     # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW
         self.treeview_entradas = ttk.Treeview(self.prog_frame,
                                      style='Custom.Treeview',
-                                     columns=('Nombre','Costo','Cantidad'))
+                                     columns=('Nombre','Cantidad','Costo','Descuento'))
         self.treeview_entradas.grid(row=5,column=1,sticky='nswe',padx=10,pady=10,rowspan=14,columnspan=10)
         # CODIGO
         self.treeview_entradas.heading('#0',text='Codigo')
@@ -116,12 +116,15 @@ class EntradasInventarioProg(ctk.CTkFrame):
         # NOMBRE - DESCRIPCION
         self.treeview_entradas.heading('Nombre',text='Descripción')
         self.treeview_entradas.column('Nombre',width=200,anchor='center')
-        # COSTO
-        self.treeview_entradas.heading('Costo',text='Costo')
-        self.treeview_entradas.column('Costo',width=100,anchor='center')
         # CANTIDAD
         self.treeview_entradas.heading('Cantidad',text='Cantidad')
         self.treeview_entradas.column('Cantidad',width=50,anchor='center')
+        # COSTO
+        self.treeview_entradas.heading('Costo',text='Costo')
+        self.treeview_entradas.column('Costo',width=50,anchor='center')
+        # DESCUENTO
+        self.treeview_entradas.heading('Descuento',text='Descuento')
+        self.treeview_entradas.column('Descuento',width=50,anchor='center')
         # CONFIGURACION VISUAL DEL TV
         style = ttk.Style()
         style.configure(
@@ -175,56 +178,89 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.btn_agregar_entrada.configure(state='disabled')
         self.tree_frame = ctk.CTkToplevel(self,
                                    fg_color=APP_COLORS[5])
-        self.tree_frame.geometry('700x450')
+        self.tree_frame.geometry('800x400')
         self.tree_frame.title('Busqueda de productos')
         self.tree_frame.protocol("WM_DELETE_WINDOW", lambda: None)
         self.tree_frame.transient(self)
     # GRID SETUP
-        for rows in range(10):
+        for rows in range(16):
             self.tree_frame.rowconfigure(rows, weight=1,uniform='row')
-        for columns in range(8):
+        for columns in range(16):
             self.tree_frame.columnconfigure(columns,weight=1,uniform='column')     
-    # BARRA DE BUSQUEDA
+    # ENTRADAS
+        # BARRA DE BUSQUEDA
         self.search_bar_var = tk.StringVar()
         self.search_bar = ctk.CTkEntry(self.tree_frame,
                                   width=200,
                                   textvariable=self.search_bar_var)
-        self.search_bar.grid(row=1,column=0,columnspan=2,sticky='we',padx=5)
+        self.search_bar.grid(row=2,column=0,columnspan=2,sticky='we',padx=10)
         self.search_bar.bind("<Return>",lambda event:self.BuscarProductoNombre())
-    # CANTIDAD
+        # COSTO
+        self.costo_var = tk.DoubleVar()
+        self.costo_var.set('')
+        self.costo_entry = ctk.CTkEntry(self.tree_frame,
+                                     state='disabled',
+                                     fg_color=APP_COLORS[4],
+                                     textvariable = self.costo_var)
+        self.costo_entry.grid(row=5,column=0,columnspan=2,sticky='w',padx=10)
+        self.costo_entry.bind("<Return>",lambda event:self.cantidad_entry.focus_set())
+        # CANTIDAD
         self.cantidad_var = tk.IntVar()
+        self.cantidad_var.set('')
         self.cantidad_entry = ctk.CTkEntry(self.tree_frame,
                                      state='disabled',
                                      fg_color=APP_COLORS[4],
                                      textvariable = self.cantidad_var)
-        self.cantidad_entry.grid(row=1,column=5,columnspan=2,sticky='we',padx=5)
-        self.cantidad_entry.bind("<Return>",lambda event:self.AgregarProducto())
-    # LABEL
-        label_cantidad = ctk.CTkLabel(self.tree_frame,
-                             text='Cantidad del producto',
-                             font=FONTS[1],
-                                        text_color=APP_COLORS[4])
-        label_cantidad.grid(row=0,column=5,columnspan=3,sticky='w',padx=5)
-    # LABEL
-        label = ctk.CTkLabel(self.tree_frame,
+        self.cantidad_entry.grid(row=7,column=0,columnspan=2,sticky='w',padx=10)
+        self.cantidad_entry.bind("<Return>",lambda event:self.descuento_entry.focus_set())
+        # DESCUENTO
+        self.descuento_var = tk.IntVar()
+        self.descuento_var.set('')
+        self.descuento_entry = ctk.CTkEntry(self.tree_frame,
+                                            state='disabled',
+                                            fg_color=APP_COLORS[4],
+                                            textvariable = self.descuento_var)
+        self.descuento_entry.grid(row=9,column=0,columnspan=2,sticky='w',padx=10)
+        self.descuento_entry.bind("<Return>",lambda event:self.AgregarProducto())
+    # LABELS
+        # BUSQUEDA
+        label_busqueda = ctk.CTkLabel(self.tree_frame,
                              text='Busqueda por nombre',
                              font=FONTS[1],
                                         text_color=APP_COLORS[4])
-        label.grid(row=0,column=0,columnspan=3,sticky='w',padx=5)
+        label_busqueda.grid(row=1,column=0,columnspan=3,sticky='w',padx=10)
+        # COSTO
+        label_costo = ctk.CTkLabel(self.tree_frame,
+                                      text='Costo',
+                                      font=FONTS[1],
+                                      text_color=APP_COLORS[4])
+        label_costo.grid(row=4,column=0,columnspan=3,sticky='w',padx=10)
+        # CANTIDAD
+        label_cantidad = ctk.CTkLabel(self.tree_frame,
+                                      text='Cantidad',
+                                      font=FONTS[1],
+                                      text_color=APP_COLORS[4])
+        label_cantidad.grid(row=6,column=0,columnspan=3,sticky='w',padx=10)
+        # DESCUENTO
+        label_descuento = ctk.CTkLabel(self.tree_frame,
+                                       text='Descuento',
+                                       font=FONTS[1],
+                                       text_color=APP_COLORS[4])
+        label_descuento.grid(row=8,column=0,columnspan=3,sticky='w',padx=10)
     # BOTONES TREEVIEW     
-    # CANCELAR
+        # CANCELAR
         cancel_btn = ctk.CTkButton(self.tree_frame,
                                     text='Cancelar',
                                     command=self.ListInventory,
                                     fg_color=APP_COLORS[2],
                                     hover_color=APP_COLORS[3])
-        cancel_btn.grid(row=1,column=2,sticky='w',padx=5)
+        cancel_btn.grid(row=14,column=0,columnspan=2,sticky='w',padx=10)
     # TREEVIEW
         self.treeview = ttk.Treeview(self.tree_frame,
                                      style='Custom.Treeview',
                                 columns=('Linea','Grupo','Proveedor','Nombre','Costo'))
-        self.treeview.grid(row=2,column=0,sticky='nswe',padx=10,pady=10,rowspan=7,columnspan=7)
-        # EVENTO DE SELECCIONAR PRODUCTO
+        self.treeview.grid(row=0,column=2,sticky='nswe',padx=10,pady=10,rowspan=16,columnspan=13)
+        # EVENTO DE SELECCIONAR PRODUCTO 
         self.treeview.bind("<<TreeviewSelect>>",self.ClickTreeview)
     # CODIGO
         self.treeview.heading('#0',text='Codigo')
@@ -262,7 +298,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
         scrollbar = ctk.CTkScrollbar(self.tree_frame,
                                      orientation='vertical',
                                      command=self.treeview.yview)
-        scrollbar.grid(row=2,column=7,sticky='nsw',padx=5,pady=5,rowspan=2)
+        scrollbar.grid(row=0,column=15,sticky='nsw',pady=5,rowspan=16)
         self.treeview.configure(yscrollcommand=scrollbar.set)
     # LISTAR TODOS LOS PRODUCTOS CARGADOS AL INICIO DEL PROGRAMA
         self.ListInventory()
@@ -270,8 +306,12 @@ class EntradasInventarioProg(ctk.CTkFrame):
     def ListInventory(self):
         self.search_bar_var.set('')
         self.cantidad_var.set('')
+        self.search_bar.configure(state='normal',fg_color=APP_COLORS[6])
+        self.costo_entry.after(100, lambda: self.costo_entry.configure(state='disabled',fg_color=APP_COLORS[4]))
         self.cantidad_entry.after(100, lambda: self.cantidad_entry.configure(state='disabled',fg_color=APP_COLORS[4]))
-        
+        self.descuento_entry.after(100, lambda: self.descuento_entry.configure(state='disabled',fg_color=APP_COLORS[4]))
+
+
         inventario = INVENTARIO.GetInventory()
         for item in self.treeview.get_children():
                 self.treeview.delete(item)
@@ -304,14 +344,19 @@ class EntradasInventarioProg(ctk.CTkFrame):
         info = self.treeview.item(item_id)
         codigo = info['text']
         self.search_bar_var.set(codigo)
+        self.search_bar.configure(state='disabled',fg_color=APP_COLORS[4])
+        self.costo_entry.configure(state='normal',fg_color=APP_COLORS[6])
         self.cantidad_entry.configure(state='normal',fg_color=APP_COLORS[6])
-        self.cantidad_entry.focus_set()
+        self.descuento_entry.configure(state='normal',fg_color=APP_COLORS[6])
+        self.costo_entry.focus_set()
         
         
     def AgregarProducto(self):
         inventario = INVENTARIO.GetCodigos()
         codigo = self.search_bar_var.get()
         cantidad = self.cantidad_var.get()
+        costo = self.costo_var.get()
+        descuento = self.descuento_var.get()
         if cantidad <= 0:
             messagebox.showerror('Error','Debe agregar la cantidad del producto')
         else:
@@ -320,8 +365,9 @@ class EntradasInventarioProg(ctk.CTkFrame):
                 self.treeview_entradas.insert("",'end',
                                      text=producto['codigo'],
                                      values=(producto['nombre'],
-                                             producto['costo'],
-                                             cantidad))
+                                             cantidad,
+                                             f'${costo}',
+                                             f'{descuento}%'))
                 self.btn_agregar_entrada.configure(state='enabled')
                 self.tree_frame.destroy()
             else:

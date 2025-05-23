@@ -1,43 +1,33 @@
 import customtkinter as ctk
-import tkinter as tk
-import ctypes
+from PIL import Image, ImageTk
 
-def create_toplevel():
-    # Creamos el CTkToplevel
-    top = ctk.CTkToplevel(root)
-    top.geometry("300x200")
-    top.title("Ventana sin minimizar ni cerrar")
+# Crear la ventana principal
+app = ctk.CTk()
+app.geometry("400x400")
 
-    # Interceptar el cierre (desactivar el botón de cerrar)
-    top.protocol("WM_DELETE_WINDOW", lambda: None)
+# Cargar la imagen con Pillow
+imagen_pillow = Image.open("tu_imagen.png")  # Cambia "tu_imagen.png" por la ruta de tu imagen
+imagen_pillow = imagen_pillow.resize((200, 200))  # Opcional: redimensionar la imagen
+imagen_ctk = ImageTk.PhotoImage(imagen_pillow)  # Convertir la imagen para Tkinter
 
-    # Actualizamos para asegurarnos de que la ventana se haya creado
-    top.update_idletasks()
+# Crear el Label y asignarle la imagen
+label = ctk.CTkLabel(app, image=imagen_ctk, text="")  # El texto vacío es para evitar que aparezca texto junto a la imagen
+label.pack(pady=20)
 
-    # Usar la API de Windows para modificar los estilos de la ventana.
-    # Esto solo funciona en Windows.
-    hwnd = ctypes.windll.user32.GetParent(top.winfo_id())
+app.mainloop()
 
-    GWL_STYLE    = -16
-    WS_MINIMIZEBOX = 0x20000
-    WS_MAXIMIZEBOX = 0x10000
+#********************************
 
-    # Obtiene el estilo actual
-    estilo_actual = ctypes.windll.user32.GetWindowLongW(hwnd, GWL_STYLE)
+# Cargar la imagen
+imagen = Image.open("tu_imagen.png")
 
-    # Remover el botón de minimizar y de maximizar
-    nuevo_estilo = estilo_actual & ~WS_MINIMIZEBOX & ~WS_MAXIMIZEBOX
-    ctypes.windll.user32.SetWindowLongW(hwnd, GWL_STYLE, nuevo_estilo)
+# Definir nuevo ancho
+nuevo_ancho = 300
+relacion_aspecto = imagen.height / imagen.width
+nuevo_alto = int(nuevo_ancho * relacion_aspecto)  # Calculando la altura proporcional
 
-    # Agregamos contenido de ejemplo al Toplevel
-    label = ctk.CTkLabel(top, text="Botones deshabilitados")
-    label.pack(pady=30)
+# Redimensionar la imagen
+imagen_redimensionada = imagen.resize((nuevo_ancho, nuevo_alto))
 
-# Ventana principal
-root = ctk.CTk()
-root.geometry("400x300")
-
-open_button = ctk.CTkButton(root, text="Abrir Toplevel", command=create_toplevel)
-open_button.pack(pady=50)
-
-root.mainloop()
+# Guardar la imagen modificada
+imagen_redimensionada.save("imagen_redimensionada.png")
