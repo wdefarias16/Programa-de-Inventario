@@ -58,6 +58,16 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                         fg_color=APP_COLORS[6],
                                         border_color=APP_COLORS[2])
         self.fecha_entry.grid(row=4,column=5,columnspan=1,padx=5,sticky='we')
+        # IVA
+        self.iva = ctk.CTkCheckBox(self.prog_frame,
+                                   text='I.V.A. 16%',
+                                   font=FONTS[1],
+                                   text_color=APP_COLORS[4],
+                                   hover_color=APP_COLORS[2],
+                                   fg_color=APP_COLORS[2],
+                                   border_color=APP_COLORS[4],
+                                   border_width=2)
+        self.iva.grid(row=4,column=6,columnspan=2,padx=5,sticky='e')
     # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
         # NUMERO - CODIGO DE PEDIDO
         num_pedido_label = ctk.CTkLabel(self.prog_frame,
@@ -157,17 +167,20 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                      command=self.treeview_entradas.yview)
         scrollbar.grid(row=5,column=11,sticky='nsw',padx=5,pady=5,rowspan=10)
         self.treeview_entradas.configure(yscrollcommand=scrollbar.set)
-# FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - 
 
-# CLICK ON MENU
+# FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES -
+# FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES -
+# FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES -
+# FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES -
+# FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES -
+# CLICK PROVEEDORES
     def SelectProvMenu(self,opcion):
         self.proveedor_var.set(opcion)
-
 # CALENDARIO - CALENDARIO - CALENDARIO - CALENDARIO - CALENDARIO - CALENDARIO - CALENDARIO - 
     def abrir_calendario(self):
         top = tk.Toplevel(self.prog_frame)
         top.title('Seleccionar Fecha')
-        top.grab_set()  # para hacer que la ventana emergente sea modal
+        top.grab_set()
         cal = Calendar(top, locale='es_ES', date_pattern='dd/mm/yyyy',
                        background=APP_COLORS[3],headersforeground=APP_COLORS[0],
                        headersbackground = APP_COLORS[4], selectbackground = APP_COLORS[2],
@@ -183,7 +196,8 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                         text="Aceptar",
                                         command=seleccionar_fecha)
         btn_seleccionar.pack(pady=10)
-
+    def IVA(self):
+        pass
 # BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - 
 # BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - 
 # BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - 
@@ -270,7 +284,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                        font=FONTS[1],
                                        text_color=APP_COLORS[4])
         label_descuento.grid(row=8,column=0,columnspan=3,sticky='w',padx=20)
-    # BOTONES TREEVIEW     
+    # BOTONES TREEVIEW - BOTONES TREEVIEW - BOTONES TREEVIEW - BOTONES TREEVIEW - 
         # CANCELAR
         cancel_btn = ctk.CTkButton(self.tree_frame,
                                     text='Cancelar',
@@ -278,7 +292,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                     fg_color=APP_COLORS[2],
                                     hover_color=APP_COLORS[3])
         cancel_btn.grid(row=14,column=0,columnspan=2,sticky='w',padx=10)
-    # TREEVIEW
+    # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
         self.treeview = ttk.Treeview(self.tree_frame,
                                      style='Custom.Treeview',
                                 columns=('Linea','Grupo','Proveedor','Nombre','Costo'))
@@ -325,7 +339,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.treeview.configure(yscrollcommand=scrollbar.set)
         # LISTAR TODOS LOS PRODUCTOS CARGADOS AL INICIO DEL PROGRAMA
         self.ListInventory()
-# AGREGAR PRODUCTO A LA ENTRADA
+# AGREGAR PRODUCTO A LA LISTA
     def AgregarProducto(self):
         inventario = INVENTARIO.GetCodigos()
         codigo = self.search_bar_var.get()
@@ -346,8 +360,8 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                                  cantidad,
                                                  ('$',costo),
                                                  (descuento,'%'),
-                                                ('$',neto),
-                                                ('$',subtotal)))
+                                                 ('$',neto),
+                                                 ('$',subtotal)))
                     self.btn_agregar_entrada.configure(state='enabled')
                     self.lista_productos.append(str(codigo).strip())
                     self.tree_frame.destroy()
@@ -385,7 +399,6 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                          producto['proveedor'],
                                          producto['nombre'],
                                          producto['costo']))
-        
 # BUSCAR PRODUCTO POR NOMBRE
     def BuscarProductoNombre(self):
         for item in self.treeview.get_children():
@@ -415,15 +428,13 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.descuento_entry.configure(state='normal',fg_color=APP_COLORS[6],
                                        border_color=APP_COLORS[6])
         self.cantidad_entry.focus_set()
-
-
 # SELECCIONAR ENTRADA PARA MODIFICAR - SELECCIONAR ENTRADA PARA MODIFICAR - SELECCIONAR ENTRADA PARA MODIFICAR -
 # SELECCIONAR ENTRADA PARA MODIFICAR - SELECCIONAR ENTRADA PARA MODIFICAR - SELECCIONAR ENTRADA PARA MODIFICAR -
 # SELECCIONAR ENTRADA PARA MODIFICAR - SELECCIONAR ENTRADA PARA MODIFICAR - SELECCIONAR ENTRADA PARA MODIFICAR -    
 # SELECCIONAR ENTRADA PARA MODIFICAR - SELECCIONAR ENTRADA PARA MODIFICAR - SELECCIONAR ENTRADA PARA MODIFICAR -
     def ClickEntrada(self,event):
         self.item_id = self.treeview_entradas.selection()
-        if not self.item_id:  # Verifica si hay una selección
+        if not self.item_id:
             print("Advertencia: No hay ningún elemento seleccionado.")
             return
         info = self.treeview_entradas.item(self.item_id)
