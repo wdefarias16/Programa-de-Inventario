@@ -16,7 +16,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.validardigit = self.register(self.ValidarDigitos)
         self.lista_productos = []
         self.total_prev = 0.0
-        self.iva_valor = 0
+
         
     # TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - 
         title_frame = ctk.CTkFrame(self,corner_radius=5,fg_color=APP_COLORS[3])
@@ -83,6 +83,45 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                    border_color=APP_COLORS[4],
                                    border_width=2)
         self.iva_checkbox.grid(row=4,column=6,columnspan=2,padx=5,sticky='e')
+        # FLETE
+        self.flete_checkbox_var = ctk.BooleanVar()
+        self.flete_checkbox = ctk.CTkCheckBox(self.prog_frame,
+                                   text='Flete',
+                                   variable = self.flete_checkbox_var,
+                                   command = self.SelectFlete,
+                                   font=FONTS[1],
+                                   text_color=APP_COLORS[4],
+                                   hover_color=APP_COLORS[2],
+                                   fg_color=APP_COLORS[2],
+                                   border_color=APP_COLORS[4],
+                                   border_width=2)
+        self.flete_checkbox.grid(row=15,column=1,columnspan=1,padx=5,sticky='w')
+        # DESCUENTO TOTAL 1
+        self.descuento_total1_checkbox_var = ctk.BooleanVar()
+        self.descuento_total1_checkbox = ctk.CTkCheckBox(self.prog_frame,
+                                   text='Descuento 1',
+                                   variable = self.descuento_total1_checkbox_var,
+                                   command = self.SelectDescuento1,
+                                   font=FONTS[1],
+                                   text_color=APP_COLORS[4],
+                                   hover_color=APP_COLORS[2],
+                                   fg_color=APP_COLORS[2],
+                                   border_color=APP_COLORS[4],
+                                   border_width=2)
+        self.descuento_total1_checkbox.grid(row=15,column=2,columnspan=2,padx=5,sticky='w')
+        # DESCUENTO TOTAL 2
+        self.descuento_total2_checkbox_var = ctk.BooleanVar()
+        self.descuento_total2_checkbox = ctk.CTkCheckBox(self.prog_frame,
+                                   text='Descuento 2',
+                                   variable = self.descuento_total2_checkbox_var,
+                                   command = self.SelectDescuento2,
+                                   font=FONTS[1],
+                                   text_color=APP_COLORS[4],
+                                   hover_color=APP_COLORS[2],
+                                   fg_color=APP_COLORS[2],
+                                   border_color=APP_COLORS[4],
+                                   border_width=2)
+        self.descuento_total2_checkbox.grid(row=15,column=4,columnspan=2,padx=10,sticky='w')
     # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
         # NUMERO - CODIGO DE PEDIDO
         num_pedido_label = ctk.CTkLabel(self.prog_frame,
@@ -641,7 +680,6 @@ class EntradasInventarioProg(ctk.CTkFrame):
         if answer:
             if self.codigo in self.lista_productos:
                 self.lista_productos.remove(self.codigo)
-                print(self.lista_productos)
             else:
                 print('No existe el codigo')
             self.treeview_entradas.delete(item_id)
@@ -660,7 +698,21 @@ class EntradasInventarioProg(ctk.CTkFrame):
         if self.iva_checkbox_var.get():
             iva = self.valor_iva / 100
             self.total_prev = self.total_prev + (self.total_prev * iva)
+        if self.flete_checkbox_var.get():
+            flete = self.valor_flete / 100
+            self.total_prev = self.total_prev + (self.total_prev * flete)
+        if self.descuento_total1_checkbox_var.get():
+            descuento1 = self.valor_descuento1 / 100
+            self.total_prev = self.total_prev - (self.total_prev * descuento1)
+        if self.descuento_total2_checkbox_var.get():
+            descuento2 = self.valor_descuento2 / 100
+            self.total_prev = self.total_prev - (self.total_prev * descuento2)
         self.total_entry_var.set(f'${format(self.total_prev,'.2f')}')
+
+# IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -
+# IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -
+# IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -
+# IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -
 # AGREGAR IVA A LA FACTURA
     def SelectIVA(self):
         if self.iva_checkbox_var.get():
@@ -716,6 +768,197 @@ class EntradasInventarioProg(ctk.CTkFrame):
       self.iva_checkbox.configure(text=f'I.V.A. {self.valor_iva}%')
       self.TotalPrev()
       self.iva_frame.destroy()
+
+# FLETE - FLETE - FLETE - FLETE - FLETE - FLETE - FLETE - FLETE - FLETE - FLETE - FLETE -  
+# FLETE - FLETE - FLETE - FLETE - FLETE - FLETE - FLETE - FLETE - FLETE - FLETE - FLETE -  
+# FLETE - FLETE - FLETE - FLETE - FLETE - FLETE - FLETE - FLETE - FLETE - FLETE - FLETE -  
+# FLETE - FLETE - FLETE - FLETE - FLETE - FLETE - FLETE - FLETE - FLETE - FLETE - FLETE -  
+    def SelectFlete(self):
+        if self.flete_checkbox_var.get():
+            self.flete_frame = ctk.CTkToplevel(self,
+                                        fg_color=APP_COLORS[5])
+            self.flete_frame.geometry('400x200')
+            self.flete_frame.title('Flete')
+            self.flete_frame.protocol("WM_DELETE_WINDOW", lambda: None)
+            self.flete_frame.transient(self)
+            for rows in range(4):
+                self.flete_frame.rowconfigure(rows, weight=1,uniform='row')
+            for columns in range(6):
+                self.flete_frame.columnconfigure(columns,weight=1,uniform='column')
+            title_frame = ctk.CTkFrame(self.flete_frame,corner_radius=0,fg_color=APP_COLORS[3])
+            title_frame.grid(row=0,column=0,columnspan=10,sticky='nswe')
+            title = ctk.CTkLabel(title_frame,
+                                 text='Cargar valor del Flete',
+                                 bg_color='transparent',
+                                 text_color=APP_COLORS[0],
+                                 height=50,
+                                 font=FONTS[3])
+            title.pack(pady=10)
+            # LABEL
+            label = ctk.CTkLabel(self.flete_frame,
+                                 text='Valor del Flete',
+                                 font=FONTS[5],
+                                 text_color=APP_COLORS[4],
+                                 bg_color='transparent')
+            label.grid(row = 1, column = 1, columnspan = 3, padx = 5, sticky = 'w')
+            # ENTRADA
+            self.carga_flete_var = tk.StringVar()
+            self.carga_flete_entry = ctk.CTkEntry(self.flete_frame,
+                                           validate = 'key',
+                                           validatecommand = (self.validardigit,'%P'),
+                                           textvariable=self.carga_flete_var,
+                                           fg_color=APP_COLORS[6],
+                                           border_color=APP_COLORS[2])
+            self.carga_flete_entry.grid(row=2,column=1,columnspan=1,padx=5,sticky='we')
+            self.flete_frame.after(100, lambda: self.carga_flete_entry.focus())
+            self.carga_flete_entry.bind("<Return>",lambda event:self.CalculateFlete())
+            # BOTON
+            aceptar = ctk.CTkButton(self.flete_frame,
+                                    text="Aceptar",
+                                    width=25,
+                                    fg_color=APP_COLORS[2],
+                                    hover_color=APP_COLORS[3],
+                                    command=self.CalculateFlete)
+            aceptar.grid(row=2,column=2,columnspan=2,sticky='we',padx=5)
+        else:
+            self.flete_checkbox.configure(text='Flete')
+            self.TotalPrev()
+# CALCULAR PRECIO DEL FLETE
+    def CalculateFlete(self):
+      self.valor_flete = float(self.carga_flete_var.get().strip())
+      self.flete_checkbox.configure(text=f'Flete {self.valor_flete}%')
+      self.TotalPrev()
+      self.flete_frame.destroy()
+
+# DESCUENTO 1 - DESCUENTO 1 - DESCUENTO 1 - DESCUENTO 1 - DESCUENTO 1 - DESCUENTO 1 - DESCUENTO 1 - DESCUENTO 1 - 
+# DESCUENTO 1 - DESCUENTO 1 - DESCUENTO 1 - DESCUENTO 1 - DESCUENTO 1 - DESCUENTO 1 - DESCUENTO 1 - DESCUENTO 1 - 
+# DESCUENTO 1 - DESCUENTO 1 - DESCUENTO 1 - DESCUENTO 1 - DESCUENTO 1 - DESCUENTO 1 - DESCUENTO 1 - DESCUENTO 1 - 
+# DESCUENTO 1 - DESCUENTO 1 - DESCUENTO 1 - DESCUENTO 1 - DESCUENTO 1 - DESCUENTO 1 - DESCUENTO 1 - DESCUENTO 1 - 
+    def SelectDescuento1(self):
+        if self.descuento_total1_checkbox_var.get():
+            self.descuento1_frame = ctk.CTkToplevel(self,
+                                        fg_color=APP_COLORS[5])
+            self.descuento1_frame.geometry('400x200')
+            self.descuento1_frame.title('Descuento 1')
+            self.descuento1_frame.protocol("WM_DELETE_WINDOW", lambda: None)
+            self.descuento1_frame.transient(self)
+            for rows in range(4):
+                self.descuento1_frame.rowconfigure(rows, weight=1,uniform='row')
+            for columns in range(6):
+                self.descuento1_frame.columnconfigure(columns,weight=1,uniform='column')
+            title_frame = ctk.CTkFrame(self.descuento1_frame,corner_radius=0,fg_color=APP_COLORS[3])
+            title_frame.grid(row=0,column=0,columnspan=10,sticky='nswe')
+            title = ctk.CTkLabel(title_frame,
+                                 text='Cargar valor del Descuento ',
+                                 bg_color='transparent',
+                                 text_color=APP_COLORS[0],
+                                 height=50,
+                                 font=FONTS[3])
+            title.pack(pady=10)
+            # LABEL
+            label = ctk.CTkLabel(self.descuento1_frame,
+                                 text='Porcentaje de Descuento 1',
+                                 font=FONTS[5],
+                                 text_color=APP_COLORS[4],
+                                 bg_color='transparent')
+            label.grid(row = 1, column = 1, columnspan = 5, padx = 5, sticky = 'w')
+            # ENTRADA
+            self.carga_descuento1_var = tk.StringVar()
+            self.carga_descuento1_entry = ctk.CTkEntry(self.descuento1_frame,
+                                           validate = 'key',
+                                           validatecommand = (self.validardigit,'%P'),
+                                           textvariable=self.carga_descuento1_var,
+                                           fg_color=APP_COLORS[6],
+                                           border_color=APP_COLORS[2])
+            self.carga_descuento1_entry.grid(row=2,column=1,columnspan=1,padx=5,sticky='we')
+            self.descuento1_frame.after(100, lambda: self.carga_descuento1_entry.focus())
+            self.carga_descuento1_entry.bind("<Return>",lambda event:self.CalculateDescuento1())
+            # BOTON
+            aceptar = ctk.CTkButton(self.descuento1_frame,
+                                    text="Aceptar",
+                                    width=25,
+                                    fg_color=APP_COLORS[2],
+                                    hover_color=APP_COLORS[3],
+                                    command=self.CalculateDescuento1)
+            aceptar.grid(row=2,column=2,columnspan=2,sticky='we',padx=5)
+        else:
+            self.descuento_total1_checkbox.configure(text='Descuento 1')
+            self.TotalPrev()
+# CALCULAR DESCUENTO 1
+    def CalculateDescuento1(self):
+      self.valor_descuento1 = float(self.carga_descuento1_var.get().strip())
+      if self.valor_descuento1 > 100:
+          messagebox.showerror('Error de carga','El porcentaje no puede ser mayor 100%')
+          return
+      self.descuento_total1_checkbox.configure(text=f'Descuento 1 {self.valor_descuento1}%')
+      self.TotalPrev()
+      self.descuento1_frame.destroy()
+
+# DESCUENTO 2 - DESCUENTO 2 - DESCUENTO 2 - DESCUENTO 2 - DESCUENTO 2 - DESCUENTO 2 - DESCUENTO 2 - DESCUENTO 2 - 
+# DESCUENTO 2 - DESCUENTO 2 - DESCUENTO 2 - DESCUENTO 2 - DESCUENTO 2 - DESCUENTO 2 - DESCUENTO 2 - DESCUENTO 2 - 
+# DESCUENTO 2 - DESCUENTO 2 - DESCUENTO 2 - DESCUENTO 2 - DESCUENTO 2 - DESCUENTO 2 - DESCUENTO 2 - DESCUENTO 2 - 
+# DESCUENTO 2 - DESCUENTO 2 - DESCUENTO 2 - DESCUENTO 2 - DESCUENTO 2 - DESCUENTO 2 - DESCUENTO 2 - DESCUENTO 2 - 
+    def SelectDescuento2(self):
+        if self.descuento_total2_checkbox_var.get():
+            self.descuento2_frame = ctk.CTkToplevel(self,
+                                        fg_color=APP_COLORS[5])
+            self.descuento2_frame.geometry('400x200')
+            self.descuento2_frame.title('Descuento 2')
+            self.descuento2_frame.protocol("WM_DELETE_WINDOW", lambda: None)
+            self.descuento2_frame.transient(self)
+            for rows in range(4):
+                self.descuento2_frame.rowconfigure(rows, weight=1,uniform='row')
+            for columns in range(6):
+                self.descuento2_frame.columnconfigure(columns,weight=1,uniform='column')
+            title_frame = ctk.CTkFrame(self.descuento2_frame,corner_radius=0,fg_color=APP_COLORS[3])
+            title_frame.grid(row=0,column=0,columnspan=10,sticky='nswe')
+            title = ctk.CTkLabel(title_frame,
+                                 text='Cargar valor del Descuento 2',
+                                 bg_color='transparent',
+                                 text_color=APP_COLORS[0],
+                                 height=50,
+                                 font=FONTS[3])
+            title.pack(pady=10)
+            # LABEL
+            label = ctk.CTkLabel(self.descuento2_frame,
+                                 text='Porcentaje de Descuento 2',
+                                 font=FONTS[5],
+                                 text_color=APP_COLORS[4],
+                                 bg_color='transparent')
+            label.grid(row = 1, column = 1, columnspan = 5, padx = 5, sticky = 'w')
+            # ENTRADA
+            self.carga_descuento2_var = tk.StringVar()
+            self.carga_descuento2_entry = ctk.CTkEntry(self.descuento2_frame,
+                                           validate = 'key',
+                                           validatecommand = (self.validardigit,'%P'),
+                                           textvariable=self.carga_descuento2_var,
+                                           fg_color=APP_COLORS[6],
+                                           border_color=APP_COLORS[2])
+            self.carga_descuento2_entry.grid(row=2,column=1,columnspan=1,padx=5,sticky='we')
+            self.descuento2_frame.after(100, lambda: self.carga_descuento2_entry.focus())
+            self.carga_descuento2_entry.bind("<Return>",lambda event:self.CalculateDescuento2())
+            # BOTON
+            aceptar = ctk.CTkButton(self.descuento2_frame,
+                                    text="Aceptar",
+                                    width=25,
+                                    fg_color=APP_COLORS[2],
+                                    hover_color=APP_COLORS[3],
+                                    command=self.CalculateDescuento2)
+            aceptar.grid(row=2,column=2,columnspan=2,sticky='we',padx=5)
+        else:
+            self.descuento_total2_checkbox.configure(text='Descuento 2')
+            self.TotalPrev()
+# CALCULAR DESCUENTO 1
+    def CalculateDescuento2(self):
+      self.valor_descuento2 = float(self.carga_descuento2_var.get().strip())
+      if self.valor_descuento2 > 100:
+          messagebox.showerror('Error de carga','El porcentaje no puede ser mayor 100%')
+          return
+      self.descuento_total2_checkbox.configure(text=f'Descuento 2 {self.valor_descuento2}%')
+      self.TotalPrev()
+      self.descuento2_frame.destroy()
+
+
 # VALIDAR LA ENTRADA DE DIGITOS
     def ValidarDigitos(self,texto):
         texto = texto.replace(".", "", 1)
