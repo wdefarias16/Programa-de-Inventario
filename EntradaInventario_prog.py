@@ -58,6 +58,14 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                         fg_color=APP_COLORS[6],
                                         border_color=APP_COLORS[2])
         self.fecha_entry.grid(row=4,column=5,columnspan=1,padx=5,sticky='we')
+        # TOTAL
+        self.total_entry_var = tk.StringVar()
+        self.total_entry = ctk.CTkEntry(self.prog_frame,
+                                        state='disabled',
+                                        textvariable=self.total_entry_var,
+                                        fg_color=APP_COLORS[8],
+                                        border_color=APP_COLORS[8])
+        self.total_entry.grid(row=1,column=10,columnspan=1,padx=5,sticky='we')
         # IVA
         self.iva = ctk.CTkCheckBox(self.prog_frame,
                                    text='I.V.A. 16%',
@@ -87,6 +95,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                         font=FONTS[1],
                                         text_color=APP_COLORS[4])
         fecha_pedido_label.grid(row=3,column=5,columnspan=2,padx=5,sticky='w')
+        # TOTAL
     # MENU - MENU - MENU - MENU - MENU - MENU - MENU - MENU - MENU - MENU - MENU - MENU - MENU -
         self.prov_menu = ctk.CTkOptionMenu(self.prog_frame,
                                            values=PROV_MANAGER.GetProvNames(),
@@ -365,6 +374,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
                     self.btn_agregar_entrada.configure(state='enabled')
                     self.lista_productos.append(str(codigo).strip())
                     self.tree_frame.destroy()
+                    self.TotalFactura()
                 else:
                     messagebox.showerror('Error',f'Producto con codigo {codigo} no se encuentra en la base de datos.')
             else:
@@ -399,6 +409,15 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                          producto['proveedor'],
                                          producto['nombre'],
                                          producto['costo']))
+# MUESTRA EN PANTALLA EL TOTAL DE LA FACTURA
+    def TotalFactura(self):
+        total = 0
+        for item in self.treeview_entradas.get_children():
+            info = self.treeview_entradas.item(item)
+            print(info)
+            subtotal = float(info['values'][5].split(' ')[1].strip())
+            total += subtotal
+        self.total_entry_var.set(f'${total}')
 # BUSCAR PRODUCTO POR NOMBRE
     def BuscarProductoNombre(self):
         for item in self.treeview.get_children():
