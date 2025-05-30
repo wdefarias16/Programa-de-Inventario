@@ -102,10 +102,7 @@ def InitTables():
                         rol INT NOT NULL,
                         estado BOOLEAN DEFAULT TRUE,
                         FOREIGN KEY (rol) REFERENCES roles(codigo) ON DELETE RESTRICT  
-                    )""",
-                    """INSERT INTO usuarios (nombre,clave,correo,rol,estado) VALUES 
-                        ('admin','1234','wdefarias16@gmail.com','Administrador','true')"""
-                ]
+                    )"""]
                 
                 for stmt in statements:
                     cursor.execute(stmt)
