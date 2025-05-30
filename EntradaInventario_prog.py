@@ -522,6 +522,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
             print("Advertencia: No hay ningún elemento seleccionado.")
             return
         info = self.treeview_entradas.item(self.item_id)
+        print(info)
         self.codigo = str(info['text']).strip()
         datos = info['values']
         self.nombre = datos[0]
@@ -1014,14 +1015,14 @@ class EntradasInventarioProg(ctk.CTkFrame):
             for item in self.treeview_entradas.get_children():
                 info = self.treeview_entradas.item(item)
                 codigo = info['text']
-                values = info['values']
+                #values = info['values']
                 # Los valores insertados fueron:
                 # values = (nombre, cantidad, ('$', costo), (descuento, '%'), ('$', neto), ('$', subtotal))
-                cantidad = int(values[1])
-                costo = float(values[2][1])
-                descuento_linea = float(values[3][0])
-                neto = float(values[4][1])
-                subtotal = float(values[5][1])
+                cantidad = int(info['values'][1])
+                costo = float(info['values'][2].split(' ')[1].strip())
+                descuento_linea = float(info['values'][3].split(' ')[0].strip())
+                neto = float(info['values'][4].split(' ')[1].strip())
+                subtotal = float(info['values'][5].split(' ')[1].strip())
                 detalle_entrada.append({
                     'codigo': codigo,
                     'cantidad': cantidad,

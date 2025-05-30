@@ -103,8 +103,31 @@ def InitTables():
                         estado BOOLEAN DEFAULT TRUE,
                         FOREIGN KEY (rol) REFERENCES roles(codigo) ON DELETE RESTRICT  
                     )""",
-                    """INSERT INTO usuarios (nombre,clave,correo,rol,estado) VALUES 
-                        ('admin','1234','wdefarias16@gmail.com','Administrador','true')"""
+                    # ENTRADAS A INVENTARIO
+                    """CREATE TABLE entradas_inventario (
+                        id SERIAL PRIMARY KEY,
+                        num_factura VARCHAR(50) NOT NULL,
+                        proveedor VARCHAR(100) NOT NULL,
+                        fecha DATE NOT NULL,
+                        total NUMERIC(12,2) NOT NULL,
+                        iva NUMERIC(5,2) DEFAULT 0,
+                        flete NUMERIC(5,2) DEFAULT 0,
+                        descuento1 NUMERIC(5,2) DEFAULT 0,
+                        descuento2 NUMERIC(5,2) DEFAULT 0,
+                        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+                        )""",
+                    # DETALLES DE ENTRADAS
+                    """CREATE TABLE detalle_entrada (
+                        id SERIAL PRIMARY KEY,
+                        entrada_id INTEGER NOT NULL,
+                        codigo VARCHAR(50) NOT NULL,
+                        cantidad INTEGER NOT NULL,
+                        costo NUMERIC(12,2) NOT NULL,
+                        descuento NUMERIC(5,2) DEFAULT 0,
+                        neto NUMERIC(12,2) NOT NULL,
+                        subtotal NUMERIC(12,2) NOT NULL,
+                        FOREIGN KEY (entrada_id) REFERENCES entradas_inventario(id) ON DELETE CASCADE
+                        )"""
                 ]
                 
                 for stmt in statements:
