@@ -297,6 +297,84 @@ class Inventory:
             return False
         return True
 
+    def GuardarEntradaInventario(self, num_factura, proveedor, fecha, total,
+                             iva=0, flete=0, descuento1=0, descuento2=0, detalle_entrada=[]):
+        """
+        Guarda una entrada a inventario completa: registra el encabezado de la entrada
+        en la tabla 'entradas_inventario', inserta cada línea en la tabla 'detalle_entrada'
+        y actualiza la existencia de cada producto en la tabla 'productos'.
+
+        Parámetros:
+          - num_factura: Número de factura o código de la entrada.
+          - proveedor: Proveedor asociado a la entrada.
+          - fecha: Fecha del pedido (debe ser un valor compatible con el tipo DATE).
+          - total: Total de la entrada (sin símbolos, como número [float o decimal]).
+          - iva, flete, descuento1, descuento2: Porcentajes aplicados (usar 0 si no se aplican).
+          - detalle_entrada: Lista de diccionarios. Cada diccionario debe tener las llaves:
+               'codigo': Código del producto.
+               'cantidad': Cantidad ingresada (entero).
+               'costo': Costo unitario.
+               'descuento': Porcentaje de descuento aplicado (puede ser 0).
+               'neto': Precio unitario neto (después del descuento).
+               'subtotal': Subtotal de la línea (cantidad * neto).
+
+        Ejemplo de detalle_entrada:
+            detalle_entrada = [
+                {
+                    'codigo': 'PROD001',
+                    'cantidad': 10,
+                    'costo': 50.0,
+                    'descuento': 5,
+                    'neto': 47.50,
+                    'subtotal': 475.0
+                },
+                # ... otros productos ...
+            ]
+        """
+        try:
+            with self.conn.cursor() as cur:
+                # Insertar el encabezado de la entrada y obtener su id
+                cur.execute("""
+                    INSERT INTO entradas_inventario
+                       (num_factura, proveedor, fecha, total, iva, flete, descuento1, descuento2)
+                    VALUES 
+                       (%s, %s, %s, %s, %s, %s, %s, %s)
+                    RETURNING id;
+                """, (num_factura, proveedor, fecha, total, iva, flete, descuento1, descuento2))
+                entrada_id = cur.fetchone()[0]
+                
+                # Para cada producto en la entrada, inserta en el detalle
+                for item in detalle_entrada:
+                    cur.execute("""
+                        INSERT INTO detalle_entrada
+                        (entrada_id, codigo, cantidad, costo, descuento, neto, subtotal)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s);
+                    """, (entrada_id, 
+                          item['codigo'], 
+                          item['cantidad'], 
+                          item['costo'], 
+                          item.get('descuento', 0), 
+                          item['neto'], 
+                          item['subtotal']))
+                    # Actualizar la existencia sumándole la cantidad ingresada
+                    cur.execute("""
+                        UPDATE productos
+                        SET existencia = existencia + %s
+                        WHERE codigo = %s;
+                    """, (item['cantidad'], item['codigo']))
+                
+                self.conn.commit()
+                messagebox.showinfo("Entrada Guardada",
+                                    "La entrada de inventario ha sido guardada correctamente.")
+        except Exception as e:
+            self.conn.rollback()
+            messagebox.showerror("Error", f"Error guardando la entrada de inventario: {str(e)}")
+
+
+
+
+
+
     def __del__(self):
         """Cierra la conexión a la base de datos cuando el objeto se destruye."""
         if self.conn:
