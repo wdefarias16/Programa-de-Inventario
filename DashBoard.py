@@ -2,9 +2,9 @@ import tkinter as tk
 import customtkinter as ctk
 from tkinter import ttk
 from PIL import Image, ImageTk
-from CargaProductos import*
-from CargaLineasGrupos import*
-from CargaProveedores import*
+from CargaProductos_prog import*
+from CargaLineasGrupos_prog import*
+from CargaProveedores_prog import*
 from DatabaseManager import*
 from Menu_Inventario import*
 from Menu_CuentasPorPagar import*
@@ -24,6 +24,7 @@ class MainFrame(ctk.CTkFrame):
         self.exit = exit_callback
         self.Inventario_CB = Inventario_CB
         self.CuentasPorPagar_CB = CuentasPorPagar_CB
+        self.ResizeImage()
     # MAIN FRAME GRID SETUP
         for rows in range(21):
             self.rowconfigure(rows, weight=1, uniform='row')
@@ -156,23 +157,28 @@ class MainFrame(ctk.CTkFrame):
     # INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - 
         title_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLORS[0])
         title_frame.grid(row=0,rowspan=20,column=2,columnspan=19,sticky='nsew')
-        title=ctk.CTkLabel(title_frame,
-                           text='PROGRAMA DE GESTION Y VENTAS',
-                           bg_color='transparent',
-                           font=FONTS[0])
-        title.pack(fill='both',expand=True)
+        for rows in range(20):
+            title_frame.rowconfigure(rows, weight=1, uniform='row')
+        for columns in range(20):
+            title_frame.columnconfigure(columns, weight=1, uniform='column')
 
+        imagen_logo = Image.open(r"Recursos\Cliente\logo_cliente_resized.png")
+        imagen_logo_ctk = ctk.CTkImage(imagen_logo,size=(200,32))
 
-        buss_name=ctk.CTkLabel(title_frame,
-                               text='NOMBRE DE LA EMPRESA',
-                               bg_color='transparent',
-                               font=FONTS[0])
-        buss_name.pack(fill='both',expand=True)
+        head = ctk.CTkLabel(title_frame, image=imagen_logo_ctk, text="",fg_color=APP_COLORS[0])
+        head.grid(row=8,column=0,rowspan=2,columnspan=20,sticky='nsew')
+
+        
 # FUNCION DAR FECHA Y HORA
     def Date_Time(self):
         hora = datetime.datetime.now()
         self.date_time.configure(text=hora.strftime("%d-%m-%Y  |  %H:%M:%S"))
         self.after(1000,self.Date_Time)
 
-    
-        
+    def ResizeImage(self):
+        imagen = Image.open(r"Recursos\Cliente\logo_cliente.png")
+        width = 200
+        ratio = imagen.height / imagen.width
+        height = int(width * ratio)
+        resized = imagen.resize((width,height))
+        resized.save(r"Recursos\Cliente\logo_cliente_resized.png")

@@ -4,6 +4,7 @@ from Proveedores_DB import Proveedores
 from Usuarios_DB import Users
 
 DATABASE_INFO = ['AppDatabase','postgres','admin1234','localhost','5432']
+CLIENT_INFO = ['Mercaduo C.A.']
 
 INVENTARIO = Inventory(dbname=DATABASE_INFO[0],
                             user=DATABASE_INFO[1],
