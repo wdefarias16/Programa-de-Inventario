@@ -36,34 +36,8 @@ class CargaProductosProg(ctk.CTkFrame):
             self.entry_frame.rowconfigure(rows,weight=1,uniform='row')
         for columns in range(10):
             self.entry_frame.columnconfigure(columns,weight=1,uniform='column')
-    # MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - MENUS - 
-    # MENU LINEAS
-        self.lineas = LINE_MANAGER.GetLineNames()
-        self.codigoActualLinea = self.lineas[0].split(" - ")[0]
-        self.lin_var = tk.StringVar(value=self.lineas[0])
-        self.lin_menu = ctk.CTkOptionMenu(self.entry_frame,
-                                          values=self.lineas,
-                                          command=self.SelectLinMenu,
-                                          fg_color=APP_COLORS[2],
-                                          button_color=APP_COLORS[3],
-                                          button_hover_color=APP_COLORS[2])
-        self.lin_menu.grid(row=3,column=1,columnspan=2,sticky='we',padx=5)
-    # MENU GRUPO
-        self.grup_menu = ctk.CTkOptionMenu(self.entry_frame,
-                                           values=LINE_MANAGER.GetGroupNames(self.codigoActualLinea),
-                                           command=self.SelectGruMenu,
-                                           fg_color=APP_COLORS[2],
-                                           button_color=APP_COLORS[3],
-                                           button_hover_color=APP_COLORS[2])
-        self.grup_menu.grid(row=4,column=1,columnspan=2,sticky='we',padx=5)
-    # MENU PROVEEDORES
-        self.prov_menu = ctk.CTkOptionMenu(self.entry_frame,
-                                           values=PROV_MANAGER.GetProvNames(),
-                                           command=self.SelectProvMenu,
-                                           fg_color=APP_COLORS[2],
-                                           button_color=APP_COLORS[3],
-                                           button_hover_color=APP_COLORS[2])
-        self.prov_menu.grid(row=5,column=1,columnspan=2,sticky='we',padx=5)
+
+    
     # ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - 
     # CODIGO
         self.codigo_var = tk.StringVar()
@@ -72,6 +46,7 @@ class CargaProductosProg(ctk.CTkFrame):
         self.codigo_entry.grid(row=2,column=3,columnspan=4,sticky='we')
         self.codigo_entry.bind("<Return>",lambda event:self.BuscarProducto())
     # LINEA
+        self.lin_var = tk.StringVar()
         self.linea_entry = ctk.CTkEntry(self.entry_frame,
                                    textvariable=self.lin_var)
         self.linea_entry.grid(row=3,column=3,columnspan=4,sticky='we')
@@ -211,6 +186,25 @@ class CargaProductosProg(ctk.CTkFrame):
         precio3_label.grid(row=11,column=5,columnspan=2,sticky='wn',padx=5,pady=2)
     
     # BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES -BOTONES - BOTONES - BOTONES
+    # BUSCAR LINEA
+        self.find_line_btn = ctk.CTkButton(self.entry_frame,
+                                     text='Líneas',
+                                     command=self.LineHelp,
+                                     fg_color=APP_COLORS[2],
+                                     hover_color=APP_COLORS[3])
+        self.find_line_btn.grid(row=3,column=2,columnspan=1,sticky='we',padx=5)
+    # BUSCAR GRUPO
+        self.find_group_btn = ctk.CTkButton(self.entry_frame,
+                                     text='Grupos',
+                                     fg_color=APP_COLORS[2],
+                                     hover_color=APP_COLORS[3])
+        self.find_group_btn.grid(row=4,column=2,columnspan=1,sticky='we',padx=5)
+    # BUSCAR PROVEEDOR
+        self.find_prov_btn = ctk.CTkButton(self.entry_frame,
+                                     text='Proveedores',
+                                     fg_color=APP_COLORS[2],
+                                     hover_color=APP_COLORS[3])
+        self.find_prov_btn.grid(row=5,column=2,columnspan=1,sticky='we',padx=5)
     # AGREGAR FOTO
         self.add_foto_btn = ctk.CTkButton(self.entry_frame,
                                      text='Agregar Foto',
@@ -317,11 +311,7 @@ class CargaProductosProg(ctk.CTkFrame):
             self.Restablecer()
 # MENUS DE SELECCION - MENUS DE SELECCION - MENUS DE SELECCION - MENUS DE SELECCION - MENUS DE SELECCION - MENUS DE SELECCION - 
 # AYUDA DE SELECCION DE LINEAS
-    def SelectLinMenu(self,opcion):
-        self.codigoActualLinea = opcion.split(" - ")[0]
-        self.lin_var.set(self.codigoActualLinea)
-        nuevos_grupos = LINE_MANAGER.GetGroupNames(self.codigoActualLinea)
-        self.grup_menu.configure(values=nuevos_grupos)
+    
 # AYUDA DE SELECCION DE GRUPOS
     def SelectGruMenu(self,opcion):
         self.grupo_var.set(opcion.split(' - ')[0])
@@ -389,7 +379,6 @@ class CargaProductosProg(ctk.CTkFrame):
                 self.modprecios_btn_active = True
     # BUSQUEDA POR NOMBRE
     def BuscarProductoNombre(self):
-        self.inventario = INVENTARIO.GetInventory()
         for item in self.treeview.get_children():
             self.treeview.delete(item)
         busqueda = self.search_bar_var.get().lower()
@@ -442,9 +431,6 @@ class CargaProductosProg(ctk.CTkFrame):
         self.costo_entry.configure(state='disabled',fg_color='#666')
         self.ubi1_entry.configure(state='disabled',fg_color='#666')
         self.ubi2_entry.configure(state='disabled',fg_color='#666')
-        self.lin_menu.configure(state='disabled')
-        self.grup_menu.configure(state='disabled')
-        self.prov_menu.configure(state='disabled')
 
         self.modprecios_btn.configure(state='enabled',
                                    fg_color=APP_COLORS[2],
@@ -584,3 +570,91 @@ class CargaProductosProg(ctk.CTkFrame):
         if info['text'] in inventario:
             self.BuscarProducto()
         self.tree_frame.destroy()
+
+
+
+
+# LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - 
+# LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - 
+# LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - 
+# LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - 
+    # FRAME DEL TREEVIEW
+    def LineHelp(self):
+        self.line_help_frame = ctk.CTkToplevel(self,fg_color=APP_COLORS[5])
+        self.line_help_frame.geometry('600x300')
+        self.line_help_frame.title('Ayuda de lineas')
+        self.line_help_frame.transient(self)
+    # GRID SETUP
+        for rows in range(10):
+            self.line_help_frame.rowconfigure(rows, weight=1,uniform='row')
+        for columns in range(10):
+            self.line_help_frame.columnconfigure(columns,weight=1,uniform='column')     
+    # BARRA DE BUSQUEDA
+        self.search_line_bar_var = tk.StringVar()
+        self.search_line_bar = ctk.CTkEntry(self.line_help_frame,
+                                       width=200,
+                                       textvariable=self.search_line_bar_var)
+        self.search_line_bar.grid(row=0,column=0,columnspan=2,sticky='we',padx=5)
+        self.search_line_bar.bind("<Return>",lambda event:self.SearchLine())
+    # BOTONES TREEVIEW     
+    # CANCELAR
+        cancel_btn = ctk.CTkButton(self.line_help_frame,
+                                   text='Cancelar',
+                                   command=self.ListLines,
+                                   fg_color=APP_COLORS[2],
+                                   hover_color=APP_COLORS[3])
+        cancel_btn.grid(row=0,column=2,sticky='w',padx=5)
+    # TREEVIEW
+        self.line_help_treeview = ttk.Treeview(self.line_help_frame,
+                                     style='Custom.Treeview',
+                                     columns=('Linea'))
+        self.line_help_treeview.grid(row=1,column=0,sticky='nswe',padx=10,pady=10,rowspan=9,columnspan=9)
+        # EVENTO DE SELECCIONAR PRODUCTO
+        self.line_help_treeview.bind("<<TreeviewSelect>>",self.ClickTreeview)
+    # CODIGO
+        self.line_help_treeview.heading('#0',text='Codigo')
+        self.line_help_treeview.column('#0',width=50,anchor='center')
+    # LINEA
+        self.line_help_treeview.heading('Linea',text='Linea')
+        self.line_help_treeview.column('Linea',width=50,anchor='center')
+    # CONFIGURACION VISUAL DEL TV
+        style = ttk.Style()
+        style.configure(
+            'Custom.Treeview',
+            background = APP_COLORS[0],
+            foreground = APP_COLORS[1],
+            rowheight = 30,
+            font = FONTS[2],
+            fieldbackground = APP_COLORS[0])
+        style.configure(
+            'Custom.Treeview.Heading',
+            background = APP_COLORS[1],
+            foreground = APP_COLORS[1],
+            font = FONTS[1])
+    # SCROLLBAR DEL TV
+        scrollbar = ctk.CTkScrollbar(self.line_help_frame,
+                                     orientation='vertical',
+                                     command=self.line_help_treeview.yview)
+        scrollbar.grid(row=1,column=9,sticky='nws',pady=5,rowspan=9)
+        self.line_help_treeview.configure(yscrollcommand=scrollbar.set)
+    # LISTAR TODOS LOS PRODUCTOS CARGADOS AL INICIO DEL PROGRAMA
+        self.ListLines()
+    # BUSCAR LINEAS POR NOMBRE
+    def SearchLine(self):
+        for item in self.line_help_treeview.get_children():
+            self.line_help_treeview.delete(item)
+        search = self.search_line_bar_var.get().lower()
+        outcome = LINE_MANAGER.SearchLineByName(search)
+        for line in outcome:
+            self.treeview.insert("", 'end',
+                                 text=line['codigo'],
+                                 values=(line['linea']))
+    # LISTAR LINEAS
+    def ListLines(self):
+        lines = LINE_MANAGER.GetLineNames()
+        for item in self.line_help_treeview.get_children():
+                self.line_help_treeview.delete(item)
+        for line in lines:
+            self.line_help_treeview.insert("",'end',
+                                 text=line.split(' - ')[0].strip(),
+                                 values=(line.split(' - ')[1].strip()))

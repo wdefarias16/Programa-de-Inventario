@@ -1,5 +1,8 @@
-from tkinter import messagebox
+import tkinter as tk
+import customtkinter as ctk
 import psycopg2
+from style import*
+from tkinter import messagebox
 
 class LineasGrupos:
     def __init__(self, dbname, user, password, host, port):
@@ -180,6 +183,26 @@ class LineasGrupos:
             self.conn.rollback()
             messagebox.showerror("Base de datos", f"Error al eliminar la línea: {str(e)}")
             return False
+
+    def SearchLineByName(self,search):
+        try:
+            with self.conn.cursor() as cur:
+                cur.execute("""
+                    SELECT codigo, nombre FROM lineas
+                    WHERE nombre ILIKE %s;
+                """, ('%' + search + '%',))
+                rows = cur.fetchall()
+                outcome = []
+                for row in rows:
+                    codigo, nombre = row
+                    outcome.append(
+                        {'codigo':codigo,
+                         'linea':nombre})
+                return outcome
+        except Exception as e:
+            messagebox.showerror('Error', f"Error buscando líneas: {str(e)}")
+            return []
+            
 
     # AGREGA UN GRUPO A UNA LÍNEA EXISTENTE.
     # Aquí se recibe el *código interno del grupo* (por ejemplo, "1" o "2") 
