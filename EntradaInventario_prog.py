@@ -983,7 +983,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
         try:
             # Recopilar datos del encabezado
             num_factura = self.num_pedido_var.get().strip()
-            proveedor = self.proveedor_var.get().strip()
+            proveedor = self.proveedor_var.get().split(' - ')[0].strip()
             fecha_str = self.fecha_entry_var.get().strip()
             total_str = self.total_entry_var.get().strip()
 

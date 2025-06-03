@@ -107,26 +107,28 @@ def InitTables():
                     """CREATE TABLE entradas_inventario (
                         id SERIAL PRIMARY KEY,
                         num_factura VARCHAR(50) NOT NULL,
-                        proveedor VARCHAR(100) NOT NULL,
+                        proveedor INT NOT NULL,
                         fecha DATE NOT NULL,
                         total NUMERIC(12,2) NOT NULL,
                         iva NUMERIC(5,2) DEFAULT 0,
                         flete NUMERIC(5,2) DEFAULT 0,
                         descuento1 NUMERIC(5,2) DEFAULT 0,
                         descuento2 NUMERIC(5,2) DEFAULT 0,
-                        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+                        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                        FOREIGN KEY (proveedor) REFERENCES proveedores(codigo)
                         )""",
                     # DETALLES DE ENTRADAS
                     """CREATE TABLE detalle_entrada (
                         id SERIAL PRIMARY KEY,
                         entrada_id INTEGER NOT NULL,
-                        codigo VARCHAR(50) NOT NULL,
+                        codigo VARCHAR(255) NOT NULL,
                         cantidad INTEGER NOT NULL,
                         costo NUMERIC(12,2) NOT NULL,
                         descuento NUMERIC(5,2) DEFAULT 0,
                         neto NUMERIC(12,2) NOT NULL,
                         subtotal NUMERIC(12,2) NOT NULL,
-                        FOREIGN KEY (entrada_id) REFERENCES entradas_inventario(id) ON DELETE CASCADE
+                        FOREIGN KEY (entrada_id) REFERENCES entradas_inventario(id) ON DELETE CASCADE,
+                        FOREIGN KEY (codigo) REFERENCES productos(codigo)
                         )"""
                 ]
                 

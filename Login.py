@@ -61,13 +61,7 @@ class LoginFrame(ctk.CTkFrame):
                                      hover_color=APP_COLORS[3],
                                      command=self.Access)
         enter_button.grid(row=11,column=2,columnspan=1,sticky='we',padx=5)
-        # BOTON ENTRAR
-        adduser_button = ctk.CTkButton(self,
-                                     text='Agregar usuario',
-                                     fg_color=APP_COLORS[2],
-                                     hover_color=APP_COLORS[3],
-                                     command=self.AddUser)
-        adduser_button.grid(row=11,column=3,columnspan=1,sticky='we',padx=5)
+        
 
         
         
