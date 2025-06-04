@@ -271,11 +271,8 @@ class Inventory:
             messagebox.showerror('Error', f"Error buscando producto: {str(e)}")
             return []
 
+    # VERIFICAR SI UN CODIGO YA EXISTE PARA EVITAR DOBLE CARGA DE CODIGO
     def CheckCode(self, codigo):
-        """
-        Verifica si un código de producto ya existe.
-        Si existe retorna False y muestra un error; de lo contrario, retorna True.
-        """
         try:
             with self.conn.cursor() as cur:
                 cur.execute("SELECT 1 FROM productos WHERE codigo = %s;", (codigo,))
@@ -284,6 +281,19 @@ class Inventory:
                     return False
                 else:
                     return True
+        except Exception as e:
+            messagebox.showerror('Error', f"Error verificando código: {str(e)}")
+            return False
+    # VERIFICAR SI UN CODIGO DE PRODUCTO
+    def CheckCodeValidate(self, codigo):
+        try:
+            with self.conn.cursor() as cur:
+                cur.execute("SELECT 1 FROM productos WHERE codigo = %s;", (codigo,))
+                if cur.fetchone():
+                    return True
+                else:
+                    messagebox.showerror('Error', f'El código {codigo} no se encuentra en la base de datos.')
+                    return False
         except Exception as e:
             messagebox.showerror('Error', f"Error verificando código: {str(e)}")
             return False

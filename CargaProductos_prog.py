@@ -66,7 +66,7 @@ class CargaProductosProg(ctk.CTkFrame):
                                     textvariable=self.nombre_var)
         self.nombre_entry.grid(row=6,column=3,columnspan=4,sticky='we')
     # COSTO
-        self.costo_var = tk.DoubleVar()
+        self.costo_var = tk.StringVar()
         self.costo_entry = ctk.CTkEntry(self.entry_frame,
                                     textvariable=self.costo_var)
         self.costo_entry.grid(row=7,column=3,columnspan=4,sticky='we')
@@ -81,7 +81,7 @@ class CargaProductosProg(ctk.CTkFrame):
                                    textvariable=self.ubi2_var)
         self.ubi2_entry.grid(row=9,column=3,columnspan=4,sticky='we')
     # PRECIO VENTA 1
-        self.precio1_var = tk.DoubleVar()
+        self.precio1_var = tk.StringVar()
         self.precio1_entry = ctk.CTkEntry(self.entry_frame,
                                           state='disabled',
                                           border_color=APP_COLORS[0],
@@ -89,7 +89,7 @@ class CargaProductosProg(ctk.CTkFrame):
                                    textvariable=self.precio1_var)
         self.precio1_entry.grid(row=10,column=3,columnspan=1,sticky='we',padx=2)
     # PRECIO VENTA 2
-        self.precio2_var = tk.DoubleVar()
+        self.precio2_var = tk.StringVar()
         self.precio2_entry = ctk.CTkEntry(self.entry_frame,
                                           state='disabled',
                                           border_color=APP_COLORS[0],
@@ -97,7 +97,7 @@ class CargaProductosProg(ctk.CTkFrame):
                                    textvariable=self.precio2_var)
         self.precio2_entry.grid(row=10,column=4,columnspan=1,sticky='we',padx=2)
     # PRECIO VENTA 3
-        self.precio3_var = tk.DoubleVar()
+        self.precio3_var = tk.StringVar()
         self.precio3_entry = ctk.CTkEntry(self.entry_frame,
                                           state='disabled',
                                           border_color=APP_COLORS[0],
@@ -264,11 +264,11 @@ class CargaProductosProg(ctk.CTkFrame):
 # FUNCION BOTON AGREGAR PRODUCTO - FUNCION BOTON AGREGAR PRODUCTO - FUNCION BOTON AGREGAR PRODUCTO - FUNCION BOTON AGREGAR PRODUCTO - 
     def AgregarProducto(self):
         codigo = self.codigo_var.get()
-        linea = self.lin_var.get()
-        grupo = self.grupo_var.get()
-        prove = self.prove_var.get()
+        linea = self.lin_var.get().split(" - ")[0].strip()
+        grupo = self.grupo_var.get().split(" - ")[0].strip()
+        prove = self.prove_var.get().split(" - ")[0].strip()
         nombre = self.nombre_var.get()
-        costo = self.costo_var.get()
+        costo = float(self.costo_var.get())
         ubi1 = self.ubi1_var.get()
         ubi2 = self.ubi2_var.get()
         precios = LINE_MANAGER.GetPrecios(linea,grupo,costo)
@@ -286,42 +286,33 @@ class CargaProductosProg(ctk.CTkFrame):
 # COMANDO MODIFICAR PRODUCTO 
     def ModificarProducto(self):
         linea = self.lin_var.get().split(" - ")[0].strip()
-        grupo = self.grupo_var.get()
-        prove = self.prove_var.get()
+        grupo = self.grupo_var.get().split(" - ")[0].strip()
+        prove = self.prove_var.get().split(" - ")[0].strip()
         nombre = self.nombre_var.get()
-        costo = self.costo_var.get()
+        costo = float(self.costo_var.get())
         ubi1 = self.ubi1_var.get()
         ubi2 = self.ubi2_var.get()
-        precios = LINE_MANAGER.GetPrecios(linea,grupo,costo)
-        if costo <=0:
+        precio1 = float(self.precio1_var.get())
+        precio2 = float(self.precio2_var.get())
+        precio3 = float(self.precio3_var.get())
+        if not costo or costo <= 0:
             messagebox.showerror('Error',f'El costo no puede ser menor o igual a 0')
-        elif nombre == '':
-            messagebox.showerror('Error',f'Agregue un nombre de producto')
-        else:
-            if  LINE_MANAGER.CheckLine(linea) and LINE_MANAGER.CheckGrupo(linea,grupo) and PROV_MANAGER.ChechProv(prove):
-                producto = Product(
-                self.mod_codi, linea, grupo, prove, nombre, costo, ubi1, ubi2,
-                precios[0], precios[1], precios[2])
-                INVENTARIO.EditProduct(producto.ToDict())
-                self.Restablecer()
+            return
+        if not INVENTARIO.CheckName(nombre):
+            return
+        if  LINE_MANAGER.CheckLine(linea) and LINE_MANAGER.CheckGrupo(linea,grupo) and PROV_MANAGER.ChechProv(prove):
+            producto = Product(
+            self.mod_codi, linea, grupo, prove, nombre, costo, ubi1, ubi2,
+            precio1, precio2, precio3)
+            INVENTARIO.EditProduct(producto.ToDict())
+            self.Restablecer()
 # COMANDO ELIMINAR PRODUCTO
     def EliminarProducto(self):
         answer = messagebox.askyesno('Atencion','¿Desea eliminar el producto?')
         if answer:
             INVENTARIO.DelProduct(self.mod_codi)
-            self.ListInventory()
             self.Restablecer()
-# MENUS DE SELECCION - MENUS DE SELECCION - MENUS DE SELECCION - MENUS DE SELECCION - MENUS DE SELECCION - MENUS DE SELECCION - 
-# AYUDA DE SELECCION DE LINEAS
-    
-# AYUDA DE SELECCION DE GRUPOS
-    def SelectGruMenu(self,opcion):
-        self.grupo_var.set(opcion.split(' - ')[0])
-# AYUDA DE SELECCION DE PROVEEDORES
-    def SelectProvMenu(self,opcion):
-        codigo = opcion.split(" - ")[0]
-        self.prove_var.set(codigo)
-# LISTA TOD0 EL INVENTARIO EN EL TREEVIEW
+# LISTA TOD0 EL INVENTARIO EN EL TREEVIEW DE PRODUCTOS
     def ListInventory(self):
         inventario = INVENTARIO.GetInventory()
         for item in self.treeview.get_children():
@@ -343,18 +334,18 @@ class CargaProductosProg(ctk.CTkFrame):
             self.treeview_active = False
         else:
             codigo = self.codigo_entry.get()
-        if codigo not in inventario:
-            messagebox.showerror('Error de busqueda',f'El producto con codigo {codigo} no existe')
-        else:
+        if INVENTARIO.CheckCodeValidate(codigo):
             for search in inventario:
                 if search == codigo:
-                    find = search
-            producto = INVENTARIO.GetProducto(find)
+                    producto = INVENTARIO.GetProducto(search)
         # LLENAR LAS ENTRADAS CON LOS DATOS DE PRODUCTO ELEGIDO
+            line = LINE_MANAGER.GetLine(producto['linea'])
+            group = LINE_MANAGER.GetGroup(producto['linea'],producto['grupo'])
+            prov = PROV_MANAGER.GetProv(producto['proveedor'])
             self.codigo_var.set(producto['codigo'])
-            self.lin_var.set(producto['linea'])
-            self.grupo_var.set(producto['grupo'])
-            self.prove_var.set(producto['proveedor'])
+            self.lin_var.set(f'{line[0]} - {line[1]}')
+            self.grupo_var.set(f'{group[0]} - {group[1]}')
+            self.prove_var.set(f'{prov['codigo']} - {prov['nombre']}')
             self.nombre_var.set(producto['nombre'])
             self.costo_var.set(producto['costo'])
             self.ubi1_var.set(producto['ubicacion1'])

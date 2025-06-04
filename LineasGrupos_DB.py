@@ -45,7 +45,27 @@ class LineasGrupos:
         except Exception as e:
             self.conn.rollback()
             messagebox.showerror("Base de datos", f"Error al inicializar datos: {str(e)}")
-
+    # RETORNA UNA LINEA
+    def GetLine(self,linea):
+        try:
+            with self.conn.cursor() as cur:
+                cur.execute("SELECT codigo,nombre FROM lineas WHERE codigo = %s", (linea,))
+                row = cur.fetchone()
+            return row
+        except Exception as e:
+            messagebox.showerror("Base de datos", f"Error al buscar línea: {str(e)}")
+            return []
+    # RETORNA UN GRUPO
+    def GetGroup(self,linea,grupo):
+        try:
+            with self.conn.cursor() as cur:
+                cur.execute("""SELECT codigo,nombre FROM grupos
+                            WHERE linea = %s AND codigo = %s""", (linea,grupo))
+                row = cur.fetchone()
+            return row
+        except Exception as e:
+            messagebox.showerror("Base de datos", f"Error al buscar grupo: {str(e)}")
+            return []
     # RETORNA LOS NOMBRES DE LÍNEA EN FORMATO (CÓDIGO - NOMBRE)
     def GetLineNames(self):
         try:

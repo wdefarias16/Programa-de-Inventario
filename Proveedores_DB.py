@@ -36,7 +36,7 @@ class Proveedores:
             return []
 
 # DEVUELVE TODOS LOS PROVEEDORES EN UN DICCIONARIO CON CODIGO DE LLAVE
-    def GetProv(self):
+    def GetProvs(self):
         try:
             with self.conn.cursor() as cur:
                 cur.execute("""
@@ -66,7 +66,7 @@ class Proveedores:
             messagebox.showerror("Base de datos", f"Error al leer los proveedores: {str(e)}")
             return {}
 # DEVUELVE UN PROVEEDOR BUSCADO POR CODIGO
-    def BuscarProv(self, codigo):
+    def GetProv(self, codigo):
         try:
             with self.conn.cursor() as cur:
                 cur.execute("""
