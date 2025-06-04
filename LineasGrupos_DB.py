@@ -202,6 +202,26 @@ class LineasGrupos:
         except Exception as e:
             messagebox.showerror('Error', f"Error buscando líneas: {str(e)}")
             return []
+    
+    def SearchGroupByName(self,search,line):
+        try:
+            with self.conn.cursor() as cur:
+                cur.execute("""
+                    SELECT codigo, nombre, linea FROM grupos
+                    WHERE nombre ILIKE %s AND linea = %s;
+                """, ('%' + search + '%',line))
+                rows = cur.fetchall()
+                outcome = []
+                for row in rows:
+                    codigo, linea, grupo = row
+                    outcome.append(
+                        {'codigo':codigo,
+                         'linea':linea,
+                         'grupo':grupo})
+                return outcome
+        except Exception as e:
+            messagebox.showerror('Error', f"Error buscando líneas: {str(e)}")
+            return []
             
 
     # AGREGA UN GRUPO A UNA LÍNEA EXISTENTE.

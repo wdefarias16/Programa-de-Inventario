@@ -241,7 +241,7 @@ class Inventory:
         Busca productos cuyo nombre contenga la cadena de búsqueda (sin importar mayúsculas/minúsculas).
         Devuelve una lista de diccionarios con los productos encontrados.
         """
-        try:
+        try: 
             with self.conn.cursor() as cur:
                 cur.execute("""
                     SELECT codigo, linea, grupo, proveedor, nombre, costo, ubicacion1, ubicacion2, precio1, precio2, precio3, existencia 

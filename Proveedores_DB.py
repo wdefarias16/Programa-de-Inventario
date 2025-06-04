@@ -97,16 +97,16 @@ class Proveedores:
             messagebox.showerror("Base de datos", f"Error al buscar el codigo de proveedor: {str(e)}")
             return None
 # DEVUELVE PROVEEDORES BUSCADOS POR NOMBRE
-    def BuscarNombres(self, busqueda):
+    def SearchProvByName(self, search):
         try:
             with self.conn.cursor() as cur:
                 cur.execute("""
                     SELECT codigo, nombre, contacto, direccion1, direccion2, ciudad, telefono, celular, email, rif 
                     FROM proveedores 
                     WHERE nombre ILIKE %s;
-                """, ('%' + busqueda + '%',))
+                """, ('%' + search + '%',))
                 rows = cur.fetchall()
-                resultados = []
+                outcome = []
                 for row in rows:
                     codigo, nombre, contacto, direccion1, direccion2, ciudad, telefono, celular, email, rif = row
                     proveedor = {
@@ -121,8 +121,8 @@ class Proveedores:
                         'email': email,
                         'rif': rif
                     }
-                    resultados.append(proveedor)
-                return resultados
+                    outcome.append(proveedor)
+                return outcome
         except Exception as e:
             messagebox.showerror("Error", f"Error al buscar nombre del proveedor: {str(e)}")
             return []
