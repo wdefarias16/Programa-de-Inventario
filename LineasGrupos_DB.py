@@ -54,7 +54,7 @@ class LineasGrupos:
             return row
         except Exception as e:
             messagebox.showerror("Base de datos", f"Error al buscar línea: {str(e)}")
-            return []
+            return
     # RETORNA UN GRUPO
     def GetGroup(self,linea,grupo):
         try:
@@ -65,7 +65,7 @@ class LineasGrupos:
             return row
         except Exception as e:
             messagebox.showerror("Base de datos", f"Error al buscar grupo: {str(e)}")
-            return []
+            return
     # RETORNA LOS NOMBRES DE LÍNEA EN FORMATO (CÓDIGO - NOMBRE)
     def GetLineNames(self):
         try:
@@ -96,7 +96,7 @@ class LineasGrupos:
         try:
             with self.conn.cursor() as cur:
                 cur.execute("""
-                    SELECT porcentaje1, porcentaje2, porcentaje3 
+                    SELECT porcentaje1, porcentaje2, porcentaje3
                     FROM grupos 
                     WHERE linea = %s AND codigo = %s;
                 """, (linea, grupo))

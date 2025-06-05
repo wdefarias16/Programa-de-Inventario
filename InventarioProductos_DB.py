@@ -282,7 +282,6 @@ class Inventory:
                 else:
                     return True
         except Exception as e:
-            messagebox.showerror('Error', f"Error verificando código: {str(e)}")
             return False
     # VERIFICAR SI UN CODIGO DE PRODUCTO
     def CheckCodeValidate(self, codigo):
