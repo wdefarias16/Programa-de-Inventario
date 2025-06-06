@@ -294,6 +294,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                        border_color=APP_COLORS[6])
         self.search_bar.grid(row=2,column=0,columnspan=2,sticky='we',padx=20)
         self.search_bar.bind("<Return>",lambda event:self.BuscarProductoNombre())
+        self.search_bar.bind("<Control-BackSpace>", lambda event: self.ListInventory())
         # CANTIDAD
         self.cantidad_var = tk.StringVar()
         self.cantidad_entry = ctk.CTkEntry(self.tree_frame,

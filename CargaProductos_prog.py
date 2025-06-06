@@ -12,6 +12,7 @@ class CargaProductosProg(ctk.CTkFrame):
         super().__init__(parent)
         self.GoBack_CB = GoBack_CB
         self.configure(fg_color=APP_COLORS[0])
+        self.validatenum = self.register(self.ValidateNum)
         self.treeview_active = False
         self.modprecios_btn_active = False
     # TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - 
@@ -70,7 +71,9 @@ class CargaProductosProg(ctk.CTkFrame):
     # COSTO
         self.costo_var = tk.StringVar()
         self.costo_entry = ctk.CTkEntry(self.entry_frame,
-                                    textvariable=self.costo_var)
+                                        validate = 'key',
+                                        validatecommand = (self.validatenum,'%P'),
+                                        textvariable=self.costo_var)
         self.costo_entry.grid(row=7,column=3,columnspan=4,sticky='we')
         self.costo_entry.bind("<Return>",lambda event:self.ubi1_entry.focus())
     # UBICACION 1
@@ -280,6 +283,7 @@ class CargaProductosProg(ctk.CTkFrame):
         # CHEQUEAR SI CODIGO NO ESTA VACIO
         if codigo == '':
             messagebox.showerror('Error',f"Agregue un codigo de producto.")
+            self.codigo_entry.focus()
             return
         # CHEQUEAR SI LINEA - GRUPO - PROV NO ESTAN VACIOS
         if linea == '' or grupo == '' or prove == '':
@@ -287,16 +291,19 @@ class CargaProductosProg(ctk.CTkFrame):
             return
         # CHEQUEAR SI NOMBRE NO ESTA VACIO
         if not INVENTARIO.CheckName(nombre):
+            self.nombre_entry.focus()
             return
         # OBTENER EL FLOTANTE DEL COSTO
         try:
             costo = float(self.costo_var.get())
         except Exception as e:
             messagebox.showerror('Error',f'La entrada "Costo" no puede estar vacia')
+            self.costo_entry.focus()
             return
         # CHEQUEAR SI COSTO NO ESTA VACIO
         if costo <= 0 or costo == '':
             messagebox.showerror('Error',f'El costo no puede ser menor o igual a 0')
+            self.costo_entry.focus()
             return
         # SI PASA LA VERIFICACION SE AGREGA EL PRODUCTO
         if INVENTARIO.CheckCode(codigo) and LINE_MANAGER.CheckLine(linea) and LINE_MANAGER.CheckGrupo(linea,grupo) and PROV_MANAGER.ChechProv(prove):
@@ -304,6 +311,14 @@ class CargaProductosProg(ctk.CTkFrame):
             producto = Product(
             codigo, linea, grupo, prove, nombre, costo, ubi1, ubi2,
             precios[0], precios[1], precios[2])
+            # MOSTRAR PRECIOS Y PORCENTAJES
+            porcentajes = LINE_MANAGER.GetPorcentajes(linea,grupo)
+            self.precio1_var.set(precios[0])
+            self.precio2_var.set(precios[1])
+            self.precio3_var.set(precios[2])
+            self.precio1_label.configure(text=f'Precio 1: {porcentajes['porcentaje1']}%')
+            self.precio2_label.configure(text=f'Precio 2: {porcentajes['porcentaje2']}%')
+            self.precio3_label.configure(text=f'Precio 3: {porcentajes['porcentaje3']}%')
             INVENTARIO.AddProduct(producto.ToDict())
             self.Restablecer()
 # COMANDO MODIFICAR PRODUCTO 
@@ -318,12 +333,20 @@ class CargaProductosProg(ctk.CTkFrame):
         costo = float(self.costo_var.get())
         ubi1 = self.ubi1_var.get()
         ubi2 = self.ubi2_var.get()
-        precio1 = float(self.precio1_var.get())
-        precio2 = float(self.precio2_var.get())
-        precio3 = float(self.precio3_var.get())
+        
+        product = INVENTARIO.GetProducto(self.mod_codi)
         if not costo or costo <= 0:
             messagebox.showerror('Error',f'El costo no puede ser menor o igual a 0')
             return
+        if costo != product['costo']:
+            precios = LINE_MANAGER.GetPrecios(linea,grupo,costo)
+            precio1 = precios[0]
+            precio2 = precios[1]
+            precio3 = precios[2]
+        else:
+            precio1 = float(self.precio1_var.get())
+            precio2 = float(self.precio2_var.get())
+            precio3 = float(self.precio3_var.get())
         if not INVENTARIO.CheckName(nombre):
             return
         if  LINE_MANAGER.CheckLine(linea) and LINE_MANAGER.CheckGrupo(linea,grupo) and PROV_MANAGER.ChechProv(prove):
@@ -336,8 +359,12 @@ class CargaProductosProg(ctk.CTkFrame):
             self.Restablecer()
 # COMANDO ELIMINAR PRODUCTO
     def EliminarProducto(self):
-        answer = messagebox.askyesno('Atencion','¿Desea eliminar el producto?')
-        if answer:
+        answer1 = messagebox.askyesno('Atencion','¿Desea eliminar el producto?')
+        if not answer1:
+            return
+        answer2 = messagebox.askyesno('Atencion','Esto modificará los datos de inventario.'
+                                      ' Está seguro de eliminar el producto?')
+        if answer1 and answer2:
             INVENTARIO.DelProduct(self.mod_codi)
             self.Restablecer()
 # LISTA TOD0 EL INVENTARIO EN EL TREEVIEW DE PRODUCTOS
@@ -937,6 +964,8 @@ class CargaProductosProg(ctk.CTkFrame):
             self.prove_entry.focus()
         else:
             messagebox.showerror("Base de datos", f"No se encontro el grupo {group_search}")
+            self.grupo_var.set('')
+            return
 # GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - 
 # GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - 
 # GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - 
@@ -1071,11 +1100,16 @@ class CargaProductosProg(ctk.CTkFrame):
             if prov:
                 self.prove_var.set(f'{prov['codigo']} - {prov['nombre']}')
                 self.nombre_entry.focus()
+            else:
+                self.prove_var.set('')
+                return
             
 # PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - 
 # PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - 
 # PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - 
 # PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - 
-
-
-
+    def ValidateNum(self,text):
+        text = text.replace(".", "", 1)
+        if text == '':
+            return True
+        return text.isdigit()
