@@ -59,7 +59,7 @@ class LineasGrupos:
     def GetGroup(self,linea,grupo):
         try:
             with self.conn.cursor() as cur:
-                cur.execute("""SELECT codigo,nombre FROM grupos
+                cur.execute("""SELECT codigo, nombre, porcentaje1, porcentaje2, porcentaje3 FROM grupos
                             WHERE linea = %s AND codigo = %s""", (linea,grupo))
                 row = cur.fetchone()
             return row
