@@ -141,8 +141,8 @@ class LineasGruposProg(ctk.CTkFrame):
         p1 = self.PorV1_entry_var.get()
         p2 = self.PorV2_entry_var.get()
         p3 = self.PorV3_entry_var.get()
-        if codigo_grupo == '' or len(codigo_grupo) != 2:
-            messagebox.showerror('Error de carga','Debe agregar un codigo de grupo y el formato debe ser "00".')
+        if codigo_grupo == '':
+            messagebox.showerror('Error de carga','Debe agregar un codigo de grupo.')
         elif nombre_grupo == '':
             messagebox.showerror('Error de carga','Debe agregar un nombre de grupo.')
         elif p1 <= 0 or p2 <= 0 or p3 <= 0:
