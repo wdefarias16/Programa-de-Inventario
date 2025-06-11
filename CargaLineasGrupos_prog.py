@@ -46,6 +46,8 @@ class LineasGruposProg(ctk.CTkFrame):
         self.codigo_entry.grid(row=2,column=2,columnspan=2,sticky='we',padx=5)
         self.codigo_entry.bind("<Return>", lambda event: self.GetLineByCode())
         self.codigo_entry.bind("<Control-Alt-BackSpace>",lambda event: self.Restablecer())
+        self.codigo_entry.bind("<Control-s>",lambda event: self.LineHelp())
+        self.codigo_entry.bind("<Control-S>",lambda event: self.LineHelp())
         self.codigo_entry.focus()
         # NOMBRE - DESCRIPCION
         self.nombre_entry_var = tk.StringVar()
@@ -190,6 +192,9 @@ class LineasGruposProg(ctk.CTkFrame):
                                  '\nNinguno puede ser menor o igual a 0')
             self.PorV1_entry.focus()
             return
+        answer = messagebox.askyesno('¡Atención!',f'¿Está seguro que desea modificar el grupo {grupo} con los valores actuales?')
+        if not answer:
+            return
         LINE_MANAGER.Mod_Grupo(linea,grupo,nombre_grupo,p1,p2,p3)
         self.LimpiarGrupo()
     # ELIMINAR GRUPO
@@ -225,6 +230,8 @@ class LineasGruposProg(ctk.CTkFrame):
         self.codigo_grupo_entry.grid(row=8,column=2,columnspan=2,sticky='we',padx=5)
         self.codigo_grupo_entry.bind("<Return>", lambda event: self.GetGroupByCode())
         self.codigo_grupo_entry.bind("<Control-Alt-BackSpace>",lambda event: self.Restablecer())
+        self.codigo_grupo_entry.bind("<Control-s>",lambda event: self.GroupHelp())
+        self.codigo_grupo_entry.bind("<Control-S>",lambda event: self.GroupHelp())
         self.codigo_grupo_entry.focus()
         # ENTRADA DESCRIPCION
         self.grupo_entry_var = tk.StringVar()
@@ -375,8 +382,6 @@ class LineasGruposProg(ctk.CTkFrame):
         self.agregar_grupo_btn.configure(state='disabled',fg_color=APP_COLORS[3])
         self.modificar_grupo_btn.configure(state='enabled',fg_color=APP_COLORS[2])
         self.eliminar_grupo_btn.configure(state='enabled',fg_color=APP_COLORS[9])
-        
-
 # LIMPIAR GRUPO
     def LimpiarGrupo(self):
         self.PorV3_entry.unbind("<Return>")
@@ -441,9 +446,6 @@ class LineasGruposProg(ctk.CTkFrame):
         self.find_line_btn.configure(state='enabled',fg_color=APP_COLORS[2])
         self.codigo_entry.configure(state='normal',fg_color=APP_COLORS[6])
         self.codigo_entry.focus()
-
-
-
 # LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - 
 # LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - 
 # LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - 
@@ -585,10 +587,6 @@ class LineasGruposProg(ctk.CTkFrame):
 # LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - 
 # LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - 
 # LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - 
-
-
-
-
 # GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - 
 # GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - 
 # GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - 
@@ -682,7 +680,6 @@ class LineasGruposProg(ctk.CTkFrame):
             self.ListGroups()
         except ValueError:
             messagebox.showerror('Error','Seleccione una línea válida.')
-        
 # BUSCAR PROVEEDORES POR NOMBRE
     def SearchGroup(self):
         for item in self.help_treeview.get_children():
@@ -750,11 +747,6 @@ class LineasGruposProg(ctk.CTkFrame):
 # GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - 
 # GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - 
 # GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - 
-
-
-
-
-
 # VALIDAR LAS CARGAS DE CODIGO 
     def ValidarCodigoLinea(self,texto):
         if len(texto) > 3:
