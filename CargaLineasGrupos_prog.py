@@ -415,7 +415,6 @@ class LineasGruposProg(ctk.CTkFrame):
         self.PorV2_entry.destroy()
         self.PorV3_entry.destroy()
         self.nombre_entry.configure(state='normal',fg_color=APP_COLORS[6])
-
         # BOTONES
         self.find_group_btn.destroy()
         self.agregar_grupo_btn.destroy()
@@ -423,7 +422,6 @@ class LineasGruposProg(ctk.CTkFrame):
         self.eliminar_grupo_btn.destroy()
         self.mod_btn.configure(state='enabled',fg_color=APP_COLORS[2])
         self.del_btn.configure(state='enabled',fg_color=APP_COLORS[9])
-
 # RESTABLECER LOS CAMPOS
     def Restablecer(self):
         self.nombre_entry.unbind("<Return>")

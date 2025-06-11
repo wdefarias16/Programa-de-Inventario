@@ -380,7 +380,7 @@ class CargaProductosProg(ctk.CTkFrame):
                                          producto['grupo'],
                                          producto['proveedor'],
                                          producto['nombre'],
-                                         producto['costo']))
+                                         f'${producto['costo']}'))
 # BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - 
     # BUSQUEDA POR CODIGO
     def BuscarProducto(self):
@@ -565,7 +565,7 @@ class CargaProductosProg(ctk.CTkFrame):
         self.treeview_active = True
         self.tree_frame = ctk.CTkToplevel(self,
                                    fg_color=APP_COLORS[5])
-        self.tree_frame.geometry('700x450')
+        self.tree_frame.geometry('900x450')
         self.tree_frame.title('Busqueda de productos')
         self.tree_frame.protocol("WM_DELETE_WINDOW", lambda: None)
         self.tree_frame.transient(self)
@@ -598,6 +598,7 @@ class CargaProductosProg(ctk.CTkFrame):
         self.search_bar.grid(row=2,column=0,columnspan=2,sticky='we',padx=15)
         self.search_bar.bind("<Return>",lambda event:self.BuscarProductoNombre())
         self.search_bar.bind("<Control-BackSpace>", lambda event: self.ListInventory())
+        self.search_bar.after(100,lambda:self.search_bar.focus())
     # BOTONES TREEVIEW     
     # CANCELAR
         cancel_btn = ctk.CTkButton(self.tree_frame,
@@ -661,6 +662,8 @@ class CargaProductosProg(ctk.CTkFrame):
         self.treeview.configure(yscrollcommand=scrollbar.set)
     # LISTAR TODOS LOS PRODUCTOS CARGADOS AL INICIO DEL PROGRAMA
         self.ListInventory()
+        
+        
 # SELECIONAR PRODUCTO EN EL TREEVIEW
     def ClickTreeview(self,event):
         inventario = INVENTARIO.GetCodigos()
