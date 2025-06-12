@@ -10,6 +10,12 @@ class ProveedoresProg(ctk.CTkFrame):
         super().__init__(parent)
         self.GoBack_CB = GoBack_CB
         self.treeview_active = False
+        PREFIJOS_L = ['0248','0281','0282','0283','0285','0292','0240','0247',
+                    '0278','0243','0244','0246','0273','0278','0284','0285',
+                    '0286','0288','0289','0241','0242','0243','0245','0249',
+                    '0258','0287','0212']
+        PREFIJOS = ['0212','0241','0281','0273','0286']
+        ID_FISCAL= ['V','E','P','R','J','G']
     # TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - 
         title_frame = ctk.CTkFrame(self,corner_radius=5,fg_color=APP_COLORS[3])
         title_frame.pack(fill='x')
@@ -26,8 +32,9 @@ class ProveedoresProg(ctk.CTkFrame):
     # GRID SETUP
         for rows in range(18):
             prov_frame.rowconfigure(rows, weight=1,uniform='row')
-        for columns in range(6):
+        for columns in range(16):
             prov_frame.columnconfigure(columns,weight=1,uniform='column')
+    # ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - 
     # ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - 
         # CODIGO
         validarcodigo = self.register(self.ValidarCodigo)
@@ -37,123 +44,213 @@ class ProveedoresProg(ctk.CTkFrame):
                                          validate='key',
                                          validatecommand = (validarcodigo,'%P'),
                                          fg_color=APP_COLORS[6])
-        self.codigo_entry.grid(row=2,column=2,columnspan=2,sticky='we',padx=5)
+        self.codigo_entry.grid(row=2,column=6,columnspan=1,sticky='we',padx=5)
         self.codigo_entry.bind("<Return>",lambda event:self.BuscarProveedor())
         # NOMBRE
         self.nombre_entry_var = tk.StringVar()
         self.nombre_entry = ctk.CTkEntry(prov_frame,
                                          textvariable=self.nombre_entry_var,
                                          fg_color=APP_COLORS[6])
-        self.nombre_entry.grid(row=3,column=2,columnspan=2,sticky='we',padx=5)
+        self.nombre_entry.grid(row=3,column=6,columnspan=4,sticky='we',padx=5)
         # CONTACTO
         self.contacto_entry_var = tk.StringVar()
         self.contacto_entry = ctk.CTkEntry(prov_frame,
                                          textvariable=self.contacto_entry_var,
                                          fg_color=APP_COLORS[6])
-        self.contacto_entry.grid(row=4,column=2,columnspan=2,sticky='we',padx=5)
+        self.contacto_entry.grid(row=4,column=6,columnspan=4,sticky='we',padx=5)
         # DIRECCION 1
         self.direccion1_entry_var = tk.StringVar()
         self.direccion1_entry = ctk.CTkEntry(prov_frame,
                                          textvariable=self.direccion1_entry_var,
                                          fg_color=APP_COLORS[6])
-        self.direccion1_entry.grid(row=5,column=2,columnspan=2,sticky='we',padx=5)
+        self.direccion1_entry.grid(row=5,column=6,columnspan=4,sticky='we',padx=5)
         # DIRECCION 2
         self.direccion2_entry_var = tk.StringVar()
         self.direccion2_entry = ctk.CTkEntry(prov_frame,
                                          textvariable=self.direccion2_entry_var,
                                          fg_color=APP_COLORS[6])
-        self.direccion2_entry.grid(row=6,column=2,columnspan=2,sticky='we',padx=5)
+        self.direccion2_entry.grid(row=6,column=6,columnspan=4,sticky='we',padx=5)
         # CIUDAD
         self.ciudad_entry_var = tk.StringVar()
         self.ciudad_entry = ctk.CTkEntry(prov_frame,
                                          textvariable=self.ciudad_entry_var,
                                          fg_color=APP_COLORS[6])
-        self.ciudad_entry.grid(row=7,column=2,columnspan=2,sticky='we',padx=5)
-        # TELEFONO
-        self.telefono_entry_var = tk.StringVar()
-        self.telefono_entry = ctk.CTkEntry(prov_frame,
-                                         textvariable=self.telefono_entry_var,
+        self.ciudad_entry.grid(row=7,column=6,columnspan=4,sticky='we',padx=5)
+        # TELEFONO - CODIGO 1
+        self.telefono1_codigo_entry_var = tk.StringVar()
+        self.telefono1_codigo_entry = ctk.CTkEntry(prov_frame,
+                                         width=85,
+                                         state='disabled',
+                                         textvariable=self.telefono1_codigo_entry_var,
                                          fg_color=APP_COLORS[6])
-        self.telefono_entry.grid(row=8,column=2,columnspan=2,sticky='we',padx=5)
-        # CELULAR
-        self.celular_entry_var = tk.StringVar()
-        self.celular_entry = ctk.CTkEntry(prov_frame,
-                                         textvariable=self.celular_entry_var,
+        self.telefono1_codigo_entry.grid(row=8,column=7,columnspan=1,sticky='w')
+        # TELEFONO 1
+        self.telefono1_entry_var = tk.StringVar()
+        self.telefono1_entry = ctk.CTkEntry(prov_frame,
+                                         textvariable=self.telefono1_entry_var,
                                          fg_color=APP_COLORS[6])
-        self.celular_entry.grid(row=9,column=2,columnspan=2,sticky='we',padx=5)
+        self.telefono1_entry.grid(row=8,column=8,columnspan=2,sticky='we',padx=5)
+        # TELEFONO - CODIGO 2
+        self.telefono2_codigo_entry_var = tk.StringVar()
+        self.telefono2_codigo_entry = ctk.CTkEntry(prov_frame,
+                                         width=85,
+                                         state='disabled',
+                                         textvariable=self.telefono2_codigo_entry_var,
+                                         fg_color=APP_COLORS[6])
+        self.telefono2_codigo_entry.grid(row=9,column=7,columnspan=1,sticky='w')
+        # TELEFONO 2
+        self.telefono2_entry_var = tk.StringVar()
+        self.telefono2_entry = ctk.CTkEntry(prov_frame,
+                                         textvariable=self.telefono2_entry_var,
+                                         fg_color=APP_COLORS[6])
+        self.telefono2_entry.grid(row=9,column=8,columnspan=2,sticky='we',padx=5)
+        # CELULAR - CODIGO 1
+        self.celular1_codigo_entry_var = tk.StringVar()
+        self.celular1_codigo_entry = ctk.CTkEntry(prov_frame,
+                                         width=85,
+                                         state='disabled',
+                                         textvariable=self.celular1_codigo_entry_var,
+                                         fg_color=APP_COLORS[6])
+        self.celular1_codigo_entry.grid(row=10,column=7,columnspan=1,sticky='w')
+        # CELULAR 1
+        self.celular1_entry_var = tk.StringVar()
+        self.celular1_entry = ctk.CTkEntry(prov_frame,
+                                         textvariable=self.celular1_entry_var,
+                                         fg_color=APP_COLORS[6])
+        self.celular1_entry.grid(row=10,column=8,columnspan=2,sticky='we',padx=5)
+        # CELULAR - CODIGO 2
+        self.celular2_codigo_entry_var = tk.StringVar()
+        self.celular2_codigo_entry = ctk.CTkEntry(prov_frame,
+                                         width=85,
+                                         state='disabled',
+                                         textvariable=self.celular2_codigo_entry_var,
+                                         fg_color=APP_COLORS[6])
+        self.celular2_codigo_entry.grid(row=11,column=7,columnspan=1,sticky='w')
+        # CELULAR 2
+        self.celular2_entry_var = tk.StringVar()
+        self.celular2_entry = ctk.CTkEntry(prov_frame,
+                                         textvariable=self.celular2_entry_var,
+                                         fg_color=APP_COLORS[6])
+        self.celular2_entry.grid(row=11,column=8,columnspan=2,sticky='we',padx=5)
         # EMAIL
         self.email_entry_var = tk.StringVar()
         self.email_entry = ctk.CTkEntry(prov_frame,
                                          textvariable=self.email_entry_var,
                                          fg_color=APP_COLORS[6])
-        self.email_entry.grid(row=10,column=2,columnspan=2,sticky='we',padx=5)
+        self.email_entry.grid(row=12,column=6,columnspan=4,sticky='we',padx=5)
         # RIF
         self.rif_entry_var = tk.StringVar()
         self.rif_entry = ctk.CTkEntry(prov_frame,
                                          textvariable=self.rif_entry_var,
                                          fg_color=APP_COLORS[6])
-        self.rif_entry.grid(row=11,column=2,columnspan=2,sticky='we',padx=5)
+        self.rif_entry.grid(row=13,column=7,columnspan=3,sticky='we',padx=5)
+    # PHONE CODES MENU
+        # MENU TELEFONO 1
+        self.telefono1_menu = ctk.CTkOptionMenu(prov_frame,
+                                               fg_color=APP_COLORS[2],
+                                               button_color=APP_COLORS[3],
+                                               button_hover_color=APP_COLORS[3],
+                                               command=lambda opcion:self.telefono1_codigo_entry_var.set(opcion),
+                                               values=PREFIJOS)
+        self.telefono1_menu.grid(row=8,column=6,columnspan=1,sticky='we',padx=5)
+        # MENU TELEFONO 2
+        self.telefono2_menu = ctk.CTkOptionMenu(prov_frame,
+                                               fg_color=APP_COLORS[2],
+                                               button_color=APP_COLORS[3],
+                                               button_hover_color=APP_COLORS[3],
+                                               command=lambda opcion:self.telefono2_codigo_entry_var.set(opcion),
+                                               values=PREFIJOS)
+        self.telefono2_menu.grid(row=9,column=6,columnspan=1,sticky='we',padx=5)
+        # MENU CELULAR 1
+        self.celular1_menu = ctk.CTkOptionMenu(prov_frame,
+                                               fg_color=APP_COLORS[2],
+                                               button_color=APP_COLORS[3],
+                                               button_hover_color=APP_COLORS[3],
+                                               command=lambda opcion:self.celular1_codigo_entry_var.set(opcion),
+                                               values=['0412','0414','0424','0416','0426'])
+        self.celular1_menu.grid(row=10,column=6,columnspan=1,sticky='we',padx=5)
+        # MENU CELULAR 2
+        self.celular2_menu = ctk.CTkOptionMenu(prov_frame,
+                                               fg_color=APP_COLORS[2],
+                                               button_color=APP_COLORS[3],
+                                               button_hover_color=APP_COLORS[3],
+                                               command=lambda opcion:self.celular2_codigo_entry_var.set(opcion),
+                                               values=['0412','0414','0424','0416','0426'])
+        self.celular2_menu.grid(row=11,column=6,columnspan=1,sticky='we',padx=5)
+        # RIF
+        self.rif_menu = ctk.CTkOptionMenu(prov_frame,
+                                               fg_color=APP_COLORS[2],
+                                               button_color=APP_COLORS[3],
+                                               button_hover_color=APP_COLORS[3],
+                                               command=lambda opcion:self.rif_entry_var.set(f'{opcion}-'),
+                                               values=ID_FISCAL)
+        self.rif_menu.grid(row=13,column=6,columnspan=1,sticky='we',padx=5)
     # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
-        # TITULO
-        self.titulo_label = ctk.CTkLabel(prov_frame,
-                                        text='Cargar datos del proveedor',
-                                        font=FONTS[1])
-        self.titulo_label.grid(row=1,column=2,sticky='w',padx=5)
         # CODIGO
         self.codigo_label = ctk.CTkLabel(prov_frame,
                                         text='Código',
                                         font=FONTS[1])
-        self.codigo_label.grid(row=2,column=4,sticky='w',padx=5)
+        self.codigo_label.grid(row=2,column=5,sticky='e',padx=5)
         # NOMBRE
         self.nombre_label = ctk.CTkLabel(prov_frame,
                                         text='Nombre',
                                         font=FONTS[1])
-        self.nombre_label.grid(row=3,column=4,sticky='w',padx=5)
+        self.nombre_label.grid(row=3,column=5,sticky='e',padx=5)
         # CONTACTO
         self.contacto_label = ctk.CTkLabel(prov_frame,
                                         text='Contacto',
                                         font=FONTS[1])
-        self.contacto_label.grid(row=4,column=4,sticky='w',padx=5)
+        self.contacto_label.grid(row=4,column=5,sticky='e',padx=5)
         # DIRECCION 1
         self.direccion1_label = ctk.CTkLabel(prov_frame,
                                         text='Dirección 1',
                                         font=FONTS[1])
-        self.direccion1_label.grid(row=5,column=4,sticky='w',padx=5)
+        self.direccion1_label.grid(row=5,column=5,sticky='e',padx=5)
         # DIRECCION 2
         self.direccion2_label = ctk.CTkLabel(prov_frame,
                                         text='Dirección 2',
                                         font=FONTS[1])
-        self.direccion2_label.grid(row=6,column=4,sticky='w',padx=5)
+        self.direccion2_label.grid(row=6,column=5,sticky='e',padx=5)
         # CIUDAD
         self.ciudad_label = ctk.CTkLabel(prov_frame,
                                         text='Ciudad',
                                         font=FONTS[1])
-        self.ciudad_label.grid(row=7,column=4,sticky='w',padx=5)
+        self.ciudad_label.grid(row=7,column=5,sticky='e',padx=5)
         # CIUDAD
         self.ciudad_label = ctk.CTkLabel(prov_frame,
                                         text='Ciudad',
                                         font=FONTS[1])
-        self.ciudad_label.grid(row=7,column=4,sticky='w',padx=5)
-        # TELEFONO
-        self.telefono_label = ctk.CTkLabel(prov_frame,
-                                        text='Teléfono',
+        self.ciudad_label.grid(row=7,column=5,sticky='e',padx=5)
+        # TELEFONO 1
+        self.telefono1_label = ctk.CTkLabel(prov_frame,
+                                        text='Teléfono 1',
                                         font=FONTS[1])
-        self.telefono_label.grid(row=8,column=4,sticky='w',padx=5)
-        # CELULAR
-        self.celular_label = ctk.CTkLabel(prov_frame,
-                                        text='Celular',
+        self.telefono1_label.grid(row=8,column=5,sticky='e',padx=5)
+        # TELEFONO 2
+        self.telefono2_label = ctk.CTkLabel(prov_frame,
+                                        text='Teléfono 2',
                                         font=FONTS[1])
-        self.celular_label.grid(row=9,column=4,sticky='w',padx=5)
+        self.telefono2_label.grid(row=9,column=5,sticky='e',padx=5)
+        # CELULAR 1
+        self.celular1_label = ctk.CTkLabel(prov_frame,
+                                        text='Celular 1',
+                                        font=FONTS[1])
+        self.celular1_label.grid(row=10,column=5,sticky='e',padx=5)
+        # CELULAR 2
+        self.celular2_label = ctk.CTkLabel(prov_frame,
+                                        text='Celular 2',
+                                        font=FONTS[1])
+        self.celular2_label.grid(row=11,column=5,sticky='e',padx=5)
         # EMAIL
         self.email_label = ctk.CTkLabel(prov_frame,
                                         text='Email',
                                         font=FONTS[1])
-        self.email_label.grid(row=10,column=4,sticky='w',padx=5)
+        self.email_label.grid(row=12,column=5,sticky='e',padx=5)
         # RIF
         self.rif_label = ctk.CTkLabel(prov_frame,
-                                        text='RIF',
+                                        text='Id. Fiscal',
                                         font=FONTS[1])
-        self.rif_label.grid(row=11,column=4,sticky='w',padx=5)
+        self.rif_label.grid(row=13,column=4,columnspan=2,sticky='e',padx=5)
     # BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - 
         # VOLVER ATRAS
         self.goback_btn = ctk.CTkButton(prov_frame,
@@ -161,14 +258,14 @@ class ProveedoresProg(ctk.CTkFrame):
                                      command=self.GoBack_CB,
                                      fg_color=APP_COLORS[4],
                                      hover_color=APP_COLORS[3])
-        self.goback_btn.grid(row=0,column=0,sticky='we',padx=5,pady=5)
+        self.goback_btn.grid(row=0,column=0,columnspan=2,sticky='we',padx=5,pady=5)
         # AGREGAR
         self.agregar_btn = ctk.CTkButton(prov_frame,
                                      text='Agregar',
                                      command=self.AgregarProv,
                                      fg_color=APP_COLORS[2],
                                      hover_color=APP_COLORS[3])
-        self.agregar_btn.grid(row=13,column=2,sticky='we',padx=5,pady=5)
+        self.agregar_btn.grid(row=15,column=6,columnspan=2,sticky='we',padx=5,pady=5)
         # CANCELAR
         self.cancelar_btn = ctk.CTkButton(prov_frame,
                                      text='Cancelar',
@@ -176,7 +273,7 @@ class ProveedoresProg(ctk.CTkFrame):
                                      state='disabled',
                                      fg_color=APP_COLORS[3],
                                      hover_color=APP_COLORS[3])
-        self.cancelar_btn.grid(row=13,column=3,sticky='we',padx=5,pady=5)
+        self.cancelar_btn.grid(row=15,column=8,columnspan=2,sticky='we',padx=5,pady=5)
         # MODIFICAR
         self.mod_btn = ctk.CTkButton(prov_frame,
                                      text='Modificar',
@@ -184,7 +281,7 @@ class ProveedoresProg(ctk.CTkFrame):
                                      state='disabled',
                                      fg_color=APP_COLORS[3],
                                      hover_color=APP_COLORS[3])
-        self.mod_btn.grid(row=14,column=2,sticky='we',padx=5,pady=5)
+        self.mod_btn.grid(row=16,column=6,columnspan=2,sticky='we',padx=5,pady=5)
         # ELIMINAR
         self.del_btn = ctk.CTkButton(prov_frame,
                                      text='Eliminar',
@@ -192,15 +289,31 @@ class ProveedoresProg(ctk.CTkFrame):
                                      state='disabled',
                                      fg_color=APP_COLORS[3],
                                      hover_color=APP_COLORS[3])
-        self.del_btn.grid(row=14,column=3,sticky='we',padx=5,pady=5)
+        self.del_btn.grid(row=16,column=8,columnspan=2,sticky='we',padx=5,pady=5)
         # BUSCAR PROVEEDOR
         self.buscar_prov_btn = ctk.CTkButton(prov_frame,
                                      text='Buscar proveedor',
                                      command=self.AyudaProveedores,
                                      fg_color=APP_COLORS[2],
                                      hover_color=APP_COLORS[3])
-        self.buscar_prov_btn.grid(row=1,column=3,sticky='we',padx=5,pady=5)
-# COMANDOS DE BOTONES - COMANDOS DE BOTONES - COMANDOS DE BOTONES - COMANDOS DE BOTONES - COMANDOS DE BOTONES - 
+        self.buscar_prov_btn.grid(row=2,column=7,columnspan=3,sticky='we',padx=5,pady=5)
+# FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - 
+# FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - 
+# FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - 
+    # VALIDAR CAMPOS DE TELEFONO Y CELULAR:
+    def ValidatePhoneNumber(self,pref,numero,tipo):
+        if numero:
+            if not pref:
+                messagebox.showinfo('Atención',f'Agregue el prefijo del número del {tipo}.')
+                return
+            if len(pref) != 4:
+                messagebox.showinfo('Atención',f'Revise el prefijo de {tipo}.')
+                return
+            if len(numero) != 7:
+                messagebox.showinfo('Atención',f'Revise el número de {tipo}.')
+                return
+            return pref + ' - ' + numero
+        return ''
     # AGREGAR PROVEEDOR
     def AgregarProv(self):
         codigo = self.codigo_entry_var.get()
@@ -209,17 +322,36 @@ class ProveedoresProg(ctk.CTkFrame):
         direccion1 = self.direccion1_entry_var.get()
         direccion2 = self.direccion2_entry_var.get()
         ciudad = self.ciudad_entry_var.get()
-        telefono = self.telefono_entry_var.get()
-        celular = self.celular_entry_var.get()
+        pre_telefono_1 = self.telefono1_codigo_entry_var.get()
+        telefono_1 = self.telefono1_entry_var.get()
+        pre_telefono_2 = self.telefono2_codigo_entry_var.get()
+        telefono_2 = self.telefono2_entry_var.get()
+        pre_celular_1 = self.celular1_codigo_entry_var.get()
+        celular_1 = self.celular1_entry_var.get()
+        pre_celular_2 = self.celular2_codigo_entry_var.get()
+        celular_2 = self.celular2_entry_var.get()
         email = self.email_entry_var.get()
         rif = self.rif_entry_var.get()
-        if len(codigo) != 3 or codigo == '':
-            messagebox.showinfo('Atención','Debe agregar un codigo de proveedor y el formato debe ser "000".')
-        elif nombre == '':
+        # CHEQUEAR CODIGO
+        if codigo == '':
+            messagebox.showinfo('Atención','Debe agregar un codigo de proveedor')
+            self.codigo_entry.focus()
+            return
+        # CHEQUEAR NOMBRE
+        if nombre == '':
             messagebox.showinfo('Atención','Debe agregar un nombre de proveedor.')
-        else:
-            PROV_MANAGER.Add_Prov(codigo,nombre,contacto,direccion1,direccion2,ciudad,telefono,celular,email,rif)
-            self.Restablecer()
+            self.nombre_entry.focus()
+            return
+        telefono_1 = self.ValidatePhoneNumber(pre_telefono_1,telefono_1,'Teléfono 1')
+        telefono_2 = self.ValidatePhoneNumber(pre_telefono_2,telefono_2,'Teléfono 2')
+        celular_1 = self.ValidatePhoneNumber(pre_celular_1,celular_1,'Celular 1')
+        celular_2 = self.ValidatePhoneNumber(pre_celular_2,celular_2,'Celular 2')
+        if rif == '':
+            messagebox.showinfo('Atención','Debe agregar un número de identificación fiscal.')
+            self.rif_entry.focus()
+            return
+        PROV_MANAGER.Add_Prov(codigo,nombre,contacto,direccion1,direccion2,ciudad,telefono_1,celular_1,email,rif)
+        self.Restablecer()
     # MODIFICAR PROVEEDOR
     def ModificarProv(self):
         codigo = self.codigo_entry_var.get()

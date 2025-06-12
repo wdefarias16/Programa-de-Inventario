@@ -48,8 +48,10 @@ def InitTables():
                         direccion1 TEXT,
                         direccion2 TEXT,
                         ciudad VARCHAR(100),
-                        telefono VARCHAR(50),
-                        celular VARCHAR(50),
+                        telefono1 VARCHAR(50),
+                        telefono2 VARCHAR(50),
+                        celular1 VARCHAR(50),
+                        celular2 VARCHAR(50),
                         email VARCHAR(255),
                         rif VARCHAR(50)
                     )""",
@@ -138,6 +140,5 @@ def InitTables():
                 print("Tablas inicializadas correctamente.")
     except Exception as e:
         print(f"Error al inicializar las tablas: {repr(e)}")
-
 CreateDatabase()
 InitTables()
