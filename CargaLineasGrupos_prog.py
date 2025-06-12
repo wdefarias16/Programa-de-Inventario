@@ -230,6 +230,7 @@ class LineasGruposProg(ctk.CTkFrame):
         self.codigo_grupo_entry.grid(row=8,column=2,columnspan=2,sticky='we',padx=5)
         self.codigo_grupo_entry.bind("<Return>", lambda event: self.GetGroupByCode())
         self.codigo_grupo_entry.bind("<Control-Alt-BackSpace>",lambda event: self.Restablecer())
+        self.codigo_grupo_entry.bind("<Control-BackSpace>",lambda event: self.LimpiarGrupo())
         self.codigo_grupo_entry.bind("<Control-s>",lambda event: self.GroupHelp())
         self.codigo_grupo_entry.bind("<Control-S>",lambda event: self.GroupHelp())
         self.codigo_grupo_entry.focus()
@@ -241,6 +242,7 @@ class LineasGruposProg(ctk.CTkFrame):
         self.grupo_entry.grid(row=9,column=2,columnspan=2,sticky='we',padx=5)
         self.grupo_entry.bind("<Return>",lambda event: self.PorV1_entry.focus())
         self.grupo_entry.bind("<Control-Alt-BackSpace>",lambda event: self.Restablecer())
+        self.grupo_entry.bind("<Control-BackSpace>",lambda event: self.LimpiarGrupo())
         # PORCENTAJE 1
         validar_pctj = self.register(self.ValidarPorcentajes)
         self.PorV1_entry_var = tk.StringVar()
@@ -252,6 +254,7 @@ class LineasGruposProg(ctk.CTkFrame):
         self.PorV1_entry.grid(row=10,column=2,columnspan=2,sticky='we',padx=5)
         self.PorV1_entry.bind("<Return>",lambda event: self.PorV2_entry.focus())
         self.PorV1_entry.bind("<Control-Alt-BackSpace>",lambda event: self.Restablecer())
+        self.PorV1_entry.bind("<Control-BackSpace>",lambda event: self.LimpiarGrupo())
         # PORCENTAJE 2
         self.PorV2_entry_var = tk.StringVar()
         self.PorV2_entry = ctk.CTkEntry(self.main_frame,
@@ -262,6 +265,7 @@ class LineasGruposProg(ctk.CTkFrame):
         self.PorV2_entry.grid(row=11,column=2,columnspan=2,sticky='we',padx=5)
         self.PorV2_entry.bind("<Return>",lambda event: self.PorV3_entry.focus())
         self.PorV2_entry.bind("<Control-Alt-BackSpace>",lambda event: self.Restablecer())
+        self.PorV2_entry.bind("<Control-BackSpace>",lambda event: self.LimpiarGrupo())
         # PORCENTAJE 3
         self.PorV3_entry_var = tk.StringVar()
         self.PorV3_entry = ctk.CTkEntry(self.main_frame,
@@ -272,6 +276,7 @@ class LineasGruposProg(ctk.CTkFrame):
         self.PorV3_entry.grid(row=12,column=2,columnspan=2,sticky='we',padx=5)
         self.PorV3_entry.bind("<Return>",lambda event: self.AgregarGrupo())
         self.PorV3_entry.bind("<Control-Alt-BackSpace>",lambda event: self.Restablecer())
+        self.PorV3_entry.bind("<Control-BackSpace>",lambda event: self.LimpiarGrupo())
     # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
         # CODIGO
         self.codigoGrupo_label = ctk.CTkLabel(self.main_frame,

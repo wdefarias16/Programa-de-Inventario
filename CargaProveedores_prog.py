@@ -4,7 +4,6 @@ from tkinter import ttk
 from tkinter import messagebox
 from DatabaseManager import PROV_MANAGER
 from style import FONTS, APP_COLORS
-
 # PROGRAMA DE CARGA DE PROVEEDORES - PROGRAMA DE CARGA DE PROVEEDORES - PROGRAMA DE CARGA DE PROVEEDORES - 
 class ProveedoresProg(ctk.CTkFrame):
     def __init__(self,parent,GoBack_CB):
@@ -214,7 +213,6 @@ class ProveedoresProg(ctk.CTkFrame):
         celular = self.celular_entry_var.get()
         email = self.email_entry_var.get()
         rif = self.rif_entry_var.get()
-
         if len(codigo) != 3 or codigo == '':
             messagebox.showinfo('Atención','Debe agregar un codigo de proveedor y el formato debe ser "000".')
         elif nombre == '':
@@ -267,7 +265,7 @@ class ProveedoresProg(ctk.CTkFrame):
             self.treeview_active = False
         else:
             codigo = self.codigo_entry_var.get()
-        proveedor = PROV_MANAGER.BuscarProv(codigo)
+        proveedor = PROV_MANAGER.GetProv(codigo)
         if PROV_MANAGER.ChechProv(codigo):
             self.codigo_entry_var.set(codigo)
             self.nombre_entry_var.set(proveedor['nombre'])
@@ -365,13 +363,18 @@ class ProveedoresProg(ctk.CTkFrame):
             self.BuscarProveedor()
         self.tree_frame.destroy()
     def ListProv(self):
-        proveedores = PROV_MANAGER.GetProv()
+        proveedores = PROV_MANAGER.GetProvs()
         for item in self.treeview.get_children():
                 self.treeview.delete(item)
-        for codigo,proveedor in proveedores.items():
+        for i,prov in enumerate(proveedores):
+            tag = "Even.Treeview" if i % 2 == 0 else "Odd.Treeview"
             self.treeview.insert("",'end',
-                                 text=codigo,
-                                 values=(proveedor['nombre']))
+                                 text=proveedores[prov]['codigo'],
+                                 values=(proveedores[prov]['nombre']),
+                                 tags=(tag,))
+        self.treeview.tag_configure('Odd.Treeview', background="#ffffff")
+        self.treeview.tag_configure('Even.Treeview', background="#eaeaea")
+
     def BuscarProvNombre(self):
         for item in self.treeview.get_children():
             self.treeview.delete(item)
