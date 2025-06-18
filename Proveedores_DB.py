@@ -113,16 +113,14 @@ class Proveedores:
                  ciudad='', telefono1='', telefono2='', celular1='', celular2='', email='', rif=''):
         """Modifica un proveedor existente."""
         try:
-            answer = messagebox.askyesno("¡Atención!", f"¿Desea modificar el proveedor {codigo} con estos datos?")
-            if answer:
-                with self.conn.cursor() as cur:
-                    cur.execute("""UPDATE proveedores SET nombre = %s, contacto = %s, direccion1 = %s, 
-                                    direccion2 = %s, ciudad = %s, telefono1 = %s, telefono2 = %s, 
-                                    celular1 = %s, celular2 = %s, email = %s, rif = %s WHERE codigo = %s;""",
-                                (nombre, contacto, direccion1, direccion2, ciudad,
-                                 telefono1, telefono2, celular1, celular2, email, rif, codigo))
-                    self.conn.commit()
-                    messagebox.showinfo("Info", f"Proveedor {codigo} modificado correctamente")
+            with self.conn.cursor() as cur:
+                cur.execute("""UPDATE proveedores SET nombre = %s, contacto = %s, direccion1 = %s, 
+                                direccion2 = %s, ciudad = %s, telefono1 = %s, telefono2 = %s, 
+                                celular1 = %s, celular2 = %s, email = %s, rif = %s WHERE codigo = %s;""",
+                            (nombre, contacto, direccion1, direccion2, ciudad,
+                             telefono1, telefono2, celular1, celular2, email, rif, codigo))
+                self.conn.commit()
+                messagebox.showinfo("Info", f"Proveedor {codigo} modificado correctamente")
         except Exception as e:
             self.conn.rollback()
             messagebox.showerror("Base de datos", f"Error al modificar proveedor: {str(e)}")
@@ -130,7 +128,7 @@ class Proveedores:
     def Del_Prov(self, codigo):
         """Elimina un proveedor."""
         try:
-            answer = messagebox.askyesno("¡Atención!", f"¿Desea eliminar el proveedor {codigo}?")
+            answer = messagebox.askyesno("¡Atención!", f"¿Esta totalmente seguro que desea eliminar el proveedor {codigo}?")
             if answer:
                 with self.conn.cursor() as cur:
                     cur.execute("DELETE FROM proveedores WHERE codigo = %s;", (codigo,))
@@ -148,6 +146,18 @@ class Proveedores:
                     return True
                 else:
                     messagebox.showerror('Error', f'El codigo de proveedor {code} no existe.')
+                    return False
+        except Exception as e:
+            messagebox.showerror('Base de datos',f'Error al chequear el proveedor {code}, {str(e)}')
+            return False
+    def ValidateProv(self,code):
+        # CHEQUEAR CODIGO DE PROVEEDOR SIN ALERTA DE NO ENCONTRADO
+        try:
+            with self.conn.cursor() as cur:
+                cur.execute("SELECT 1 FROM proveedores WHERE codigo = %s;",(code,))
+                if cur.fetchone():
+                    return True
+                else:
                     return False
         except Exception as e:
             messagebox.showerror('Base de datos',f'Error al chequear el proveedor {code}, {str(e)}')

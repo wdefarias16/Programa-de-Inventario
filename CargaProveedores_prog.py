@@ -14,8 +14,8 @@ class ProveedoresProg(ctk.CTkFrame):
                     '0278','0243','0244','0246','0273','0278','0284','0285',
                     '0286','0288','0289','0241','0242','0243','0245','0249',
                     '0258','0287','0212']
-        PREFIJOS = ['0212','0241','0281','0273','0286']
-        ID_FISCAL= ['V','E','P','R','J','G']
+        PREFIJOS = ['0212','0239','0241','0281','0273','0286']
+        ID_FISCAL= ['J','V','E','P','R','G']
     # TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - 
         title_frame = ctk.CTkFrame(self,corner_radius=5,fg_color=APP_COLORS[3])
         title_frame.pack(fill='x')
@@ -52,98 +52,127 @@ class ProveedoresProg(ctk.CTkFrame):
                                          textvariable=self.nombre_entry_var,
                                          fg_color=APP_COLORS[6])
         self.nombre_entry.grid(row=3,column=6,columnspan=4,sticky='we',padx=5)
+        self.nombre_entry.bind("<Return>", lambda event: self.contacto_entry.focus())
         # CONTACTO
         self.contacto_entry_var = tk.StringVar()
         self.contacto_entry = ctk.CTkEntry(prov_frame,
                                          textvariable=self.contacto_entry_var,
                                          fg_color=APP_COLORS[6])
         self.contacto_entry.grid(row=4,column=6,columnspan=4,sticky='we',padx=5)
+        self.contacto_entry.bind("<Return>", lambda event: self.direccion1_entry.focus())
         # DIRECCION 1
         self.direccion1_entry_var = tk.StringVar()
         self.direccion1_entry = ctk.CTkEntry(prov_frame,
                                          textvariable=self.direccion1_entry_var,
                                          fg_color=APP_COLORS[6])
         self.direccion1_entry.grid(row=5,column=6,columnspan=4,sticky='we',padx=5)
+        self.direccion1_entry.bind("<Return>", lambda event: self.direccion2_entry.focus())
         # DIRECCION 2
         self.direccion2_entry_var = tk.StringVar()
         self.direccion2_entry = ctk.CTkEntry(prov_frame,
                                          textvariable=self.direccion2_entry_var,
                                          fg_color=APP_COLORS[6])
         self.direccion2_entry.grid(row=6,column=6,columnspan=4,sticky='we',padx=5)
+        self.direccion2_entry.bind("<Return>", lambda event: self.ciudad_entry.focus())
         # CIUDAD
         self.ciudad_entry_var = tk.StringVar()
         self.ciudad_entry = ctk.CTkEntry(prov_frame,
                                          textvariable=self.ciudad_entry_var,
                                          fg_color=APP_COLORS[6])
         self.ciudad_entry.grid(row=7,column=6,columnspan=4,sticky='we',padx=5)
+        self.ciudad_entry.bind("<Return>", lambda event: self.telefono1_codigo_entry.focus())
         # TELEFONO - CODIGO 1
+        validate_phone_pre = self.register(self.ValidatePhonePre)
         self.telefono1_codigo_entry_var = tk.StringVar()
         self.telefono1_codigo_entry = ctk.CTkEntry(prov_frame,
                                          width=85,
-                                         state='disabled',
+                                         validate='key',
+                                         validatecommand = (validate_phone_pre,'%P'),
                                          textvariable=self.telefono1_codigo_entry_var,
                                          fg_color=APP_COLORS[6])
         self.telefono1_codigo_entry.grid(row=8,column=7,columnspan=1,sticky='w')
+        self.telefono1_codigo_entry.bind("<Return>", lambda event: self.telefono1_entry.focus())
         # TELEFONO 1
+        validate_phone = self.register(self.ValidatePhone)
         self.telefono1_entry_var = tk.StringVar()
         self.telefono1_entry = ctk.CTkEntry(prov_frame,
-                                         textvariable=self.telefono1_entry_var,
-                                         fg_color=APP_COLORS[6])
+                                            validate='key',
+                                            validatecommand = (validate_phone,'%P'),
+                                            textvariable=self.telefono1_entry_var,
+                                            fg_color=APP_COLORS[6])
         self.telefono1_entry.grid(row=8,column=8,columnspan=2,sticky='we',padx=5)
+        self.telefono1_entry.bind("<Return>", lambda event: self.telefono2_codigo_entry.focus())
         # TELEFONO - CODIGO 2
         self.telefono2_codigo_entry_var = tk.StringVar()
         self.telefono2_codigo_entry = ctk.CTkEntry(prov_frame,
                                          width=85,
-                                         state='disabled',
+                                         validate='key',
+                                         validatecommand = (validate_phone_pre,'%P'),
                                          textvariable=self.telefono2_codigo_entry_var,
                                          fg_color=APP_COLORS[6])
         self.telefono2_codigo_entry.grid(row=9,column=7,columnspan=1,sticky='w')
+        self.telefono2_codigo_entry.bind("<Return>", lambda event: self.telefono2_entry.focus())
         # TELEFONO 2
         self.telefono2_entry_var = tk.StringVar()
         self.telefono2_entry = ctk.CTkEntry(prov_frame,
-                                         textvariable=self.telefono2_entry_var,
-                                         fg_color=APP_COLORS[6])
+                                            validate='key',
+                                            validatecommand = (validate_phone,'%P'),
+                                            textvariable=self.telefono2_entry_var,
+                                            fg_color=APP_COLORS[6])
         self.telefono2_entry.grid(row=9,column=8,columnspan=2,sticky='we',padx=5)
+        self.telefono2_entry.bind("<Return>", lambda event: self.celular1_codigo_entry.focus())
         # CELULAR - CODIGO 1
         self.celular1_codigo_entry_var = tk.StringVar()
         self.celular1_codigo_entry = ctk.CTkEntry(prov_frame,
                                          width=85,
-                                         state='disabled',
+                                         validate='key',
+                                         validatecommand = (validate_phone_pre,'%P'),
                                          textvariable=self.celular1_codigo_entry_var,
                                          fg_color=APP_COLORS[6])
         self.celular1_codigo_entry.grid(row=10,column=7,columnspan=1,sticky='w')
+        self.celular1_codigo_entry.bind("<Return>", lambda event: self.celular1_entry.focus())
         # CELULAR 1
         self.celular1_entry_var = tk.StringVar()
         self.celular1_entry = ctk.CTkEntry(prov_frame,
-                                         textvariable=self.celular1_entry_var,
-                                         fg_color=APP_COLORS[6])
+                                           validate='key',
+                                           validatecommand = (validate_phone,'%P'),
+                                           textvariable=self.celular1_entry_var,
+                                           fg_color=APP_COLORS[6])
         self.celular1_entry.grid(row=10,column=8,columnspan=2,sticky='we',padx=5)
+        self.celular1_entry.bind("<Return>", lambda event: self.celular2_codigo_entry.focus())
         # CELULAR - CODIGO 2
         self.celular2_codigo_entry_var = tk.StringVar()
         self.celular2_codigo_entry = ctk.CTkEntry(prov_frame,
                                          width=85,
-                                         state='disabled',
+                                         validate='key',
+                                         validatecommand = (validate_phone_pre,'%P'),
                                          textvariable=self.celular2_codigo_entry_var,
                                          fg_color=APP_COLORS[6])
         self.celular2_codigo_entry.grid(row=11,column=7,columnspan=1,sticky='w')
+        self.celular2_codigo_entry.bind("<Return>", lambda event: self.celular2_entry.focus())
         # CELULAR 2
         self.celular2_entry_var = tk.StringVar()
         self.celular2_entry = ctk.CTkEntry(prov_frame,
-                                         textvariable=self.celular2_entry_var,
-                                         fg_color=APP_COLORS[6])
+                                           validate='key',
+                                           validatecommand = (validate_phone,'%P'),
+                                           textvariable=self.celular2_entry_var,
+                                           fg_color=APP_COLORS[6])
         self.celular2_entry.grid(row=11,column=8,columnspan=2,sticky='we',padx=5)
+        self.celular2_entry.bind("<Return>", lambda event: self.email_entry.focus())
         # EMAIL
         self.email_entry_var = tk.StringVar()
         self.email_entry = ctk.CTkEntry(prov_frame,
                                          textvariable=self.email_entry_var,
                                          fg_color=APP_COLORS[6])
         self.email_entry.grid(row=12,column=6,columnspan=4,sticky='we',padx=5)
+        self.email_entry.bind("<Return>", lambda event: self.rif_entry.focus())
         # RIF
         self.rif_entry_var = tk.StringVar()
         self.rif_entry = ctk.CTkEntry(prov_frame,
                                          textvariable=self.rif_entry_var,
                                          fg_color=APP_COLORS[6])
         self.rif_entry.grid(row=13,column=7,columnspan=3,sticky='we',padx=5)
+        self.rif_entry.bind("<Return>", lambda event: self.AgregarProv())
     # PHONE CODES MENU
         # MENU TELEFONO 1
         self.telefono1_menu = ctk.CTkOptionMenu(prov_frame,
@@ -271,8 +300,8 @@ class ProveedoresProg(ctk.CTkFrame):
                                      text='Cancelar',
                                      command=self.Restablecer,
                                      state='disabled',
-                                     fg_color=APP_COLORS[3],
-                                     hover_color=APP_COLORS[3])
+                                     fg_color=APP_COLORS[10],
+                                     hover_color=APP_COLORS[10])
         self.cancelar_btn.grid(row=15,column=8,columnspan=2,sticky='we',padx=5,pady=5)
         # MODIFICAR
         self.mod_btn = ctk.CTkButton(prov_frame,
@@ -287,8 +316,8 @@ class ProveedoresProg(ctk.CTkFrame):
                                      text='Eliminar',
                                      command=self.EliminarProv,
                                      state='disabled',
-                                     fg_color=APP_COLORS[3],
-                                     hover_color=APP_COLORS[3])
+                                     fg_color=APP_COLORS[10],
+                                     hover_color=APP_COLORS[10])
         self.del_btn.grid(row=16,column=8,columnspan=2,sticky='we',padx=5,pady=5)
         # BUSCAR PROVEEDOR
         self.buscar_prov_btn = ctk.CTkButton(prov_frame,
@@ -405,14 +434,15 @@ class ProveedoresProg(ctk.CTkFrame):
     def EliminarProv(self):
         codigo = self.codigo_entry_var.get()
         nombre = self.nombre_entry_var.get()
-        answer = messagebox.showinfo('¡Atención!',f'Está seguro que desea eliminar el proveedor {codigo} - {nombre} '
-                                     'con estos datos?')
+        answer = messagebox.askyesno('¡Atención!',f'¿Está seguro que desea eliminar el proveedor {codigo} - {nombre}?')
         if not answer:
             return
         PROV_MANAGER.Del_Prov(codigo)
         self.Restablecer()
     # CANCELAR SELECCION
     def Restablecer(self):
+        self.rif_entry.unbind("<Return>")
+        self.rif_entry.bind("<Return>", lambda event: self.AgregarProv())
         self.codigo_entry_var.set('')
         self.nombre_entry_var.set('')
         self.contacto_entry_var.set('')
@@ -433,18 +463,31 @@ class ProveedoresProg(ctk.CTkFrame):
         self.codigo_entry.configure(state='normal',fg_color=APP_COLORS[6])
         # CONFIGURAR BOTONES
         self.agregar_btn.configure(state='enabled',fg_color=APP_COLORS[2])
-        self.del_btn.configure(state='disabled',fg_color=APP_COLORS[3])
+        self.del_btn.configure(state='disabled',fg_color=APP_COLORS[10])
         self.mod_btn.configure(state='disabled',fg_color=APP_COLORS[3])
-        self.cancelar_btn.configure(state='disabled',fg_color=APP_COLORS[3])
+        self.cancelar_btn.configure(state='disabled',fg_color=APP_COLORS[10])
+        # FOCUS EN CODIGO
+        self.codigo_entry.focus()
 # BUSCAR UN PROVEEDOR POR CODIGO Y PONERLO EN PANTALLA
     def BuscarProveedor(self):
+        self.rif_entry.unbind("<Return>")
+        self.rif_entry.bind("<Return>", lambda event: self.ModificarProv())
         if self.treeview_active:
-            codigo = self.search_bar_var.get()
+            codigo = str(self.search_bar_var.get()).strip()
             self.tree_frame.destroy
             self.treeview_active = False
         else:
-            codigo = self.codigo_entry_var.get()
-        if not PROV_MANAGER.CheckProv(codigo):
+            codigo = str(self.codigo_entry_var.get()).strip()
+        # CONVERTIR EL CODIGO A ENTERO
+        if codigo == '':
+            return
+        try:
+            codigo = int(codigo)
+        except Exception as e:
+            messagebox.showerror('Error',f'Error con el codigo {codigo}: {str(e)}')
+        # VALIDAR EL CODIGO
+        if not PROV_MANAGER.ValidateProv(codigo):
+            self.nombre_entry.focus()
             return
         proveedor = PROV_MANAGER.GetProv(codigo)
         self.codigo_entry_var.set(codigo)
@@ -475,8 +518,8 @@ class ProveedoresProg(ctk.CTkFrame):
         self.codigo_entry.configure(state='disabled',fg_color=APP_COLORS[4])
         # CONFIGURAR BOTONES
         self.agregar_btn.configure(state='disabled',fg_color=APP_COLORS[3])
-        self.cancelar_btn.configure(state='enabled',fg_color=APP_COLORS[2])
-        self.del_btn.configure(state='enabled',fg_color=APP_COLORS[2])
+        self.cancelar_btn.configure(state='enabled',fg_color=APP_COLORS[9])
+        self.del_btn.configure(state='enabled',fg_color=APP_COLORS[9])
         self.mod_btn.configure(state='enabled',fg_color=APP_COLORS[2])
 # BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - 
 # BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - 
@@ -582,6 +625,20 @@ class ProveedoresProg(ctk.CTkFrame):
     # VALIDAR ENTRADA DE CODIGO
     def ValidarCodigo(self,texto):
         if len(texto) > 3:
+            return False
+        if texto == '':
+            return True
+        return texto.isdigit()
+    # VALIDAR ENTRADA DE NUMEROS DE TELEFONO (CODIGOS)
+    def ValidatePhonePre(self,texto):
+        if len(texto) > 4:
+            return False
+        if texto == '':
+            return True
+        return texto.isdigit()
+    # VALIDAR ENTRADA DE NUMEROS DE TELEFONO
+    def ValidatePhone(self,texto):
+        if len(texto) > 7:
             return False
         if texto == '':
             return True
