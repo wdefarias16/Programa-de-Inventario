@@ -48,11 +48,11 @@ class EntradasInventarioProg(ctk.CTkFrame):
         # PROVEEDOR
         self.proveedor_var = tk.StringVar()
         self.proveedor_entry = ctk.CTkEntry(self.prog_frame,
-                                            state='disabled',
                                             textvariable=self.proveedor_var,
                                             fg_color=APP_COLORS[6],
                                             border_color=APP_COLORS[2])
         self.proveedor_entry.grid(row=4,column=3,columnspan=2,padx=5,sticky='we')
+        self.proveedor_entry.bind("<Return>",lambda event:self.BuscarProvCodigo())
         # FECHA
         self.fecha_entry_var = tk.StringVar()
         self.fecha_entry = ctk.CTkEntry(self.prog_frame,
@@ -147,14 +147,6 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                         font=FONTS[1],
                                         text_color=APP_COLORS[4])
         total_label.grid(row=1,column=8,columnspan=2,padx=5,sticky='e')
-    # MENU - MENU - MENU - MENU - MENU - MENU - MENU - MENU - MENU - MENU - MENU - MENU - MENU -
-        self.prov_menu = ctk.CTkOptionMenu(self.prog_frame,
-                                           values=PROV_MANAGER.GetProvNames(),
-                                           command=self.SelectProvMenu,
-                                           fg_color=APP_COLORS[2],
-                                           button_color=APP_COLORS[3],
-                                           button_hover_color=APP_COLORS[2])
-        self.prov_menu.grid(row=3,column=3,columnspan=1,padx=5,sticky='we')
     # BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - 
         # VOLVER ATRAS
         salir_btn = ctk.CTkButton(self.prog_frame,
@@ -164,6 +156,14 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                        fg_color=APP_COLORS[4],
                                        hover_color=APP_COLORS[3])
         salir_btn.grid(row=0,column=0,sticky='nw',padx=5,pady=5)
+        # AYUDA DE PROVEEDORES
+        prov_help_btn = ctk.CTkButton(self.prog_frame,
+                                       text='Proveedores',
+                                       command=self.AyudaProveedores,
+                                       text_color=APP_COLORS[0],
+                                       fg_color=APP_COLORS[2],
+                                       hover_color=APP_COLORS[3])
+        prov_help_btn.grid(row=3,column=3,columnspan=1,padx=5,sticky='we')
         # ABRIR CALENDARIO
         btn_calendario = ctk.CTkButton(self.prog_frame,
                                        text="←",
@@ -967,6 +967,115 @@ class EntradasInventarioProg(ctk.CTkFrame):
       self.descuento_total2_checkbox.configure(text=f'Descuento 2 {self.valor_descuento2}%')
       self.TotalPrev()
       self.descuento2_frame.destroy()
+
+# BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - 
+# BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - 
+# BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - 
+# BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - 
+    def AyudaProveedores(self):
+    # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
+        self.treeview_active = True
+    # FRAME DEL TREEVIEW
+        self.tree_frame = ctk.CTkToplevel(self,
+                                   fg_color=APP_COLORS[5])
+        self.tree_frame.geometry('600x450')
+        self.tree_frame.title('Busqueda de proveedores')
+        self.tree_frame.transient(self)
+    # GRID SETUP
+        self.tree_frame.rowconfigure(0,weight=1)
+        self.tree_frame.rowconfigure((1,2),weight=4)
+        self.tree_frame.columnconfigure((0,1,2),weight=4)
+        self.tree_frame.columnconfigure(3,weight=1)     
+    # BARRA DE BUSQUEDA
+        self.search_bar_var = tk.StringVar()
+        self.search_bar = ctk.CTkEntry(self.tree_frame,
+                                  width=200,
+                                  textvariable=self.search_bar_var)
+        self.search_bar.grid(row=0,column=2,sticky='we',padx=5)
+        self.search_bar.bind("<Return>",lambda event: self.BuscarProvNombre())
+    # BOTONES TREEVIEW     
+    # CANCELAR
+        cancel_btn = ctk.CTkButton(self.tree_frame,
+                                    text='Cancelar',
+                                    command=self.ListProv,
+                                    fg_color=APP_COLORS[2],
+                                    hover_color=APP_COLORS[3])
+        cancel_btn.grid(row=0,column=1,sticky='w',padx=5)
+    
+    # TREEVIEW
+        self.treeview = ttk.Treeview(self.tree_frame,
+                                     style='Custom.Treeview',
+                                columns=('Nombre'))
+        self.treeview.grid(row=1,column=0,sticky='nswe',padx=10,pady=10,rowspan=2,columnspan=3)
+        # EVENTO DE SELECCIONAR PRODUCTO
+        self.treeview.bind("<<TreeviewSelect>>",self.ClickTreeview)
+    # CODIGO
+        self.treeview.heading('#0',text='Codigo')
+        self.treeview.column('#0',width=50,anchor='center')
+    # NOMBRE
+        self.treeview.heading('Nombre',text='Nombre')
+        self.treeview.column('Nombre',width=150,anchor='center')
+    # CONFIGURACION VISUAL DEL TV
+        style = ttk.Style()
+        style.configure(
+            'Custom.Treeview',
+            background = APP_COLORS[0],
+            foreground = APP_COLORS[1],
+            rowheight = 30,
+            font = FONTS[2],
+            fieldbackground = APP_COLORS[0])
+        style.configure(
+            'Custom.Treeview.Heading',
+            background = APP_COLORS[1],
+            foreground = APP_COLORS[1],
+            font = FONTS[1])
+    # SCROLLBAR DEL TV
+        scrollbar = ctk.CTkScrollbar(self.tree_frame,
+                                     orientation='vertical',
+                                     command=self.treeview.yview)
+        scrollbar.grid(row=1,column=3,sticky='ns',padx=5,pady=5,rowspan=2)
+        self.treeview.configure(yscrollcommand=scrollbar.set)
+    # LISTAR TODOS LOS PRODUCTOS CARGADOS AL INICIO DEL PROGRAMA
+        self.ListProv()
+    # SELECIONAR PRODUCTO EN EL TREEVIEW
+    def ClickTreeview(self,event):
+        item_id = self.treeview.selection()
+        info = self.treeview.item(item_id)
+        self.search_bar_var.set(info['text'])
+        if PROV_MANAGER.CheckProv(info['text']):
+            self.proveedor_var.set(f'{info['text']} - {info['values'][0]}')
+        self.tree_frame.destroy()
+    def ListProv(self):
+        proveedores = PROV_MANAGER.GetProvs()
+        for item in self.treeview.get_children():
+                self.treeview.delete(item)
+        for i,prov in enumerate(proveedores):
+            tag = "Even.Treeview" if i % 2 == 0 else "Odd.Treeview"
+            self.treeview.insert("",'end',
+                                 text=proveedores[prov]['codigo'],
+                                 values=(proveedores[prov]['nombre']),
+                                 tags=(tag,))
+        self.treeview.tag_configure('Odd.Treeview', background="#ffffff")
+        self.treeview.tag_configure('Even.Treeview', background="#eaeaea")
+
+    def BuscarProvNombre(self):
+        for item in self.treeview.get_children():
+            self.treeview.delete(item)
+        busqueda = self.search_bar_var.get().lower()
+        resultados = PROV_MANAGER.SearchProvByName(busqueda)
+        print(resultados)
+        for proveedor in resultados:
+            self.treeview.insert("", 'end',
+                                 text=proveedor['codigo'],
+                                 values=(proveedor['nombre']))
+    def BuscarProvCodigo(self):
+        prov = self.proveedor_var.get()
+        if not prov:
+            return
+        if PROV_MANAGER.CheckProv(prov):
+            prov = PROV_MANAGER.GetProv(prov)
+            self.proveedor_var.set(f'{prov['codigo']} - {prov['nombre']}')
+
 
 
 # VALIDAR LA ENTRADA DE DIGITOS
