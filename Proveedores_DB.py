@@ -139,7 +139,19 @@ class Proveedores:
         except Exception as e:
             self.conn.rollback()
             messagebox.showerror("Base de datos", f"Error al eliminar proveedor: {str(e)}")
-
+    def CheckProv(self,code):
+        # CHEQUEAR CODIGO DE PROVEEDOR
+        try:
+            with self.conn.cursor() as cur:
+                cur.execute("SELECT 1 FROM proveedores WHERE codigo = %s;",(code,))
+                if cur.fetchone():
+                    return True
+                else:
+                    messagebox.showerror('Error', f'El codigo de proveedor {code} no existe.')
+                    return False
+        except Exception as e:
+            messagebox.showerror('Base de datos',f'Error al chequear el proveedor {code}, {str(e)}')
+            return False
     def __del__(self):
         """Cierra la conexión al eliminar el objeto."""
         if self.conn:

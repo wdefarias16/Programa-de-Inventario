@@ -375,7 +375,27 @@ class ProveedoresProg(ctk.CTkFrame):
         celular_2 = self.celular2_entry_var.get()
         email = self.email_entry_var.get()
         rif = self.rif_entry_var.get()
-        answer = messagebox.showinfo('¡Atención!','Está seguro que desea guardar el proveedor {codigo} - {nombre}'
+        # CHEQUEAR CODIGO
+        if codigo == '':
+            messagebox.showinfo('Atención','Debe agregar un codigo de proveedor')
+            self.codigo_entry.focus()
+            return
+        # CHEQUEAR NOMBRE
+        if nombre == '':
+            messagebox.showinfo('Atención','Debe agregar un nombre de proveedor.')
+            self.nombre_entry.focus()
+            return
+        telefono_1 = self.ValidatePhoneNumber(pre_telefono_1,telefono_1,'Teléfono 1')
+        telefono_2 = self.ValidatePhoneNumber(pre_telefono_2,telefono_2,'Teléfono 2')
+        celular_1 = self.ValidatePhoneNumber(pre_celular_1,celular_1,'Celular 1')
+        celular_2 = self.ValidatePhoneNumber(pre_celular_2,celular_2,'Celular 2')
+        if telefono_1 == False or telefono_2 == False or celular_1 == False or celular_2 == False:
+            return
+        if rif == '':
+            messagebox.showinfo('Atención','Debe agregar un número de identificación fiscal.')
+            self.rif_entry.focus()
+            return
+        answer = messagebox.showinfo('¡Atención!',f'Está seguro que desea guardar el proveedor {codigo} - {nombre} '
                                      'con estos datos?')
         if not answer:
             return
@@ -383,11 +403,12 @@ class ProveedoresProg(ctk.CTkFrame):
                               ciudad,telefono_1,telefono_2,celular_1,celular_2,email,rif)
         self.Restablecer()
     def EliminarProv(self):
-        answer = messagebox.showinfo('¡Atención!','Está seguro que desea eliminar el proveedor {codigo} - {nombre}'
+        codigo = self.codigo_entry_var.get()
+        nombre = self.nombre_entry_var.get()
+        answer = messagebox.showinfo('¡Atención!',f'Está seguro que desea eliminar el proveedor {codigo} - {nombre} '
                                      'con estos datos?')
         if not answer:
             return
-        codigo = self.codigo_entry_var.get()
         PROV_MANAGER.Del_Prov(codigo)
         self.Restablecer()
     # CANCELAR SELECCION
@@ -423,20 +444,31 @@ class ProveedoresProg(ctk.CTkFrame):
             self.treeview_active = False
         else:
             codigo = self.codigo_entry_var.get()
+        if not PROV_MANAGER.CheckProv(codigo):
+            return
         proveedor = PROV_MANAGER.GetProv(codigo)
-        if PROV_MANAGER.ChechProv(codigo):
-            self.codigo_entry_var.set(codigo)
-            self.nombre_entry_var.set(proveedor['nombre'])
-            self.contacto_entry_var.set(proveedor['contacto'])
-            self.direccion1_entry_var.set(proveedor['direccion1'])
-            self.direccion2_entry_var.set(proveedor['direccion2'])
-            self.ciudad_entry_var.set(proveedor['ciudad'])
-            self.telefono_entry_var.set(proveedor['telefono'])
-            self.celular_entry_var.set(proveedor['celular'])
-            self.email_entry_var.set(proveedor['email'])
-            self.rif_entry_var.set(proveedor['rif'])
-            # ENTRAR EN MODO EDICION
-            self.ModoEdicion()
+        self.codigo_entry_var.set(codigo)
+        self.nombre_entry_var.set(proveedor['nombre'])
+        self.contacto_entry_var.set(proveedor['contacto'])
+        self.direccion1_entry_var.set(proveedor['direccion1'])
+        self.direccion2_entry_var.set(proveedor['direccion2'])
+        self.ciudad_entry_var.set(proveedor['ciudad'])
+        if proveedor['telefono1']:
+            self.telefono1_codigo_entry_var.set(proveedor['telefono1'].split(' - ')[0])
+            self.telefono1_entry_var.set(proveedor['telefono1'].split(' - ')[1])
+        if proveedor['telefono2']:
+            self.telefono2_codigo_entry_var.set(proveedor['telefono2'].split(' - ')[0])
+            self.telefono2_entry_var.set(proveedor['telefono2'].split(' - ')[1])
+        if proveedor['celular1']:
+            self.celular1_codigo_entry_var.set(proveedor['celular1'].split(' - ')[0])
+            self.celular1_entry_var.set(proveedor['celular1'].split(' - ')[1])
+        if proveedor['celular2']:
+            self.celular2_codigo_entry_var.set(proveedor['celular2'].split(' - ')[0])
+            self.celular2_entry_var.set(proveedor['celular2'].split(' - ')[1])
+        self.email_entry_var.set(proveedor['email'])
+        self.rif_entry_var.set(proveedor['rif'])
+        # ENTRAR EN MODO EDICION
+        self.ModoEdicion()
 # MODO EDICION - MODO EDICION - MODO EDICION - MODO EDICION - MODO EDICION - MODO EDICION - MODO EDICION - 
     def ModoEdicion(self):
         # BLOQUEAR EL CODIGO DE PROVEEDOR
@@ -446,6 +478,9 @@ class ProveedoresProg(ctk.CTkFrame):
         self.cancelar_btn.configure(state='enabled',fg_color=APP_COLORS[2])
         self.del_btn.configure(state='enabled',fg_color=APP_COLORS[2])
         self.mod_btn.configure(state='enabled',fg_color=APP_COLORS[2])
+# BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - 
+# BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - 
+# BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - 
 # BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - 
     def AyudaProveedores(self):
     # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
@@ -517,7 +552,7 @@ class ProveedoresProg(ctk.CTkFrame):
         item_id = self.treeview.selection()
         info = self.treeview.item(item_id)
         self.search_bar_var.set(info['text'])
-        if PROV_MANAGER.ChechProv(info['text']):
+        if PROV_MANAGER.CheckProv(info['text']):
             self.BuscarProveedor()
         self.tree_frame.destroy()
     def ListProv(self):
@@ -537,7 +572,7 @@ class ProveedoresProg(ctk.CTkFrame):
         for item in self.treeview.get_children():
             self.treeview.delete(item)
         busqueda = self.search_bar_var.get().lower()
-        resultados = PROV_MANAGER.BuscarNombres(busqueda)
+        resultados = PROV_MANAGER.SearchProvByName(busqueda)
         print(resultados)
         for proveedor in resultados:
             self.treeview.insert("", 'end',
