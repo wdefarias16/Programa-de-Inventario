@@ -305,14 +305,16 @@ class ProveedoresProg(ctk.CTkFrame):
         if numero:
             if not pref:
                 messagebox.showinfo('Atención',f'Agregue el prefijo del número del {tipo}.')
-                return
+                return False
             if len(pref) != 4:
-                messagebox.showinfo('Atención',f'Revise el prefijo de {tipo}.')
-                return
+                messagebox.showinfo('Atención',f'Revise el prefijo de {tipo}.\n'
+                                    'No debe tener espacios y el formato es "0000".')
+                return False
             if len(numero) != 7:
-                messagebox.showinfo('Atención',f'Revise el número de {tipo}.')
-                return
-            return pref + ' - ' + numero
+                messagebox.showinfo('Atención',f'Revise el número de {tipo}.\n'
+                                    'No debe tener espacios y el formato es "0000000".')
+                return False
+            return pref.strip() + ' - ' + numero.strip()
         return ''
     # AGREGAR PROVEEDOR
     def AgregarProv(self):
@@ -346,11 +348,14 @@ class ProveedoresProg(ctk.CTkFrame):
         telefono_2 = self.ValidatePhoneNumber(pre_telefono_2,telefono_2,'Teléfono 2')
         celular_1 = self.ValidatePhoneNumber(pre_celular_1,celular_1,'Celular 1')
         celular_2 = self.ValidatePhoneNumber(pre_celular_2,celular_2,'Celular 2')
+        if telefono_1 == False or telefono_2 == False or celular_1 == False or celular_2 == False:
+            return
         if rif == '':
             messagebox.showinfo('Atención','Debe agregar un número de identificación fiscal.')
             self.rif_entry.focus()
             return
-        PROV_MANAGER.Add_Prov(codigo,nombre,contacto,direccion1,direccion2,ciudad,telefono_1,celular_1,email,rif)
+        PROV_MANAGER.Add_Prov(codigo,nombre,contacto,direccion1,direccion2,
+                              ciudad,telefono_1,telefono_2,celular_1,celular_2,email,rif)
         self.Restablecer()
     # MODIFICAR PROVEEDOR
     def ModificarProv(self):
@@ -360,13 +365,28 @@ class ProveedoresProg(ctk.CTkFrame):
         direccion1 = self.direccion1_entry_var.get()
         direccion2 = self.direccion2_entry_var.get()
         ciudad = self.ciudad_entry_var.get()
-        telefono = self.telefono_entry_var.get()
-        celular = self.celular_entry_var.get()
+        pre_telefono_1 = self.telefono1_codigo_entry_var.get()
+        telefono_1 = self.telefono1_entry_var.get()
+        pre_telefono_2 = self.telefono2_codigo_entry_var.get()
+        telefono_2 = self.telefono2_entry_var.get()
+        pre_celular_1 = self.celular1_codigo_entry_var.get()
+        celular_1 = self.celular1_entry_var.get()
+        pre_celular_2 = self.celular2_codigo_entry_var.get()
+        celular_2 = self.celular2_entry_var.get()
         email = self.email_entry_var.get()
         rif = self.rif_entry_var.get()
-        PROV_MANAGER.Mod_Prov(codigo,nombre,contacto,direccion1,direccion2,ciudad,telefono,celular,email,rif)
+        answer = messagebox.showinfo('¡Atención!','Está seguro que desea guardar el proveedor {codigo} - {nombre}'
+                                     'con estos datos?')
+        if not answer:
+            return
+        PROV_MANAGER.Mod_Prov(codigo,nombre,contacto,direccion1,direccion2,
+                              ciudad,telefono_1,telefono_2,celular_1,celular_2,email,rif)
         self.Restablecer()
     def EliminarProv(self):
+        answer = messagebox.showinfo('¡Atención!','Está seguro que desea eliminar el proveedor {codigo} - {nombre}'
+                                     'con estos datos?')
+        if not answer:
+            return
         codigo = self.codigo_entry_var.get()
         PROV_MANAGER.Del_Prov(codigo)
         self.Restablecer()
@@ -378,8 +398,14 @@ class ProveedoresProg(ctk.CTkFrame):
         self.direccion1_entry_var.set('')
         self.direccion2_entry_var.set('')
         self.ciudad_entry_var.set('')
-        self.telefono_entry_var.set('')
-        self.celular_entry_var.set('')
+        self.telefono1_codigo_entry_var.set('')
+        self.telefono1_entry_var.set('')
+        self.telefono2_codigo_entry_var.set('')
+        self.telefono2_entry_var.set('')
+        self.celular1_codigo_entry_var.set('')
+        self.celular1_entry_var.set('')
+        self.celular2_codigo_entry_var.set('')
+        self.celular2_entry_var.set('')
         self.email_entry_var.set('')
         self.rif_entry_var.set('')
         # DESBLOQUEAR EL CODIGO DE PROVEEDOR
