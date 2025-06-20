@@ -16,6 +16,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.validardigit = self.register(self.ValidarDigitos)
         self.lista_productos = []
         self.total_prev = 0.0
+        self.inventory_codes = []
 
         
     # TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - 
@@ -191,7 +192,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
     # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW
         self.treeview_entradas = ttk.Treeview(self.prog_frame,
                                      style='Custom.Treeview',
-                                     columns=('Nombre','Cantidad','Costo','Iva','Descuento','Neto','SubTotal'))
+                                     columns=('Nombre','Cantidad','Costo','Descuento','Iva','Neto','SubTotal'))
         self.treeview_entradas.grid(row=5,column=1,sticky='nswe',padx=10,pady=10,rowspan=10,columnspan=10)
         self.treeview_entradas.bind("<<TreeviewSelect>>",self.ClickEntrada)
         # CODIGO
@@ -206,12 +207,12 @@ class EntradasInventarioProg(ctk.CTkFrame):
         # COSTO
         self.treeview_entradas.heading('Costo',text='Costo')
         self.treeview_entradas.column('Costo',width=50,anchor='center')
-        # IVA
-        self.treeview_entradas.heading('Iva',text='Iva')
-        self.treeview_entradas.column('Iva',width=50,anchor='center')
         # DESCUENTO
         self.treeview_entradas.heading('Descuento',text='Descuento')
         self.treeview_entradas.column('Descuento',width=50,anchor='center')
+        # IVA
+        self.treeview_entradas.heading('Iva',text='Iva')
+        self.treeview_entradas.column('Iva',width=50,anchor='center')
         # NETO
         self.treeview_entradas.heading('Neto',text='Neto')
         self.treeview_entradas.column('Neto',width=50,anchor='center')
@@ -264,8 +265,6 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                         text="Aceptar",
                                         command=seleccionar_fecha)
         btn_seleccionar.pack(pady=10)
-    def IVA(self):
-        pass
 # BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - 
 # BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - 
 # BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - 
@@ -316,18 +315,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                      fg_color=APP_COLORS[4],
                                      border_color=APP_COLORS[4])
         self.costo_entry.grid(row=7,column=0,columnspan=2,sticky='w',padx=20)
-        self.costo_entry.bind("<Return>",lambda event:self.iva_entry.focus_set())
-        # IVA
-        self.iva_var = tk.StringVar()
-        self.iva_entry = ctk.CTkEntry(self.tree_frame,
-                                     state='disabled',
-                                     validate = 'key',
-                                     validatecommand = (self.validardigit,'%P'),
-                                     textvariable = self.iva_var,
-                                     fg_color=APP_COLORS[4],
-                                     border_color=APP_COLORS[4])
-        self.iva_entry.grid(row=9,column=0,columnspan=2,sticky='w',padx=20)
-        self.iva_entry.bind("<Return>",lambda event:self.descuento_entry.focus_set())
+        self.costo_entry.bind("<Return>",lambda event:self.descuento_entry.focus_set())
         # DESCUENTO
         self.descuento_var = tk.StringVar()
         self.descuento_entry = ctk.CTkEntry(self.tree_frame,
@@ -337,8 +325,19 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                             fg_color=APP_COLORS[4],
                                             border_color=APP_COLORS[4],
                                             textvariable = self.descuento_var)
-        self.descuento_entry.grid(row=11,column=0,columnspan=2,sticky='w',padx=20)
-        self.descuento_entry.bind("<Return>",lambda event:self.AgregarProducto())
+        self.descuento_entry.grid(row=9,column=0,columnspan=2,sticky='w',padx=20)
+        self.descuento_entry.bind("<Return>",lambda event:self.iva_entry.focus())
+        # IVA
+        self.iva_var = tk.StringVar()
+        self.iva_entry = ctk.CTkEntry(self.tree_frame,
+                                     state='disabled',
+                                     validate = 'key',
+                                     validatecommand = (self.validardigit,'%P'),
+                                     textvariable = self.iva_var,
+                                     fg_color=APP_COLORS[4],
+                                     border_color=APP_COLORS[4])
+        self.iva_entry.grid(row=11,column=0,columnspan=2,sticky='w',padx=20)
+        self.iva_entry.bind("<Return>",lambda event:self.AgregarProducto())
     # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
         # BUSQUEDA
         label_busqueda = ctk.CTkLabel(self.tree_frame,
@@ -358,18 +357,18 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                       font=FONTS[1],
                                       text_color=APP_COLORS[4])
         label_costo.grid(row=6,column=0,columnspan=3,sticky='w',padx=20)
-        # IVA
-        label_iva = ctk.CTkLabel(self.tree_frame,
-                                      text='I.V.A.',
-                                      font=FONTS[1],
-                                      text_color=APP_COLORS[4])
-        label_iva.grid(row=8,column=0,columnspan=3,sticky='w',padx=20)
         # DESCUENTO
         label_descuento = ctk.CTkLabel(self.tree_frame,
                                        text='Descuento',
                                        font=FONTS[1],
                                        text_color=APP_COLORS[4])
-        label_descuento.grid(row=10,column=0,columnspan=3,sticky='w',padx=20)
+        label_descuento.grid(row=8,column=0,columnspan=3,sticky='w',padx=20)
+        # IVA
+        label_iva = ctk.CTkLabel(self.tree_frame,
+                                      text='I.V.A.',
+                                      font=FONTS[1],
+                                      text_color=APP_COLORS[4])
+        label_iva.grid(row=10,column=0,columnspan=3,sticky='w',padx=20)
     # BOTONES TREEVIEW - BOTONES TREEVIEW - BOTONES TREEVIEW - BOTONES TREEVIEW - 
         # CANCELAR
         cancel_btn = ctk.CTkButton(self.tree_frame,
@@ -427,49 +426,66 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.ListInventory()
 # AGREGAR PRODUCTO A LA LISTA
     def AgregarProducto(self):
-        inventario = INVENTARIO.GetCodigos()
+        if not self.inventory_codes:
+            self.inventory_codes = INVENTARIO.GetCodigos()
+        # OBTENER VALORES
         codigo = self.search_bar_var.get()
         cantidad = self.cantidad_var.get()
         costo = self.costo_var.get()
         descuento = self.descuento_var.get()
+        iva = self.iva_var.get()
+        # VERIFICAR ENTRADA DE VALORES
         if cantidad == '':
             messagebox.showerror('Error','Debe agregar la cantidad del producto.')
             return
         if costo == '':
             messagebox.showerror('Error','Debe agregar el costo del producto.')
             return
-        if descuento == '':
+        if not descuento:
                 descuento = 0
-
+        if not iva:
+            iva = 0
+        # CONVERTIR VALORES A NUMEROS
         cantidad = int(cantidad)
         costo = float(costo)
         descuento = float(descuento)
+        iva = float(iva)
+        # SEGUNDO CHEQUEO DE ENTRADAS
         if cantidad <= 0:
             messagebox.showerror('Error','Debe agregar la cantidad del producto.')
-        elif costo <= 0:
+            return
+        if costo <= 0:
             messagebox.showerror('Error','Debe agregar el costo del producto.')
+            return
+        # CALCULAR EL IVA SI TIENE
+        if iva:
+            ivaf = iva / 100
+            neto = format( costo + (ivaf * (costo - (costo * (descuento / 100)))),'.2f')
         else:
             neto = format(costo - (costo * (descuento / 100)),'.2f')
-            subtotal = format(cantidad * float(neto),'.2f')
-            if codigo not in self.lista_productos:
-                if codigo in inventario:
-                    producto = INVENTARIO.GetProducto(codigo)
-                    self.treeview_entradas.insert("",'end',
-                                         text=producto['codigo'],
-                                         values=(producto['nombre'],
-                                                 cantidad,
-                                                 ('$',costo),
-                                                 (descuento,'%'),
-                                                 ('$',neto),
-                                                 ('$',subtotal)))
-                    self.btn_agregar_entrada.configure(state='enabled')
-                    self.lista_productos.append(str(codigo).strip())
-                    self.TotalPrev()
-                    self.tree_frame.destroy()
-                else:
-                    messagebox.showerror('Error',f'Producto con codigo {codigo} no se encuentra en la base de datos.')
+        # CALCULAR EL SUBTOTAL
+        subtotal = format(cantidad * float(neto),'.2f')
+        # AGREGAR EL PRODUCTO AL TREEVIEW
+        if codigo not in self.lista_productos:
+            if codigo in self.inventory_codes:
+                producto = INVENTARIO.GetProducto(codigo)
+                self.treeview_entradas.insert("",'end',
+                                     text=producto['codigo'],
+                                     values=(producto['nombre'],
+                                             cantidad,
+                                             ('$',costo),
+                                             (descuento,'%'),
+                                             (iva,'%'),
+                                             ('$',neto),
+                                             ('$',subtotal)))
+                self.btn_agregar_entrada.configure(state='enabled')
+                self.lista_productos.append(str(codigo).strip())
+                self.TotalPrev()
+                self.tree_frame.destroy()
             else:
-                messagebox.showerror('Error',f'Producto con codigo {codigo} ya se encuentra en la lista.')
+                messagebox.showerror('Error',f'Producto con codigo {codigo} no se encuentra en la base de datos.')
+        else:
+            messagebox.showerror('Error',f'Producto con codigo {codigo} ya se encuentra en la lista.')
 # LISTAR INVENTARIO DE LA BUSQUEDA DE PRODDUCTOS
     def ListInventory(self):
         self.search_bar_var.set('')
@@ -527,6 +543,8 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                    border_color=APP_COLORS[6])
         self.cantidad_entry.configure(state='normal',fg_color=APP_COLORS[6],
                                       border_color=APP_COLORS[6])
+        self.iva_entry.configure(state='normal',fg_color=APP_COLORS[6],
+                                       border_color=APP_COLORS[6])
         self.descuento_entry.configure(state='normal',fg_color=APP_COLORS[6],
                                        border_color=APP_COLORS[6])
         self.cantidad_entry.focus_set()
@@ -540,7 +558,6 @@ class EntradasInventarioProg(ctk.CTkFrame):
             print("Advertencia: No hay ningún elemento seleccionado.")
             return
         info = self.treeview_entradas.item(self.item_id)
-        print(info)
         self.codigo = str(info['text']).strip()
         datos = info['values']
         self.nombre = datos[0]
@@ -721,7 +738,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.total_prev = 0
         for item in self.treeview_entradas.get_children():
             info = self.treeview_entradas.item(item)
-            subtotal = float(info['values'][5].split(' ')[1].strip())
+            subtotal = float(info['values'][6].split(' ')[1].strip())
             self.total_prev += subtotal
         if self.iva_checkbox_var.get():
             iva = self.valor_iva / 100
@@ -1025,7 +1042,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                 columns=('Nombre'))
         self.treeview.grid(row=1,column=0,sticky='nswe',padx=10,pady=10,rowspan=2,columnspan=3)
         # EVENTO DE SELECCIONAR PRODUCTO
-        self.treeview.bind("<<TreeviewSelect>>",self.ClickTreeview)
+        self.treeview.bind("<<TreeviewSelect>>",self.ClickTreeviewProvs)
     # CODIGO
         self.treeview.heading('#0',text='Codigo')
         self.treeview.column('#0',width=50,anchor='center')
@@ -1055,7 +1072,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
     # LISTAR TODOS LOS PRODUCTOS CARGADOS AL INICIO DEL PROGRAMA
         self.ListProv()
     # SELECIONAR PRODUCTO EN EL TREEVIEW
-    def ClickTreeview(self,event):
+    def ClickTreeviewProvs(self,event):
         item_id = self.treeview.selection()
         info = self.treeview.item(item_id)
         self.search_bar_var.set(info['text'])
@@ -1079,7 +1096,6 @@ class EntradasInventarioProg(ctk.CTkFrame):
             self.treeview.delete(item)
         busqueda = self.search_bar_var.get().lower()
         resultados = PROV_MANAGER.SearchProvByName(busqueda)
-        print(resultados)
         for proveedor in resultados:
             self.treeview.insert("", 'end',
                                  text=proveedor['codigo'],

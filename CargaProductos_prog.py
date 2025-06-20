@@ -306,7 +306,7 @@ class CargaProductosProg(ctk.CTkFrame):
             self.costo_entry.focus()
             return
         # SI PASA LA VERIFICACION SE AGREGA EL PRODUCTO
-        if INVENTARIO.CheckCode(codigo) and LINE_MANAGER.CheckLine(linea) and LINE_MANAGER.CheckGrupo(linea,grupo) and PROV_MANAGER.ChechProv(prove):
+        if INVENTARIO.CheckCode(codigo) and LINE_MANAGER.CheckLine(linea) and LINE_MANAGER.CheckGrupo(linea,grupo) and PROV_MANAGER.CheckProv(prove):
             precios = LINE_MANAGER.GetPrecios(linea,grupo,costo)
             producto = Product(
             codigo, linea, grupo, prove, nombre, costo, ubi1, ubi2,
@@ -349,7 +349,7 @@ class CargaProductosProg(ctk.CTkFrame):
             precio3 = float(self.precio3_var.get())
         if not INVENTARIO.CheckName(nombre):
             return
-        if  LINE_MANAGER.CheckLine(linea) and LINE_MANAGER.CheckGrupo(linea,grupo) and PROV_MANAGER.ChechProv(prove):
+        if  LINE_MANAGER.CheckLine(linea) and LINE_MANAGER.CheckGrupo(linea,grupo) and PROV_MANAGER.CheckProv(prove):
             producto = Product(
             self.mod_codi, linea, grupo, prove, nombre, costo, ubi1, ubi2,
             precio1, precio2, precio3)
