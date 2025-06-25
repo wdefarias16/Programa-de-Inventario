@@ -71,19 +71,6 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                         fg_color=APP_COLORS[8],
                                         border_color=APP_COLORS[8])
         self.total_entry.grid(row=1,column=10,columnspan=1,padx=5,sticky='we')
-        # IVA
-        self.iva_checkbox_var = ctk.BooleanVar()
-        self.iva_checkbox = ctk.CTkCheckBox(self.prog_frame,
-                                   text='I.V.A.',
-                                   variable = self.iva_checkbox_var,
-                                   command = self.SelectIVA,
-                                   font=FONTS[1],
-                                   text_color=APP_COLORS[4],
-                                   hover_color=APP_COLORS[2],
-                                   fg_color=APP_COLORS[2],
-                                   border_color=APP_COLORS[4],
-                                   border_width=2)
-        self.iva_checkbox.grid(row=4,column=6,columnspan=2,padx=5,sticky='e')
         # FLETE
         self.flete_checkbox_var = ctk.BooleanVar()
         self.flete_checkbox = ctk.CTkCheckBox(self.prog_frame,
@@ -192,7 +179,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
     # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW
         self.treeview_entradas = ttk.Treeview(self.prog_frame,
                                      style='Custom.Treeview',
-                                     columns=('Nombre','Cantidad','Costo','Descuento','Iva','Neto','SubTotal'))
+                                     columns=('Nombre','Cantidad','Costo','Descuento','Neto','Iva','Neto_IVA','SubTotal'))
         self.treeview_entradas.grid(row=5,column=1,sticky='nswe',padx=10,pady=10,rowspan=10,columnspan=10)
         self.treeview_entradas.bind("<<TreeviewSelect>>",self.ClickEntrada)
         # CODIGO
@@ -210,12 +197,15 @@ class EntradasInventarioProg(ctk.CTkFrame):
         # DESCUENTO
         self.treeview_entradas.heading('Descuento',text='Descuento')
         self.treeview_entradas.column('Descuento',width=50,anchor='center')
-        # IVA
-        self.treeview_entradas.heading('Iva',text='Iva')
-        self.treeview_entradas.column('Iva',width=50,anchor='center')
         # NETO
         self.treeview_entradas.heading('Neto',text='Neto')
         self.treeview_entradas.column('Neto',width=50,anchor='center')
+        # IVA
+        self.treeview_entradas.heading('Iva',text='I.V.A.')
+        self.treeview_entradas.column('Iva',width=50,anchor='center')
+        # NETO + IVA 
+        self.treeview_entradas.heading('Neto_IVA',text='Neto + I.V.A.')
+        self.treeview_entradas.column('Neto_IVA',width=50,anchor='center')
         # SUBTOTAL
         self.treeview_entradas.heading('SubTotal',text='SubTotal')
         self.treeview_entradas.column('SubTotal',width=50,anchor='center')
@@ -458,13 +448,15 @@ class EntradasInventarioProg(ctk.CTkFrame):
             messagebox.showerror('Error','Debe agregar el costo del producto.')
             return
         # CALCULAR EL IVA SI TIENE
-        if iva:
+        if iva != 0:
             ivaf = iva / 100
-            neto = format( costo + (ivaf * (costo - (costo * (descuento / 100)))),'.2f')
+            neto = float(format(costo - (costo * (descuento / 100)),'.2f'))
+            neto_iva = format(neto+(neto * ivaf),'.2f')
+            subtotal = format(cantidad * float(neto_iva),'.2f')
         else:
+            neto_iva = 0
             neto = format(costo - (costo * (descuento / 100)),'.2f')
-        # CALCULAR EL SUBTOTAL
-        subtotal = format(cantidad * float(neto),'.2f')
+            subtotal = format(cantidad * float(neto),'.2f')
         # AGREGAR EL PRODUCTO AL TREEVIEW
         if codigo not in self.lista_productos:
             if codigo in self.inventory_codes:
@@ -475,8 +467,9 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                              cantidad,
                                              ('$',costo),
                                              (descuento,'%'),
-                                             (iva,'%'),
                                              ('$',neto),
+                                             (iva,'%'),
+                                             ('$',neto_iva),
                                              ('$',subtotal)))
                 self.btn_agregar_entrada.configure(state='enabled')
                 self.lista_productos.append(str(codigo).strip())
@@ -564,6 +557,8 @@ class EntradasInventarioProg(ctk.CTkFrame):
         cantidad = datos[1]
         costo = float(datos[2].split(' ')[1])
         porcentaje = float(datos[3].split(' ')[0])
+        iva = float(datos[5].split(' ')[0])
+        
         # FRAME DE EDICION DE ENTRADAS
         self.edit_window = ctk.CTkToplevel(self,
                                    fg_color=APP_COLORS[0])
@@ -632,7 +627,19 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                                   fg_color=APP_COLORS[6],
                                                   border_width=0)
         self.porcentaje_edit_entry.grid(row = 6, column = 1, columnspan = 2, padx = 10, sticky = 'we')
-        self.porcentaje_edit_entry.bind("<Return>",lambda event: self.ModEntrada())
+        self.porcentaje_edit_entry.bind("<Return>",lambda event: self.iva_edit_entry.focus_set())
+        # IVA
+        self.iva_edit_var = tk.StringVar()
+        self.iva_edit_var.set(iva)
+        self.iva_edit_entry = ctk.CTkEntry(edit_frame,
+                                                  state='disabled',
+                                                  textvariable=self.iva_edit_var,
+                                                  validate = 'key',
+                                                  validatecommand = (self.validardigit,'%P'),
+                                                  fg_color=APP_COLORS[6],
+                                                  border_width=0)
+        self.iva_edit_entry.grid(row = 7, column = 1, columnspan = 2, padx = 10, sticky = 'we')
+        self.iva_edit_entry.bind("<Return>",lambda event: self.ModEntrada())
     # LABELS
         # CANTIDAD
         cantidad_label = ctk.CTkLabel(edit_frame,
@@ -652,6 +659,12 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                       font=FONTS[1],
                                       text_color=APP_COLORS[4])
         porcentaje_label.grid(row = 6, column = 3, columnspan = 2, sticky = 'w')
+        # IVA
+        iva_label = ctk.CTkLabel(edit_frame,
+                                      text=f'I.V.A. %',
+                                      font=FONTS[1],
+                                      text_color=APP_COLORS[4])
+        iva_label.grid(row = 7, column = 3, columnspan = 2, sticky = 'w')
     # BOTONES
         # EDITAR
         editar_btn = ctk.CTkButton(edit_frame,
@@ -686,35 +699,61 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.cantidad_edit_entry.configure(state='normal')
         self.costo_edit_entry.configure(state='normal')
         self.porcentaje_edit_entry.configure(state='normal')
+        self.iva_edit_entry.configure(state='normal')
         self.cantidad_edit_entry.focus()
 # MODIFICAR ENTRADA
     def ModEntrada(self):
         item_id = self.item_id
         nombre = self.nombre
-        cantidad = int(self.cantidad_edit_var.get())
-        costo = float(self.costo_edit_var.get())
-        porcentaje = float(self.porcentaje_edit_var.get())
-        neto = format(costo - (costo * (porcentaje / 100)),'.2f')
-        subtotal = format(cantidad * float(neto),'.2f')
-
-        if not cantidad or cantidad <= 0:
-            messagebox.showerror('Error de carga','Debe agregar cantidad del producto.')
-        elif not costo or costo <= 0:
-            messagebox.showerror('Error de carga','Debe agregar costo del producto.')
-        else:
+        cantidad = costo = porcentaje = iva = None
+        try:
+            cantidad = int(self.cantidad_edit_var.get())
+            costo = float(self.costo_edit_var.get())
+            porcentaje = float(self.porcentaje_edit_var.get())
+            iva = float(self.iva_edit_entry.get())
+        except ValueError as e:
+            if not cantidad:
+                messagebox.showerror('¡Atención!','Verifique la cantidad del producto.')
+                self.cantidad_edit_entry.focus()
+                return
+            if not costo:
+                messagebox.showerror('¡Atención!','Verifique el costo del producto.')
+                self.costo_edit_entry.focus()
+                return
             if not porcentaje:
                 porcentaje = 0
-            if item_id:
-                self.treeview_entradas.item(item_id,
-                                            values = (nombre,
-                                                      cantidad,
-                                                      ('$',costo),
-                                                      (porcentaje,'%'),
-                                                      ('$',neto),
-                                                      ('$',subtotal)))
-                self.TotalPrev()
-                messagebox.showinfo('Editar entrada','Producto editado correctamente.')
-                self.edit_window.destroy()
+            if not iva:
+                iva = 0
+        if not cantidad:
+            messagebox.showerror('¡Atención!','La cantidad del producto no puede ser 0.')
+            self.cantidad_edit_entry.focus()
+            return
+        if not costo:
+            messagebox.showerror('¡Atención!','El costo del producto no puede ser 0.')
+            self.costo_edit_entry.focus()
+            return
+        if iva != 0:
+            ivaf = iva / 100
+            neto = float(format(costo - (costo * (porcentaje / 100)),'.2f'))
+            neto_iva = format(neto+(neto * ivaf),'.2f')
+            subtotal = format(cantidad * float(neto_iva),'.2f')
+        else:
+            neto_iva = 0
+            neto = format(costo - (costo * (porcentaje / 100)),'.2f')
+            subtotal = format(cantidad * float(neto),'.2f')
+        if item_id:
+            self.treeview_entradas.item(item_id,
+                                        values = (nombre,
+                                                  cantidad,
+                                                  ('$',costo),
+                                                  (porcentaje,'%'),
+                                                  ('$',neto),
+                                                  (iva,'%'),
+                                                  ('$',neto_iva),
+                                                  ('$',subtotal)))
+        messagebox.showinfo('Editar entrada','Producto editado correctamente.')
+        self.edit_window.destroy()
+        self.after(100,lambda: self.TotalPrev())
 # ELIMINAR ENTRADA
     def EliminarEntrada(self):
         item_id = self.item_id
@@ -736,13 +775,11 @@ class EntradasInventarioProg(ctk.CTkFrame):
 # CALCULAR TOTAL
     def TotalPrev(self):
         self.total_prev = 0
+        
         for item in self.treeview_entradas.get_children():
             info = self.treeview_entradas.item(item)
-            subtotal = float(info['values'][6].split(' ')[1].strip())
+            subtotal = float(info['values'][7].split(' ')[1].strip())
             self.total_prev += subtotal
-        if self.iva_checkbox_var.get():
-            iva = self.valor_iva / 100
-            self.total_prev = self.total_prev + (self.total_prev * iva)
         if self.flete_checkbox_var.get():
             flete = self.valor_flete / 100
             self.total_prev = self.total_prev + (self.total_prev * flete)
@@ -754,65 +791,6 @@ class EntradasInventarioProg(ctk.CTkFrame):
             self.total_prev = self.total_prev - (self.total_prev * descuento2)
         self.total_entry_var.set(f'${format(self.total_prev,'.2f')}')
 
-# IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -
-# IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -
-# IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -
-# IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -IVA -
-# AGREGAR IVA A LA FACTURA
-    def SelectIVA(self):
-        if self.iva_checkbox_var.get():
-            self.iva_frame = ctk.CTkToplevel(self,
-                                        fg_color=APP_COLORS[5])
-            self.iva_frame.geometry('400x200')
-            self.iva_frame.title('I.V.A.')
-            self.iva_frame.protocol("WM_DELETE_WINDOW", lambda: None)
-            self.iva_frame.transient(self)
-            for rows in range(4):
-                self.iva_frame.rowconfigure(rows, weight=1,uniform='row')
-            for columns in range(6):
-                self.iva_frame.columnconfigure(columns,weight=1,uniform='column')
-            title_frame = ctk.CTkFrame(self.iva_frame,corner_radius=0,fg_color=APP_COLORS[3])
-            title_frame.grid(row=0,column=0,columnspan=10,sticky='nswe')
-            title = ctk.CTkLabel(title_frame,
-                                 text='Cargar valor del I.V.A.',
-                                 bg_color='transparent',
-                                 text_color=APP_COLORS[0],
-                                 height=50,
-                                 font=FONTS[3])
-            title.pack(pady=10)
-            # LABEL
-            label = ctk.CTkLabel(self.iva_frame,
-                                 text='Valor del I.V.A.',
-                                 font=FONTS[5],
-                                 text_color=APP_COLORS[4],
-                                 bg_color='transparent')
-            label.grid(row = 1, column = 1, columnspan = 3, padx = 5, sticky = 'w')
-            # ENTRADA
-            self.carga_iva_var = tk.StringVar()
-            self.carga_iva_entry = ctk.CTkEntry(self.iva_frame,
-                                           textvariable=self.carga_iva_var,
-                                           fg_color=APP_COLORS[6],
-                                           border_color=APP_COLORS[2])
-            self.carga_iva_entry.grid(row=2,column=1,columnspan=1,padx=5,sticky='we')
-            self.iva_frame.after(100, lambda: self.carga_iva_entry.focus())
-            self.carga_iva_entry.bind("<Return>",lambda event:self.CalculateIVA())
-            # BOTON
-            aceptar = ctk.CTkButton(self.iva_frame,
-                                    text="Aceptar",
-                                    width=25,
-                                    fg_color=APP_COLORS[2],
-                                    hover_color=APP_COLORS[3],
-                                    command=self.CalculateIVA)
-            aceptar.grid(row=2,column=2,columnspan=2,sticky='we',padx=5)
-        else:
-            self.iva_checkbox.configure(text='I.V.A.')
-            self.TotalPrev()
-# CALCULAR PRECIO DEL IVA
-    def CalculateIVA(self):
-      self.valor_iva = float(self.carga_iva_var.get().strip())
-      self.iva_checkbox.configure(text=f'I.V.A. {self.valor_iva}%')
-      self.TotalPrev()
-      self.iva_frame.destroy()
 
 # FLETE - FLETE - FLETE - FLETE - FLETE - FLETE - FLETE - FLETE - FLETE - FLETE - FLETE -  
 # FLETE - FLETE - FLETE - FLETE - FLETE - FLETE - FLETE - FLETE - FLETE - FLETE - FLETE -  
@@ -1139,8 +1117,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
                 return
             # Convertir el total, asumiendo que se muestra con el símbolo '$'
             total = float(total_str.replace("$", "").strip())
-            # Obtener porcentajes de ajustes (IVA, Flete, Descuento 1 y Descuento 2)
-            iva = self.valor_iva if self.iva_checkbox_var.get() else 0
+            # Obtener porcentajes de ajustes (IVA, Flete, Descuento 1 y Descuento 2
             flete = self.valor_flete if self.flete_checkbox_var.get() else 0
             descuento1 = self.valor_descuento1 if self.descuento_total1_checkbox_var.get() else 0
             descuento2 = self.valor_descuento2 if self.descuento_total2_checkbox_var.get() else 0
