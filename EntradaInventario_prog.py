@@ -449,96 +449,89 @@ class EntradasInventarioProg(ctk.CTkFrame):
     def AgregarProducto(self):
         if not self.inventory_codes:
             self.inventory_codes = INVENTARIO.GetCodigos()
-        # OBTENER VALORES
+
         codigo = self.search_bar_var.get()
-        try:
-            cantidad = self.cantidad_var.get()
-            costo = self.costo_var.get()
-            descuento_1 = self.descuento_1_var.get()
-            descuento_2 = self.descuento_2_var.get()
-            descuento_3 = self.descuento_3_var.get()
-            flete = self.flete_entry_var.get()
-            iva = self.iva_var.get()
-        except Exception as e:
-            if not descuento_1:
-                descuento_1 = 0
-            if not descuento_2:
-                    descuento_2 = 0
-            if not descuento_3:
-                    descuento_3 = 0
-            if not flete:
-                    flete = 0
-            if not iva:
-                iva = 0
-            print(e)
-        # VERIFICAR ENTRADA DE VALORES
-        if cantidad == '':
-            messagebox.showerror('Error','Debe agregar la cantidad del producto.')
+        if codigo in self.lista_productos:
+            messagebox.showerror('Error', f'Producto con código {codigo} ya se encuentra en la lista.')
             return
-        if costo == '':
-            messagebox.showerror('Error','Debe agregar el costo del producto.')
+
+        if codigo not in self.inventory_codes:
+            messagebox.showerror('Error', f'Producto con código {codigo} no se encuentra en la base de datos.')
             return
         
-        # CONVERTIR VALORES A NUMEROS
-        cantidad = int(cantidad)
-        costo = float(costo)
-        descuento_1 = float(descuento_1)
-        descuento_2 = float(descuento_2)
-        descuento_3 = float(descuento_3)
-        flete = float(flete)
-        iva = float(iva)
-        # SEGUNDO CHEQUEO DE ENTRADAS
+        campos = {
+            "cantidad": self.cantidad_var.get(),
+            "costo": self.costo_var.get(),
+            "descuento_1": self.descuento_1_var.get(),
+            "descuento_2": self.descuento_2_var.get(),
+            "descuento_3": self.descuento_3_var.get(),
+            "flete": self.flete_entry_var.get(),
+            "iva": self.iva_var.get()
+        }
+
+        try:
+            # Parsear y asegurar valores numéricos válidos
+            cantidad = int(campos["cantidad"])
+            costo = float(campos["costo"])
+            descuento_1 = float(campos["descuento_1"] or 0)
+            descuento_2 = float(campos["descuento_2"] or 0)
+            descuento_3 = float(campos["descuento_3"] or 0)
+            flete = float(campos["flete"] or 0)
+            iva = float(campos["iva"] or 0)
+        except ValueError:
+            messagebox.showerror('Error', 'Verifica que todos los campos numéricos estén correctamente llenos.')
+            return
+
         if cantidad <= 0:
-            messagebox.showerror('Error','Debe agregar la cantidad del producto.')
+            messagebox.showerror('Error', 'Agregue la cantidad del producto.')
+            self.cantidad_entry.focus()
             return
         if costo <= 0:
-            messagebox.showerror('Error','Debe agregar el costo del producto.')
+            messagebox.showerror('Error', 'Agregue el costo del producto.')
+            self.costo_entry.focus()
             return
-        # CALCULAR EL IVA SI TIENE
-        if iva != 0:
-            ivaf = iva / 100
-            neto = float(format(costo - (costo * (descuento_1 / 100)),'.2f'))
-            if descuento_2 > 0:
-                neto = float(format(float(neto) - (float(neto) * (descuento_2 / 100)),'.2f'))
-            if descuento_3 > 0:
-                neto = float(format(float(neto) - (float(neto) * (descuento_3 / 100)),'.2f'))
-            neto_iva = format(neto+(neto * ivaf),'.2f')
-            subtotal = format(cantidad * float(neto_iva),'.2f')
-            iva_dif = float(neto_iva) - float(neto)
+
+        def aplicar_descuentos(valor, *descuentos):
+            for d in descuentos:
+                valor -= valor * (d / 100)
+            return round(valor, 2)
+
+        neto = aplicar_descuentos(costo, descuento_1, descuento_2, descuento_3)
+
+        if flete > 0:
+            neto = round(neto * (1 + flete / 100), 2)
+
+        if iva > 0:
+            neto_iva = round(neto * (1 + iva / 100), 2)
+            iva_dif = round(neto_iva - neto, 2)
         else:
             neto_iva = 0
-            neto = format(costo - (costo * (descuento_1 / 100)),'.2f')
-            if descuento_2 > 0:
-                neto = format(float(neto) - (float(neto) * (descuento_2 / 100)),'.2f')
-            if descuento_3 > 0:
-                neto = format(float(neto) - (float(neto) * (descuento_3 / 100)),'.2f')
-            subtotal = format(cantidad * float(neto),'.2f')
             iva_dif = 0
-        # AGREGAR EL PRODUCTO AL TREEVIEW
-        if codigo not in self.lista_productos:
-            if codigo in self.inventory_codes:
-                producto = INVENTARIO.GetProducto(codigo)
-                self.treeview_entradas.insert("",'end',
-                                     text=producto['codigo'],
-                                     values=(producto['nombre'],
-                                             cantidad,
-                                             ('$',costo),
-                                             (descuento_1,'%'),
-                                             (descuento_2,'%'),
-                                             (descuento_2,'%'),
-                                             (flete,'%'),
-                                             ('$',neto),
-                                             (f'{iva_dif} {iva}%'),
-                                             ('$',neto_iva),
-                                             ('$',subtotal)))
-                self.btn_agregar_entrada.configure(state='enabled')
-                self.lista_productos.append(str(codigo).strip())
-                self.TotalPrev()
-                self.tree_frame.destroy()
-            else:
-                messagebox.showerror('Error',f'Producto con codigo {codigo} no se encuentra en la base de datos.')
-        else:
-            messagebox.showerror('Error',f'Producto con codigo {codigo} ya se encuentra en la lista.')
+
+        subtotal = round(cantidad * (neto_iva or neto), 2)
+
+        producto = INVENTARIO.GetProducto(codigo)
+        self.treeview_entradas.insert("", 'end',
+            text=producto['codigo'],
+            values=(
+                producto['nombre'],
+                cantidad,
+                ('$', costo),
+                (descuento_1, '%'),
+                (descuento_2, '%'),
+                (descuento_3, '%'),
+                (flete, '%'),
+                ('$', neto),
+                (f'{iva_dif} {iva}%'),
+                ('$', neto_iva),
+                ('$', subtotal)
+            )
+        )
+        self.btn_agregar_entrada.configure(state='enabled')
+        self.lista_productos.append(str(codigo).strip())
+        self.TotalPrev()
+        self.tree_frame.destroy()
+
 # LISTAR INVENTARIO DE LA BUSQUEDA DE PRODDUCTOS
     def ListInventory(self):
         self.search_bar_var.set('')
