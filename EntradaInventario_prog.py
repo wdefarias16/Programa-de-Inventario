@@ -5,7 +5,7 @@ from tkinter import ttk, messagebox
 from PIL import Image, ImageTk
 from DatabaseManager import INVENTARIO, PROV_MANAGER
 from style import*
-
+import win32api
 import os
 import tempfile
 import platform
@@ -13,6 +13,8 @@ from reportlab.lib.pagesizes import LETTER
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.pagesizes import LETTER, landscape
+from reportlab.lib.styles import ParagraphStyle
 
 # PROGRAMA DE CARGA DE PRODUCTOS
 class EntradasInventarioProg(ctk.CTkFrame):
@@ -1219,21 +1221,16 @@ class EntradasInventarioProg(ctk.CTkFrame):
             text="Cancelar",
             fg_color=APP_COLORS[9],
             hover_color=APP_COLORS[10],
-            command=self.CancelarVisualizacion
-        
-        # — Botón Imprimir factura —
-        self.print_btn = ctk.CTkButton(
-            self.prog_frame,
-            text="Imprimir factura",
-            fg_color=APP_COLORS[2],
-            hover_color=APP_COLORS[3],
-            command=self.ImprimirFactura
-)
-self.print_btn.grid(row=0, column=2, sticky='nw', padx=5, pady=5)
-
-        )
-        # Ubica el botón donde mejor encaje (por ejemplo junto a 'Volver atrás'):
+            command=self.CancelarVisualizacion)
         self.cancel_btn.grid(row=0, column=1, sticky='nw', padx=5, pady=5)
+        # Ubica el botón donde mejor encaje (por ejemplo junto a 'Volver atrás'):
+        # IMPRIMIR FACT
+        self.print_btn = ctk.CTkButton(self.prog_frame,
+                                       text="Imprimir factura",
+                                       fg_color=APP_COLORS[2],
+                                       hover_color=APP_COLORS[3],
+                                       command=self.ImprimirFactura)
+        self.print_btn.grid(row=0, column=2, sticky='nw', padx=5, pady=5)
 
     # — Vuelve la UI a su estado original —
     def CancelarVisualizacion(self):
@@ -1256,53 +1253,116 @@ self.print_btn.grid(row=0, column=2, sticky='nw', padx=5, pady=5)
         # devolver foco al número de factura
         self.num_pedido_entry.focus()
 
-    
-
     def ImprimirFactura(self):
-        """Recopila datos de la UI, genera un PDF y lo envía a imprimir."""
-        # 1) Header
-        num_fact   = self.num_pedido_var.get().strip()
-        prov_txt   = self.proveedor_var.get()
-        fecha_txt  = self.fecha_entry_var.get()
-        total_txt  = self.total_entry_var.get().lstrip('$')
+        """ Recopila TODOS los campos de self.treeview_entradas,
+            genera un PDF y lo envía a impresión."""
+        # — Helpers internos —
+        def parse_currency_val(val):
+            # Val puede ser tuple ('$', número) o string '$123.45' / '123.45'
+            if isinstance(val, tuple):
+                num = val[1]
+            else:
+                num = str(val).replace('$', '').strip()
+            try:
+                return float(num)
+            except:
+                raise ValueError(f"Formato monetario inválido: {val}")
 
-        # 2) Detalle
+        def parse_percent_val(val):
+            # Val puede ser tuple (pct, '%') o string '5%' / '5'
+            if isinstance(val, tuple):
+                num = val[0]
+            else:
+                num = str(val).replace('%','').strip()
+            try:
+                return float(num)
+            except:
+                raise ValueError(f"Formato porcentaje inválido: {val}")
+
+        # 1) Leer cabecera
+        num_fact  = self.num_pedido_var.get().strip()
+        prov_txt  = self.proveedor_var.get()
+        fecha_txt = self.fecha_entry_var.get()
+        total_txt = self.total_entry_var.get().lstrip('$').strip()
+
+        # 2) Leer detalle completo del Treeview
         detalle = []
         for iid in self.treeview_entradas.get_children():
             info   = self.treeview_entradas.item(iid)
             code   = info['text']
             vals   = info['values']
-            qty    = vals[1]
             desc   = vals[0]
-            costo  = vals[2][1]          # vals[2] = ('$', num)
-            subtotal = vals[10][1]
-            detalle.append([code, desc, qty, f"${costo:.2f}", f"${subtotal:.2f}"])
+            qty    = int(vals[1])
+            costo  = parse_currency_val(vals[2])
+            d1     = parse_percent_val(vals[3])
+            d2     = parse_percent_val(vals[4])
+            d3     = parse_percent_val(vals[5])
+            flete  = parse_percent_val(vals[6])
+            neto   = parse_currency_val(vals[7])
+            # vals[8] = '$X.YY - Z%'  -> extraemos Z%
+            iva_pct = float(str(vals[8]).split('-')[1].replace('%','').strip())
+            neto_iva = parse_currency_val(vals[9])
+            subtotal = parse_currency_val(vals[10])
 
-        # 3) Generar PDF
-        tmpdir = tempfile.gettempdir()
+            detalle.append([
+                code,               # Código
+                desc,               # Descripción
+                qty,                # Cantidad
+                f"${costo:.2f}",    # Costo U.
+                f"{d1:.2f}%",       # Dto 1
+                f"{d2:.2f}%",       # Dto 2
+                f"{d3:.2f}%",       # Dto 3
+                f"{flete:.2f}%",    # Flete
+                f"${neto:.2f}",     # Neto
+                f"{iva_pct:.2f}%",  # IVA %
+                f"${neto_iva:.2f}", # Neto+IVA
+                f"${subtotal:.2f}"  # Subtotal
+            ])
+
+        # 3) Generar PDF en carpeta temporal
+        tmpdir   = tempfile.gettempdir()
         pdf_path = os.path.join(tmpdir, f"factura_{num_fact}.pdf")
         self.GenerarPDF(
             pdf_path,
-            header = [("Factura Nº:", num_fact),
-                      ("Proveedor:", prov_txt),
-                      ("Fecha:", fecha_txt),
-                      ("Total:", f"${total_txt}")],
+            header=[
+                ("Factura Nº:", num_fact),
+                ("Proveedor:", prov_txt),
+                ("Fecha:", fecha_txt),
+                ("Total:", f"${float(total_txt):.2f}")
+            ],
             detalle=detalle
         )
 
-        # 4) Enviar a la impresora por defecto
-        if platform.system()=="Windows":
-            os.startfile(pdf_path, "print")
+        # 4) Enviar a imprimir (Win32) o abrir si falla
+        try:
+            win32api.ShellExecute(0, "print", pdf_path, None, ".", 0)
+        except Exception:
+            os.startfile(pdf_path)
+            messagebox.showwarning(
+                "Impresión",
+                ("No se pudo imprimir automáticamente.\n"
+                 f"PDF guardado en:\n{pdf_path}\n"
+                 "Por favor imprime manualmente.")
+            )
         else:
-            # Linux/Mac
-            os.system(f"lpr {pdf_path}")
+            messagebox.showinfo(
+                "Impresión",
+                f"Factura enviada a imprimir.\nPDF guardado en:\n{pdf_path}"
+            )
 
-        messagebox.showinfo("Impresión", f"Factura enviada a imprimir.\nPDF guardado en:\n{pdf_path}")
 
-    def GenerarPDF(self, path, header: list, detalle: list):
-        """Crea un PDF con encabezado y tabla de detalle."""
-        doc = SimpleDocTemplate(path, pagesize=LETTER,
-                                rightMargin=40, leftMargin=40, topMargin=60, bottomMargin=18)
+    def GenerarPDF(self, path: str, header: list, detalle: list):
+        """
+        Crea un PDF (landscape) con encabezado y tabla de detalle
+        que incluya todas las columnas y quepa en la hoja.
+        """
+        # — Configuración del documento en horizontal —
+        doc = SimpleDocTemplate(
+            path,
+            pagesize=landscape(LETTER),
+            leftMargin=20, rightMargin=20,
+            topMargin=30, bottomMargin=18
+        )
         styles = getSampleStyleSheet()
         story = []
 
@@ -1310,23 +1370,65 @@ self.print_btn.grid(row=0, column=2, sticky='nw', padx=5, pady=5)
         story.append(Paragraph("Factura de Inventario", styles['Title']))
         story.append(Spacer(1, 12))
 
-        # Encabezado
+        # Cabecera
         for label, val in header:
-            txt = f"<b>{label}</b> {val}"
-            story.append(Paragraph(txt, styles['Normal']))
+            story.append(Paragraph(f"<b>{label}</b> {val}", styles['Normal']))
         story.append(Spacer(1, 12))
 
-        # Tabla de detalle
-        data = [["Código", "Descripción", "Cant.", "Costo U.", "Subtotal"]] + detalle
-        table = Table(data, hAlign='LEFT', colWidths=[60, 200, 50, 60, 60])
-        table.setStyle(TableStyle([
-            ('BACKGROUND', (0,0), (-1,0), colors.grey),
-            ('TEXTCOLOR',  (0,0), (-1,0), colors.whitesmoke),
-            ('ALIGN',      (2,1), (-1,-1), 'CENTER'),
-            ('GRID',       (0,0), (-1,-1), 0.5, colors.black),
-            ('FONTNAME',   (0,0), (-1,0), 'Helvetica-Bold'),
-            ('BOTTOMPADDING', (0,0), (-1,0), 12)
-        ]))
-        story.append(table)
+        # Definimos ratios para 12 columnas que sumen 1.0
+        ratios = [
+            0.06,  # Código
+            0.21,  # Descripción
+            0.05,  # Cant.
+            0.06,  # Costo U.
+            0.05,  # Dto 1
+            0.05,  # Dto 2
+            0.05,  # Dto 3
+            0.05,  # Flete
+            0.06,  # Neto
+            0.05,  # IVA %
+            0.06,  # Neto+IVA
+            0.10,  # Subtotal
+        ]
+        # Ancho utilizable
+        usable_width = doc.width
+        colWidths = [usable_width * r for r in ratios]
 
+        # Encabezados de columna
+        cols = [
+            "Código", "Descripción", "Cant.", "Costo U.",
+            "Dto 1", "Dto 2", "Dto 3", "Flete",
+            "Neto", "IVA %", "Neto+IVA", "Subtotal"
+        ]
+        data = [cols] + detalle
+
+        # Estilo de párrafo para envolver texto largo en la columna Descripción
+        wrap_style = ParagraphStyle(
+            name='wrap',
+            parent=styles['BodyText'],
+            fontSize=7,
+            leading=8
+        )
+
+        # Convertimos la celda de Descripción a Paragraph para que se envuelva
+        for row_i in range(1, len(data)):
+            desc = data[row_i][1]
+            data[row_i][1] = Paragraph(desc, wrap_style)
+
+        # Creamos tabla
+        table = Table(data, colWidths=colWidths, hAlign='LEFT')
+        table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#666666")),
+            ('TEXTCOLOR',  (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN',       (2, 1), (-1, -1), 'CENTER'),
+            ('VALIGN',      (0, 0), (-1, -1), 'MIDDLE'),
+            ('GRID',        (0, 0), (-1, -1), 0.4, colors.black),
+            ('FONTNAME',    (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE',    (0, 0), (-1, -1), 7),
+            ('BOTTOMPADDING', (0,0), (-1,0), 6),
+            ('LEFTPADDING',   (0,0), (-1,-1), 3),
+            ('RIGHTPADDING',  (0,0), (-1,-1), 3),
+        ]))
+
+        story.append(table)
         doc.build(story)
