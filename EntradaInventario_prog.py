@@ -175,7 +175,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.treeview_entradas.column('Neto',width=50,anchor='center')
         # IVA
         self.treeview_entradas.heading('Iva',text='I.V.A.')
-        self.treeview_entradas.column('Iva',width=50,anchor='center')
+        self.treeview_entradas.column('Iva',width=80,anchor='center')
         # NETO + IVA 
         self.treeview_entradas.heading('Neto_IVA',text='Neto + I.V.A.')
         self.treeview_entradas.column('Neto_IVA',width=50,anchor='center')
@@ -522,7 +522,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
                 (descuento_3, '%'),
                 (flete, '%'),
                 ('$', neto),
-                (f'{iva_dif} {iva}%'),
+                (f'${iva_dif} - {iva}%'),
                 ('$', neto_iva),
                 ('$', subtotal)
             )
@@ -898,7 +898,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                              (descuento_2,'%'),
                                              (flete,'%'),
                                              ('$',neto),
-                                             (f'{iva_dif} {iva}%'),
+                                             (f'${iva_dif} - {iva}%'),
                                              ('$',neto_iva),
                                              ('$',subtotal)))
         messagebox.showinfo('Editar entrada','Producto editado correctamente.')
