@@ -6,6 +6,14 @@ from PIL import Image, ImageTk
 from DatabaseManager import INVENTARIO, PROV_MANAGER
 from style import*
 
+import os
+import tempfile
+import platform
+from reportlab.lib.pagesizes import LETTER
+from reportlab.lib import colors
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.lib.styles import getSampleStyleSheet
+
 # PROGRAMA DE CARGA DE PRODUCTOS
 class EntradasInventarioProg(ctk.CTkFrame):
     def __init__(self,parent,GoBack_CB):
@@ -1212,6 +1220,17 @@ class EntradasInventarioProg(ctk.CTkFrame):
             fg_color=APP_COLORS[9],
             hover_color=APP_COLORS[10],
             command=self.CancelarVisualizacion
+        
+        # — Botón Imprimir factura —
+        self.print_btn = ctk.CTkButton(
+            self.prog_frame,
+            text="Imprimir factura",
+            fg_color=APP_COLORS[2],
+            hover_color=APP_COLORS[3],
+            command=self.ImprimirFactura
+)
+self.print_btn.grid(row=0, column=2, sticky='nw', padx=5, pady=5)
+
         )
         # Ubica el botón donde mejor encaje (por ejemplo junto a 'Volver atrás'):
         self.cancel_btn.grid(row=0, column=1, sticky='nw', padx=5, pady=5)
@@ -1236,3 +1255,78 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self._set_editable(True)
         # devolver foco al número de factura
         self.num_pedido_entry.focus()
+
+    
+
+    def ImprimirFactura(self):
+        """Recopila datos de la UI, genera un PDF y lo envía a imprimir."""
+        # 1) Header
+        num_fact   = self.num_pedido_var.get().strip()
+        prov_txt   = self.proveedor_var.get()
+        fecha_txt  = self.fecha_entry_var.get()
+        total_txt  = self.total_entry_var.get().lstrip('$')
+
+        # 2) Detalle
+        detalle = []
+        for iid in self.treeview_entradas.get_children():
+            info   = self.treeview_entradas.item(iid)
+            code   = info['text']
+            vals   = info['values']
+            qty    = vals[1]
+            desc   = vals[0]
+            costo  = vals[2][1]          # vals[2] = ('$', num)
+            subtotal = vals[10][1]
+            detalle.append([code, desc, qty, f"${costo:.2f}", f"${subtotal:.2f}"])
+
+        # 3) Generar PDF
+        tmpdir = tempfile.gettempdir()
+        pdf_path = os.path.join(tmpdir, f"factura_{num_fact}.pdf")
+        self.GenerarPDF(
+            pdf_path,
+            header = [("Factura Nº:", num_fact),
+                      ("Proveedor:", prov_txt),
+                      ("Fecha:", fecha_txt),
+                      ("Total:", f"${total_txt}")],
+            detalle=detalle
+        )
+
+        # 4) Enviar a la impresora por defecto
+        if platform.system()=="Windows":
+            os.startfile(pdf_path, "print")
+        else:
+            # Linux/Mac
+            os.system(f"lpr {pdf_path}")
+
+        messagebox.showinfo("Impresión", f"Factura enviada a imprimir.\nPDF guardado en:\n{pdf_path}")
+
+    def GenerarPDF(self, path, header: list, detalle: list):
+        """Crea un PDF con encabezado y tabla de detalle."""
+        doc = SimpleDocTemplate(path, pagesize=LETTER,
+                                rightMargin=40, leftMargin=40, topMargin=60, bottomMargin=18)
+        styles = getSampleStyleSheet()
+        story = []
+
+        # Título
+        story.append(Paragraph("Factura de Inventario", styles['Title']))
+        story.append(Spacer(1, 12))
+
+        # Encabezado
+        for label, val in header:
+            txt = f"<b>{label}</b> {val}"
+            story.append(Paragraph(txt, styles['Normal']))
+        story.append(Spacer(1, 12))
+
+        # Tabla de detalle
+        data = [["Código", "Descripción", "Cant.", "Costo U.", "Subtotal"]] + detalle
+        table = Table(data, hAlign='LEFT', colWidths=[60, 200, 50, 60, 60])
+        table.setStyle(TableStyle([
+            ('BACKGROUND', (0,0), (-1,0), colors.grey),
+            ('TEXTCOLOR',  (0,0), (-1,0), colors.whitesmoke),
+            ('ALIGN',      (2,1), (-1,-1), 'CENTER'),
+            ('GRID',       (0,0), (-1,-1), 0.5, colors.black),
+            ('FONTNAME',   (0,0), (-1,0), 'Helvetica-Bold'),
+            ('BOTTOMPADDING', (0,0), (-1,0), 12)
+        ]))
+        story.append(table)
+
+        doc.build(story)
