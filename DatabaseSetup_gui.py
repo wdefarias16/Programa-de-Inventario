@@ -205,28 +205,28 @@ class DatabaseManagerApp(ctk.CTk):
                         """CREATE TABLE IF NOT EXISTS entradas_inventario (
                             id SERIAL PRIMARY KEY,
                             num_factura VARCHAR(50) NOT NULL,
-                            proveedor INT NOT NULL,
-                            fecha DATE NOT NULL,
-                            total NUMERIC(12,2) NOT NULL,
-                            iva NUMERIC(5,2) DEFAULT 0,
-                            flete NUMERIC(5,2) DEFAULT 0,
-                            descuento1 NUMERIC(5,2) DEFAULT 0,
-                            descuento2 NUMERIC(5,2) DEFAULT 0,
-                            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                            FOREIGN KEY (proveedor) REFERENCES proveedores(codigo)
-                        )""",
+                            proveedor   INT     NOT NULL REFERENCES proveedores(codigo),
+                            fecha       DATE    NOT NULL,
+                            total       NUMERIC(12,2) NOT NULL,
+                            created_at  TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP
+                        );""",
                         # Tabla detalle_entrada
                         """CREATE TABLE IF NOT EXISTS detalle_entrada (
-                            id SERIAL PRIMARY KEY,
-                            entrada_id INTEGER NOT NULL,
-                            codigo VARCHAR(255) NOT NULL,
-                            cantidad INTEGER NOT NULL,
-                            costo NUMERIC(12,2) NOT NULL,
-                            descuento NUMERIC(5,2) DEFAULT 0,
-                            neto NUMERIC(12,2) NOT NULL,
-                            subtotal NUMERIC(12,2) NOT NULL,
-                            FOREIGN KEY (entrada_id) REFERENCES entradas_inventario(id) ON DELETE CASCADE,
-                            FOREIGN KEY (codigo) REFERENCES productos(codigo)
+                            id          SERIAL PRIMARY KEY,
+                            entrada_id  INTEGER     NOT NULL
+                                           REFERENCES entradas_inventario(id) ON DELETE CASCADE,
+                            codigo      VARCHAR(255) NOT NULL
+                                           REFERENCES productos(codigo),
+                            cantidad    INTEGER     NOT NULL,
+                            costo       NUMERIC(12,2) NOT NULL,
+                            descuento1  NUMERIC(5,2)  DEFAULT 0,
+                            descuento2  NUMERIC(5,2)  DEFAULT 0,
+                            descuento3  NUMERIC(5,2)  DEFAULT 0,
+                            flete       NUMERIC(5,2)  DEFAULT 0,
+                            iva         NUMERIC(5,2)  DEFAULT 0,
+                            neto        NUMERIC(12,2) NOT NULL,
+                            neto_iva    NUMERIC(12,2) NOT NULL,
+                            subtotal    NUMERIC(12,2) NOT NULL
                         )"""
                     ]
                     for stmt in statements:
