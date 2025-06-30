@@ -131,7 +131,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                             width=25,
                                             fg_color=APP_COLORS[2],
                                             hover_color=APP_COLORS[3],
-                                            command=self.abrir_calendario)
+                                            command=self.AbrirCalendario)
         self.btn_calendario.grid(row=4, column=6, sticky='w')
         # AGREGAR ENTRADA
         self.btn_agregar_entrada = ctk.CTkButton(self.prog_frame,
@@ -220,10 +220,13 @@ class EntradasInventarioProg(ctk.CTkFrame):
 # FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES -
 # FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES -
 # CALENDARIO - CALENDARIO - CALENDARIO - CALENDARIO - CALENDARIO - CALENDARIO - CALENDARIO - 
-    def abrir_calendario(self):
+    def AbrirCalendario(self):
         top = tk.Toplevel(self.prog_frame)
         top.title('Seleccionar Fecha')
         top.grab_set()
+        top.protocol("WM_DELETE_WINDOW", lambda: None)
+        top.transient(self)
+        top.bind("<Return>",)
         cal = Calendar(top, locale='es_ES', date_pattern='dd/mm/yyyy',
                        background=APP_COLORS[3],headersforeground=APP_COLORS[0],
                        headersbackground = APP_COLORS[4], selectbackground = APP_COLORS[2],
@@ -256,7 +259,19 @@ class EntradasInventarioProg(ctk.CTkFrame):
         for rows in range(16):
             self.tree_frame.rowconfigure(rows, weight=1,uniform='a')
         for columns in range(24):
-            self.tree_frame.columnconfigure(columns,weight=1,uniform='a')     
+            self.tree_frame.columnconfigure(columns,weight=1,uniform='a')
+
+        # TITULO
+        title_frame = ctk.CTkFrame(self.tree_frame,corner_radius=0,fg_color=APP_COLORS[3])
+        title_frame.grid(row=0,column=0,columnspan=24,sticky='nswe')
+
+        title = ctk.CTkLabel(title_frame,
+                             text='Busqueda de productos',
+                             bg_color='transparent',
+                             text_color=APP_COLORS[0],
+                             height=50,
+                             font=FONTS[3])
+        title.pack(pady=10)  
     # ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - 
         # BARRA DE BUSQUEDA
         self.search_bar_var = tk.StringVar()
@@ -402,10 +417,17 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                       text_color=APP_COLORS[4])
         label_iva.grid(row=10,column=1,columnspan=3,sticky='w',padx=20)
     # BOTONES TREEVIEW - BOTONES TREEVIEW - BOTONES TREEVIEW - BOTONES TREEVIEW - 
+        # LIMPIAR BUSQUEDA
+        clear_btn = ctk.CTkButton(self.tree_frame,
+                                    text='Limpiar Búsqueda',
+                                    command=self.ListInventory,
+                                    fg_color=APP_COLORS[2],
+                                    hover_color=APP_COLORS[3])
+        clear_btn.grid(row=1,column=5,columnspan=2,sticky='w',padx=10)
         # CANCELAR
         cancel_btn = ctk.CTkButton(self.tree_frame,
                                     text='Cancelar',
-                                    command=self.ListInventory,
+                                    command=lambda: self.tree_frame.destroy(),
                                     fg_color=APP_COLORS[2],
                                     hover_color=APP_COLORS[3])
         cancel_btn.grid(row=14,column=0,columnspan=2,sticky='w',padx=10)
@@ -516,7 +538,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
             neto_iva = round(neto * (1 + iva / 100), 2)
             iva_dif = round(neto_iva - neto, 2)
         else:
-            neto_iva = 0
+            neto_iva = neto
             iva_dif = 0
 
         subtotal = round(cantidad * (neto_iva or neto), 2)
@@ -655,7 +677,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
         edit_frame = ctk.CTkFrame(self.edit_window,corner_radius=5,fg_color=APP_COLORS[0])
         edit_frame.pack(expand=True,fill='both')
     # GRID SETUP
-        for rows in range(10):
+        for rows in range(12):
             edit_frame.rowconfigure(rows, weight=1,uniform='row')
         for columns in range(10):
             edit_frame.columnconfigure(columns,weight=1,uniform='column')
@@ -833,7 +855,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                     command=self.ModEntrada,
                                     fg_color=APP_COLORS[2],
                                     hover_color=APP_COLORS[3])
-        aceptar_btn.grid(row=8,column=1,columnspan=2,sticky='we',padx=10)
+        aceptar_btn.grid(row=8,column=5,columnspan=2,sticky='we',padx=10)
 # MODO MODIFICAR ENTRADA
     def ModEntradaMode(self):
         self.cantidad_edit_entry.configure(state='normal')
@@ -857,48 +879,38 @@ class EntradasInventarioProg(ctk.CTkFrame):
             descuento_3 = float(self.porcentaje_3_edit_var.get())
             flete = float(self.flete_edit_var.get())
             iva = float(self.iva_edit_entry.get())
-        except ValueError as e:
+        except ValueError:
             if not cantidad:
                 messagebox.showerror('¡Atención!','Verifique la cantidad del producto.')
                 self.cantidad_edit_entry.focus()
                 return
-            if not costo:
-                messagebox.showerror('¡Atención!','Verifique el costo del producto.')
-                self.costo_edit_entry.focus()
-                return
-            if not descuento_1:
-                descuento_1 = 0
-            if not descuento_2:
-                descuento_2 = 0
-            if not descuento_3:
-                descuento_3 = 0
-            if not flete:
-                flete = 0
-            if not iva:
-                iva = 0
-        if not cantidad:
-            messagebox.showerror('¡Atención!','La cantidad del producto no puede ser 0.')
-            self.cantidad_edit_entry.focus()
+        if cantidad <= 0:
+            messagebox.showerror('Error', 'Agregue la cantidad del producto.')
+            self.cantidad_entry.focus()
             return
-        if not costo:
-            messagebox.showerror('¡Atención!','El costo del producto no puede ser 0.')
-            self.costo_edit_entry.focus()
+        if costo <= 0:
+            messagebox.showerror('Error', 'Agregue el costo del producto.')
+            self.costo_entry.focus()
             return
-        if iva != 0:
-            ivaf = iva / 100
-            neto = float(format(costo - (costo * (descuento_1 / 100)),'.2f'))
-            neto = float(format(costo - (costo * (descuento_2 / 100)),'.2f'))
-            neto = float(format(costo - (costo * (descuento_3 / 100)),'.2f'))
-            neto_iva = format(neto+(neto * ivaf),'.2f')
-            subtotal = format(cantidad * float(neto_iva),'.2f')
-            iva_dif = float(neto_iva) - float(neto)
+
+        def aplicar_descuentos(valor, *descuentos):
+            for d in descuentos:
+                valor -= valor * (d / 100)
+            return round(valor, 2)
+
+        neto = aplicar_descuentos(costo, descuento_1, descuento_2, descuento_3)
+
+        if flete > 0:
+            neto = round(neto * (1 + flete / 100), 2)
+
+        if iva > 0:
+            neto_iva = round(neto * (1 + iva / 100), 2)
+            iva_dif = round(neto_iva - neto, 2)
         else:
-            neto_iva = 0
-            neto = format(costo - (costo * (descuento_1 / 100)),'.2f')
-            neto = format(costo - (costo * (descuento_2 / 100)),'.2f')
-            neto = format(costo - (costo * (descuento_3 / 100)),'.2f')
-            subtotal = format(cantidad * float(neto),'.2f')
+            neto_iva = neto
             iva_dif = 0
+
+        subtotal = round(cantidad * (neto_iva or neto), 2)
         if item_id:
             self.treeview_entradas.item(item_id,
                                          values=(nombre,
@@ -1049,6 +1061,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
         if PROV_MANAGER.CheckProv(prov):
             prov = PROV_MANAGER.GetProv(prov)
             self.proveedor_var.set(f'{prov['codigo']} - {prov['nombre']}')
+            self.AbrirCalendario()
 # VALIDAR LA ENTRADA DE DIGITOS
     def ValidarDigitos(self,texto):
         texto = texto.replace(".", "", 1)
@@ -1177,8 +1190,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
             return
         data = INVENTARIO.ObtenerEntrada(num_fact)
         if not data:
-            messagebox.showerror('No existe',
-                                 f'La factura {num_fact} no se encontró.')
+            self.proveedor_entry.focus()
             return
 
         # 1) Bloquear UI
