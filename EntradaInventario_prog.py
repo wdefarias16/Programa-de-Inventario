@@ -27,7 +27,8 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.lista_productos = []
         self.total_prev = 0.0
         self.inventory_codes = []
-
+        self.iva_default = 0
+        self.flete_default = 0
         
     # TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - 
         title_frame = ctk.CTkFrame(self,corner_radius=5,fg_color=APP_COLORS[3])
@@ -56,6 +57,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                              fg_color=APP_COLORS[6],
                                              border_color=APP_COLORS[2])
         self.num_pedido_entry.grid(row=4,column=1,columnspan=2,padx=5,sticky='we')
+        self.num_pedido_entry.focus()
         self.num_pedido_entry.bind("<Return>", self.ObtenerEntrada)
         # PROVEEDOR
         self.proveedor_var = tk.StringVar()
@@ -125,7 +127,6 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                        hover_color=APP_COLORS[3])
         prov_help_btn.grid(row=3,column=3,columnspan=1,padx=5,sticky='we')
         # ABRIR CALENDARIO
-        # ahora: lo guardamos como atributo
         self.btn_calendario = ctk.CTkButton(self.prog_frame,
                                             text="←",
                                             width=25,
@@ -354,6 +355,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                             border_color=APP_COLORS[4],
                                             textvariable = self.flete_entry_var)
         self.flete_entry.grid(row=9,column=0,columnspan=2,sticky='wns',padx=20,pady=5)
+        self.flete_entry_var.set(self.flete_default)
         self.flete_entry.bind("<Return>",lambda event:self.iva_entry.focus())
         # IVA
         self.iva_var = tk.StringVar()
@@ -366,6 +368,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                      fg_color=APP_COLORS[4],
                                      border_color=APP_COLORS[4])
         self.iva_entry.grid(row=10,column=0,columnspan=2,sticky='wns',padx=20,pady=5)
+        self.iva_var.set(self.iva_default)
         self.iva_entry.bind("<Return>",lambda event:self.AgregarProducto())
     # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
         # BUSQUEDA
@@ -425,9 +428,12 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                     hover_color=APP_COLORS[3])
         clear_btn.grid(row=1,column=5,columnspan=2,sticky='w',padx=10)
         # CANCELAR
+        def CloseAddProdWindow():
+            self.tree_frame.destroy()
+            self.btn_agregar_entrada.configure(state='enabled')
         cancel_btn = ctk.CTkButton(self.tree_frame,
                                     text='Cancelar',
-                                    command=lambda: self.tree_frame.destroy(),
+                                    command=CloseAddProdWindow,
                                     fg_color=APP_COLORS[2],
                                     hover_color=APP_COLORS[3])
         cancel_btn.grid(row=14,column=0,columnspan=2,sticky='w',padx=10)
@@ -533,10 +539,12 @@ class EntradasInventarioProg(ctk.CTkFrame):
 
         if flete > 0:
             neto = round(neto * (1 + flete / 100), 2)
+            self.flete_default = flete
 
         if iva > 0:
             neto_iva = round(neto * (1 + iva / 100), 2)
             iva_dif = round(neto_iva - neto, 2)
+            self.iva_default = iva
         else:
             neto_iva = neto
             iva_dif = 0
@@ -567,7 +575,6 @@ class EntradasInventarioProg(ctk.CTkFrame):
 
 # LISTAR INVENTARIO DE LA BUSQUEDA DE PRODDUCTOS
     def ListInventory(self):
-        self.search_bar_var.set('')
         self.cantidad_var.set('')
         self.costo_var.set('')
         self.descuento_1_var.set('')
@@ -578,6 +585,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.search_bar.after(100,
             lambda:  self.search_bar.configure(state='normal',
                                                fg_color=APP_COLORS[6],border_color=APP_COLORS[6]))
+        self.search_bar_var.set('')
         self.search_bar.after(100,self.search_bar.focus())
         self.costo_entry.after(100,
             lambda: self.costo_entry.configure(state='disabled',
@@ -610,7 +618,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                          producto['grupo'],
                                          producto['proveedor'],
                                          producto['nombre'],
-                                         producto['costo']))
+                                         f'$ {producto['costo']}'))
 
 # BUSCAR PRODUCTO POR NOMBRE
     def BuscarProductoNombre(self):
@@ -631,11 +639,16 @@ class EntradasInventarioProg(ctk.CTkFrame):
         item_id = self.treeview.selection()
         info = self.treeview.item(item_id)
         codigo = info['text']
+        try:
+            costo = info['values'][4].split(' ')[1].strip()
+        except IndexError:
+            costo = ''
         self.search_bar_var.set(codigo)
         self.search_bar.configure(state='disabled',fg_color=APP_COLORS[4],
                                   border_color=APP_COLORS[4])
         self.costo_entry.configure(state='normal',fg_color=APP_COLORS[6],
                                    border_color=APP_COLORS[6])
+        self.costo_var.set(costo)
         self.cantidad_entry.configure(state='normal',fg_color=APP_COLORS[6],
                                       border_color=APP_COLORS[6])
         self.descuento_1_entry.configure(state='normal',fg_color=APP_COLORS[6],
@@ -646,8 +659,10 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                        border_color=APP_COLORS[6])
         self.flete_entry.configure(state='normal',fg_color=APP_COLORS[6],
                                        border_color=APP_COLORS[6])
+        self.flete_entry_var.set(self.flete_default)
         self.iva_entry.configure(state='normal',fg_color=APP_COLORS[6],
                                        border_color=APP_COLORS[6])
+        self.iva_var.set(self.iva_default)
         self.cantidad_entry.focus_set()
 # SELECCIONAR ENTRADA PARA MODIFICAR - SELECCIONAR ENTRADA PARA MODIFICAR - SELECCIONAR ENTRADA PARA MODIFICAR -
 # SELECCIONAR ENTRADA PARA MODIFICAR - SELECCIONAR ENTRADA PARA MODIFICAR - SELECCIONAR ENTRADA PARA MODIFICAR -
