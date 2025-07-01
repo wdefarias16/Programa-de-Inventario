@@ -29,7 +29,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.inventory_codes = []
         self.iva_default = 0
         self.flete_default = 0
-        
+        self.bind("<Return>",lambda event: self.BusquedaProducto())
     # TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - 
         title_frame = ctk.CTkFrame(self,corner_radius=5,fg_color=APP_COLORS[3])
         title_frame.pack(fill='x')
@@ -227,7 +227,8 @@ class EntradasInventarioProg(ctk.CTkFrame):
         top.grab_set()
         top.protocol("WM_DELETE_WINDOW", lambda: None)
         top.transient(self)
-        top.bind("<Return>",)
+        top.focus()
+        
         cal = Calendar(top, locale='es_ES', date_pattern='dd/mm/yyyy',
                        background=APP_COLORS[3],headersforeground=APP_COLORS[0],
                        headersbackground = APP_COLORS[4], selectbackground = APP_COLORS[2],
@@ -237,12 +238,15 @@ class EntradasInventarioProg(ctk.CTkFrame):
             fecha = cal.get_date()
             self.fecha_entry_var.set(fecha)
             top.destroy()
+            self.focus()
         btn_seleccionar = ctk.CTkButton(top,
                                         fg_color=APP_COLORS[2],
                                         hover_color=APP_COLORS[3],
                                         text="Aceptar",
                                         command=seleccionar_fecha)
         btn_seleccionar.pack(pady=10)
+        top.bind("<Return>",lambda event: seleccionar_fecha())
+        
 # BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - 
 # BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - 
 # BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - BUSCAR PRODUCTO - 
