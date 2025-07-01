@@ -306,79 +306,144 @@ class Inventory:
             return False
         return True
 
-    def GuardarEntradaInventario(self, num_factura, proveedor, fecha, total,
-                             iva=0, flete=0, descuento1=0, descuento2=0, detalle_entrada=[]):
+    def GuardarEntradaInventario(self,
+                                 num_factura: str,
+                                 proveedor: int,
+                                 fecha: str,
+                                 total: float,
+                                 detalle_entrada: list):
         """
-        Guarda una entrada a inventario completa: registra el encabezado de la entrada
-        en la tabla 'entradas_inventario', inserta cada línea en la tabla 'detalle_entrada'
-        y actualiza la existencia de cada producto en la tabla 'productos'.
-
-        Parámetros:
-          - num_factura: Número de factura o código de la entrada.
-          - proveedor: Proveedor asociado a la entrada.
-          - fecha: Fecha del pedido (debe ser un valor compatible con el tipo DATE).
-          - total: Total de la entrada (sin símbolos, como número [float o decimal]).
-          - iva, flete, descuento1, descuento2: Porcentajes aplicados (usar 0 si no se aplican).
-          - detalle_entrada: Lista de diccionarios. Cada diccionario debe tener las llaves:
-               'codigo': Código del producto.
-               'cantidad': Cantidad ingresada (entero).
-               'costo': Costo unitario.
-               'descuento': Porcentaje de descuento aplicado (puede ser 0).
-               'neto': Precio unitario neto (después del descuento).
-               'subtotal': Subtotal de la línea (cantidad * neto).
-
-        Ejemplo de detalle_entrada:
-            detalle_entrada = [
-                {
-                    'codigo': 'PROD001',
-                    'cantidad': 10,
-                    'costo': 50.0,
-                    'descuento': 5,
-                    'neto': 47.50,
-                    'subtotal': 475.0
-                },
-                # ... otros productos ...
-            ]
+        Inserta en entradas_inventario y detalle_entrada.
+        Cada línea en detalle_entrada debe contener:
+          codigo, cantidad, costo, descuento1, descuento2, descuento3,
+          flete, iva, neto, neto_iva, subtotal
         """
         try:
             with self.conn.cursor() as cur:
-                # Insertar el encabezado de la entrada y obtener su id
+                # Cabecera
                 cur.execute("""
                     INSERT INTO entradas_inventario
-                       (num_factura, proveedor, fecha, total, iva, flete, descuento1, descuento2)
-                    VALUES 
-                       (%s, %s, %s, %s, %s, %s, %s, %s)
+                      (num_factura, proveedor, fecha, total)
+                    VALUES (%s, %s, %s, %s)
                     RETURNING id;
-                """, (num_factura, proveedor, fecha, total, iva, flete, descuento1, descuento2))
+                """, (num_factura, proveedor, fecha, total))
                 entrada_id = cur.fetchone()[0]
-                
-                # Para cada producto en la entrada, inserta en el detalle
+
+                # Detalle por línea
                 for item in detalle_entrada:
                     cur.execute("""
                         INSERT INTO detalle_entrada
-                        (entrada_id, codigo, cantidad, costo, descuento, neto, subtotal)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s);
-                    """, (entrada_id, 
-                          item['codigo'], 
-                          item['cantidad'], 
-                          item['costo'], 
-                          item.get('descuento', 0), 
-                          item['neto'], 
-                          item['subtotal']))
-                    # Actualizar la existencia sumándole la cantidad ingresada
+                          (entrada_id, codigo, cantidad, costo,
+                           descuento1, descuento2, descuento3,
+                           flete, iva, neto, neto_iva, subtotal)
+                        VALUES (%s, %s, %s, %s,  %s, %s, %s,  %s, %s, %s, %s, %s);
+                    """, (
+                        entrada_id,
+                        item['codigo'],
+                        item['cantidad'],
+                        item['costo'],
+                        item['descuento1'],
+                        item['descuento2'],
+                        item['descuento3'],
+                        item['flete'],
+                        item['iva'],
+                        item['neto'],
+                        item['neto_iva'],
+                        item['subtotal'],
+                    ))
+
+                    # Actualizar stock
                     cur.execute("""
                         UPDATE productos
                         SET existencia = existencia + %s
                         WHERE codigo = %s;
                     """, (item['cantidad'], item['codigo']))
-                
+
                 self.conn.commit()
-                messagebox.showinfo("Entrada Guardada",
-                                    "La entrada de inventario ha sido guardada correctamente.")
+                messagebox.showinfo("Éxito", "Entrada guardada correctamente.")
         except Exception as e:
             self.conn.rollback()
-            messagebox.showerror("Error", f"Error guardando la entrada de inventario: {str(e)}")
+            messagebox.showerror("Error BD",
+                                  f"Al guardar la entrada: {str(e)}")
+            raise
 
+    def ObtenerEntrada(self, num_factura: str) -> dict | None:
+        """
+        Devuelve None si no existe. Si existe, retorna:
+        {
+          'id': int,
+          'num_factura': str,
+          'proveedor': int,
+          'nombre_proveedor': str,
+          'fecha': date,
+          'total': float,
+          'detalle': [
+              {
+                'codigo': str,
+                'nombre': str,
+                'cantidad': int,
+                'costo': float,
+                'descuento1': float,
+                'descuento2': float,
+                'descuento3': float,
+                'flete': float,
+                'iva': float,
+                'neto': float,
+                'neto_iva': float,
+                'subtotal': float
+              }, …
+          ]
+        }
+        """
+        with self.conn.cursor() as cur:
+            # 1) Cabecera
+            cur.execute("""
+                SELECT e.id, e.proveedor, p.nombre, e.fecha, e.total
+                  FROM entradas_inventario e
+                  JOIN proveedores p ON p.codigo = e.proveedor
+                 WHERE e.num_factura = %s;
+            """, (num_factura,))
+            row = cur.fetchone()
+            if not row:
+                return None
+            entrada_id, prov, nombre_prov, fecha, total = row
+
+            # 2) Detalle
+            cur.execute("""
+                SELECT d.codigo, pr.nombre, d.cantidad, d.costo,
+                       d.descuento1, d.descuento2, d.descuento3,
+                       d.flete, d.iva, d.neto, d.neto_iva, d.subtotal
+                  FROM detalle_entrada d
+                  JOIN productos pr ON pr.codigo = d.codigo
+                 WHERE d.entrada_id = %s;
+            """, (entrada_id,))
+            detalles = []
+            for (codigo, nombre, cantidad, costo,
+                 d1, d2, d3, flete, iva, neto, neto_iva, subtotal) in cur.fetchall():
+                detalles.append({
+                    'codigo':     codigo,
+                    'nombre':     nombre,
+                    'cantidad':   cantidad,
+                    'costo':      float(costo),
+                    'descuento1': float(d1),
+                    'descuento2': float(d2),
+                    'descuento3': float(d3),
+                    'flete':      float(flete),
+                    'iva':        float(iva),
+                    'neto':       float(neto),
+                    'neto_iva':   float(neto_iva),
+                    'subtotal':   float(subtotal)
+                })
+
+            return {
+                'id':               entrada_id,
+                'num_factura':      num_factura,
+                'proveedor':        prov,
+                'nombre_proveedor': nombre_prov,
+                'fecha':            fecha,
+                'total':            float(total),
+                'detalle':          detalles
+            }
 
 
 
