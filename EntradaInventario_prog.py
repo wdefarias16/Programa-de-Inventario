@@ -119,13 +119,13 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                        hover_color=APP_COLORS[3])
         salir_btn.grid(row=0,column=0,sticky='nw',padx=5,pady=5)
         # AYUDA DE PROVEEDORES
-        prov_help_btn = ctk.CTkButton(self.prog_frame,
+        self.prov_help_btn = ctk.CTkButton(self.prog_frame,
                                        text='Proveedores',
                                        command=self.AyudaProveedores,
                                        text_color=APP_COLORS[0],
                                        fg_color=APP_COLORS[2],
                                        hover_color=APP_COLORS[3])
-        prov_help_btn.grid(row=3,column=3,columnspan=1,padx=5,sticky='we')
+        self.prov_help_btn.grid(row=3,column=3,columnspan=1,padx=5,sticky='we')
         # ABRIR CALENDARIO
         self.btn_calendario = ctk.CTkButton(self.prog_frame,
                                             text="←",
@@ -1076,6 +1076,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
         if PROV_MANAGER.CheckProv(prov):
             prov = PROV_MANAGER.GetProv(prov)
             self.proveedor_var.set(f'{prov['codigo']} - {prov['nombre']}')
+            self.focus()
             self.AbrirCalendario()
 # VALIDAR LA ENTRADA DE DIGITOS
     def ValidarDigitos(self,texto):
@@ -1186,7 +1187,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
 
 
     # — Helper para bloquear/desbloquear UI —
-    def _set_editable(self, flag: bool):
+    def ModoVisualizacion(self, flag: bool):
         state = 'normal' if flag else 'disabled'
         # campos cabecera
         self.num_pedido_entry.configure(state=state)
@@ -1195,6 +1196,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
         # botones
         self.btn_agregar_entrada.configure(state=state)
         self.btn_guardar_entrada.configure(state=state)
+        self.prov_help_btn.configure(state=state)
         # Treeview principal: impedir selección
         self.treeview_entradas.configure(selectmode='browse' if flag else 'none')
 
@@ -1209,7 +1211,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
             return
 
         # 1) Bloquear UI
-        self._set_editable(False)
+        self.ModoVisualizacion(False)
 
         # 2) Rellenar cabecera
         prov_txt = f"{data['proveedor']} - {data['nombre_proveedor']}"
@@ -1264,7 +1266,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
         # destruye el botón
         if hasattr(self, 'cancel_btn'):
             self.cancel_btn.destroy()
-
+            self.print_btn.destroy()
         # Limpiar campos
         self.num_pedido_var.set('')
         self.proveedor_var.set('')
@@ -1276,7 +1278,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
             self.treeview_entradas.delete(iid)
 
         # Rehabilitar edición
-        self._set_editable(True)
+        self.ModoVisualizacion(True)
         # devolver foco al número de factura
         self.num_pedido_entry.focus()
 
