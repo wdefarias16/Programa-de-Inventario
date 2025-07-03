@@ -683,9 +683,12 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.nombre = datos[0]
         cantidad = datos[1]
         costo = float(datos[2].split(' ')[1])
-        porcentaje = float(datos[3].split(' ')[0])
-        iva = float(datos[5].split(' ')[0])
-        
+        descuento1=float(datos[3].split(' ')[0])
+        descuento2=float(datos[4].split(' ')[0])
+        descuento3=float(datos[5].split(' ')[0])
+        flete = float(datos[6].split(' ')[0])
+        iva_e = (datos[8].split(' - ')[1])
+        iva = float(iva_e.replace("%","").strip())
         # FRAME DE EDICION DE ENTRADAS
         self.edit_window = ctk.CTkToplevel(self,
                                    fg_color=APP_COLORS[0])
@@ -745,7 +748,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.costo_edit_entry.bind("<Return>",lambda event:self.porcentaje_1_edit_entry.focus_set())
         # PORCENTAJE 1
         self.porcentaje_1_edit_var = tk.StringVar()
-        self.porcentaje_1_edit_var.set(porcentaje)
+        self.porcentaje_1_edit_var.set(descuento1)
         self.porcentaje_1_edit_entry = ctk.CTkEntry(edit_frame,
                                                   state='disabled',
                                                   textvariable=self.porcentaje_1_edit_var,
@@ -757,7 +760,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.porcentaje_1_edit_entry.bind("<Return>",lambda event: self.porcentaje_2_edit_entry.focus_set())
         # PORCENTAJE 2
         self.porcentaje_2_edit_var = tk.StringVar()
-        self.porcentaje_2_edit_var.set(porcentaje)
+        self.porcentaje_2_edit_var.set(descuento2)
         self.porcentaje_2_edit_entry = ctk.CTkEntry(edit_frame,
                                                   state='disabled',
                                                   textvariable=self.porcentaje_2_edit_var,
@@ -769,7 +772,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.porcentaje_2_edit_entry.bind("<Return>",lambda event: self.porcentaje_3_edit_entry.focus_set())
         # PORCENTAJE 3
         self.porcentaje_3_edit_var = tk.StringVar()
-        self.porcentaje_3_edit_var.set(porcentaje)
+        self.porcentaje_3_edit_var.set(descuento3)
         self.porcentaje_3_edit_entry = ctk.CTkEntry(edit_frame,
                                                   state='disabled',
                                                   textvariable=self.porcentaje_3_edit_var,
@@ -781,7 +784,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.porcentaje_3_edit_entry.bind("<Return>",lambda event: self.iva_edit_entry.focus_set())
         # FLETE
         self.flete_edit_var = tk.StringVar()
-        self.flete_edit_var.set(porcentaje)
+        self.flete_edit_var.set(flete)
         self.flete_edit_entry = ctk.CTkEntry(edit_frame,
                                                   state='disabled',
                                                   textvariable=self.flete_edit_var,

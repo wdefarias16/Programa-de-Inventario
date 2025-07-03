@@ -1,64 +1,18 @@
-# ———————————————————————————————————————————————————————————————————————————————
-# 2) En tu clase de acceso a datos (DatabaseManager.py), actualiza 
-#    GuardarEntradaInventario() para recibir y almacenar los campos nuevos:
-# ———————————————————————————————————————————————————————————————————————————————
-    def GuardarEntradaInventario(self,
-                                 num_factura: str,
-                                 proveedor: int,
-                                 fecha: str,
-                                 total: float,
-                                 detalle_entrada: list):
-        """
-        Inserta en entradas_inventario y detalle_entrada.
-        Cada línea en detalle_entrada debe contener:
-          codigo, cantidad, costo, descuento1, descuento2, descuento3,
-          flete, iva, neto, neto_iva, subtotal
-        """
-        try:
-            with self.conn.cursor() as cur:
-                # Cabecera
-                cur.execute("""
-                    INSERT INTO entradas_inventario
-                      (num_factura, proveedor, fecha, total)
-                    VALUES (%s, %s, %s, %s)
-                    RETURNING id;
-                """, (num_factura, proveedor, fecha, total))
-                entrada_id = cur.fetchone()[0]
+from reportlab.lib.pagesizes import LETTER
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+from reportlab.lib.styles import getSampleStyleSheet
 
-                # Detalle por línea
-                for item in detalle_entrada:
-                    cur.execute("""
-                        INSERT INTO detalle_entrada
-                          (entrada_id, codigo, cantidad, costo,
-                           descuento1, descuento2, descuento3,
-                           flete, iva, neto, neto_iva, subtotal)
-                        VALUES (%s, %s, %s, %s,  %s, %s, %s,  %s, %s, %s, %s, %s);
-                    """, (
-                        entrada_id,
-                        item['codigo'],
-                        item['cantidad'],
-                        item['costo'],
-                        item['descuento1'],
-                        item['descuento2'],
-                        item['descuento3'],
-                        item['flete'],
-                        item['iva'],
-                        item['neto'],
-                        item['neto_iva'],
-                        item['subtotal'],
-                    ))
+# DEFINIR EL DOCUMENTO Y EL TAMAÑO
+doc = SimpleDocTemplate('Hello.pdf',pagesize=LETTER)
 
-                    # Actualizar stock
-                    cur.execute("""
-                        UPDATE productos
-                        SET existencia = existencia + %s
-                        WHERE codigo = %s;
-                    """, (item['cantidad'], item['codigo']))
+# OBTENER ESTILOS PREDEFINIDOS
+styles = getSampleStyleSheet()
 
-                self.conn.commit()
-                messagebox.showinfo("Éxito", "Entrada guardada correctamente.")
-        except Exception as e:
-            self.conn.rollback()
-            messagebox.showerror("Error BD",
-                                  f"Al guardar la entrada: {str(e)}")
-            raise
+# CONSTRUIT LISTA DE ELEMENTOS FLOWABLES O FLUIBLES
+story = []
+story.append(Paragraph("Hola ReportLab", styles['Title']))
+story.append(Spacer(1,12))
+story.append(Paragraph("Este es mi primer PDF generado con Platypus",styles['Normal']))
+
+# GENERAR EL PDF
+doc.build(story)
