@@ -1290,181 +1290,64 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.num_pedido_entry.focus()
 
     def ImprimirFactura(self):
-        """ Recopila TODOS los campos de self.treeview_entradas,
-            genera un PDF y lo envía a impresión."""
-        # — Helpers internos —
-        def parse_currency_val(val):
-            # Val puede ser tuple ('$', número) o string '$123.45' / '123.45'
-            if isinstance(val, tuple):
-                num = val[1]
-            else:
-                num = str(val).replace('$', '').strip()
-            try:
-                return float(num)
-            except:
-                raise ValueError(f"Formato monetario inválido: {val}")
-
-        def parse_percent_val(val):
-            # Val puede ser tuple (pct, '%') o string '5%' / '5'
-            if isinstance(val, tuple):
-                num = val[0]
-            else:
-                num = str(val).replace('%','').strip()
-            try:
-                return float(num)
-            except:
-                raise ValueError(f"Formato porcentaje inválido: {val}")
-
-        # 1) Leer cabecera
-        num_fact  = self.num_pedido_var.get().strip()
-        prov_txt  = self.proveedor_var.get()
-        fecha_txt = self.fecha_entry_var.get()
-        total_txt = self.total_entry_var.get().lstrip('$').strip()
-
-        # 2) Leer detalle completo del Treeview
-        detalle = []
-        for iid in self.treeview_entradas.get_children():
-            info   = self.treeview_entradas.item(iid)
-            code   = info['text']
-            vals   = info['values']
-            desc   = vals[0]
-            qty    = int(vals[1])
-            costo  = parse_currency_val(vals[2])
-            d1     = parse_percent_val(vals[3])
-            d2     = parse_percent_val(vals[4])
-            d3     = parse_percent_val(vals[5])
-            flete  = parse_percent_val(vals[6])
-            neto   = parse_currency_val(vals[7])
-            # vals[8] = '$X.YY - Z%'  -> extraemos Z%
-            iva_pct = float(str(vals[8]).split('-')[1].replace('%','').strip())
-            neto_iva = parse_currency_val(vals[9])
-            subtotal = parse_currency_val(vals[10])
-
-            detalle.append([
-                code,               # Código
-                desc,               # Descripción
-                qty,                # Cantidad
-                f"${costo:.2f}",    # Costo U.
-                f"{d1:.2f}%",       # Dto 1
-                f"{d2:.2f}%",       # Dto 2
-                f"{d3:.2f}%",       # Dto 3
-                f"{flete:.2f}%",    # Flete
-                f"${neto:.2f}",     # Neto
-                f"{iva_pct:.2f}%",  # IVA %
-                f"${neto_iva:.2f}", # Neto+IVA
-                f"${subtotal:.2f}"  # Subtotal
+        # OBTENER DATOS DE FACTURA
+        num_fact = self.num_pedido_var.get()
+        prov = self.proveedor_var.get()
+        date = self.fecha_entry_var.get()
+        total = self.total_entry_var.get()
+        # VERIFICAR LOS DATOS DE FACTURA
+        if num_fact == '':
+            messagebox.showerror('Error','Agregue un número de factura.')
+            return
+        if prov == '':
+            messagebox.showerror('Error','Agregue un código de proveedor.')
+            return
+        if date == '':
+            messagebox.showerror('Error','Agregue una fecha válida.')
+            return
+        if total == '':
+            messagebox.showerror('Error','No hay productos agregados.')
+            return
+        
+        # OBTENER DETALLES DE PRODUCTOS AGREGADOS
+        products = [] 
+        for item_id in self.treeview_entradas.get_children():
+            product = self.treeview_entradas.item(item_id)
+            code = product['text']
+            data = product['values']
+            desc = data[0]
+            quantity = data[1]
+            cost = data[2].split(' ')[1].strip()
+            dto1 = data[3].split(' ')[0].strip()
+            dto2 = data[4].split(' ')[0].strip()
+            dto3 = data[5].split(' ')[0].strip()
+            flete = data[6].split(' ')[0].strip()
+            neto = data[7].split(' ')[1].strip()
+            iva_m = data[8].split(' - ')[0].strip()
+            iva_m = iva_m.replace('$','').strip()
+            iva_p = data[8].split(' - ')[1].strip()
+            iva_p = iva_p.replace('%','').strip()
+            neto_iva = data[9].split(' ')[1].strip()
+            total_p = data[10].split(' ')[1].strip()
+            products.append([
+                code,
+                int(quantity),
+                float(cost),
+                float(dto1),
+                float(dto2),
+                float(dto3),
+                float(flete),
+                float(iva_m),
+                float(iva_p),
+                float(neto_iva),
+                float(total_p)
             ])
+        # ROMPER SI NO HAY PRODUCTOS EN LA LISTA
+        if not products:
+            messagebox.showerror('Error','No hay productos agregados.')
+            return
 
-        # 3) Generar PDF en carpeta temporal
-        tmpdir   = tempfile.gettempdir()
-        pdf_path = os.path.join(tmpdir, f"factura_{num_fact}.pdf")
-        self.GenerarPDF(
-            pdf_path,
-            header=[
-                ("Factura Nº:", num_fact),
-                ("Proveedor:", prov_txt),
-                ("Fecha:", fecha_txt),
-                ("Total:", f"${float(total_txt):.2f}")
-            ],
-            detalle=detalle
-        )
+            
+    def GenerarPDF(self, fact, products):
+        pass
 
-        # 4) Enviar a imprimir (Win32) o abrir si falla
-        try:
-            win32api.ShellExecute(0, "print", pdf_path, None, ".", 0)
-        except Exception:
-            os.startfile(pdf_path)
-            messagebox.showwarning(
-                "Impresión",
-                ("No se pudo imprimir automáticamente.\n"
-                 f"PDF guardado en:\n{pdf_path}\n"
-                 "Por favor imprime manualmente.")
-            )
-        else:
-            messagebox.showinfo(
-                "Impresión",
-                f"Factura enviada a imprimir.\nPDF guardado en:\n{pdf_path}"
-            )
-
-
-    def GenerarPDF(self, path: str, header: list, detalle: list):
-        """
-        Crea un PDF (landscape) con encabezado y tabla de detalle
-        que incluya todas las columnas y quepa en la hoja.
-        """
-        # — Configuración del documento en horizontal —
-        doc = SimpleDocTemplate(
-            path,
-            pagesize=landscape(LETTER),
-            leftMargin=20, rightMargin=20,
-            topMargin=30, bottomMargin=18
-        )
-        styles = getSampleStyleSheet()
-        story = []
-
-        # Título
-        story.append(Paragraph("Factura de Inventario", styles['Title']))
-        story.append(Spacer(1, 12))
-
-        # Cabecera
-        for label, val in header:
-            story.append(Paragraph(f"<b>{label}</b> {val}", styles['Normal']))
-        story.append(Spacer(1, 12))
-
-        # Definimos ratios para 12 columnas que sumen 1.0
-        ratios = [
-            0.06,  # Código
-            0.21,  # Descripción
-            0.05,  # Cant.
-            0.06,  # Costo U.
-            0.05,  # Dto 1
-            0.05,  # Dto 2
-            0.05,  # Dto 3
-            0.05,  # Flete
-            0.06,  # Neto
-            0.05,  # IVA %
-            0.06,  # Neto+IVA
-            0.10,  # Subtotal
-        ]
-        # Ancho utilizable
-        usable_width = doc.width
-        colWidths = [usable_width * r for r in ratios]
-
-        # Encabezados de columna
-        cols = [
-            "Código", "Descripción", "Cant.", "Costo U.",
-            "Dto 1", "Dto 2", "Dto 3", "Flete",
-            "Neto", "IVA %", "Neto+IVA", "Subtotal"
-        ]
-        data = [cols] + detalle
-
-        # Estilo de párrafo para envolver texto largo en la columna Descripción
-        wrap_style = ParagraphStyle(
-            name='wrap',
-            parent=styles['BodyText'],
-            fontSize=7,
-            leading=8
-        )
-
-        # Convertimos la celda de Descripción a Paragraph para que se envuelva
-        for row_i in range(1, len(data)):
-            desc = data[row_i][1]
-            data[row_i][1] = Paragraph(desc, wrap_style)
-
-        # Creamos tabla
-        table = Table(data, colWidths=colWidths, hAlign='LEFT')
-        table.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#666666")),
-            ('TEXTCOLOR',  (0, 0), (-1, 0), colors.whitesmoke),
-            ('ALIGN',       (2, 1), (-1, -1), 'CENTER'),
-            ('VALIGN',      (0, 0), (-1, -1), 'MIDDLE'),
-            ('GRID',        (0, 0), (-1, -1), 0.4, colors.black),
-            ('FONTNAME',    (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('FONTSIZE',    (0, 0), (-1, -1), 7),
-            ('BOTTOMPADDING', (0,0), (-1,0), 6),
-            ('LEFTPADDING',   (0,0), (-1,-1), 3),
-            ('RIGHTPADDING',  (0,0), (-1,-1), 3),
-        ]))
-
-        story.append(table)
-        doc.build(story)
