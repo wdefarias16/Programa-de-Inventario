@@ -1346,8 +1346,14 @@ class EntradasInventarioProg(ctk.CTkFrame):
         if not products:
             messagebox.showerror('Error','No hay productos agregados.')
             return
-
+        # RUTA DE GUARDADO DE FACTURA
+        path = 'Data/EntradasInventario'
+        file = os.path.join(path,f'Entrada_{num_fact}.pdf')
+        os.makedirs(path,exist_ok=True)
+        
             
-    def GenerarPDF(self, fact, products):
-        pass
-
+    def GenerarPDF(self, path, fact, products):
+        # SETEAR DOCUMENTO
+        doc = SimpleDocTemplate(
+            path,
+        )
