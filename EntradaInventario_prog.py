@@ -150,6 +150,14 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                             hover_color=APP_COLORS[3],
                                             command=self.GuardarFactura)
         self.btn_guardar_entrada.grid(row=1,column=9,columnspan=2,sticky='we',padx=5)
+        # IMPRIMIR ENTRADA
+        self.btn_imprimir_entrada = ctk.CTkButton(self.prog_frame,
+                                            text="Imprimir Entrada",
+                                            width=25,
+                                            fg_color=APP_COLORS[8],
+                                            hover_color=APP_COLORS[3],
+                                            command=self.ImprimirFactura)
+        self.btn_imprimir_entrada.grid(row=1,column=7,columnspan=2,sticky='we',padx=5)
     # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW
         self.treeview_entradas = ttk.Treeview(self.prog_frame,
                                      style='Custom.Treeview',
@@ -1350,10 +1358,27 @@ class EntradasInventarioProg(ctk.CTkFrame):
         path = 'Data/EntradasInventario'
         file = os.path.join(path,f'Entrada_{num_fact}.pdf')
         os.makedirs(path,exist_ok=True)
-        
+        # GENERAR PDF
+        self.GenerarPDF(path=file,fact=num_fact,products=products)
             
     def GenerarPDF(self, path, fact, products):
         # SETEAR DOCUMENTO
         doc = SimpleDocTemplate(
             path,
+            pagesize = LETTER,
+            leftMargin = 20,
+            rightMargin = 20,
+            topMargin=30,
+            bottomMargin=18
         )
+        # ESTILOS DE HOJA
+        styles = getSampleStyleSheet()
+        # CREAR STORY
+        story = []
+
+        # TITULO
+        story.append(Paragraph("Entrada a Inventario",styles['Heading2']))
+
+
+        # CREAR EL DOCUMENTO
+        doc.build(story)
