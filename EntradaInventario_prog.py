@@ -11,10 +11,11 @@ import tempfile
 import platform
 from reportlab.lib.pagesizes import LETTER
 from reportlab.lib import colors
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, HRFlowable
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.pagesizes import LETTER, landscape
 from reportlab.lib.styles import ParagraphStyle
+from reportlab.lib.enums import TA_RIGHT
 
 # PROGRAMA DE CARGA DE PRODUCTOS
 class EntradasInventarioProg(ctk.CTkFrame):
@@ -1327,13 +1328,8 @@ class EntradasInventarioProg(ctk.CTkFrame):
             total_iva += round(float(iva_m) * float(quantity),2)
             total += round(float(total_p),2)
 
-        total_descuento = total_costo - total_neto
-        print('Subtotal: ',total_costo)
-        print('Descuento: ',total_descuento)
-        print('Subtotal: ',total_neto)
-        print('IVA: ',total_iva)
-        print('Total: ',total)
-        self.CalculoFact = [total_costo,total_descuento,total_neto,total_iva,total]
+        total_descuento = round(total_costo - total_neto,2)
+        self.CalculoFact = [round(total_costo,2),total_descuento,total_neto,total_iva,total]
         
 # IMPRIMIR UNA FACTURA DE ENTRADA
     def ImprimirFactura(self):
@@ -1405,7 +1401,8 @@ class EntradasInventarioProg(ctk.CTkFrame):
         os.makedirs(path,exist_ok=True)
         # GENERAR PDF
         self.GenerarPDF(path=file,fact=num_fact,prov=prov,date=date,products=products,calculo = self.CalculoFact)
-            
+        os.startfile(file)
+
     def GenerarPDF(self, path, fact, prov, date, products,calculo):
         total_fact = 0
         # SETEAR DOCUMENTO
@@ -1419,6 +1416,14 @@ class EntradasInventarioProg(ctk.CTkFrame):
         )
         # ESTILOS DE HOJA
         styles = getSampleStyleSheet()
+        right_align = ParagraphStyle(
+                name='RightAlign',
+                parent=styles['Normal'],
+                alignment=TA_RIGHT)
+        destacado = ParagraphStyle("Destacado",
+                              fontName = 'Helvetica-Bold',
+                              fontSize = 15,
+                              alignment=TA_RIGHT)
         # CREAR STORY
         story = []
 
@@ -1449,32 +1454,56 @@ class EntradasInventarioProg(ctk.CTkFrame):
 
         data.append(['', 'TOTAL GENERAL', '', '','','','','','','',f'${total_fact}'])
         # WRAP PARA DESCRIPCION
-        wrap = ParagraphStyle("wrap", parent=styles["BodyText"], fontSize=8, leading=10)
+        wrap = ParagraphStyle("wrap",
+                              parent=styles["BodyText"],
+                              fontSize=7, leading=10)
         for i in range(1, len(data)):
             data[i][1] = Paragraph(data[i][1], wrap)
 
         # CONTRUIR LA TABLA
-        col_widths = [40, doc.width * 0.30, 30, 30, 30, 30, 30, 45, 45, 45]
+        col_widths = [40, doc.width * 0.30, 30, 35, 25, 25, 25, 25, 25, 55,55]
         table = Table(data, colWidths=col_widths, hAlign="LEFT", repeatRows=1)
 
         table.setStyle(TableStyle([
                 ("GRID",           (0,0), (-1,-1),      0.4, colors.grey),
+                ('BOX',          (0,0), (-1,-1),  1.2, colors.HexColor("#666666")),
                 ("BACKGROUND",     (0,0), (-1,0),        colors.HexColor("#333333")),
                 ("TEXTCOLOR",      (0,0), (-1,0),        colors.whitesmoke),
                 ("FONTNAME",       (0,0), (-1,0),        "Helvetica-Bold"),
-                ('FONTSIZE', (0,0), (-1,-1), 7),
+                ('FONTSIZE', (0,0), (-1,-1), 6),
                 #("ROWBACKGROUNDS", (0,1), (-1,-2),       [colors.white, colors.HexColor("#f0f0f0")]),
-                ("BACKGROUND",     (0,-1), (-1,-1),      colors.HexColor("#d9edf7")),
+                #("BACKGROUND",     (0,-1), (-1,-1),      colors.HexColor("#d9edf7")),
                 ("FONTNAME",       (0,-1), (-1,-1),      "Helvetica-Bold"),
             ]))
         story.append(table)
 
         story.append(Spacer(1,20))
-        story.append(Paragraph(f'Subtotal: ${calculo[0]}'))
-        story.append(Paragraph(f'Descuento: ${calculo[1]}'))
-        story.append(Paragraph(f'Subtotal: ${calculo[2]}'))
-        story.append(Paragraph(f'IVA: ${calculo[3]}'))
-        story.append(Paragraph(f'Total: ${calculo[4]}'))
+        story.append(Paragraph('Subtotal:',destacado))
+        story.append(Spacer(1,8))
+        story.append(Paragraph(f'Subtotal: ${calculo[0]}',right_align))
+        story.append(Paragraph(f'Descuento: ${calculo[1]}',right_align))
+        story.append(Paragraph(f'Subtotal: ${calculo[2]}',right_align))
+        story.append(HRFlowable(
+            width="25%",
+            thickness=1.5,
+            color=colors.grey,
+            hAlign="RIGHT",
+            spaceBefore=10,
+            spaceAfter=10))
+
+        story.append(Paragraph('IVA:',destacado))
+        story.append(Spacer(1,8))
+        story.append(Paragraph(f'IVA: ${calculo[3]}',right_align))
+        story.append(HRFlowable(
+            width="25%",
+            thickness=1.5,
+            color=colors.grey,
+            hAlign="RIGHT",
+            spaceBefore=10,
+            spaceAfter=10))
+        
+
+        story.append(Paragraph(f'Total: ${calculo[4]}',destacado))
 
         # CREAR EL DOCUMENTO
         doc.build(story)
