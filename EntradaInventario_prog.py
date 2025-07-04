@@ -1298,6 +1298,10 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.num_pedido_entry.focus()
 
     def ImprimirFactura(self):
+        subtotal = 0
+        descuento = 0
+        iva = 0
+        total_fact = 0
         # OBTENER DATOS DE FACTURA
         num_fact = self.num_pedido_var.get()
         prov = self.proveedor_var.get()
@@ -1337,19 +1341,31 @@ class EntradasInventarioProg(ctk.CTkFrame):
             iva_p = iva_p.replace('%','').strip()
             neto_iva = data[9].split(' ')[1].strip()
             total_p = data[10].split(' ')[1].strip()
-            products.append([
-                code,
-                int(quantity),
-                float(cost),
-                float(dto1),
-                float(dto2),
-                float(dto3),
-                float(flete),
-                float(iva_m),
-                float(iva_p),
-                float(neto_iva),
-                float(total_p)
-            ])
+            products.append({
+                'Codigo': code,
+                'Desc':desc,
+                'Cantidad': int(quantity),
+                'Costo': float(cost),
+                'Dto1': float(dto1),
+                'Dto2':float(dto2),
+                'Dto3':float(dto3),
+                'Flete':float(flete),
+                'IvaM':float(iva_m),
+                'IvaP':float(iva_p),
+                'NetoIva':float(neto_iva),
+                'Total':float(total_p)
+            })
+            # CALCULAR SUBTOTALES - DESCUENTOS - IVA
+            subtotal += float(cost) * int(quantity)
+            descuento += int(quantity) * (float(cost) - float(neto))
+            iva += float(iva_m) * int(quantity)
+            total_fact += float(total_p)
+        
+        # CALCULAR
+        descuento_total = subtotal - descuento
+        iva_total = iva - descuento
+        calculo_fact = [descuento,descuento_total,iva_total]
+            
         # ROMPER SI NO HAY PRODUCTOS EN LA LISTA
         if not products:
             messagebox.showerror('Error','No hay productos agregados.')
@@ -1358,26 +1374,80 @@ class EntradasInventarioProg(ctk.CTkFrame):
         path = 'Data/EntradasInventario'
         file = os.path.join(path,f'Entrada_{num_fact}.pdf')
         os.makedirs(path,exist_ok=True)
+
+       
         # GENERAR PDF
-        self.GenerarPDF(path=file,fact=num_fact,products=products)
+        self.GenerarPDF(path=file,fact=num_fact,prov=prov,date=date,products=products,calculo = calculo_fact)
             
-    def GenerarPDF(self, path, fact, products):
+    def GenerarPDF(self, path, fact, prov, date, products,calculo):
+        total_fact = 0
         # SETEAR DOCUMENTO
         doc = SimpleDocTemplate(
             path,
             pagesize = LETTER,
-            leftMargin = 20,
-            rightMargin = 20,
-            topMargin=30,
-            bottomMargin=18
+            leftMargin = 50,
+            rightMargin = 50,
+            topMargin=40,
+            bottomMargin=30
         )
         # ESTILOS DE HOJA
         styles = getSampleStyleSheet()
         # CREAR STORY
         story = []
 
-        # TITULO
+        # TITULO Y DATOS DE FACTURA
         story.append(Paragraph("Entrada a Inventario",styles['Heading2']))
+        story.append(Paragraph(f"Numero de factura: {fact}",styles['Normal']))
+        story.append(Paragraph(f"Proveedor: {prov}",styles['Normal']))
+        story.append(Paragraph(f"Fecha: {date}",styles['Normal']))
+        story.append(Spacer(1,12))
+
+        # PREPARAR LA TABLA Y DATOS
+        data = [['Cod.','Descripción','Cant.','Costo','Dto. 1','Dto. 2','Dto. 3','Flete','IVA','Neto','Total']]
+        for product in products:
+            data.append([
+                product['Codigo'],
+                product['Desc'],
+                product['Cantidad'],
+                f'${product['Costo']}',
+                f'{product['Dto1']}%',
+                f'{product['Dto2']}%',
+                f'{product['Dto3']}%',
+                f'{product['Flete']}%',
+                f'{product['IvaP']}%',
+                f'${product['NetoIva']}',
+                f'${product['Total']}'
+            ])
+            total_fact += product['Total']
+
+        data.append(['', 'TOTAL GENERAL', '', '','','','','','','',f'${total_fact}'])
+        # WRAP PARA DESCRIPCION
+        wrap = ParagraphStyle("wrap", parent=styles["BodyText"], fontSize=8, leading=10)
+        for i in range(1, len(data)):
+            data[i][1] = Paragraph(data[i][1], wrap)
+
+        # CONTRUIR LA TABLA
+        col_widths = [40, doc.width * 0.30, 30, 30, 30, 30, 30, 45, 45, 45]
+        table = Table(data, colWidths=col_widths, hAlign="LEFT", repeatRows=1)
+
+        table.setStyle(TableStyle([
+                ("GRID",           (0,0), (-1,-1),      0.4, colors.grey),
+                ("BACKGROUND",     (0,0), (-1,0),        colors.HexColor("#333333")),
+                ("TEXTCOLOR",      (0,0), (-1,0),        colors.whitesmoke),
+                ("FONTNAME",       (0,0), (-1,0),        "Helvetica-Bold"),
+                ('FONTSIZE', (0,0), (-1,-1), 7),
+                #("ROWBACKGROUNDS", (0,1), (-1,-2),       [colors.white, colors.HexColor("#f0f0f0")]),
+                ("BACKGROUND",     (0,-1), (-1,-1),      colors.HexColor("#d9edf7")),
+                ("FONTNAME",       (0,-1), (-1,-1),      "Helvetica-Bold"),
+            ]))
+        story.append(table)
+
+        story.append(Spacer(1,20))
+        story.append(Paragraph(f'Subtotal: ${calculo[0]}'))
+        story.append(Paragraph(f'Descuento: ${calculo[1]}'))
+        story.append(Paragraph(f'IVA: ${calculo[2]}'))
+        story.append(Paragraph(f'Total: ${total_fact}'))
+
 
 
         # CREAR EL DOCUMENTO
