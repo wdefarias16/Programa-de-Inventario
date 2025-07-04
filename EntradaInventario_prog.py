@@ -1297,6 +1297,45 @@ class EntradasInventarioProg(ctk.CTkFrame):
         # devolver foco al número de factura
         self.num_pedido_entry.focus()
 
+# CALCULAR TOTALES
+    def CalcularTotales(self):
+        total_costo = 0
+        total_neto = 0
+        total_iva = 0
+        total = 0
+        for item_id in self.treeview_entradas.get_children():
+            product = self.treeview_entradas.item(item_id)
+            code = product['text']
+            data = product['values']
+            desc = data[0]
+            quantity = data[1]
+            cost = data[2].split(' ')[1].strip()
+            dto1 = data[3].split(' ')[0].strip()
+            dto2 = data[4].split(' ')[0].strip()
+            dto3 = data[5].split(' ')[0].strip()
+            flete = data[6].split(' ')[0].strip()
+            neto = data[7].split(' ')[1].strip()
+            iva_m = data[8].split(' - ')[0].strip()
+            iva_m = iva_m.replace('$','').strip()
+            iva_p = data[8].split(' - ')[1].strip()
+            iva_p = iva_p.replace('%','').strip()
+            neto_iva = data[9].split(' ')[1].strip()
+            total_p = data[10].split(' ')[1].strip()
+
+            total_costo += round(float(cost) * float(quantity),2)
+            total_neto += round(float(neto) * float(quantity),2)
+            total_iva += round(float(iva_m) * float(quantity),2)
+            total += round(float(total_p),2)
+
+        total_descuento = total_costo - total_neto
+        print('Subtotal: ',total_costo)
+        print('Descuento: ',total_descuento)
+        print('Subtotal: ',total_neto)
+        print('IVA: ',total_iva)
+        print('Total: ',total)
+        self.CalculoFact = [total_costo,total_descuento,total_neto,total_iva,total]
+        
+# IMPRIMIR UNA FACTURA DE ENTRADA
     def ImprimirFactura(self):
         subtotal = 0
         descuento = 0
@@ -1355,17 +1394,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
                 'NetoIva':float(neto_iva),
                 'Total':float(total_p)
             })
-            # CALCULAR SUBTOTALES - DESCUENTOS - IVA
-            subtotal += float(cost) * int(quantity)
-            descuento += int(quantity) * (float(cost) - float(neto))
-            iva += float(iva_m) * int(quantity)
-            total_fact += float(total_p)
-        
-        # CALCULAR
-        descuento_total = subtotal - descuento
-        iva_total = iva - descuento
-        calculo_fact = [descuento,descuento_total,iva_total]
-            
+        self.CalcularTotales()
         # ROMPER SI NO HAY PRODUCTOS EN LA LISTA
         if not products:
             messagebox.showerror('Error','No hay productos agregados.')
@@ -1374,10 +1403,8 @@ class EntradasInventarioProg(ctk.CTkFrame):
         path = 'Data/EntradasInventario'
         file = os.path.join(path,f'Entrada_{num_fact}.pdf')
         os.makedirs(path,exist_ok=True)
-
-       
         # GENERAR PDF
-        self.GenerarPDF(path=file,fact=num_fact,prov=prov,date=date,products=products,calculo = calculo_fact)
+        self.GenerarPDF(path=file,fact=num_fact,prov=prov,date=date,products=products,calculo = self.CalculoFact)
             
     def GenerarPDF(self, path, fact, prov, date, products,calculo):
         total_fact = 0
@@ -1445,10 +1472,9 @@ class EntradasInventarioProg(ctk.CTkFrame):
         story.append(Spacer(1,20))
         story.append(Paragraph(f'Subtotal: ${calculo[0]}'))
         story.append(Paragraph(f'Descuento: ${calculo[1]}'))
-        story.append(Paragraph(f'IVA: ${calculo[2]}'))
-        story.append(Paragraph(f'Total: ${total_fact}'))
-
-
+        story.append(Paragraph(f'Subtotal: ${calculo[2]}'))
+        story.append(Paragraph(f'IVA: ${calculo[3]}'))
+        story.append(Paragraph(f'Total: ${calculo[4]}'))
 
         # CREAR EL DOCUMENTO
         doc.build(story)
