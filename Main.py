@@ -4,6 +4,7 @@ from Login import*
 from CargaProductos_prog import*
 from CargaLineasGrupos_prog import*
 from CargaProveedores_prog import*
+from AjustesInventario_prog import*
 from Menu_Inventario import*
 from Menu_CuentasPorPagar import*
 from EntradaInventario_prog import*
@@ -56,6 +57,8 @@ class App(ctk.CTk):
         self.login_frame = LoginFrame(self, success_callback=self.LoginSuccess)
         self.login_frame.pack(expand=True,fill='both')
 # PROGRAMAS DE INVENTARIO - PROGRAMAS DE INVENTARIO - PROGRAMAS DE INVENTARIO - PROGRAMAS DE INVENTARIO
+# PROGRAMAS DE INVENTARIO - PROGRAMAS DE INVENTARIO - PROGRAMAS DE INVENTARIO - PROGRAMAS DE INVENTARIO
+# PROGRAMAS DE INVENTARIO - PROGRAMAS DE INVENTARIO - PROGRAMAS DE INVENTARIO - PROGRAMAS DE INVENTARIO
     # MENU DE INVENTARIO
     def InventarioMenu(self):
         self.dashboard.destroy()
@@ -64,7 +67,8 @@ class App(ctk.CTk):
                                            GoBack_CB = self.ReturnToDashboard,
                                            CargaPro_Prog = self.CargaProductosProg,
                                            Lineas_Prog = self.CargaLineas,
-                                           EntradasInv_prog = self.EntradasInventario)
+                                           EntradasInv_prog = self.EntradasInventario,
+                                           AjustesInv_Prog = self.AjustesInventario)
         self.current_prog.pack(expand=True,fill='both')
     def GoBackInventario(self):
         self.current_prog.destroy()
@@ -72,7 +76,8 @@ class App(ctk.CTk):
                                            GoBack_CB = self.ReturnToDashboard,
                                            CargaPro_Prog = self.CargaProductosProg,
                                            Lineas_Prog = self.CargaLineas,
-                                           EntradasInv_prog = self.EntradasInventario)
+                                           EntradasInv_prog = self.EntradasInventario,
+                                           AjustesInv_Prog = self.AjustesInventario)
         self.current_prog.pack(expand=True,fill='both')
     # PROGRAMA DE CARGA DE LINEAS Y GRUPOS
     def CargaLineas(self):
@@ -89,6 +94,13 @@ class App(ctk.CTk):
         self.current_prog.destroy()
         self.current_prog = EntradasInventarioProg(self,GoBack_CB=self.GoBackInventario)
         self.current_prog.pack(expand=True,fill='both')
+    # AJUSTES DE INVENTARIO
+    def AjustesInventario(self):
+        self.current_prog.destroy()
+        self.current_prog = AjustesInventarioProg(self,GoBack_CB=self.GoBackInventario)
+        self.current_prog.pack(expand=True,fill='both')
+# PROGRAMAS DE CUENTAS POR PAGAR - PROGRAMAS DE CUENTAS POR PAGAR - PROGRAMAS DE CUENTAS POR PAGAR - PROGRAMAS DE CUENTAS POR PAGAR - 
+# PROGRAMAS DE CUENTAS POR PAGAR - PROGRAMAS DE CUENTAS POR PAGAR - PROGRAMAS DE CUENTAS POR PAGAR - PROGRAMAS DE CUENTAS POR PAGAR - 
 # PROGRAMAS DE CUENTAS POR PAGAR - PROGRAMAS DE CUENTAS POR PAGAR - PROGRAMAS DE CUENTAS POR PAGAR - PROGRAMAS DE CUENTAS POR PAGAR - 
     # MENU DE CUENTAS POR PAGAR
     def CuentasPorPagarMenu(self):

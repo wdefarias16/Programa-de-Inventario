@@ -5,10 +5,7 @@ from tkinter import ttk, messagebox
 from PIL import Image, ImageTk
 from DatabaseManager import INVENTARIO, PROV_MANAGER
 from style import*
-import win32api
 import os
-import tempfile
-import platform
 from reportlab.lib.pagesizes import LETTER
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, HRFlowable
@@ -16,6 +13,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.pagesizes import LETTER, landscape
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.enums import TA_RIGHT
+
 
 # PROGRAMA DE CARGA DE PRODUCTOS
 class EntradasInventarioProg(ctk.CTkFrame):
@@ -151,6 +149,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                             hover_color=APP_COLORS[3],
                                             command=self.GuardarFactura)
         self.btn_guardar_entrada.grid(row=1,column=9,columnspan=2,sticky='we',padx=5)
+
         # IMPRIMIR ENTRADA
         self.btn_imprimir_entrada = ctk.CTkButton(self.prog_frame,
                                             text="Imprimir Entrada",
@@ -1269,20 +1268,12 @@ class EntradasInventarioProg(ctk.CTkFrame):
             command=self.CancelarVisualizacion)
         self.cancel_btn.grid(row=0, column=1, sticky='nw', padx=5, pady=5)
         # Ubica el botón donde mejor encaje (por ejemplo junto a 'Volver atrás'):
-        # IMPRIMIR FACT
-        self.print_btn = ctk.CTkButton(self.prog_frame,
-                                       text="Imprimir factura",
-                                       fg_color=APP_COLORS[2],
-                                       hover_color=APP_COLORS[3],
-                                       command=self.ImprimirFactura)
-        self.print_btn.grid(row=0, column=2, sticky='nw', padx=5, pady=5)
 
     # — Vuelve la UI a su estado original —
     def CancelarVisualizacion(self):
         # destruye el botón
         if hasattr(self, 'cancel_btn'):
             self.cancel_btn.destroy()
-            self.print_btn.destroy()
         # Limpiar campos
         self.num_pedido_var.set('')
         self.proveedor_var.set('')
@@ -1329,7 +1320,11 @@ class EntradasInventarioProg(ctk.CTkFrame):
             total += round(float(total_p),2)
 
         total_descuento = round(total_costo - total_neto,2)
-        self.CalculoFact = [round(total_costo,2),total_descuento,total_neto,total_iva,total]
+        self.CalculoFact = [round(total_costo,2),
+                            round(total_descuento,2),
+                            round(total_neto,2),
+                            round(total_iva,2),
+                            round(total,2)]
         
 # IMPRIMIR UNA FACTURA DE ENTRADA
     def ImprimirFactura(self):
@@ -1452,7 +1447,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
             ])
             total_fact += product['Total']
 
-        data.append(['', 'TOTAL GENERAL', '', '','','','','','','',f'${total_fact}'])
+        data.append(['', 'TOTAL GENERAL', '', '','','','','','','',f'${round(total_fact,2)}'])
         # WRAP PARA DESCRIPCION
         wrap = ParagraphStyle("wrap",
                               parent=styles["BodyText"],

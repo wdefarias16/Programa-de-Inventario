@@ -6,13 +6,14 @@ from style import*
 
 
 class InventarioMenu(ctk.CTkFrame):
-    def __init__(self,parent,GoBack_CB,CargaPro_Prog,Lineas_Prog,EntradasInv_prog):
+    def __init__(self,parent,GoBack_CB,CargaPro_Prog,Lineas_Prog,EntradasInv_prog,AjustesInv_Prog):
         super().__init__(parent)
     # CALLBACKS
         self.GoBack_CB =  GoBack_CB
         self.CargaPro_Prog = CargaPro_Prog
         self.Lineas_Prog = Lineas_Prog
         self.EntradasInv_prog = EntradasInv_prog
+        self.AjustesInv_Prog = AjustesInv_Prog
 
 
         
@@ -39,7 +40,8 @@ class InventarioMenu(ctk.CTkFrame):
         consultas_menu.add_command(label='Consultas')
         # AJUSTES
         ajustes_menu = tk.Menu(menu_bar,tearoff=0)
-        ajustes_menu.add_command(label='Ajustes')
+        ajustes_menu.add_command(label='Ajustes de inventario',
+                                 command=self.AjustesInv_Prog)
         # ENTRADAS DE INVENTARIO
         entradas_menu = tk.Menu(menu_bar,tearoff=0)
         entradas_menu.add_command(label='Entradas de inventario',
