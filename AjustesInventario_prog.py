@@ -328,20 +328,21 @@ class AjustesInventarioProg(ctk.CTkFrame):
         self.tree_frame.protocol("WM_DELETE_WINDOW", lambda: None)
         self.tree_frame.transient(self)
         # GRID SETUP
-        for rows in range(16):
+        ROWS,COLUMNS = 16,10
+        for rows in range(ROWS):
             self.tree_frame.rowconfigure(rows, weight=1,uniform='a')
-        for columns in range(24):
+        for columns in range(COLUMNS):
             self.tree_frame.columnconfigure(columns,weight=1,uniform='a')
         # TITULO
         title_frame = ctk.CTkFrame(self.tree_frame,corner_radius=0,fg_color=APP_COLORS[3])
-        title_frame.grid(row=0,column=0,columnspan=24,sticky='nswe')
+        title_frame.grid(row=0,column=0,columnspan=COLUMNS,sticky='nswe')
         title = ctk.CTkLabel(title_frame,
                              text='Busqueda de productos',
                              bg_color='transparent',
                              text_color=APP_COLORS[0],
                              height=50,
                              font=FONTS[3])
-        title.pack(pady=10)
+        title.pack(pady=5)
     # ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - 
         # BARRA DE BUSQUEDA
         self.search_bar_var = tk.StringVar()
@@ -350,7 +351,7 @@ class AjustesInventarioProg(ctk.CTkFrame):
                                        textvariable=self.search_bar_var,
                                        fg_color=APP_COLORS[6],
                                        border_color=APP_COLORS[6])
-        self.search_bar.grid(row=2,column=0,columnspan=2,sticky='we',padx=20)
+        self.search_bar.grid(row=3,column=0,columnspan=2,sticky='we',padx=5,pady=5)
         self.search_bar.bind("<Return>",lambda event:SearchProductName())
         self.search_bar.bind("<Control-BackSpace>", lambda event: ListInventory())
         # CANTIDAD
@@ -363,7 +364,7 @@ class AjustesInventarioProg(ctk.CTkFrame):
                                      width=100,
                                      fg_color=APP_COLORS[4],
                                      border_color=APP_COLORS[4])
-        self.cantidad_entry.grid(row=4,column=0,columnspan=2,sticky='wns',padx=20,pady=5)
+        self.cantidad_entry.grid(row=3,column=3,sticky='we',padx=5,pady=5)
         self.cantidad_entry.bind("<Return>",lambda event:self.AddProduct())
         
     # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
@@ -372,13 +373,13 @@ class AjustesInventarioProg(ctk.CTkFrame):
                              text='Busqueda por nombre',
                              font=FONTS[1],
                                         text_color=APP_COLORS[4])
-        label_busqueda.grid(row=1,column=0,columnspan=3,sticky='w',padx=20)
+        label_busqueda.grid(row=2,column=0,columnspan=3,sticky='w',padx=5)
         # CANTIDAD
         label_cantidad = ctk.CTkLabel(self.tree_frame,
                                       text='Cantidad',
                                       font=FONTS[1],
                                       text_color=APP_COLORS[4])
-        label_cantidad.grid(row=4,column=1,columnspan=3,sticky='w',padx=20)
+        label_cantidad.grid(row=2,column=3,columnspan=3,sticky='w',padx=5)
     # BOTONES TREEVIEW - BOTONES TREEVIEW - BOTONES TREEVIEW - BOTONES TREEVIEW - 
         # LIMPIAR BUSQUEDA
         clear_btn = ctk.CTkButton(self.tree_frame,
@@ -386,7 +387,7 @@ class AjustesInventarioProg(ctk.CTkFrame):
                                     command=ListInventory,
                                     fg_color=APP_COLORS[2],
                                     hover_color=APP_COLORS[3])
-        clear_btn.grid(row=1,column=5,columnspan=2,sticky='w',padx=10)
+        clear_btn.grid(row=3,column=8,columnspan=2,sticky='e',padx=5)
         # CANCELAR
         def CloseAddProdWindow():
             self.tree_frame.destroy()
@@ -396,12 +397,12 @@ class AjustesInventarioProg(ctk.CTkFrame):
                                     command=CloseAddProdWindow,
                                     fg_color=APP_COLORS[2],
                                     hover_color=APP_COLORS[3])
-        cancel_btn.grid(row=14,column=0,columnspan=2,sticky='w',padx=10)
+        cancel_btn.grid(row=2,column=8,columnspan=2,sticky='e',padx=5)
     # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
         self.treeview = ttk.Treeview(self.tree_frame,
                                      style='Custom.Treeview',
                                      columns=('Descripcion','Existencia'))
-        self.treeview.grid(row=2,column=2,sticky='nswe',padx=10,rowspan=13,columnspan=21)
+        self.treeview.grid(row=5,column=0,sticky='nswe',padx=5,rowspan=ROWS-5,columnspan=COLUMNS-1)
         # EVENTO DE SELECCIONAR PRODUCTO 
         self.treeview.bind("<<TreeviewSelect>>",ClickTreeview)
         # CODIGO
@@ -431,7 +432,7 @@ class AjustesInventarioProg(ctk.CTkFrame):
         scrollbar = ctk.CTkScrollbar(self.tree_frame,
                                      orientation='vertical',
                                      command=self.treeview.yview)
-        scrollbar.grid(row=2,column=23,sticky='nsw',pady=5,rowspan=13)
+        scrollbar.grid(row=5,column=COLUMNS,sticky='nsw',pady=5,rowspan=ROWS-5)
         self.treeview.configure(yscrollcommand=scrollbar.set)
         # LISTAR TODOS LOS PRODUCTOS CARGADOS AL INICIO DEL PROGRAMA
         ListInventory()
