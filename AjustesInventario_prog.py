@@ -12,20 +12,24 @@ class AjustesInventarioProg(ctk.CTkFrame):
         super().__init__(parent)
         # CALLBACK IR ATRAS
         self.GoBack_CB = GoBack_CB
-        self.configure(fg_color=APP_COLORS[0],corner_radius=0)
         self.validate = self.register(self.ValidateDigit)
         self.inventory_codes = []
         self.product_list = []
         ROWS, COLUMNS = 40, 12
+        self.pack_propagate(False)
+        self.grid_propagate(False)
+        # PROG FRAME
+        self.prog_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLORS[0])
+        self.prog_frame.pack(expand=True,fill='both',side='left')
         # GRID SETUP
         for rows in range(ROWS):
-            self.rowconfigure(rows,weight=1,uniform='row')
+            self.prog_frame.rowconfigure(rows,weight=1,uniform='a')
         for columns in range(COLUMNS):
-            self.columnconfigure(columns,weight=1,uniform='column')
+            self.prog_frame.columnconfigure(columns,weight=1,uniform='a')
         
         # TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - 
         # FRAME
-        title_frame = ctk.CTkFrame(self,
+        title_frame = ctk.CTkFrame(self.prog_frame,
                                    fg_color=APP_COLORS[3],
                                    corner_radius=0,
                                    height=50)
@@ -41,7 +45,7 @@ class AjustesInventarioProg(ctk.CTkFrame):
         # ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - 
         # NUM DOC
         self.num_doc_entry_var = tk.StringVar()
-        self.num_doc_entry = ctk.CTkEntry(self,
+        self.num_doc_entry = ctk.CTkEntry(self.prog_frame,
                                           textvariable=self.num_doc_entry_var,
                                           fg_color=APP_COLORS[6],
                                           border_color=APP_COLORS[2],
@@ -50,13 +54,13 @@ class AjustesInventarioProg(ctk.CTkFrame):
         
         # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
         # NUM DOC
-        num_doc_label = ctk.CTkLabel(self,
+        num_doc_label = ctk.CTkLabel(self.prog_frame,
                                      text='Documento',
                                      text_color=APP_COLORS[1],
                                      font=FONTS[1])
         num_doc_label.grid(row=10,column=1,columnspan=2,sticky='w')
         # BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - 
-        self.btn_add_product = ctk.CTkButton(self,
+        self.btn_add_product = ctk.CTkButton(self.prog_frame,
                                             text="Agregar producto",
                                             width=25,
                                             fg_color=APP_COLORS[2],
@@ -65,7 +69,7 @@ class AjustesInventarioProg(ctk.CTkFrame):
         self.btn_add_product.grid(row=11,column=COLUMNS-3,columnspan=2,sticky='we')
 
         # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
-        self.treeview_main = ttk.Treeview(self,
+        self.treeview_main = ttk.Treeview(self.prog_frame,
                                      style='Custom.Treeview',
                                      columns=('Descripcion','Linea','Grupo',
                                               'Existencia','Ajuste','Final'))
@@ -107,7 +111,7 @@ class AjustesInventarioProg(ctk.CTkFrame):
             foreground = APP_COLORS[1],
             font = FONTS[1])
         # SCROLLBAR DEL TV
-        scrollbar = ctk.CTkScrollbar(self,
+        scrollbar = ctk.CTkScrollbar(self.prog_frame,
                                      orientation='vertical',
                                      command=self.treeview_main.yview)
         scrollbar.grid(row=13,column=COLUMNS-1,sticky='nsw',padx=5,pady=5,rowspan=10)
@@ -178,7 +182,7 @@ class AjustesInventarioProg(ctk.CTkFrame):
         self.nombre = datos[0]
         existencia = datos[3]
         ajuste = datos[4]
-        # FRAME DE EDICION DE ENTRADAS
+        # FRAME DE EDICION DE AJUSTES
         self.edit_window = ctk.CTkToplevel(self,
                                    fg_color=APP_COLORS[0])
         self.edit_window.geometry('600x350')
@@ -284,7 +288,6 @@ class AjustesInventarioProg(ctk.CTkFrame):
                                                    fg_color=APP_COLORS[6],border_color=APP_COLORS[6]))
             self.search_bar_var.set('')
             self.search_bar.after(100,self.search_bar.focus())
-
             inventario = INVENTARIO.GetInventory()
             for item in self.treeview.get_children():
                     self.treeview.delete(item)
@@ -319,7 +322,7 @@ class AjustesInventarioProg(ctk.CTkFrame):
             self.cantidad_entry.focus_set()
         # -------------------------------------------------------------------------------------------------
         self.btn_add_product.configure(state='disabled')
-        self.tree_frame = ctk.CTkToplevel(fg_color=APP_COLORS[5])
+        self.tree_frame = ctk.CTkToplevel(self,fg_color=APP_COLORS[5])
         self.tree_frame.geometry('800x550')
         self.tree_frame.title('Busqueda de productos')
         self.tree_frame.protocol("WM_DELETE_WINDOW", lambda: None)
@@ -329,7 +332,6 @@ class AjustesInventarioProg(ctk.CTkFrame):
             self.tree_frame.rowconfigure(rows, weight=1,uniform='a')
         for columns in range(24):
             self.tree_frame.columnconfigure(columns,weight=1,uniform='a')
-
         # TITULO
         title_frame = ctk.CTkFrame(self.tree_frame,corner_radius=0,fg_color=APP_COLORS[3])
         title_frame.grid(row=0,column=0,columnspan=24,sticky='nswe')
@@ -339,7 +341,7 @@ class AjustesInventarioProg(ctk.CTkFrame):
                              text_color=APP_COLORS[0],
                              height=50,
                              font=FONTS[3])
-        title.pack(pady=10)  
+        title.pack(pady=10)
     # ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - 
         # BARRA DE BUSQUEDA
         self.search_bar_var = tk.StringVar()
@@ -398,7 +400,7 @@ class AjustesInventarioProg(ctk.CTkFrame):
     # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
         self.treeview = ttk.Treeview(self.tree_frame,
                                      style='Custom.Treeview',
-                                columns=('Descripcion','Existencia'))
+                                     columns=('Descripcion','Existencia'))
         self.treeview.grid(row=2,column=2,sticky='nswe',padx=10,rowspan=13,columnspan=21)
         # EVENTO DE SELECCIONAR PRODUCTO 
         self.treeview.bind("<<TreeviewSelect>>",ClickTreeview)
