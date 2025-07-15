@@ -16,8 +16,6 @@ class AjustesInventarioProg(ctk.CTkFrame):
         self.inventory_codes = []
         self.product_list = []
         ROWS, COLUMNS = 40, 12
-        self.pack_propagate(False)
-        self.grid_propagate(False)
         # PROG FRAME
         self.prog_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLORS[0])
         self.prog_frame.pack(expand=True,fill='both',side='left')
@@ -116,165 +114,11 @@ class AjustesInventarioProg(ctk.CTkFrame):
                                      command=self.treeview_main.yview)
         scrollbar.grid(row=13,column=COLUMNS-1,sticky='nsw',padx=5,pady=5,rowspan=10)
         self.treeview_main.configure(yscrollcommand=scrollbar.set)
+        self.update_idletasks()
 # FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - 
 # FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - 
 # FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - 
 # FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - 
-    def ClickAjuste(self,event):
-        item_id = self.treeview_main.selection()
-        if not item_id:
-            print("Advertencia: No hay ningún elemento seleccionado.")
-            return
-        info = self.treeview_main.item(item_id)
-        codigo = str(info['text']).strip()
-    # MODE ADJUSTMENT
-        def ModAdjustmentMode():
-            self.ajuste_edit_entry.configure(state='normal')
-            self.ajuste_edit_entry.focus()
-        # -------------------------------------------------------------------------------
-    # MODIFY ADJUSTMENT
-        def ModAdjustment():
-            producto = INVENTARIO.GetProducto(codigo)
-            ajuste = self.ajuste_edit_var.get()
-            try:
-                ajuste = int(ajuste)
-            except ValueError:
-                messagebox.showerror('Error', 'Verifica que el campo "Cantidad" este correcto.')
-                self.ajuste_edit_entry.focus()
-                return
-            ajuste_final = existencia + ajuste
-            if ajuste_final < 0:
-                messagebox.showerror('Error', 'La existencia quedaría en negativo, verifique el ajuste.')
-                self.ajuste_edit_entry.focus()
-                return
-            self.treeview_main.item(item_id,
-                values=(producto['nombre'],
-                        producto['linea'],
-                        producto['grupo'],
-                        existencia,
-                        ajuste,
-                        ajuste_final))
-            self.btn_add_product.configure(state='enabled')
-            self.edit_window.destroy()
-        # -------------------------------------------------------------------------------
-    # DELETE ADJUSTMENT
-        def DelAdjustment():
-            if not item_id:
-                messagebox.showerror("Error", "Debe seleccionar un producto para eliminarlo.")
-                return
-            answer = messagebox.askyesno("Eliminar producto",f"¿Está seguro que desea eliminar el producto '{self.nombre}' de la lista?")
-            if answer:
-                if self.codigo in self.product_list:
-                    self.product_list.remove(self.codigo)
-                else:
-                    print('No existe el codigo')
-                self.treeview_main.delete(item_id)
-                messagebox.showinfo("Ajustes", "Producto eliminado correctamente.")
-                self.edit_window.destroy()
-        # -------------------------------------------------------------------------------
-        item_id = self.treeview_main.selection()
-        if not item_id:
-            print("Advertencia: No hay ningún elemento seleccionado.")
-            return
-        info = self.treeview_main.item(item_id)
-        self.codigo = str(info['text']).strip()
-        datos = info['values']
-        self.nombre = datos[0]
-        existencia = datos[3]
-        ajuste = datos[4]
-        # FRAME DE EDICION DE AJUSTES
-        self.edit_window = ctk.CTkToplevel(self,
-                                   fg_color=APP_COLORS[0])
-        self.edit_window.geometry('600x350')
-        self.edit_window.title('Editar')
-        self.edit_window.protocol("WM_DELETE_WINDOW", lambda: None)
-        self.edit_window.transient(self)
-        edit_frame = ctk.CTkFrame(self.edit_window,corner_radius=5,fg_color=APP_COLORS[0])
-        edit_frame.pack(expand=True,fill='both')
-    # GRID SETUP
-        ROWS, COLUMNS = 12,10
-        for rows in range(ROWS):
-            edit_frame.rowconfigure(rows, weight=1,uniform='a')
-        for columns in range(COLUMNS):
-            edit_frame.columnconfigure(columns,weight=1,uniform='a')
-    # TITULO
-        title_frame = ctk.CTkFrame(edit_frame,corner_radius=0,fg_color=APP_COLORS[3])
-        title_frame.grid(row=0,column=0,rowspan=2,columnspan=10,sticky='nwe')
-        title = ctk.CTkLabel(title_frame,
-                             text='Editar existencia',
-                             bg_color='transparent',
-                             text_color=APP_COLORS[0],
-                             height=50,
-                             font=FONTS[3])
-        title.pack(pady=10)
-    # PRODUCTO
-        producto_label = ctk.CTkLabel(edit_frame,
-                                      text=self.nombre,
-                                      font=FONTS[4],
-                                      text_color=APP_COLORS[4],
-                                      bg_color='transparent')
-        producto_label.grid(row = 3, column = 1, columnspan = 6, padx = 10, sticky = 'w')
-        existencia_label = ctk.CTkLabel(edit_frame,
-                                      text=f'Existencia actual: {existencia}',
-                                      font=FONTS[5],
-                                      text_color=APP_COLORS[4],
-                                      bg_color='transparent')
-        existencia_label.grid(row = 4, column = 1, columnspan = 6, padx = 10, sticky = 'w')
-    # ENTRADAS
-        # AJUSTE
-        self.ajuste_edit_var = tk.StringVar()
-        self.ajuste_edit_var.set(ajuste)
-        self.ajuste_edit_entry = ctk.CTkEntry(edit_frame,
-                                                state='disabled',
-                                                textvariable=self.ajuste_edit_var,
-                                                validate = 'key',
-                                                validatecommand = (self.validate,'%P'),
-                                                fg_color=APP_COLORS[6],
-                                                border_width=0)
-        self.ajuste_edit_entry.grid(row = 7, column = 1, columnspan = 2, sticky = 'we',padx = 10)
-        self.ajuste_edit_entry.bind("<Return>",lambda event:ModAdjustment())
-    # LABELS 
-        # AJUSTE
-        ajuste_label = ctk.CTkLabel(edit_frame,
-                                      text=f'Ajuste',
-                                      font=FONTS[1],
-                                      text_color=APP_COLORS[4])
-        ajuste_label.grid(row = 6, column = 1, columnspan = 2, sticky = 'w',padx = 10)
-    # BOTONES
-        # EDITAR
-        editar_btn = ctk.CTkButton(edit_frame,
-                                   text='Editar',
-                                   command=ModAdjustmentMode,
-                                   fg_color=APP_COLORS[2],
-                                   hover_color=APP_COLORS[3])
-        editar_btn.grid(row=9,column=1,columnspan=2,sticky='we',padx=10)
-        # ELIMINAR
-        eliminar_btn_image=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_trash_light.png"), size=(30,30),
-                                   dark_image=Image.open(r"Recursos\Iconos\btn_trash_dark.png"))
-        eliminar_btn = ctk.CTkButton(edit_frame,
-                                     text='',
-                                     image=eliminar_btn_image,
-                                     command=DelAdjustment,
-                                     fg_color=APP_COLORS[9],
-                                     hover_color=APP_COLORS[10])
-        eliminar_btn.grid(row=9,column=3,sticky='we')
-        # ACEPTAR
-        aceptar_btn = ctk.CTkButton(edit_frame,
-                                    text='Aceptar',
-                                    command=ModAdjustment,
-                                    fg_color=APP_COLORS[2],
-                                    hover_color=APP_COLORS[3])
-        aceptar_btn.grid(row=7,column=3,columnspan=2,sticky='we',padx=10)
-        # CANCELAR
-        cancelar_btn_img = ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_cerrar_light.png"), size=(30,30),
-                                        dark_image=Image.open(r"Recursos\Iconos\btn_cerrar_dark.png"))
-        cancelar_btn = ctk.CTkButton(edit_frame,
-                                     text='',
-                                     image=cancelar_btn_img,
-                                     command=lambda: self.edit_window.destroy(),
-                                     fg_color=APP_COLORS[9],
-                                     hover_color=APP_COLORS[10])
-        cancelar_btn.grid(row=3,column=COLUMNS-2,sticky='w')
 # OPEN PRODUCT HELP FRAME - OPEN PRODUCT HELP FRAME - OPEN PRODUCT HELP FRAME - OPEN PRODUCT HELP FRAME - OPEN PRODUCT HELP FRAME - 
 # OPEN PRODUCT HELP FRAME - OPEN PRODUCT HELP FRAME - OPEN PRODUCT HELP FRAME - OPEN PRODUCT HELP FRAME - OPEN PRODUCT HELP FRAME - 
     def ProductsHelp(self):
@@ -436,6 +280,161 @@ class AjustesInventarioProg(ctk.CTkFrame):
         self.treeview.configure(yscrollcommand=scrollbar.set)
         # LISTAR TODOS LOS PRODUCTOS CARGADOS AL INICIO DEL PROGRAMA
         ListInventory()
+    def ClickAjuste(self,event):
+        item_id = self.treeview_main.selection()
+        if not item_id:
+            print("Advertencia: No hay ningún elemento seleccionado.")
+            return
+        info = self.treeview_main.item(item_id)
+        codigo = str(info['text']).strip()
+    # MODE ADJUSTMENT
+        def ModAdjustmentMode():
+            self.ajuste_edit_entry.configure(state='normal')
+            self.ajuste_edit_entry.focus()
+        # -------------------------------------------------------------------------------
+    # MODIFY ADJUSTMENT
+        def ModAdjustment():
+            producto = INVENTARIO.GetProducto(codigo)
+            ajuste = self.ajuste_edit_var.get()
+            try:
+                ajuste = int(ajuste)
+            except ValueError:
+                messagebox.showerror('Error', 'Verifica que el campo "Cantidad" este correcto.')
+                self.ajuste_edit_entry.focus()
+                return
+            ajuste_final = existencia + ajuste
+            if ajuste_final < 0:
+                messagebox.showerror('Error', 'La existencia quedaría en negativo, verifique el ajuste.')
+                self.ajuste_edit_entry.focus()
+                return
+            self.treeview_main.item(item_id,
+                values=(producto['nombre'],
+                        producto['linea'],
+                        producto['grupo'],
+                        existencia,
+                        ajuste,
+                        ajuste_final))
+            self.btn_add_product.configure(state='enabled')
+            self.edit_window.destroy()
+        # -------------------------------------------------------------------------------
+    # DELETE ADJUSTMENT
+        def DelAdjustment():
+            if not item_id:
+                messagebox.showerror("Error", "Debe seleccionar un producto para eliminarlo.")
+                return
+            answer = messagebox.askyesno("Eliminar producto",f"¿Está seguro que desea eliminar el producto '{self.nombre}' de la lista?")
+            if answer:
+                if self.codigo in self.product_list:
+                    self.product_list.remove(self.codigo)
+                else:
+                    print('No existe el codigo')
+                self.treeview_main.delete(item_id)
+                messagebox.showinfo("Ajustes", "Producto eliminado correctamente.")
+                self.edit_window.destroy()
+        # -------------------------------------------------------------------------------
+        item_id = self.treeview_main.selection()
+        if not item_id:
+            print("Advertencia: No hay ningún elemento seleccionado.")
+            return
+        info = self.treeview_main.item(item_id)
+        self.codigo = str(info['text']).strip()
+        datos = info['values']
+        self.nombre = datos[0]
+        existencia = datos[3]
+        ajuste = datos[4]
+        # FRAME DE EDICION DE AJUSTES
+        self.edit_window = ctk.CTkToplevel(self,
+                                   fg_color=APP_COLORS[0])
+        self.edit_window.geometry('600x350')
+        self.edit_window.title('Editar')
+        self.edit_window.protocol("WM_DELETE_WINDOW", lambda: None)
+        self.edit_window.transient(self)
+        edit_frame = ctk.CTkFrame(self.edit_window,corner_radius=5,fg_color=APP_COLORS[0])
+        edit_frame.pack(expand=True,fill='both')
+    # GRID SETUP
+        ROWS, COLUMNS = 12,10
+        for rows in range(ROWS):
+            edit_frame.rowconfigure(rows, weight=1,uniform='a')
+        for columns in range(COLUMNS):
+            edit_frame.columnconfigure(columns,weight=1,uniform='a')
+    # TITULO
+        title_frame = ctk.CTkFrame(edit_frame,corner_radius=0,fg_color=APP_COLORS[3])
+        title_frame.grid(row=0,column=0,rowspan=2,columnspan=10,sticky='nwe')
+        title = ctk.CTkLabel(title_frame,
+                             text='Editar existencia',
+                             bg_color='transparent',
+                             text_color=APP_COLORS[0],
+                             height=50,
+                             font=FONTS[3])
+        title.pack(pady=10)
+    # PRODUCTO
+        producto_label = ctk.CTkLabel(edit_frame,
+                                      text=self.nombre,
+                                      font=FONTS[4],
+                                      text_color=APP_COLORS[4],
+                                      bg_color='transparent')
+        producto_label.grid(row = 3, column = 1, columnspan = 6, padx = 10, sticky = 'w')
+        existencia_label = ctk.CTkLabel(edit_frame,
+                                      text=f'Existencia actual: {existencia}',
+                                      font=FONTS[5],
+                                      text_color=APP_COLORS[4],
+                                      bg_color='transparent')
+        existencia_label.grid(row = 4, column = 1, columnspan = 6, padx = 10, sticky = 'w')
+    # ENTRADAS
+        # AJUSTE
+        self.ajuste_edit_var = tk.StringVar()
+        self.ajuste_edit_var.set(ajuste)
+        self.ajuste_edit_entry = ctk.CTkEntry(edit_frame,
+                                                state='disabled',
+                                                textvariable=self.ajuste_edit_var,
+                                                validate = 'key',
+                                                validatecommand = (self.validate,'%P'),
+                                                fg_color=APP_COLORS[6],
+                                                border_width=0)
+        self.ajuste_edit_entry.grid(row = 7, column = 1, columnspan = 2, sticky = 'we',padx = 10)
+        self.ajuste_edit_entry.bind("<Return>",lambda event:ModAdjustment())
+    # LABELS 
+        # AJUSTE
+        ajuste_label = ctk.CTkLabel(edit_frame,
+                                      text=f'Ajuste',
+                                      font=FONTS[1],
+                                      text_color=APP_COLORS[4])
+        ajuste_label.grid(row = 6, column = 1, columnspan = 2, sticky = 'w',padx = 10)
+    # BOTONES
+        # EDITAR
+        editar_btn = ctk.CTkButton(edit_frame,
+                                   text='Editar',
+                                   command=ModAdjustmentMode,
+                                   fg_color=APP_COLORS[2],
+                                   hover_color=APP_COLORS[3])
+        editar_btn.grid(row=9,column=1,columnspan=2,sticky='we',padx=10)
+        # ELIMINAR
+        eliminar_btn_image=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_trash_light.png"), size=(30,30),
+                                   dark_image=Image.open(r"Recursos\Iconos\btn_trash_dark.png"))
+        eliminar_btn = ctk.CTkButton(edit_frame,
+                                     text='',
+                                     image=eliminar_btn_image,
+                                     command=DelAdjustment,
+                                     fg_color=APP_COLORS[9],
+                                     hover_color=APP_COLORS[10])
+        eliminar_btn.grid(row=9,column=3,sticky='we')
+        # ACEPTAR
+        aceptar_btn = ctk.CTkButton(edit_frame,
+                                    text='Aceptar',
+                                    command=ModAdjustment,
+                                    fg_color=APP_COLORS[2],
+                                    hover_color=APP_COLORS[3])
+        aceptar_btn.grid(row=7,column=3,columnspan=2,sticky='we',padx=10)
+        # CANCELAR
+        cancelar_btn_img = ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_cerrar_light.png"), size=(30,30),
+                                        dark_image=Image.open(r"Recursos\Iconos\btn_cerrar_dark.png"))
+        cancelar_btn = ctk.CTkButton(edit_frame,
+                                     text='',
+                                     image=cancelar_btn_img,
+                                     command=lambda: self.edit_window.destroy(),
+                                     fg_color=APP_COLORS[9],
+                                     hover_color=APP_COLORS[10])
+        cancelar_btn.grid(row=3,column=COLUMNS-2,sticky='w')
         
     # ADD PRODUCT TO MAIN TREEVIEW
     def AddProduct(self):
