@@ -12,37 +12,6 @@ class AjustesInventarioProg(ctk.CTkFrame):
         super().__init__(parent)
         # CALLBACK IR ATRAS
         self.GoBack_CB = GoBack_CB
-<<<<<<< HEAD
-        self.configure(fg_color=APP_COLORS[0],corner_radius=0)
-        # MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - 
-        # GRID SETUP
-        for rows in range(30):
-            self.rowconfigure(rows,weight=1,uniform='rows')
-        for columns in range(12):
-            self.columnconfigure(columns,weight=1,uniform='columns')  
-        # TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE
-        # TITLE FRAME
-        title_frame = ctk.CTkFrame(self,fg_color=APP_COLORS[3],corner_radius=0)
-        title_frame.grid(row=0,column=0,rowspan=2,columnspan=12,sticky='nswe')
-        # TITLE LABEL
-        title_label = ctk.CTkLabel(title_frame,
-                                   text='Ajustes de Inventario',
-                                   text_color=APP_COLORS[0],
-                                   bg_color='transparent',
-                                   font=FONTS[0])
-        title_label.pack(expand=True,fill='both',padx=5)
-        # ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - 
-        # NUMERO DE DOCUMENTO
-        self.num_fact_entry = ctk.CTkEntry(self,
-                                           )
-        self.num_fact_entry.grid(row=4,column=1,columnspan=2,sticky='ew')
-        # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS
-        # NUMERO DE DOCUMENTO
-        num_fact_label = ctk.CTkLabel(self,text='Documento',
-                                      font=FONTS[1],
-                                      text_color=APP_COLORS[4])
-        num_fact_label.grid(row=3,column=1,columnspan=2,sticky='w')
-=======
         self.validate = self.register(self.ValidateDigit)
         self.inventory_codes = []
         self.product_list = []
@@ -282,13 +251,13 @@ class AjustesInventarioProg(ctk.CTkFrame):
         self.treeview.bind("<<TreeviewSelect>>",ClickTreeview)
         # CODIGO
         self.treeview.heading('#0',text='Código')
-        self.treeview.column('#0',width=50,anchor='center')
+        self.treeview.column('#0',width=10,anchor='center')
         # DESCRIPCION
         self.treeview.heading('Descripcion',text='Descripción')
-        self.treeview.column('Descripcion',width=50,anchor='center')
+        self.treeview.column('Descripcion',width=30,anchor='center')
         # EXISTENCIA
         self.treeview.heading('Existencia',text='Existencia')
-        self.treeview.column('Existencia',width=50,anchor='center')
+        self.treeview.column('Existencia',width=10,anchor='center')
     # CONFIGURACION VISUAL DEL TV
         style = ttk.Style()
         style.configure(
@@ -497,7 +466,6 @@ class AjustesInventarioProg(ctk.CTkFrame):
             messagebox.showerror('Error', 'La existencia quedaría en negativo, verifique el ajuste.')
             self.cantidad_entry.focus()
             return
->>>>>>> 3ffb59af0660de3d61e527833df729ff50b1d2e1
 
         self.treeview_main.insert("", 'end',
             text=producto['codigo'],
