@@ -8,15 +8,18 @@ APP_COLORS = ['#eaeaea','#1d1d1d','#1c9bac','#166c78',
 APPEARANCE_MODE = 'light'
 
 
-cancel_img = ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_cerrar_light.png"), size=(30,30),
+cancel_icon = ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_cerrar_light.png"), size=(30,30),
                                         dark_image=Image.open(r"Recursos\Iconos\btn_cerrar_dark.png"))
-search_img = ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_search_light.png"), size=(30,30),
+search_icon = ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_search_light.png"), size=(30,30),
                                 dark_image=Image.open(r"Recursos\Iconos\btn_search_dark.png"))
+refresh_icon = ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_refresh_light.png"), size=(30,30),
+                                dark_image=Image.open(r"Recursos\Iconos\btn_refresh_dark.png"))
 
 
 ICONS = {
-    'cancel':cancel_img,
-    'search':search_img
+    'cancel':cancel_icon,
+    'search':search_icon,
+    'refresh':refresh_icon
 }
 
 
