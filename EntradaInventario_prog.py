@@ -30,7 +30,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.flete_default = 0
         self.bind("<Return>",lambda event: self.BusquedaProducto())
     # TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - 
-        title_frame = ctk.CTkFrame(self,corner_radius=5,fg_color=APP_COLORS[3])
+        title_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLORS[3])
         title_frame.pack(fill='x')
 
         title = ctk.CTkLabel(title_frame,
