@@ -67,16 +67,7 @@ class AjustesInventarioProg(ctk.CTkFrame):
                                             hover_color=APP_COLORS[3],
                                             command=self.ProductsHelp)
         self.btn_add_product.grid(row=11,column=9,columnspan=2,sticky='we')
-        def test():
-            pass
-        self.btn_test = ctk.CTkButton(self.prog_frame,
-                                            text="Prueba",
-                                            width=25,
-                                            fg_color=APP_COLORS[2],
-                                            hover_color=APP_COLORS[3],
-                                            command=test)
-        self.btn_test.grid(row=10,column=9,columnspan=2,sticky='we')
-
+        
         # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
         # CONFIGURACION VISUAL DEL TV
         style = ttk.Style()
@@ -136,44 +127,58 @@ class AjustesInventarioProg(ctk.CTkFrame):
     def ProductsHelp(self):
         # LIST INVENTORY IN TREEVIEW
         def ListInventory():
-            self.cantidad_var.set('')
-            self.search_bar.after(100,
-                lambda:  self.search_bar.configure(state='normal',
-                                                   fg_color=APP_COLORS[6],border_color=APP_COLORS[6]))
-            self.search_bar_var.set('')
-            self.search_bar.after(100,self.search_bar.focus())
+            self.qty_entry_var.set('')
+            self.search_bar_entry.after(100,
+                lambda:  self.search_bar_entry.configure(state='normal',
+                fg_color=APP_COLORS[6],border_color=APP_COLORS[6]))
+            self.search_bar_entry_var.set('')
+            self.search_bar_entry.after(100,self.search_bar_entry.focus())
             inventario = INVENTARIO.GetInventory()
-            for item in self.treeview.get_children():
-                    self.treeview.delete(item)
+            for item in self.product_tv.get_children():
+                    self.product_tv.delete(item)
             for producto in inventario.values():
-                self.treeview.insert("",'end',
+                self.product_tv.insert("",'end',
                                      text=producto['codigo'],
                                      values=(producto['nombre'],
                                              producto['existencia']))
         # ------------------------------------------------------------------------------------------------        
     # SEARCH A PRODUCT BY NAME
         def SearchProductName():
-            for item in self.treeview.get_children():
-                self.treeview.delete(item)
+            for item in self.product_tv.get_children():
+                self.product_tv.delete(item)
             busqueda = self.search_bar_entry_var.get().lower()
             resultados = INVENTARIO.BuscarNombres(busqueda)
             for producto in resultados:
-                self.treeview.insert("", 'end',
+                self.product_tv.insert("", 'end',
                                      text=producto['codigo'],
                                      values=(producto['nombre'],
                                              producto['existencia']))
         # -------------------------------------------------------------------------------------------------
     # SELECT A PRODUCT WHEN CLICK ON TREEVIEW
         def ClickTreeview(event):
-            item_id = self.treeview.selection()
-            info = self.treeview.item(item_id)
+            item_id = self.product_tv.selection()
+            info = self.product_tv.item(item_id)
             codigo = info['text']
             self.search_bar_entry_var.set(codigo)
-            self.search_bar_entry.configure(state='disabled',fg_color=APP_COLORS[4],
+            self.search_bar_entry.configure(state='disabled',
+                                            fg_color=APP_COLORS[4],
                                             border_color=APP_COLORS[4])
-            self.search_bar_entry.configure(state='normal',fg_color=APP_COLORS[0],
-                                            border_color=APP_COLORS[4])
-            self.search_bar_entry.focus_set()
+            self.qty_entry.configure(state='normal',
+                                     fg_color=APP_COLORS[6],
+                                     border_color=APP_COLORS[6])
+            self.qty_entry.focus_set()
+        # -------------------------------------------------------------------------------------------------
+    # CANCEL TREEVIEW SELECTION
+        def CancelSelection():
+            self.qty_entry_var.set('')
+            self.qty_entry.configure(state='disabled',
+                                     fg_color=APP_COLORS[4],
+                                     border_color=APP_COLORS[4])
+            self.search_bar_entry_var.set('')
+            self.search_bar_entry.configure(state='normal',
+                                            fg_color=APP_COLORS[6],
+                                            border_color=APP_COLORS[6])
+            self.search_bar_entry.focus()
         # -------------------------------------------------------------------------------------------------
         # CREATE THE WINDOW
         help_frame = ctk.CTkToplevel(self,fg_color=APP_COLORS[0])
@@ -213,23 +218,32 @@ class AjustesInventarioProg(ctk.CTkFrame):
         self.search_bar_entry_var = tk.StringVar()
         self.search_bar_entry = ctk.CTkEntry(prog_frame,
                                         textvariable=self.search_bar_entry_var,
-                                        fg_color=APP_COLORS[6],
+                                        fg_color=APP_COLORS[4],
                                         border_color=APP_COLORS[4])
         self.search_bar_entry.grid(row=2,column=1,columnspan=2,sticky='we')
-        self.search_bar_entry.bind("<Return>",lambda event:SearchProductName)
+        self.search_bar_entry.bind("<Return>",lambda event:SearchProductName())
         # QUANTITY
-        self.cantidad_entry_var = tk.StringVar()
-        self.cantidad_entry = ctk.CTkEntry(prog_frame,
-                                        textvariable=self.cantidad_entry_var,
-                                        fg_color=APP_COLORS[6],
+        self.qty_entry_var = tk.StringVar()
+        self.qty_entry = ctk.CTkEntry(prog_frame,
+                                        state='disabled',
+                                        textvariable=self.qty_entry_var,
+                                        fg_color=APP_COLORS[4],
                                         border_color=APP_COLORS[4])
-        self.cantidad_entry.grid(row=2,column=5,columnspan=2,sticky='we')
+        self.qty_entry.grid(row=2,column=5,sticky='we')
+        self.qty_entry.bind("<Control-BackSpace>",lambda event:CancelSelection())
         # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
+        # SEARCH BAR
         search_bar_label = ctk.CTkLabel(prog_frame,
                                         text='Búsqueda por nombre',
                                         font=FONTS[1],
                                         text_color=APP_COLORS[4])
         search_bar_label.grid(row=1,column=1,columnspan=2,sticky='w')
+        # QUANTITY
+        qty_label = ctk.CTkLabel(prog_frame,
+                                text='Cantidad',
+                                font=FONTS[1],
+                                text_color=APP_COLORS[4])
+        qty_label.grid(row=1,column=5,columnspan=2,sticky='w')
         # BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - 
         # CLOSE WINDOW
         close_btn = ctk.CTkButton(prog_frame,
@@ -243,27 +257,36 @@ class AjustesInventarioProg(ctk.CTkFrame):
         search_btn = ctk.CTkButton(prog_frame,
                                   text='',
                                   image=ICONS['search'],
-                                  command=lambda:help_frame.destroy(),
+                                  command=SearchProductName,
                                   fg_color=APP_COLORS[2],
                                   hover_color=APP_COLORS[3])
         search_btn.grid(row=2,column=3,sticky='w',padx=5)
+        # SEARCH
+        cancel_slct_btn = ctk.CTkButton(prog_frame,
+                                  text='',
+                                  image=ICONS['search'],
+                                  command=CancelSelection,
+                                  fg_color=APP_COLORS[2],
+                                  hover_color=APP_COLORS[3])
+        cancel_slct_btn.grid(row=2,column=8,sticky='w',padx=5)
         # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
         # TREVIEW
-        product_tv = ttk.Treeview(prog_frame,
+        self.product_tv = ttk.Treeview(prog_frame,
                                   style='Custom.Treeview',
                                   columns = ('Descripcion','Existencia'))
-        product_tv.grid(row=4,column=1,rowspan=6,columnspan=COLUMNS-2,sticky='nswe')
-        product_tv.bind("<<TreeviewSelect>>",ClickTreeview)
+        self.product_tv.grid(row=4,column=1,rowspan=6,columnspan=COLUMNS-2,sticky='nswe')
+        self.product_tv.bind("<<TreeviewSelect>>",ClickTreeview)
         # CODIGO
-        product_tv.heading('#0',text='Cod')
-        product_tv.column('#0',width=25,anchor='center')
+        self.product_tv.heading('#0',text='Cod')
+        self.product_tv.column('#0',width=25,anchor='center')
         # DESCRIPCION
-        product_tv.heading('Descripcion',text='Descripción')
-        product_tv.column('Descripcion',width=60,anchor='center')
+        self.product_tv.heading('Descripcion',text='Descripción')
+        self.product_tv.column('Descripcion',width=60,anchor='center')
         # CODIGO
-        product_tv.heading('Existencia',text='Existencia')
-        product_tv.column('Existencia',width=25,anchor='center')
-
+        self.product_tv.heading('Existencia',text='Existencia')
+        self.product_tv.column('Existencia',width=25,anchor='center')
+        # LIST INVENTORY WHEN OPENING THE HELP WINDOW
+        ListInventory()
 
 
 
