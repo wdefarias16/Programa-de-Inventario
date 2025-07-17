@@ -201,7 +201,7 @@ class DatabaseManagerApp(ctk.CTk):
                             estado BOOLEAN DEFAULT TRUE,
                             FOREIGN KEY (rol) REFERENCES roles(codigo) ON DELETE RESTRICT  
                         )""",
-                        # Tabla entradas_inventario
+                        # TABLA ENTRADAS INVENTARIO
                         """CREATE TABLE IF NOT EXISTS entradas_inventario (
                             id SERIAL PRIMARY KEY,
                             num_factura VARCHAR(50) NOT NULL,
@@ -210,7 +210,7 @@ class DatabaseManagerApp(ctk.CTk):
                             total       NUMERIC(12,2) NOT NULL,
                             created_at  TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP
                         );""",
-                        # Tabla detalle_entrada
+                        # TABLA DETALLES DE ENTRADA A INVENTARIO
                         """CREATE TABLE IF NOT EXISTS detalle_entrada (
                             id          SERIAL PRIMARY KEY,
                             entrada_id  INTEGER     NOT NULL

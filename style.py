@@ -14,12 +14,15 @@ search_icon = ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_search_l
                                 dark_image=Image.open(r"Recursos\Iconos\btn_search_dark.png"))
 refresh_icon = ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_refresh_light.png"), size=(30,30),
                                 dark_image=Image.open(r"Recursos\Iconos\btn_refresh_dark.png"))
+trash_icon = ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_trash_light.png"), size=(30,30),
+                                dark_image=Image.open(r"Recursos\Iconos\btn_trash_dark.png"))
 
 
 ICONS = {
     'cancel':cancel_icon,
     'search':search_icon,
-    'refresh':refresh_icon
+    'refresh':refresh_icon,
+    'trash':trash_icon
 }
 
 

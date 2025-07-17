@@ -3,7 +3,6 @@ import customtkinter as ctk
 from tkinter import ttk,messagebox
 from style import*
 from DatabaseManager import*
-from PIL import Image
 
 
 
@@ -483,11 +482,9 @@ class AjustesInventarioProg(ctk.CTkFrame):
                                    hover_color=APP_COLORS[3])
         editar_btn.grid(row=9,column=1,columnspan=2,sticky='we',padx=10)
         # ELIMINAR
-        eliminar_btn_image=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_trash_light.png"), size=(30,30),
-                                   dark_image=Image.open(r"Recursos\Iconos\btn_trash_dark.png"))
         eliminar_btn = ctk.CTkButton(edit_frame,
                                      text='',
-                                     image=eliminar_btn_image,
+                                     image=ICONS['trash'],
                                      command=DelAdjustment,
                                      fg_color=APP_COLORS[9],
                                      hover_color=APP_COLORS[10])
