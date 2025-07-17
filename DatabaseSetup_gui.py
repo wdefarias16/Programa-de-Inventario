@@ -228,6 +228,31 @@ class DatabaseManagerApp(ctk.CTk):
                             neto_iva    NUMERIC(12,2) NOT NULL,
                             subtotal    NUMERIC(12,2) NOT NULL
                         )"""
+                        # TABLA AJUSTES INVENTARIO
+                        """CREATE TABLE IF NOT EXISTS ajustes_inventario (
+                            id SERIAL PRIMARY KEY,
+                            num_documento VARCHAR(50) NOT NULL,
+                            fecha       DATE    NOT NULL,
+                            total       NUMERIC(12,2) NOT NULL
+                        );""",
+                        # TABLA AJUSTES DE ENTRADA A INVENTARIO
+                        """CREATE TABLE IF NOT EXISTS detalle_entrada (
+                            id          SERIAL PRIMARY KEY,
+                            entrada_id  INTEGER     NOT NULL
+                                           REFERENCES entradas_inventario(id) ON DELETE CASCADE,
+                            codigo      VARCHAR(255) NOT NULL
+                                           REFERENCES productos(codigo),
+                            cantidad    INTEGER     NOT NULL,
+                            costo       NUMERIC(12,2) NOT NULL,
+                            descuento1  NUMERIC(5,2)  DEFAULT 0,
+                            descuento2  NUMERIC(5,2)  DEFAULT 0,
+                            descuento3  NUMERIC(5,2)  DEFAULT 0,
+                            flete       NUMERIC(5,2)  DEFAULT 0,
+                            iva         NUMERIC(5,2)  DEFAULT 0,
+                            neto        NUMERIC(12,2) NOT NULL,
+                            neto_iva    NUMERIC(12,2) NOT NULL,
+                            subtotal    NUMERIC(12,2) NOT NULL
+                        )"""
                     ]
                     for stmt in statements:
                         cursor.execute(stmt)
