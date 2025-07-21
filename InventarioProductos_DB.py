@@ -445,6 +445,146 @@ class Inventory:
                 'detalle':          detalles
             }
 
+    def GuardarAjusteInventario(self,
+                                 num_documento: str,
+                                 motivo: str,
+                                 fecha: str,
+                                 detalle_ajuste: list):
+        """
+        Inserta un ajuste en 'ajustes_inventario' y su detalle en 'detalle_ajustes',
+        y actualiza la existencia en 'productos'.
+
+        Parámetros:
+          - num_documento: identificador único del ajuste.
+          - motivo: texto explicando la razón del ajuste.
+          - fecha: cadena 'YYYY-MM-DD'.
+          - detalle_ajuste: lista de dicts con claves
+                'codigo'              (str),
+                'cantidad'            (int) existencia anterior,
+                'ajuste'              (int) unidades agregadas (+) o restadas (-),
+                'final'               (int) existencia resultante.
+        """
+        try:
+
+            with self.conn.cursor() as cur:
+                # 2) Insertar cabecera del ajuste
+                cur.execute("""
+                    INSERT INTO ajustes_inventario
+                      (num_documento, log, fecha)
+                    VALUES (%s, %s, %s)
+                    RETURNING id;
+                """, (
+                    num_documento,
+                    motivo,
+                    fecha
+                ))
+                ajuste_id = cur.fetchone()[0]
+
+                # 3) Insertar cada línea de detalle y actualizar stock
+                for item in detalle_ajuste:
+                    cur.execute("""
+                        INSERT INTO detalle_ajustes
+                          (ajuste_id, codigo, cantidad, ajuste, final)
+                        VALUES (%s, %s, %s, %s, %s);
+                    """, (
+                        ajuste_id,
+                        item['codigo'],
+                        item['cantidad'],
+                        item['ajuste'],
+                        item['final']
+                    ))
+                    cur.execute("""
+                        UPDATE productos
+                           SET existencia = %s
+                         WHERE codigo = %s;
+                    """, (
+                        item['final'],
+                        item['codigo']
+                    ))
+
+                # 4) Confirmar transacción
+                self.conn.commit()
+                messagebox.showinfo(
+                    "Éxito",
+                    f"Ajuste {num_documento} guardado correctamente."
+                )
+
+        except Exception as e:
+            self.conn.rollback()
+            messagebox.showerror(
+                "Error al guardar ajuste",
+                f"{str(e)}"
+            )
+            raise
+
+    def ObtenerAjuste(self, num_documento: str) -> dict | None:
+        """
+        Recupera un ajuste por su num_documento.
+        Si no existe, devuelve None. En caso contrario retorna dict:
+        {
+          'id': int,
+          'num_documento': str,
+          'motivo': str,
+          'fecha': date,
+          'detalle': [
+            {
+              'codigo': str,
+              'cantidad': int,
+              'ajuste': int,
+              'final': int
+            }, …
+          ]
+        }
+        """
+        try:
+            with self.conn.cursor() as cur:
+                # 1) Leer cabecera
+                cur.execute("""
+                    SELECT id, log, fecha
+                      FROM ajustes_inventario
+                     WHERE num_documento = %s;
+                """, (num_documento,))
+                row = cur.fetchone()
+                if not row:
+                    return None
+
+                ajuste_id, motivo, fecha = row
+
+                # 2) Leer detalle asociado
+                cur.execute("""
+                    SELECT codigo, cantidad, ajuste, final
+                      FROM detalle_ajustes
+                     WHERE ajuste_id = %s
+                     ORDER BY id;
+                """, (ajuste_id,))
+                detalle = [{
+                    'codigo': r[0],
+                    'cantidad': r[1],
+                    'ajuste': r[2],
+                    'final': r[3]
+                } for r in cur.fetchall()]
+
+                return {
+                    'id':             ajuste_id,
+                    'num_documento':  num_documento,
+                    'motivo':         motivo,
+                    'fecha':          fecha,
+                    'detalle':        detalle
+                }
+
+        except Exception as e:
+            messagebox.showerror(
+                "Error al obtener ajuste",
+                f"{str(e)}"
+            )
+            return None
+
+
+
+
+
+
+
 
 
 
