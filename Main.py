@@ -5,10 +5,12 @@ from CargaProductos_prog import*
 from CargaLineasGrupos_prog import*
 from CargaProveedores_prog import*
 from AjustesInventario_prog import*
+from MaestroDeTablas_prog import*
 from Menu_Inventario import*
 from Menu_CuentasPorPagar import*
+from Menu_ProgramasDeUtilidad import*
 from EntradaInventario_prog import*
-from style import FONTS, APP_COLORS, APPEARANCE_MODE
+from style import APPEARANCE_MODE
 import psycopg2
 from psycopg2 import sql
 
@@ -42,11 +44,12 @@ class App(ctk.CTk):
 # BLOQUEO Y DESBLOQUEO DE SESION
     def LoginSuccess(self):
         self.login_frame.destroy()
-        self.dashboard=MainFrame(self,
+        self.dashboard=DashBoardMenu(self,
                                  lockscreen_callback = self.LockWindow,
                                  exit_callback = self.Salir,
                                  Inventario_CB=self.InventarioMenu,
-                                 CuentasPorPagar_CB=self.CuentasPorPagarMenu)
+                                 CuentasPorPagar_CB=self.CuentasPorPagarMenu,
+                                 ProgramasDeUtilidad_CB = self.ProgramasUtilidadMenu)
         self.dashboard.pack(expand=True, fill='both')
         self.dashboard_activo = True
     def LockWindow(self):
@@ -56,6 +59,8 @@ class App(ctk.CTk):
         self.dashboard_activo = False
         self.login_frame = LoginFrame(self, success_callback=self.LoginSuccess)
         self.login_frame.pack(expand=True,fill='both')
+# -------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------
 # PROGRAMAS DE INVENTARIO - PROGRAMAS DE INVENTARIO - PROGRAMAS DE INVENTARIO - PROGRAMAS DE INVENTARIO
 # PROGRAMAS DE INVENTARIO - PROGRAMAS DE INVENTARIO - PROGRAMAS DE INVENTARIO - PROGRAMAS DE INVENTARIO
 # PROGRAMAS DE INVENTARIO - PROGRAMAS DE INVENTARIO - PROGRAMAS DE INVENTARIO - PROGRAMAS DE INVENTARIO
@@ -99,6 +104,8 @@ class App(ctk.CTk):
         self.current_prog.destroy()
         self.current_prog = AjustesInventarioProg(self,GoBack_CB=self.GoBackInventario)
         self.current_prog.pack(expand=True,fill='both')
+# -------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------
 # PROGRAMAS DE CUENTAS POR PAGAR - PROGRAMAS DE CUENTAS POR PAGAR - PROGRAMAS DE CUENTAS POR PAGAR - PROGRAMAS DE CUENTAS POR PAGAR - 
 # PROGRAMAS DE CUENTAS POR PAGAR - PROGRAMAS DE CUENTAS POR PAGAR - PROGRAMAS DE CUENTAS POR PAGAR - PROGRAMAS DE CUENTAS POR PAGAR - 
 # PROGRAMAS DE CUENTAS POR PAGAR - PROGRAMAS DE CUENTAS POR PAGAR - PROGRAMAS DE CUENTAS POR PAGAR - PROGRAMAS DE CUENTAS POR PAGAR - 
@@ -121,21 +128,55 @@ class App(ctk.CTk):
         self.current_prog.destroy()
         self.current_prog = ProveedoresProg(self,GoBack_CB=self.GoBackCuentasPP)
         self.current_prog.pack(expand=True,fill='both')
+# -------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------
+# PROGRAMAS DE UTILIDAD - PROGRAMAS DE UTILIDAD - PROGRAMAS DE UTILIDAD - PROGRAMAS DE UTILIDAD - 
+# PROGRAMAS DE UTILIDAD - PROGRAMAS DE UTILIDAD - PROGRAMAS DE UTILIDAD - PROGRAMAS DE UTILIDAD - 
+# PROGRAMAS DE UTILIDAD - PROGRAMAS DE UTILIDAD - PROGRAMAS DE UTILIDAD - PROGRAMAS DE UTILIDAD - 
+    # PROGRAMAS DE UTILIDAD MENU
+    def ProgramasUtilidadMenu(self):
+        self.dashboard.destroy()
+        self.dashboard_activo = False
+        self.current_prog = ProgramasDeUtilidadMenu(self,
+                                           GoBack_CB = self.ReturnToDashboard,
+                                           MaestroDeTablas = self.MaestroDeTablas)
+        self.current_prog.pack(expand=True,fill='both')
+    # GO BACJ PDU MENU
+    def GoBackProgramasUtilidadMenu(self):
+        self.current_prog.destroy()
+        self.current_prog = ProgramasDeUtilidadMenu(self,
+                                           GoBack_CB = self.ReturnToDashboard,
+                                           MaestroDeTablas = self.MaestroDeTablas)
+        self.current_prog.pack(expand=True,fill='both')
+    # PROG MAESTRO DE TABLAS
+    def MaestroDeTablas(self):
+        self.current_prog.destroy()
+        self.current_prog = MaestroDeTablas_prog(self,GoBack_CB=self.GoBackProgramasUtilidadMenu)
+        self.current_prog.pack(expand=True,fill='both')
+# -------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------
+# REGRESAR AL DASHBOARD
+# REGRESAR AL DASHBOARD
 # REGRESAR AL DASHBOARD
     def ReturnToDashboard(self):
         self.current_prog.destroy()
-        self.dashboard=MainFrame(self,
+        self.dashboard=DashBoardMenu(self,
                                  lockscreen_callback = self.LockWindow,
                                  exit_callback = self.Salir,
                                  Inventario_CB=self.InventarioMenu,
-                                 CuentasPorPagar_CB=self.CuentasPorPagarMenu)
+                                 CuentasPorPagar_CB=self.CuentasPorPagarMenu,
+                                 ProgramasDeUtilidad_CB = self.ProgramasUtilidadMenu)
         self.dashboard.pack(expand=True, fill='both')
         self.dashboard_activo = True
+# SALIR DEL PROGRAMA
+# SALIR DEL PROGRAMA
 # SALIR DEL PROGRAMA
     def Salir(self):
         answer = messagebox.askyesno('Salir','¿Está seguro que desea salir de la aplicación?')
         if answer:
             self.quit()
+# ATAJOS
+# ATAJOS
 # ATAJOS
     def F4_Pressed(self,event):
         if self.dashboard_activo == False:
@@ -143,6 +184,8 @@ class App(ctk.CTk):
     def CloseSession(self, event):
         if self.dashboard_activo:
             self.LockWindow()
+# INNICIO DE LA APLICACION
+# INNICIO DE LA APLICACION
 # INNICIO DE LA APLICACION
 if __name__ == '__main__':
     ctk.set_appearance_mode(APPEARANCE_MODE)

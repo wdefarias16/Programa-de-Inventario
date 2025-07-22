@@ -1,7 +1,7 @@
 import tkinter as tk
 import customtkinter as ctk
 from tkinter import ttk,messagebox
-from style import*
+from style import FONT, ICONS, APP_COLORS
 from DatabaseManager import*
 
 import os
@@ -42,7 +42,7 @@ class AjustesInventarioProg(ctk.CTkFrame):
                                    text='Ajustes de inventario',
                                    bg_color='transparent',
                                    text_color=APP_COLORS[0],
-                                   font=FONTS[0])
+                                   font=FONT['title_light'])
         title_label.pack(pady=10)
         # PROG FRAME
         self.prog_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLORS[0])
@@ -81,13 +81,13 @@ class AjustesInventarioProg(ctk.CTkFrame):
         num_doc_label = ctk.CTkLabel(self.prog_frame,
                                      text='Documento',
                                      text_color=APP_COLORS[1],
-                                     font=FONTS[1])
+                                     font=FONT['text_light'])
         num_doc_label.grid(row=3,column=1,columnspan=2,sticky='ws')
         # LOG TEXT BOX
         log_label = ctk.CTkLabel(self.prog_frame,
                                      text='Motivo del ajuste',
                                      text_color=APP_COLORS[1],
-                                     font=FONTS[1])
+                                     font=FONT['text_light'])
         log_label.grid(row=15,column=1,columnspan=2,sticky='w')
         # BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - 
         # ADD PRODUCT
@@ -131,13 +131,13 @@ class AjustesInventarioProg(ctk.CTkFrame):
             background = APP_COLORS[0],
             foreground = APP_COLORS[1],
             rowheight = 30,
-            font = FONTS[2],
+            font = FONT['text_small'],
             fieldbackground = APP_COLORS[0])
         style.configure(
             'Custom.Treeview.Heading',
             background = APP_COLORS[1],
             foreground = APP_COLORS[1],
-            font = FONTS[1])
+            font = FONT['text_light'])
         self.treeview_main = ttk.Treeview(self.prog_frame,
                                      style='Custom.Treeview',
                                      columns=('Descripcion','Linea','Grupo',
@@ -305,7 +305,7 @@ class AjustesInventarioProg(ctk.CTkFrame):
                                    text='Búsqueda de productos',
                                    bg_color='transparent',
                                    text_color=APP_COLORS[0],
-                                   font=FONTS[3])
+                                   font=FONT['text'])
         title_label.pack(expand=True,fill='x',pady=5)
         # PROG FRAME - PROG FRAME - PROG FRAME - PROG FRAME - 
         prog_frame = ctk.CTkFrame(help_frame,
@@ -344,13 +344,13 @@ class AjustesInventarioProg(ctk.CTkFrame):
         # SEARCH BAR
         search_bar_label = ctk.CTkLabel(prog_frame,
                                         text='Búsqueda por nombre',
-                                        font=FONTS[1],
+                                        font=FONT['text_light'],
                                         text_color=APP_COLORS[4])
         search_bar_label.grid(row=1,column=1,columnspan=2,sticky='w')
         # QUANTITY
         qty_label = ctk.CTkLabel(prog_frame,
                                 text='Cantidad',
-                                font=FONTS[1],
+                                font=FONT['text_light'],
                                 text_color=APP_COLORS[4])
         qty_label.grid(row=1,column=6,columnspan=2,sticky='w')
         # BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - 
@@ -490,18 +490,18 @@ class AjustesInventarioProg(ctk.CTkFrame):
                              bg_color='transparent',
                              text_color=APP_COLORS[0],
                              height=50,
-                             font=FONTS[3])
+                             font=FONT['text'])
         title.pack(pady=10)
     # PRODUCTO
         producto_label = ctk.CTkLabel(edit_frame,
                                       text=self.nombre,
-                                      font=FONTS[4],
+                                      font=FONT['title_bold'],
                                       text_color=APP_COLORS[4],
                                       bg_color='transparent')
         producto_label.grid(row = 3, column = 1, columnspan = 6, padx = 10, sticky = 'w')
         existencia_label = ctk.CTkLabel(edit_frame,
                                       text=f'Existencia actual: {existencia}',
-                                      font=FONTS[5],
+                                      font=FONT['subtitle_bold'],
                                       text_color=APP_COLORS[4],
                                       bg_color='transparent')
         existencia_label.grid(row = 4, column = 1, columnspan = 6, padx = 10, sticky = 'w')
@@ -522,7 +522,7 @@ class AjustesInventarioProg(ctk.CTkFrame):
         # AJUSTE
         ajuste_label = ctk.CTkLabel(edit_frame,
                                       text=f'Ajuste',
-                                      font=FONTS[1],
+                                      font=FONT['text_light'],
                                       text_color=APP_COLORS[4])
         ajuste_label.grid(row = 6, column = 1, columnspan = 2, sticky = 'w',padx = 10)
     # BOTONES

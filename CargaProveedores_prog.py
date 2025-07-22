@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 from DatabaseManager import PROV_MANAGER
-from style import FONTS, APP_COLORS
+from style import FONT, APP_COLORS
 # PROGRAMA DE CARGA DE PROVEEDORES - PROGRAMA DE CARGA DE PROVEEDORES - PROGRAMA DE CARGA DE PROVEEDORES - 
 class ProveedoresProg(ctk.CTkFrame):
     def __init__(self,parent,GoBack_CB):
@@ -24,7 +24,7 @@ class ProveedoresProg(ctk.CTkFrame):
                              bg_color='transparent',
                              text_color=APP_COLORS[0],
                              height=50,
-                             font=FONTS[0])
+                             font=FONT['title_light'])
         title.pack(pady=5)
     # FRAME PROVEDORES - FRAME PROVEDORES - FRAME PROVEDORES - FRAME PROVEDORES - FRAME PROVEDORES - 
         prov_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLORS[0])
@@ -218,67 +218,67 @@ class ProveedoresProg(ctk.CTkFrame):
         # CODIGO
         self.codigo_label = ctk.CTkLabel(prov_frame,
                                         text='Código',
-                                        font=FONTS[1])
+                                        font=FONT['text_light'])
         self.codigo_label.grid(row=2,column=5,sticky='e',padx=5)
         # NOMBRE
         self.nombre_label = ctk.CTkLabel(prov_frame,
                                         text='Nombre',
-                                        font=FONTS[1])
+                                        font=FONT['text_light'])
         self.nombre_label.grid(row=3,column=5,sticky='e',padx=5)
         # CONTACTO
         self.contacto_label = ctk.CTkLabel(prov_frame,
                                         text='Contacto',
-                                        font=FONTS[1])
+                                        font=FONT['text_light'])
         self.contacto_label.grid(row=4,column=5,sticky='e',padx=5)
         # DIRECCION 1
         self.direccion1_label = ctk.CTkLabel(prov_frame,
                                         text='Dirección 1',
-                                        font=FONTS[1])
+                                        font=FONT['text_light'])
         self.direccion1_label.grid(row=5,column=5,sticky='e',padx=5)
         # DIRECCION 2
         self.direccion2_label = ctk.CTkLabel(prov_frame,
                                         text='Dirección 2',
-                                        font=FONTS[1])
+                                        font=FONT['text_light'])
         self.direccion2_label.grid(row=6,column=5,sticky='e',padx=5)
         # CIUDAD
         self.ciudad_label = ctk.CTkLabel(prov_frame,
                                         text='Ciudad',
-                                        font=FONTS[1])
+                                        font=FONT['text_light'])
         self.ciudad_label.grid(row=7,column=5,sticky='e',padx=5)
         # CIUDAD
         self.ciudad_label = ctk.CTkLabel(prov_frame,
                                         text='Ciudad',
-                                        font=FONTS[1])
+                                        font=FONT['text_light'])
         self.ciudad_label.grid(row=7,column=5,sticky='e',padx=5)
         # TELEFONO 1
         self.telefono1_label = ctk.CTkLabel(prov_frame,
                                         text='Teléfono 1',
-                                        font=FONTS[1])
+                                        font=FONT['text_light'])
         self.telefono1_label.grid(row=8,column=5,sticky='e',padx=5)
         # TELEFONO 2
         self.telefono2_label = ctk.CTkLabel(prov_frame,
                                         text='Teléfono 2',
-                                        font=FONTS[1])
+                                        font=FONT['text_light'])
         self.telefono2_label.grid(row=9,column=5,sticky='e',padx=5)
         # CELULAR 1
         self.celular1_label = ctk.CTkLabel(prov_frame,
                                         text='Celular 1',
-                                        font=FONTS[1])
+                                        font=FONT['text_light'])
         self.celular1_label.grid(row=10,column=5,sticky='e',padx=5)
         # CELULAR 2
         self.celular2_label = ctk.CTkLabel(prov_frame,
                                         text='Celular 2',
-                                        font=FONTS[1])
+                                        font=FONT['text_light'])
         self.celular2_label.grid(row=11,column=5,sticky='e',padx=5)
         # EMAIL
         self.email_label = ctk.CTkLabel(prov_frame,
                                         text='Email',
-                                        font=FONTS[1])
+                                        font=FONT['text_light'])
         self.email_label.grid(row=12,column=5,sticky='e',padx=5)
         # RIF
         self.rif_label = ctk.CTkLabel(prov_frame,
                                         text='Id. Fiscal',
-                                        font=FONTS[1])
+                                        font=FONT['text_light'])
         self.rif_label.grid(row=13,column=4,columnspan=2,sticky='e',padx=5)
     # BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - 
         # VOLVER ATRAS
@@ -575,13 +575,13 @@ class ProveedoresProg(ctk.CTkFrame):
             background = APP_COLORS[0],
             foreground = APP_COLORS[1],
             rowheight = 30,
-            font = FONTS[2],
+            font = FONT['text_small'],
             fieldbackground = APP_COLORS[0])
         style.configure(
             'Custom.Treeview.Heading',
             background = APP_COLORS[1],
             foreground = APP_COLORS[1],
-            font = FONTS[1])
+            font = FONT['text_light'])
     # SCROLLBAR DEL TV
         scrollbar = ctk.CTkScrollbar(self.tree_frame,
                                      orientation='vertical',

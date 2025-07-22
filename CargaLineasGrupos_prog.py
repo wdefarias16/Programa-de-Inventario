@@ -1,7 +1,7 @@
 import customtkinter as ctk
 import tkinter as tk
 from tkinter import messagebox, ttk
-from style import FONTS, APP_COLORS, APPEARANCE_MODE
+from style import FONT,APP_COLORS
 from DatabaseManager import LINE_MANAGER
 
 # PROGRAMA DE CARGA DE LINEAS Y GRUPOS - PROGRAMA DE CARGA DE LINEAS Y GRUPOS - PROGRAMA DE CARGA DE LINEAS Y GRUPOS
@@ -21,7 +21,7 @@ class LineasGruposProg(ctk.CTkFrame):
                              bg_color='transparent',
                              text_color=APP_COLORS[0],
                              height=50,
-                             font=FONTS[0])
+                             font=FONT['title_light'])
         title.pack(pady=10)
     # MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - 
         self.main_frame = ctk.CTkFrame(self,
@@ -62,17 +62,17 @@ class LineasGruposProg(ctk.CTkFrame):
         # TITULO LINEAS
         self.titulo_line = ctk.CTkLabel(self.main_frame,
                                         text='Cargar una línea',
-                                        font=FONTS[1])
+                                        font=FONT['text_light'])
         self.titulo_line.grid(row=1,column=2,sticky='w')
         # CODIGO
         codigo_label = ctk.CTkLabel(self.main_frame,
                                     text='Código de línea',
-                                    font=FONTS[1])
+                                    font=FONT['text_light'])
         codigo_label.grid(row=2,column=4,columnspan=2,sticky='w')
         # NOMBRE - DESCRIPCION
         descrip_label = ctk.CTkLabel(self.main_frame,
                                     text='Descripción',
-                                    font=FONTS[1])
+                                    font=FONT['text_light'])
         descrip_label.grid(row=3,column=4,columnspan=2,sticky='w')
     # LINE HELP BUTTON - LINE HELP BUTTON - LINE HELP BUTTON - LINE HELP BUTTON - LINE HELP BUTTON - LINE HELP BUTTON - 
         # BUSCAR LINEA
@@ -216,7 +216,7 @@ class LineasGruposProg(ctk.CTkFrame):
         # TITULO CARGA GRUPO
         self.titulo_grupo_label = ctk.CTkLabel(self.main_frame,
                                     text='Carga de grupo',
-                                    font=FONTS[1])
+                                    font=FONT['text_light'])
         self.titulo_grupo_label.grid(row=7,column=2,columnspan=2,sticky='w')
     # ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - 
         # ENTRADA CODIGO GRUPO
@@ -281,27 +281,27 @@ class LineasGruposProg(ctk.CTkFrame):
         # CODIGO
         self.codigoGrupo_label = ctk.CTkLabel(self.main_frame,
                                     text='Código de grupo',
-                                    font=FONTS[1])
+                                    font=FONT['text_light'])
         self.codigoGrupo_label.grid(row=8,column=4,columnspan=2,sticky='w')
         # DESCRIPCION
         self.nombreGrupo_label = ctk.CTkLabel(self.main_frame,
                                     text='Descripción',
-                                    font=FONTS[1])
+                                    font=FONT['text_light'])
         self.nombreGrupo_label.grid(row=9,column=4,columnspan=2,sticky='w')
         # PDV1
         self.pdv1_label = ctk.CTkLabel(self.main_frame,
                                     text='% Porcentaje de venta 1',
-                                    font=FONTS[1])
+                                    font=FONT['text_light'])
         self.pdv1_label.grid(row=10,column=4,columnspan=2,sticky='w')
         # PDV2
         self.pdv2_label = ctk.CTkLabel(self.main_frame,
                                     text='% Porcentaje de venta 2',
-                                    font=FONTS[1])
+                                    font=FONT['text_light'])
         self.pdv2_label.grid(row=11,column=4,columnspan=2,sticky='w')
         # PDV3
         self.pdv3_label = ctk.CTkLabel(self.main_frame,
                                     text='% Porcentaje de venta 3',
-                                    font=FONTS[1])
+                                    font=FONT['text_light'])
         self.pdv3_label.grid(row=12,column=4,columnspan=2,sticky='w')
         # GROUP HELP BUTTON - GROUP HELP BUTTON - GROUP HELP BUTTON - GROUP HELP BUTTON -  
         self.find_group_btn = ctk.CTkButton(self.main_frame,
@@ -472,7 +472,7 @@ class LineasGruposProg(ctk.CTkFrame):
                              bg_color='transparent',
                              text_color=APP_COLORS[0],
                              height=50,
-                             font=FONTS[3])
+                             font=FONT['text'])
         title.pack(pady=10)   
     # BARRA DE BUSQUEDA
         self.search_line_bar_var = tk.StringVar()
@@ -518,13 +518,13 @@ class LineasGruposProg(ctk.CTkFrame):
             background = APP_COLORS[0],
             foreground = APP_COLORS[1],
             rowheight = 30,
-            font = FONTS[2],
+            font = FONT['text_small'],
             fieldbackground = APP_COLORS[0])
         style.configure(
             'Custom.Treeview.Heading',
             background = APP_COLORS[1],
             foreground = APP_COLORS[1],
-            font = FONTS[1])
+            font = FONT['text_light'])
     # SCROLLBAR DEL TV
         scrollbar = ctk.CTkScrollbar(self.line_help_frame,
                                      orientation='vertical',
@@ -617,7 +617,7 @@ class LineasGruposProg(ctk.CTkFrame):
                                  bg_color='transparent',
                                  text_color=APP_COLORS[0],
                                  height=50,
-                                 font=FONTS[3])
+                                 font=FONT['text'])
             title.pack(pady=10)   
         # BARRA DE BUSQUEDA
             self.search_help_bar_var = tk.StringVar()
@@ -667,12 +667,12 @@ class LineasGruposProg(ctk.CTkFrame):
                 foreground = APP_COLORS[1],
                 rowheight = 30,
                 fieldbackground = APP_COLORS[0],
-                font = FONTS[2])
+                font = FONT['text_small'])
             style.configure(
                 'Custom.Treeview.Heading',
                 background = APP_COLORS[1],
                 foreground = APP_COLORS[1],
-                font = FONTS[1])
+                font = FONT['text_light'])
         # SCROLLBAR DEL TV
             scrollbar = ctk.CTkScrollbar(self.help_frame,
                                          orientation='vertical',

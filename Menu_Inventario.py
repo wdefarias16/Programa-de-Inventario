@@ -6,7 +6,12 @@ from style import*
 
 
 class InventarioMenu(ctk.CTkFrame):
-    def __init__(self,parent,GoBack_CB,CargaPro_Prog,Lineas_Prog,EntradasInv_prog,AjustesInv_Prog):
+    def __init__(self,parent,
+                 GoBack_CB,
+                 CargaPro_Prog,
+                 Lineas_Prog,
+                 EntradasInv_prog,
+                 AjustesInv_Prog):
         super().__init__(parent)
     # CALLBACKS
         self.GoBack_CB =  GoBack_CB
@@ -53,8 +58,5 @@ class InventarioMenu(ctk.CTkFrame):
         menu_bar.add_cascade(label='Consultas', menu=consultas_menu)
         menu_bar.add_cascade(label='Ajustes', menu=ajustes_menu)
         menu_bar.add_cascade(label='Entradas de Inventario', menu=entradas_menu)
-
-        
-
 
         parent.configure(menu=menu_bar)

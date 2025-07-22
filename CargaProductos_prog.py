@@ -4,7 +4,7 @@ from tkinter import ttk
 from PIL import Image, ImageTk
 from InventarioProductos_DB import*
 from DatabaseManager import INVENTARIO, LINE_MANAGER, PROV_MANAGER
-from style import FONTS, APP_COLORS, APPEARANCE_MODE
+from style import FONT, APP_COLORS, ICONS
 
 # PROGRAMA DE CARGA DE PRODUCTOS
 class CargaProductosProg(ctk.CTkFrame):
@@ -24,7 +24,7 @@ class CargaProductosProg(ctk.CTkFrame):
                              bg_color='transparent',
                              text_color=APP_COLORS[0],
                              height=50,
-                             font=FONTS[0])
+                             font=FONT['title_light'])
         title.pack(pady=10)
     # CARGA ENTRADAS - CARGA ENTRADAS - CARGA ENTRADAS - CARGA ENTRADAS - CARGA ENTRADAS - CARGA ENTRADAS - 
         self.entry_frame = ctk.CTkFrame(self,
@@ -119,79 +119,79 @@ class CargaProductosProg(ctk.CTkFrame):
     # DATOS DE PRODUCTO
         he_label = ctk.CTkLabel(self.entry_frame,
                                     text='Datos del producto',
-                                    font=FONTS[1],
+                                    font=FONT['text_light'],
                                     text_color=APP_COLORS[4])
         he_label.grid(row=1,column=3,columnspan=1,sticky='w')
     # CODIGO
         codigo_label = ctk.CTkLabel(self.entry_frame,
                                     text='Código',
-                                    font=FONTS[1],
+                                    font=FONT['text_light'],
                                     text_color=APP_COLORS[4])
         codigo_label.grid(row=2,column=7,columnspan=1,sticky='w',padx=5)
     # LINEA
         linea_label = ctk.CTkLabel(self.entry_frame,
                                     text='Línea',
-                                    font=FONTS[1],
+                                    font=FONT['text_light'],
                                     text_color=APP_COLORS[4])
         linea_label.grid(row=3,column=7,columnspan=1,sticky='w',padx=5)
     # GRUPO
         grupo_label = ctk.CTkLabel(self.entry_frame,
                                     text='Grupo',
-                                    font=FONTS[1],
+                                    font=FONT['text_light'],
                                     text_color=APP_COLORS[4])
         grupo_label.grid(row=4,column=7,columnspan=1,sticky='w',padx=5)
     # PROVEEDOR
         prove_label = ctk.CTkLabel(self.entry_frame,
                                     text='Proveedor Pricipal',
-                                    font=FONTS[1],
+                                    font=FONT['text_light'],
                                     text_color=APP_COLORS[4])
         prove_label.grid(row=5,column=7,columnspan=1,sticky='w',padx=5)
     # NOMBRE
         nombre_label = ctk.CTkLabel(self.entry_frame,
                                     text='Nombre',
-                                    font=FONTS[1],
+                                    font=FONT['text_light'],
                                     text_color=APP_COLORS[4])
         nombre_label.grid(row=6,column=7,columnspan=1,sticky='w',padx=5)        
     # COSTO
         costo_label = ctk.CTkLabel(self.entry_frame,
                                     text='Costo',
-                                    font=FONTS[1],
+                                    font=FONT['text_light'],
                                     text_color=APP_COLORS[4])
         costo_label.grid(row=7,column=7,columnspan=1,sticky='w',padx=5)
     # UBICACION 1
         ubi1_label = ctk.CTkLabel(self.entry_frame,
                                     text='Ubicación 1',
-                                    font=FONTS[1],
+                                    font=FONT['text_light'],
                                     text_color=APP_COLORS[4])
         ubi1_label.grid(row=8,column=7,columnspan=1,sticky='w',padx=5)
     # UBICACION 2
         ubi2_label = ctk.CTkLabel(self.entry_frame,
                                     text='Ubicación 2',
-                                    font=FONTS[1],
+                                    font=FONT['text_light'],
                                     text_color=APP_COLORS[4])
         ubi2_label.grid(row=9,column=7,columnspan=1,sticky='w',padx=5)
     # PRECIOS
         precios_label = ctk.CTkLabel(self.entry_frame,
                                     text='Precios de venta',
-                                    font=FONTS[1],
+                                    font=FONT['text_light'],
                                     text_color=APP_COLORS[4])
         precios_label.grid(row=10,column=7,columnspan=2,sticky='w',padx=5)
     # PRECIO 1
         self.precio1_label = ctk.CTkLabel(self.entry_frame,
                                     text='Precio 1',
-                                    font=FONTS[1],
+                                    font=FONT['text_light'],
                                     text_color=APP_COLORS[4])
         self.precio1_label.grid(row=11,column=3,columnspan=2,sticky='wn',padx=5,pady=2)
     # PRECIO 2
         self.precio2_label = ctk.CTkLabel(self.entry_frame,
                                     text='Precio 2',
-                                    font=FONTS[1],
+                                    font=FONT['text_light'],
                                     text_color=APP_COLORS[4])
         self.precio2_label.grid(row=11,column=4,columnspan=2,sticky='wn',padx=5,pady=2)
     # PRECIO 3
         self.precio3_label = ctk.CTkLabel(self.entry_frame,
                                     text='Precio 3',
-                                    font=FONTS[1],
+                                    font=FONT['text_light'],
                                     text_color=APP_COLORS[4])
         self.precio3_label.grid(row=11,column=5,columnspan=2,sticky='wn',padx=5,pady=2)
     
@@ -582,14 +582,14 @@ class CargaProductosProg(ctk.CTkFrame):
                              bg_color='transparent',
                              text_color=APP_COLORS[0],
                              height=50,
-                             font=FONTS[3])
+                             font=FONT['text'])
         title.pack(pady=10)
     # BARRA DE BUSQUEDA
         label_sb = ctk.CTkLabel(self.tree_frame,
                              text='Busqueda por nombre',
                              bg_color='transparent',
                              text_color=APP_COLORS[4],
-                             font=FONTS[1])
+                             font=FONT['text_light'])
         label_sb.grid(row=1,column=0,columnspan=3,sticky='ws',padx=15)
         self.search_bar_var = tk.StringVar()
         self.search_bar = ctk.CTkEntry(self.tree_frame,
@@ -647,13 +647,13 @@ class CargaProductosProg(ctk.CTkFrame):
             background = APP_COLORS[0],
             foreground = APP_COLORS[1],
             rowheight = 30,
-            font = FONTS[2],
+            font = FONT['text_small'],
             fieldbackground = APP_COLORS[0])
         style.configure(
             'Custom.Treeview.Heading',
             background = APP_COLORS[1],
             foreground = APP_COLORS[1],
-            font = FONTS[1])
+            font = FONT['text_light'])
     # SCROLLBAR DEL TV
         scrollbar = ctk.CTkScrollbar(self.tree_frame,
                                      orientation='vertical',
@@ -702,7 +702,7 @@ class CargaProductosProg(ctk.CTkFrame):
                              bg_color='transparent',
                              text_color=APP_COLORS[0],
                              height=50,
-                             font=FONTS[3])
+                             font=FONT['text'])
         title.pack(pady=10)   
     # BARRA DE BUSQUEDA
         self.search_line_bar_var = tk.StringVar()
@@ -741,20 +741,7 @@ class CargaProductosProg(ctk.CTkFrame):
         # LINEA
         self.line_help_treeview.heading('Linea',text='Linea')
         self.line_help_treeview.column('Linea',width=100,anchor='center')
-    # CONFIGURACION VISUAL DEL TV
-        style = ttk.Style()
-        style.configure(
-            'Custom.Treeview',
-            background = APP_COLORS[0],
-            foreground = APP_COLORS[1],
-            rowheight = 30,
-            font = FONTS[2],
-            fieldbackground = APP_COLORS[0])
-        style.configure(
-            'Custom.Treeview.Heading',
-            background = APP_COLORS[1],
-            foreground = APP_COLORS[1],
-            font = FONTS[1])
+
     # SCROLLBAR DEL TV
         scrollbar = ctk.CTkScrollbar(self.line_help_frame,
                                      orientation='vertical',
@@ -846,7 +833,7 @@ class CargaProductosProg(ctk.CTkFrame):
                                  bg_color='transparent',
                                  text_color=APP_COLORS[0],
                                  height=50,
-                                 font=FONTS[3])
+                                 font=FONT['text'])
             title.pack(pady=10)   
         # BARRA DE BUSQUEDA
             self.search_help_bar_var = tk.StringVar()
@@ -888,20 +875,7 @@ class CargaProductosProg(ctk.CTkFrame):
             # GRUPO
             self.help_treeview.heading('Grupo',text='Grupo')
             self.help_treeview.column('Grupo',width=100,anchor='center')
-        # CONFIGURACION VISUAL DEL TV
-            style = ttk.Style()
-            style.configure(
-                'Custom.Treeview',
-                background = APP_COLORS[0],
-                foreground = APP_COLORS[1],
-                rowheight = 30,
-                fieldbackground = APP_COLORS[0],
-                font = FONTS[2])
-            style.configure(
-                'Custom.Treeview.Heading',
-                background = APP_COLORS[1],
-                foreground = APP_COLORS[1],
-                font = FONTS[1])
+
         # SCROLLBAR DEL TV
             scrollbar = ctk.CTkScrollbar(self.help_frame,
                                          orientation='vertical',
@@ -997,7 +971,7 @@ class CargaProductosProg(ctk.CTkFrame):
                              bg_color='transparent',
                              text_color=APP_COLORS[0],
                              height=50,
-                             font=FONTS[3])
+                             font=FONT['text'])
         title.pack(pady=10)   
     # BARRA DE BUSQUEDA
         self.search_help_bar_var = tk.StringVar()
@@ -1036,20 +1010,7 @@ class CargaProductosProg(ctk.CTkFrame):
         # PROVEEDOR
         self.help_treeview.heading('Proveedor',text='Proveedor')
         self.help_treeview.column('Proveedor',width=100,anchor='center')
-    # CONFIGURACION VISUAL DEL TV
-        style = ttk.Style()
-        style.configure(
-            'Custom.Treeview',
-            background = APP_COLORS[0],
-            foreground = APP_COLORS[1],
-            rowheight = 30,
-            font = FONTS[2],
-            fieldbackground = APP_COLORS[0])
-        style.configure(
-            'Custom.Treeview.Heading',
-            background = APP_COLORS[1],
-            foreground = APP_COLORS[1],
-            font = FONTS[1])
+
     # SCROLLBAR DEL TV
         scrollbar = ctk.CTkScrollbar(self.help_frame,
                                      orientation='vertical',

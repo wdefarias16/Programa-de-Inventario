@@ -4,7 +4,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from PIL import Image, ImageTk
 from DatabaseManager import INVENTARIO, PROV_MANAGER
-from style import*
+from style import FONT, APP_COLORS, ICONS
 import os
 from reportlab.lib.pagesizes import LETTER
 from reportlab.lib import colors
@@ -38,7 +38,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
                              bg_color='transparent',
                              text_color=APP_COLORS[0],
                              height=50,
-                             font=FONTS[0])
+                             font=FONT['title_light'])
         title.pack(pady=10)
     # PROG FRAME
         self.prog_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLORS[0])
@@ -87,25 +87,25 @@ class EntradasInventarioProg(ctk.CTkFrame):
         # NUMERO - CODIGO DE PEDIDO
         num_pedido_label = ctk.CTkLabel(self.prog_frame,
                                         text='Número de factura',
-                                        font=FONTS[1],
+                                        font=FONT['text_light'],
                                         text_color=APP_COLORS[4])
         num_pedido_label.grid(row=3,column=1,columnspan=2,padx=5,sticky='w')
         # PROVEEDOR
         proveedor_label = ctk.CTkLabel(self.prog_frame,
                                         text='Proveedor',
-                                        font=FONTS[1],
+                                        font=FONT['text_light'],
                                         text_color=APP_COLORS[4])
         proveedor_label.grid(row=3,column=4,columnspan=2,padx=5,sticky='w')
         # FECHA - 
         fecha_pedido_label = ctk.CTkLabel(self.prog_frame,
                                         text='Fecha del pedido',
-                                        font=FONTS[1],
+                                        font=FONT['text_light'],
                                         text_color=APP_COLORS[4])
         fecha_pedido_label.grid(row=3,column=5,columnspan=2,padx=5,sticky='w')
         # TOTAL
         total_label = ctk.CTkLabel(self.prog_frame,
                                         text='Previsualización Total:',
-                                        font=FONTS[1],
+                                        font=FONT['text_light'],
                                         text_color=APP_COLORS[4])
         total_label.grid(row=15,column=8,columnspan=2,padx=5,sticky='e')
     # BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - 
@@ -209,13 +209,13 @@ class EntradasInventarioProg(ctk.CTkFrame):
             background = APP_COLORS[0],
             foreground = APP_COLORS[1],
             rowheight = 30,
-            font = FONTS[2],
+            font = FONT['text_small'],
             fieldbackground = APP_COLORS[0])
         style.configure(
             'Custom.Treeview.Heading',
             background = APP_COLORS[1],
             foreground = APP_COLORS[1],
-            font = FONTS[1])
+            font = FONT['text_light'])
         # SCROLLBAR DEL TV
         scrollbar = ctk.CTkScrollbar(self.prog_frame,
                                      orientation='vertical',
@@ -283,7 +283,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
                              bg_color='transparent',
                              text_color=APP_COLORS[0],
                              height=50,
-                             font=FONTS[3])
+                             font=FONT['text'])
         title.pack(pady=10)  
     # ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - 
         # BARRA DE BUSQUEDA
@@ -386,49 +386,49 @@ class EntradasInventarioProg(ctk.CTkFrame):
         # BUSQUEDA
         label_busqueda = ctk.CTkLabel(self.tree_frame,
                              text='Busqueda por nombre',
-                             font=FONTS[1],
+                             font=FONT['text_light'],
                                         text_color=APP_COLORS[4])
         label_busqueda.grid(row=1,column=0,columnspan=3,sticky='w',padx=20)
         # CANTIDAD
         label_cantidad = ctk.CTkLabel(self.tree_frame,
                                       text='Cantidad',
-                                      font=FONTS[1],
+                                      font=FONT['text_light'],
                                       text_color=APP_COLORS[4])
         label_cantidad.grid(row=4,column=1,columnspan=3,sticky='w',padx=20)
         # COSTO
         label_costo = ctk.CTkLabel(self.tree_frame,
                                       text='Costo',
-                                      font=FONTS[1],
+                                      font=FONT['text_light'],
                                       text_color=APP_COLORS[4])
         label_costo.grid(row=5,column=1,columnspan=3,sticky='w',padx=20)
         # DESCUENTO 1
         label_descuento_1 = ctk.CTkLabel(self.tree_frame,
                                        text='Descuento 1',
-                                       font=FONTS[1],
+                                       font=FONT['text_light'],
                                        text_color=APP_COLORS[4])
         label_descuento_1.grid(row=6,column=1,columnspan=3,sticky='w',padx=20)
         # DESCUENTO 2
         label_descuento_2 = ctk.CTkLabel(self.tree_frame,
                                        text='Descuento 2',
-                                       font=FONTS[1],
+                                       font=FONT['text_light'],
                                        text_color=APP_COLORS[4])
         label_descuento_2.grid(row=7,column=1,columnspan=3,sticky='w',padx=20)
         # DESCUENTO 3
         label_descuento_3 = ctk.CTkLabel(self.tree_frame,
                                        text='Descuento 3',
-                                       font=FONTS[1],
+                                       font=FONT['text_light'],
                                        text_color=APP_COLORS[4])
         label_descuento_3.grid(row=8,column=1,columnspan=3,sticky='w',padx=20)
         # FLETE
         label_flete = ctk.CTkLabel(self.tree_frame,
                                        text='Flete',
-                                       font=FONTS[1],
+                                       font=FONT['text_light'],
                                        text_color=APP_COLORS[4])
         label_flete.grid(row=9,column=1,columnspan=3,sticky='w',padx=20)
         # IVA
         label_iva = ctk.CTkLabel(self.tree_frame,
                                       text='I.V.A.',
-                                      font=FONTS[1],
+                                      font=FONT['text_light'],
                                       text_color=APP_COLORS[4])
         label_iva.grid(row=10,column=1,columnspan=3,sticky='w',padx=20)
     # BOTONES TREEVIEW - BOTONES TREEVIEW - BOTONES TREEVIEW - BOTONES TREEVIEW - 
@@ -474,20 +474,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
         # COSTO
         self.treeview.heading('Costo',text='Costo')
         self.treeview.column('Costo',width=100,anchor='center')
-    # CONFIGURACION VISUAL DEL TV
-        style = ttk.Style()
-        style.configure(
-            'Custom.Treeview',
-            background = APP_COLORS[0],
-            foreground = APP_COLORS[1],
-            rowheight = 30,
-            font = FONTS[2],
-            fieldbackground = APP_COLORS[0])
-        style.configure(
-            'Custom.Treeview.Heading',
-            background = APP_COLORS[1],
-            foreground = APP_COLORS[1],
-            font = FONTS[1])
+
         # SCROLLBAR DEL TV
         scrollbar = ctk.CTkScrollbar(self.tree_frame,
                                      orientation='vertical',
@@ -720,12 +707,12 @@ class EntradasInventarioProg(ctk.CTkFrame):
                              bg_color='transparent',
                              text_color=APP_COLORS[0],
                              height=50,
-                             font=FONTS[3])
+                             font=FONT['text'])
         title.pack(pady=10)
     # PRODUCTO
         producto_label = ctk.CTkLabel(edit_frame,
                                       text=self.nombre,
-                                      font=FONTS[4],
+                                      font=FONT['title_bold'],
                                       text_color=APP_COLORS[4],
                                       bg_color='transparent')
         producto_label.grid(row = 2, column = 1, columnspan = 6, padx = 10, sticky = 'w')
@@ -818,43 +805,43 @@ class EntradasInventarioProg(ctk.CTkFrame):
         # CANTIDAD
         cantidad_label = ctk.CTkLabel(edit_frame,
                                       text=f'Cantidad',
-                                      font=FONTS[1],
+                                      font=FONT['text_light'],
                                       text_color=APP_COLORS[4])
         cantidad_label.grid(row = 4, column = 3, columnspan = 2, sticky = 'w')
         # COSTO
         costo_label = ctk.CTkLabel(edit_frame,
                                       text=f'Costo $',
-                                      font=FONTS[1],
+                                      font=FONT['text_light'],
                                       text_color=APP_COLORS[4])
         costo_label.grid(row = 5, column = 3, columnspan = 2, sticky = 'w')
         # PORCENTAJE 1
         porcentaje_1_label = ctk.CTkLabel(edit_frame,
                                       text=f'Descuento 1',
-                                      font=FONTS[1],
+                                      font=FONT['text_light'],
                                       text_color=APP_COLORS[4])
         porcentaje_1_label.grid(row = 6, column = 3, columnspan = 2, sticky = 'w')
         # PORCENTAJE 2
         porcentaje_2_label = ctk.CTkLabel(edit_frame,
                                       text=f'Descuento 2',
-                                      font=FONTS[1],
+                                      font=FONT['text_light'],
                                       text_color=APP_COLORS[4])
         porcentaje_2_label.grid(row = 7, column = 3, columnspan = 2, sticky = 'w')
         # PORCENTAJE 3
         porcentaje_3_label = ctk.CTkLabel(edit_frame,
                                       text=f'Descuento 3',
-                                      font=FONTS[1],
+                                      font=FONT['text_light'],
                                       text_color=APP_COLORS[4])
         porcentaje_3_label.grid(row = 8, column = 3, columnspan = 2, sticky = 'w')
         # FLETE
         flete_label = ctk.CTkLabel(edit_frame,
                                       text=f'Descuento %',
-                                      font=FONTS[1],
+                                      font=FONT['text_light'],
                                       text_color=APP_COLORS[4])
         flete_label.grid(row = 9, column = 3, columnspan = 2, sticky = 'w')
         # IVA
         iva_label = ctk.CTkLabel(edit_frame,
                                       text=f'I.V.A. %',
-                                      font=FONTS[1],
+                                      font=FONT['text_light'],
                                       text_color=APP_COLORS[4])
         iva_label.grid(row = 10, column = 3, columnspan = 2, sticky = 'w')
     # BOTONES
@@ -1033,20 +1020,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
     # NOMBRE
         self.treeview.heading('Nombre',text='Nombre')
         self.treeview.column('Nombre',width=150,anchor='center')
-    # CONFIGURACION VISUAL DEL TV
-        style = ttk.Style()
-        style.configure(
-            'Custom.Treeview',
-            background = APP_COLORS[0],
-            foreground = APP_COLORS[1],
-            rowheight = 30,
-            font = FONTS[2],
-            fieldbackground = APP_COLORS[0])
-        style.configure(
-            'Custom.Treeview.Heading',
-            background = APP_COLORS[1],
-            foreground = APP_COLORS[1],
-            font = FONTS[1])
+
     # SCROLLBAR DEL TV
         scrollbar = ctk.CTkScrollbar(self.tree_frame,
                                      orientation='vertical',

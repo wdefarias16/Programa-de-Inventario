@@ -1,7 +1,7 @@
 # CREAR FRAME LOGIN
 import customtkinter as ctk
 import tkinter as tk
-from style import FONTS, APP_COLORS, APPEARANCE_MODE
+from style import FONT, APP_COLORS, APPEARANCE_MODE
 from DatabaseManager import USER_MANAGER
 
 # LOGIN FRAME
@@ -41,17 +41,29 @@ class LoginFrame(ctk.CTkFrame):
         self.password_entry.bind("<Return>",lambda event:self.Access())
     # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
         # MENSAJE BIENVENIDO
-        label_wc = ctk.CTkLabel(self,text='Bienvenido',font=FONTS[0],text_color=APP_COLORS[4])
+        label_wc = ctk.CTkLabel(self,
+                                text='Bienvenido',
+                                font=FONT['title_light'],
+                                text_color=APP_COLORS[4])
         label_wc.grid(row=3,column=2,columnspan=2,sticky='we')
         # USUARIO
-        user_label = ctk.CTkLabel(self,text='Usuario',font=FONTS[1],text_color=APP_COLORS[4])
+        user_label = ctk.CTkLabel(self,
+                                text='Usuario',
+                                font=FONT['text_light'],
+                                text_color=APP_COLORS[4])
         user_label.grid(row=6,column=2,columnspan=1,sticky='ws')
         # CONTRASENA
-        password_label = ctk.CTkLabel(self,text='Contraseña',font=FONTS[1],text_color=APP_COLORS[4])
+        password_label = ctk.CTkLabel(self,
+                                text='Contraseña',
+                                font=FONT['text_light'],
+                                text_color=APP_COLORS[4])
         password_label.grid(row=8,column=2,columnspan=1,sticky='ws')
         # MENSAJE INFERIOR
         self.label_var = tk.StringVar(value='Ingresa tus credenciales')
-        label_accses = ctk.CTkLabel(self,textvariable=self.label_var,font=FONTS[1],text_color=APP_COLORS[4])
+        label_accses = ctk.CTkLabel(self,
+                                textvariable=self.label_var,
+                                font=FONT['text_light'],
+                                text_color=APP_COLORS[4])
         label_accses.grid(row=13,column=2,columnspan=2,sticky='we')
     # BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES -  
         # BOTON ENTRAR
