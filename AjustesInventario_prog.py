@@ -90,6 +90,7 @@ class AjustesInventarioProg(ctk.CTkFrame):
                                      font=FONTS[1])
         log_label.grid(row=15,column=1,columnspan=2,sticky='w')
         # BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - 
+        # ADD PRODUCT
         self.btn_add_product = ctk.CTkButton(self.prog_frame,
                                             text="Agregar producto",
                                             width=50,
@@ -97,6 +98,7 @@ class AjustesInventarioProg(ctk.CTkFrame):
                                             hover_color=APP_COLORS[3],
                                             command=self.ProductsHelp)
         self.btn_add_product.grid(row=4,column=9,columnspan=2,sticky='nse')
+        # GO BACK
         go_back_btn = ctk.CTkButton(self.prog_frame,
                                     text="Volver atrás",
                                     width=50,
@@ -104,13 +106,15 @@ class AjustesInventarioProg(ctk.CTkFrame):
                                     hover_color=APP_COLORS[3],
                                     command=self.GoBack_CB)
         go_back_btn.grid(row=0,column=0,sticky='nsew',padx=5,pady=5)
+        # PRINT ADJUSTMENT
         imprimir_btn = ctk.CTkButton(
             self.prog_frame,
             text='Imprimir Ajuste',
             fg_color=APP_COLORS[8],
             hover_color=APP_COLORS[3],
             command=self.ImprimirAjustes)
-        imprimir_btn.grid(row=1, column=9, columnspan=2, sticky='we', padx=5)
+        imprimir_btn.grid(row=1, column=7, columnspan=2, sticky='we', padx=5)
+        # SAVE
         self.btn_guardar_ajuste = ctk.CTkButton(
             self.prog_frame,
             text="Guardar Ajuste",
@@ -602,7 +606,7 @@ class AjustesInventarioProg(ctk.CTkFrame):
             path=ruta,
             documento=num_doc,
             motivo=motivo,
-            fecha = datetime.datetime.now().strftime('%Y-%m-%d'),
+            fecha = datetime.now().strftime('%Y-%m-%d'),
             ajustes=ajustes
         )
         os.startfile(ruta)
@@ -656,7 +660,6 @@ class AjustesInventarioProg(ctk.CTkFrame):
             ('FONTSIZE',        (0, 0), (-1, -1),   8),
             ('ALIGN',           (0, 0), (-1, -1),   'CENTER'),
             ('VALIGN',          (0, 0), (-1, -1),   'MIDDLE'),
-            ('FONTNAME',        (0, -1), (-1, -1),  'Helvetica-Bold'),
             ('BACKGROUND',      (0, -1), (-1, -1),  colors.HexColor('#f0f0f0')),
         ]))
 
@@ -684,6 +687,7 @@ class AjustesInventarioProg(ctk.CTkFrame):
             self.cancel_btn.destroy()
         # limpiar campos
         self.num_doc_entry_var.set('')
+        self.text_box.configure(state='normal')
         self.text_box.delete('0.0', 'end')
         for iid in self.treeview_main.get_children():
             self.treeview_main.delete(iid)
@@ -705,8 +709,10 @@ class AjustesInventarioProg(ctk.CTkFrame):
         self.ModoVisualizacion(False)
 
         # rellenar motivo
+        self.text_box.configure(state='normal')                 # Activar edición
         self.text_box.delete('0.0', 'end')
         self.text_box.insert('0.0', data['motivo'])
+        self.text_box.configure(state='disabled')
 
         # limpiar y rellenar Treeview
         for iid in self.treeview_main.get_children():
@@ -767,7 +773,7 @@ class AjustesInventarioProg(ctk.CTkFrame):
             messagebox.showerror('Error', 'No hay productos para ajustar.')
             return
 
-        fecha = datetime.datetime.now().strftime('%Y-%m-%d')
+        fecha = datetime.now().strftime('%Y-%m-%d')
         try:
             INVENTARIO.GuardarAjusteInventario(
                 num_documento=num_doc,

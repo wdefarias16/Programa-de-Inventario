@@ -231,20 +231,20 @@ class DatabaseManagerApp(ctk.CTk):
                         # TABLA AJUSTES INVENTARIO
                         """CREATE TABLE IF NOT EXISTS ajustes_inventario (
                             id SERIAL PRIMARY KEY,
-                            num_documento VARCHAR(50) NOT NULL,
+                            num_documento VARCHAR(50) NOT NULL UNIQUE,
                             log TEXT,
-                            fecha       DATE    NOT NULL
+                            fecha DATE NOT NULL
                         )""",
                         # TABLA DETALLES DE AJUSTES A INVENTARIO
                         """CREATE TABLE IF NOT EXISTS detalle_ajustes (
-                            id          SERIAL PRIMARY KEY,
-                            ajuste_id  INTEGER     NOT NULL
-                                           REFERENCES ajustes_inventario(id) ON DELETE CASCADE,
-                            codigo      VARCHAR(255) NOT NULL
-                                           REFERENCES productos(codigo),
-                            cantidad    INTEGER     NOT NULL,
-                            ajuste      INTEGER     NOT NULL,
-                            final       INTEGER     NOT NULL,
+                            id SERIAL PRIMARY KEY,
+                            ajuste_id INTEGER NOT NULL
+                              REFERENCES ajustes_inventario(id) ON DELETE CASCADE,
+                            codigo VARCHAR(255) NOT NULL
+                              REFERENCES productos(codigo),
+                            cantidad INTEGER NOT NULL,
+                            ajuste INTEGER NOT NULL,
+                            final INTEGER NOT NULL
                         )"""
                     ]
                     for stmt in statements:

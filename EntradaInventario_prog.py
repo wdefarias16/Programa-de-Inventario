@@ -1502,3 +1502,5 @@ class EntradasInventarioProg(ctk.CTkFrame):
 
         # CREAR EL DOCUMENTO
         doc.build(story)
+
+        
