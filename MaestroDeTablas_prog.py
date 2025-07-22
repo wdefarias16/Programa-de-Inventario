@@ -33,3 +33,9 @@ class MaestroDeTablas_prog(ctk.CTkFrame):
             self.prog_frame.rowconfigure(rows,weight=1,uniform='a')
         for columns in range(COLUMNS):
             self.prog_frame.columnconfigure(columns,weight=1,uniform='a')
+
+    # PROG - PROG - PROG - PROG - PROG - PROG - PROG - PROG - PROG - PROG - PROG - PROG - PROG - PROG - 
+    # PROG - PROG - PROG - PROG - PROG - PROG - PROG - PROG - PROG - PROG - PROG - PROG - PROG - PROG - 
+    # PROG - PROG - PROG - PROG - PROG - PROG - PROG - PROG - PROG - PROG - PROG - PROG - PROG - PROG - 
+    # PROG - PROG - PROG - PROG - PROG - PROG - PROG - PROG - PROG - PROG - PROG - PROG - PROG - PROG - 
+        
