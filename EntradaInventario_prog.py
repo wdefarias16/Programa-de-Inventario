@@ -2,7 +2,6 @@ import customtkinter as ctk
 from tkcalendar import Calendar
 import tkinter as tk
 from tkinter import ttk, messagebox
-from PIL import Image, ImageTk
 from DatabaseManager import INVENTARIO, PROV_MANAGER
 from style import FONT, APP_COLORS, ICONS
 import os
