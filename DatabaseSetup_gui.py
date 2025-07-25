@@ -156,7 +156,7 @@ class DatabaseManagerApp(ctk.CTk):
                             celular1 VARCHAR(50),
                             celular2 VARCHAR(50),
                             email VARCHAR(255),
-                            rif VARCHAR(50)
+                            rif VARCHAR(50) NOT NULL
                         )""",
                         # Tabla lineas
                         """CREATE TABLE IF NOT EXISTS lineas (
@@ -205,6 +205,17 @@ class DatabaseManagerApp(ctk.CTk):
                             rol INT NOT NULL,
                             estado BOOLEAN DEFAULT TRUE,
                             FOREIGN KEY (rol) REFERENCES roles(codigo) ON DELETE RESTRICT  
+                        )""",
+                        # TABLA CLIENTES
+                        """CREATE TABLE IF NOT EXISTS clientes(
+                            codigo SERIAL PRIMARY KEY,
+                            nombre VARCHAR(100) NOT NULL,
+                            id_fiscal VARCHAR(50) NOT NULL,
+                            telefono VARCHAR(50),
+                            direccion1 TEXT,
+                            direccion2 TEXT,
+                            ciudad VARCHAR(50),
+                            email VARCHAR(100)
                         )""",
                         # TABLA ENTRADAS INVENTARIO
                         """CREATE TABLE IF NOT EXISTS entradas_inventario (
