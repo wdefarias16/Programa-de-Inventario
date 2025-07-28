@@ -52,7 +52,3 @@ ICONS = {
     'cxc':cuentas_xc_icon,
     'proutil':pdutilidad_icon,
 }
-
-
-
-

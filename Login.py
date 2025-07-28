@@ -27,8 +27,7 @@ class LoginFrame(ctk.CTkFrame):
                                    border_color='#fff')
         self.login_entry.grid(row=7,column=2,columnspan=2,sticky='we')
         self.login_entry.bind("<Control-a>",self.AdminUser)
-        self.login_entry.bind("<Return>",self.password_entry.focus())
-
+        self.login_entry.bind("<Return>",lambda event: self.password_entry.focus())
         # INICIAR EL PROGRAMA CON LA ENTRADA DE USUARIO ACTIVA
         self.login_entry.after(100, lambda: self.login_entry.focus_set())
         # ENTRADA CONTRASENA

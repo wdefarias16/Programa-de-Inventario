@@ -1,46 +1,58 @@
-import tkinter as tk
+import os
 import customtkinter as ctk
+from tkinter import filedialog
+from PIL import Image, ImageTk
 
-ctk.set_appearance_mode("light")
+# Configuración de estilo
+ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("blue")
 
-class App(ctk.CTk):
+class ImageResizerApp(ctk.CTk):
     def __init__(self):
         super().__init__()
-        self.title("Entradas dinámicas")
-        self.geometry("400x500")
+        self.title("Redimensionar Imágenes 500×500")
+        self.geometry("600x550")
+        
+        self.btn_load = ctk.CTkButton(self, text="Cargar imagen", command=self.load_image)
+        self.btn_load.pack(pady=20)
+        
+        self.preview_label = ctk.CTkLabel(self, text="Aquí se mostrará la vista previa")
+        self.preview_label.pack(pady=10)
+        
+    def load_image(self):
+        file_path = filedialog.askopenfilename(
+            filetypes=[("Archivos de imagen", "*.jpg *.jpeg *.png *.bmp *.gif")]
+        )
+        if not file_path:
+            return
+        
+        img = Image.open(file_path)
+        w, h = img.size
+        
+        max_size = 500
+        scale = min(max_size / w, max_size / h)
+        new_w = int(w * scale)
+        new_h = int(h * scale)
+        
+        # Filtro compatible según versión de Pillow
+        try:
+            resample_filter = Image.Resampling.LANCZOS
+        except AttributeError:
+            resample_filter = Image.LANCZOS
+        
+        img_resized = img.resize((new_w, new_h), resample_filter)
+        
+        output_dir = "imagenes"
+        os.makedirs(output_dir, exist_ok=True)
+        
+        base_name = os.path.basename(file_path)
+        save_path = os.path.join(output_dir, base_name)
+        img_resized.save(save_path)
+        
+        tk_img = ImageTk.PhotoImage(img_resized)
+        self.preview_label.configure(image=tk_img, text="")
+        self.preview_label.image = tk_img  # Evitar que Python elimine la referencia
 
-        self.vars = []     # Lista de StringVar
-        self.entries = []  # Lista de widgets Entry
-
-        self.entries_frame = ctk.CTkFrame(self)
-        self.entries_frame.pack(pady=10)
-
-        self.add_button = ctk.CTkButton(self, text="Añadir entrada", command=self.add_entry)
-        self.add_button.pack(pady=5)
-
-        self.delete_button = ctk.CTkButton(self, text="Eliminar último", command=self.delete_last_entry)
-        self.delete_button.pack(pady=5)
-
-        self.show_button = ctk.CTkButton(self, text="Mostrar valores", command=self.show_values)
-        self.show_button.pack(pady=5)
-
-    def add_entry(self):
-        new_var = tk.StringVar()
-        new_entry = ctk.CTkEntry(self.entries_frame, textvariable=new_var)
-        new_entry.pack(pady=5)
-        self.vars.append(new_var)
-        self.entries.append(new_entry)
-
-    def delete_last_entry(self):
-        if self.entries:
-            last_entry = self.entries.pop()
-            last_entry.destroy()
-            self.vars.pop()
-
-    def show_values(self):
-        for i, var in enumerate(self.vars, start=1):
-            print(f"Entrada {i}: {var.get()}")
-
-app = App()
-app.mainloop()
+if __name__ == "__main__":
+    app = ImageResizerApp()
+    app.mainloop()
