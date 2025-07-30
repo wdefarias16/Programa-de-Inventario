@@ -1,6 +1,7 @@
 import customtkinter as ctk
 import tkinter as tk
-from tkinter import ttk
+import os
+from tkinter import ttk, filedialog
 from PIL import Image, ImageTk
 from InventarioProductos_DB import*
 from DatabaseManager import INVENTARIO, LINE_MANAGER, PROV_MANAGER
@@ -1077,3 +1078,33 @@ class CargaProductosProg(ctk.CTkFrame):
         if text == '':
             return True
         return text.isdigit()
+    
+    def AddPhoto(self):
+        file_path = filedialog.askopenfilename(
+            filetypes=[("Archivos de imagen", "*.jpg *.jpeg *.png *.bmp *.gif")]
+        )
+        if not file_path:
+            return
+        
+        img = Image.open(file_path)
+        w, h = img.size
+        
+        max_size = 500
+        scale = min(max_size / w, max_size / h)
+        new_w = int(w * scale)
+        new_h = int(h * scale)
+        
+        # Filtro compatible según versión de Pillow
+        try:
+            resample_filter = Image.Resampling.LANCZOS
+        except AttributeError:
+            resample_filter = Image.LANCZOS
+        
+        img_resized = img.resize((new_w, new_h), resample_filter)
+        
+        output_dir = "imagenes"
+        os.makedirs(output_dir, exist_ok=True)
+        
+        base_name = os.path.basename(file_path)
+        save_path = os.path.join(output_dir, base_name)
+        img_resized.save(save_path)
