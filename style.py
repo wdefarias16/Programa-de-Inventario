@@ -39,6 +39,7 @@ cuentas_xc_icon=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_cuenta
 pdutilidad_icon=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_PDUtilidad_light.png"), size=(30,30),
                                    dark_image=Image.open(r"Recursos\Iconos\btn_PDUtilidad_dark.png"))
 
+
 ICONS = {
     'cancel':cancel_icon,
     'search':search_icon,

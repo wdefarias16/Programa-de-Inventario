@@ -221,6 +221,7 @@ class CargaProductosProg(ctk.CTkFrame):
     # AGREGAR FOTO
         self.add_foto_btn = ctk.CTkButton(self.entry_frame,
                                      text='Agregar Foto',
+                                     command=self.AddPhoto,
                                      fg_color=APP_COLORS[2],
                                      hover_color=APP_COLORS[3])
         self.add_foto_btn.grid(row=12,column=3,columnspan=2,sticky='wens',padx=4,pady=4)
@@ -1080,8 +1081,13 @@ class CargaProductosProg(ctk.CTkFrame):
         return text.isdigit()
     
     def AddPhoto(self):
+        codigo = self.codigo_var.get()
+        if not codigo:
+            messagebox.showwarning('Atención','Seleccione un producto al que agregar una foto.')
+            return
+        
         file_path = filedialog.askopenfilename(
-            filetypes=[("Archivos de imagen", "*.jpg *.jpeg *.png *.bmp *.gif")]
+            filetypes=[("Archivos de imagen", "*.jpg *.jpeg *.png")]
         )
         if not file_path:
             return
@@ -1102,9 +1108,9 @@ class CargaProductosProg(ctk.CTkFrame):
         
         img_resized = img.resize((new_w, new_h), resample_filter)
         
-        output_dir = "imagenes"
-        os.makedirs(output_dir, exist_ok=True)
+        folder = "Data/Imagenes/Productos"
+        os.makedirs(folder, exist_ok=True)
         
-        base_name = os.path.basename(file_path)
-        save_path = os.path.join(output_dir, base_name)
+        file_name = f'{codigo}_img.png'
+        save_path = os.path.join(folder, file_name)
         img_resized.save(save_path)
