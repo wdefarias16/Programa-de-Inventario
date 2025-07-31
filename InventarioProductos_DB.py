@@ -77,13 +77,14 @@ class Inventory:
                 # Insertar el nuevo producto
                 cur.execute("""
                     INSERT INTO productos 
-                        (codigo, linea, grupo, proveedor, nombre, costo, ubicacion1, ubicacion2, precio1, precio2, precio3, existencia)
+                        (codigo, linea, grupo, proveedor, nombre, costo, ubicacion1, ubicacion2, precio1, precio2, precio3, existencia,image)
                     VALUES 
-                        (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+                        (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
                 """, (
                     product['codigo'], product['linea'], product['grupo'], product['proveedor'],
                     product['nombre'], product['costo'], product['ubicacion1'], product['ubicacion2'],
-                    product['precio1'], product['precio2'], product['precio3'], product.get('existencia', 0)
+                    product['precio1'], product['precio2'], product['precio3'], product.get('existencia', 0),
+                    product['image']
                 ))
                 self.conn.commit()
                 messagebox.showinfo('Producto agregado', f"El producto {product['codigo']} ha sido agregado.")
