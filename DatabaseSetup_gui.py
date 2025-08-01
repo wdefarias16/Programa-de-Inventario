@@ -185,7 +185,8 @@ class DatabaseManagerApp(ctk.CTk):
                             precio1 NUMERIC(10,2),
                             precio2 NUMERIC(10,2),
                             precio3 NUMERIC(10,2),
-                            existencia INT DEFAULT 0
+                            existencia INT DEFAULT 0,
+                            image TEXT
                         )""",
                         # Tabla roles
                         """CREATE TABLE IF NOT EXISTS roles (

@@ -43,31 +43,31 @@ class CargaProductosProg(ctk.CTkFrame):
         self.codigo_var = tk.StringVar()
         self.codigo_entry = ctk.CTkEntry(self.entry_frame,
                                          textvariable=self.codigo_var)
-        self.codigo_entry.grid(row=2,column=3,columnspan=2,sticky='we')
+        self.codigo_entry.grid(row=2,column=3,columnspan=2,sticky='nswe',pady=5)
         self.codigo_entry.bind("<Return>",lambda event:self.BuscarProducto())
     # LINEA
         self.line_var = tk.StringVar()
         self.linea_entry = ctk.CTkEntry(self.entry_frame,
                                    textvariable=self.line_var)
-        self.linea_entry.grid(row=3,column=3,columnspan=2,sticky='we')
+        self.linea_entry.grid(row=3,column=3,columnspan=2,sticky='nswe',pady=5)
         self.linea_entry.bind("<Return>",lambda event:self.GetLineByCode())
     # GRUPO
         self.grupo_var = tk.StringVar()
         self.grupo_entry = ctk.CTkEntry(self.entry_frame,
                                    textvariable=self.grupo_var)
-        self.grupo_entry.grid(row=4,column=3,columnspan=2,sticky='we')
+        self.grupo_entry.grid(row=4,column=3,columnspan=2,sticky='nswe',pady=5)
         self.grupo_entry.bind("<Return>",lambda event:self.GetGroupByCode())
     # PROVEEDOR
         self.prove_var = tk.StringVar()
         self.prove_entry = ctk.CTkEntry(self.entry_frame,
                                    textvariable=self.prove_var)
-        self.prove_entry.grid(row=5,column=3,columnspan=2,sticky='we')
+        self.prove_entry.grid(row=5,column=3,columnspan=2,sticky='nswe',pady=5)
         self.prove_entry.bind("<Return>",lambda event:self.GetProvByCode())
     # NOMBRE
         self.nombre_var = tk.StringVar()
         self.nombre_entry = ctk.CTkEntry(self.entry_frame,
                                     textvariable=self.nombre_var)
-        self.nombre_entry.grid(row=6,column=3,columnspan=3,sticky='we')
+        self.nombre_entry.grid(row=6,column=3,columnspan=3,sticky='nswe',pady=5)
         self.nombre_entry.bind("<Return>",lambda event:self.costo_entry.focus())
     # COSTO
         self.costo_var = tk.StringVar()
@@ -75,19 +75,19 @@ class CargaProductosProg(ctk.CTkFrame):
                                         validate = 'key',
                                         validatecommand = (self.validatenum,'%P'),
                                         textvariable=self.costo_var)
-        self.costo_entry.grid(row=7,column=3,sticky='we')
+        self.costo_entry.grid(row=7,column=3,sticky='nswe',pady=5)
         self.costo_entry.bind("<Return>",lambda event:self.ubi1_entry.focus())
     # UBICACION 1
         self.ubi1_var = tk.StringVar()
         self.ubi1_entry = ctk.CTkEntry(self.entry_frame,
                                    textvariable=self.ubi1_var)
-        self.ubi1_entry.grid(row=8,column=3,columnspan=3,sticky='we')
+        self.ubi1_entry.grid(row=8,column=3,columnspan=3,sticky='nswe',pady=5)
         self.ubi1_entry.bind("<Return>",lambda event:self.ubi2_entry.focus())
     # UBICACION 2
         self.ubi2_var = tk.StringVar()
         self.ubi2_entry = ctk.CTkEntry(self.entry_frame,
                                    textvariable=self.ubi2_var)
-        self.ubi2_entry.grid(row=9,column=3,columnspan=3,sticky='we')
+        self.ubi2_entry.grid(row=9,column=3,columnspan=3,sticky='nswe',pady=5)
         self.ubi2_entry.bind("<Return>",lambda event:self.AgregarProducto())
     # PRECIO VENTA 1
         self.precio1_var = tk.StringVar()
@@ -96,7 +96,7 @@ class CargaProductosProg(ctk.CTkFrame):
                                           border_color=APP_COLORS[0],
                                           fg_color=APP_COLORS[8],
                                    textvariable=self.precio1_var)
-        self.precio1_entry.grid(row=10,column=3,columnspan=1,sticky='we',padx=2)
+        self.precio1_entry.grid(row=10,column=3,columnspan=1,sticky='nswe',padx=2,pady=5)
         self.precio1_entry.bind("<Return>",lambda event:self.precio2_entry.focus())
     # PRECIO VENTA 2
         self.precio2_var = tk.StringVar()
@@ -105,7 +105,7 @@ class CargaProductosProg(ctk.CTkFrame):
                                           border_color=APP_COLORS[0],
                                           fg_color=APP_COLORS[8],
                                    textvariable=self.precio2_var)
-        self.precio2_entry.grid(row=10,column=4,columnspan=1,sticky='we',padx=2)
+        self.precio2_entry.grid(row=10,column=4,columnspan=1,sticky='nswe',padx=2,pady=5)
         self.precio2_entry.bind("<Return>",lambda event:self.precio3_entry.focus())
     # PRECIO VENTA 3
         self.precio3_var = tk.StringVar()
@@ -114,7 +114,7 @@ class CargaProductosProg(ctk.CTkFrame):
                                           border_color=APP_COLORS[0],
                                           fg_color=APP_COLORS[8],
                                    textvariable=self.precio3_var)
-        self.precio3_entry.grid(row=10,column=5,columnspan=1,sticky='we',padx=2)
+        self.precio3_entry.grid(row=10,column=5,columnspan=1,sticky='nswe',padx=2,pady=5)
         self.precio3_entry.bind("<Return>",lambda event:self.AceptarPrecios())
     # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS
     # DATOS DE PRODUCTO
@@ -201,10 +201,12 @@ class CargaProductosProg(ctk.CTkFrame):
         self.busqueda_btn = ctk.CTkButton(self.entry_frame,
                                      text='',
                                      image=ICONS['search'],
+                                     anchor='w',
+                                     width=10,
                                      fg_color=APP_COLORS[2],
                                      hover_color=APP_COLORS[3],
                                      command=lambda: self.BusquedaProducto() if not self.treeview_active else None)
-        self.busqueda_btn.grid(row=2,column=5,sticky='we',padx=4)
+        self.busqueda_btn.grid(row=2,column=5,sticky='nsw',padx=5,pady=5)
     # CANCELAR
         self.cancelar_btn = ctk.CTkButton(self.entry_frame,
                                      text='Cancelar',
@@ -212,42 +214,42 @@ class CargaProductosProg(ctk.CTkFrame):
                                      fg_color=APP_COLORS[10],
                                      hover_color=APP_COLORS[10],
                                      command=self.Restablecer)
-        self.cancelar_btn.grid(row=2,column=6,sticky='wens',padx=4,pady=4)
+        self.cancelar_btn.grid(row=13,column=2,sticky='nswe',padx=4,pady=4)
     # BUSCAR LINEA
         self.find_line_btn = ctk.CTkButton(self.entry_frame,
                                      text='Líneas',
                                      command=self.LineHelp,
                                      fg_color=APP_COLORS[2],
                                      hover_color=APP_COLORS[3])
-        self.find_line_btn.grid(row=3,column=5,columnspan=1,sticky='we',padx=5)
+        self.find_line_btn.grid(row=3,column=5,columnspan=1,sticky='nswe',padx=5,pady=5)
     # BUSCAR GRUPO
         self.find_group_btn = ctk.CTkButton(self.entry_frame,
                                      text='Grupos',
                                      command=self.GroupHelp,
                                      fg_color=APP_COLORS[2],
                                      hover_color=APP_COLORS[3])
-        self.find_group_btn.grid(row=4,column=5,columnspan=1,sticky='we',padx=5)
+        self.find_group_btn.grid(row=4,column=5,columnspan=1,sticky='nswe',padx=5,pady=5)
     # BUSCAR PROVEEDOR
         self.find_prov_btn = ctk.CTkButton(self.entry_frame,
                                      text='Proveedores',
                                      command=self.ProvHelp,
                                      fg_color=APP_COLORS[2],
                                      hover_color=APP_COLORS[3])
-        self.find_prov_btn.grid(row=5,column=5,columnspan=1,sticky='we',padx=5)
+        self.find_prov_btn.grid(row=5,column=5,columnspan=1,sticky='nswe',padx=5,pady=5)
     # AGREGAR FOTO
         self.add_foto_btn = ctk.CTkButton(self.entry_frame,
                                      text='Agregar Foto',
                                      command=self.AddPhoto,
                                      fg_color=APP_COLORS[2],
                                      hover_color=APP_COLORS[3])
-        self.add_foto_btn.grid(row=12,column=3,columnspan=2,sticky='wens',padx=4,pady=4)
+        self.add_foto_btn.grid(row=12,column=3,columnspan=2,sticky='nswe',padx=4,pady=4)
     # GUARDAR
         self.guardar_btn = ctk.CTkButton(self.entry_frame,
                                      text='Agregar',
                                      fg_color=APP_COLORS[2],
                                      hover_color=APP_COLORS[3],
                                      command=self.AgregarProducto)
-        self.guardar_btn.grid(row=12,column=5,columnspan=2,sticky='wens',padx=4,pady=4)
+        self.guardar_btn.grid(row=12,column=5,columnspan=2,sticky='nswe',padx=4,pady=4)
     # MODIFICAR
         self.modificar_btn = ctk.CTkButton(self.entry_frame,
                                      state='disabled',
@@ -255,7 +257,7 @@ class CargaProductosProg(ctk.CTkFrame):
                                      fg_color=APP_COLORS[3],
                                      hover_color=APP_COLORS[3],
                                      command=self.ModificarProducto)
-        self.modificar_btn.grid(row=13,column=3,columnspan=2,sticky='wens',padx=4,pady=4)
+        self.modificar_btn.grid(row=13,column=3,columnspan=2,sticky='nswe',padx=4,pady=4)
     # ELIMINAR
         self.eliminar_btn = ctk.CTkButton(self.entry_frame,
                                      state='disabled',
@@ -263,7 +265,7 @@ class CargaProductosProg(ctk.CTkFrame):
                                      fg_color=APP_COLORS[10],
                                      hover_color=APP_COLORS[10],
                                      command=self.EliminarProducto)
-        self.eliminar_btn.grid(row=13,column=5,columnspan=2,sticky='wens',padx=4,pady=4)
+        self.eliminar_btn.grid(row=13,column=5,columnspan=2,sticky='nswe',padx=4,pady=4)
     # VOLVER ATRAS
         salir_btn = ctk.CTkButton(self.entry_frame,
                                        text='Volver atrás',
@@ -274,17 +276,17 @@ class CargaProductosProg(ctk.CTkFrame):
         salir_btn.grid(row=0,column=0,sticky='nw',padx=5)
     
     # PHOTOFRAME
-        self.image_path = 'Data/Imagenes/Productos'
+        self.image_path = 'Recursos/Imagenes/Productos'
         self.product_image = Image.open(f"{self.image_path}/Default.png")
-        self.ctk_image = ctk.CTkImage(light_image=self.product_image, size=(150,150))
+        self.ctk_image = ctk.CTkImage(light_image=self.product_image, size=(200,200))
         
         self.image_frame = ctk.CTkFrame(self.entry_frame,fg_color=APP_COLORS[0])
-        self.image_frame.grid(row=2,column=7,columnspan=2,rowspan=3,sticky='nswe')
+        self.image_frame.grid(row=2,column=7,columnspan=2,rowspan=12,sticky='nswe',pady=5)
         
         self.image_label = ctk.CTkLabel(self.image_frame,
                                         text='',
                                         image=self.ctk_image)
-        self.image_label.pack(expand=True)
+        self.image_label.pack(side="top", anchor="n")
     
 # FUNCION BOTONES - FUNCION BOTONES - FUNCION BOTONES - FUNCION BOTONES - FUNCION BOTONES - FUNCION BOTONES
 # FUNCION BOTON AGREGAR PRODUCTO - FUNCION BOTON AGREGAR PRODUCTO - FUNCION BOTON AGREGAR PRODUCTO - FUNCION BOTON AGREGAR PRODUCTO - 
@@ -351,6 +353,7 @@ class CargaProductosProg(ctk.CTkFrame):
         ubi2 = self.ubi2_var.get()
         
         product = INVENTARIO.GetProducto(self.mod_codi)
+
         if not costo or costo <= 0:
             messagebox.showerror('Error',f'El costo no puede ser menor o igual a 0')
             return
@@ -437,7 +440,6 @@ class CargaProductosProg(ctk.CTkFrame):
         # BLOQUEO DE ENTRADAS Y BOTONES
             self.mod_codi = self.codigo_entry.get()
             self.guardar_btn.configure(state='disabled',fg_color=APP_COLORS[3])
-            self.add_foto_btn.configure(state='disabled',fg_color=APP_COLORS[3])
             self.codigo_entry.configure(state='disabled',fg_color='#666')
             self.modificar_btn.configure(state='enabled',fg_color=APP_COLORS[2])
             self.eliminar_btn.configure(state='enabled',fg_color=APP_COLORS[9],hover_color=APP_COLORS[10])
@@ -449,7 +451,7 @@ class CargaProductosProg(ctk.CTkFrame):
                                              fg_color=APP_COLORS[2],
                                              hover_color=APP_COLORS[3],
                                              command=self.ModificarPrecios)
-                self.modprecios_btn.grid(row=10,column=2,sticky='nswe',padx=4,pady=4)
+                self.modprecios_btn.grid(row=10,column=6,sticky='nswe',padx=4,pady=4)
                 self.modprecios_btn_active = True
         else:
             self.linea_entry.focus()
@@ -1121,9 +1123,29 @@ class CargaProductosProg(ctk.CTkFrame):
         
         img_resized = img.resize((new_w, new_h), resample_filter)
         
-        folder = "Data/Imagenes/Productos"
+        folder = "Recursos/Imagenes/Productos"
         os.makedirs(folder, exist_ok=True)
         
         file_name = f'{codigo}_img.png'
         save_path = os.path.join(folder, file_name)
         img_resized.save(save_path)
+
+        photo = ctk.CTkImage(light_image=img_resized, size=(200,200))
+        self.UpdatePhoto(photo)
+
+    def UpdatePhoto(self,photo):
+        self.image_label.configure(image=photo)
+
+
+        # # PHOTOFRAME
+        # self.image_path = 'Recursos/Imagenes/Productos'
+        # self.product_image = Image.open(f"{self.image_path}/Default.png")
+        # self.ctk_image = ctk.CTkImage(light_image=self.product_image, size=(150,150))
+        # 
+        # self.image_frame = ctk.CTkFrame(self.entry_frame,fg_color=APP_COLORS[0])
+        # self.image_frame.grid(row=2,column=7,columnspan=2,rowspan=3,sticky='nswe')
+        # 
+        # self.image_label = ctk.CTkLabel(self.image_frame,
+        #                                 text='',
+        #                                 image=self.ctk_image)
+        # self.image_label.pack(expand=True)
