@@ -124,6 +124,12 @@ class CargaProductosProg(ctk.CTkFrame):
                                     font=FONT['text_light'],
                                     text_color=APP_COLORS[4])
         he_label.grid(row=1,column=3,columnspan=1,sticky='w')
+    # IMAGEN
+        image_label = ctk.CTkLabel(self.entry_frame,
+                                    text='Imagen del producto',
+                                    font=FONT['text_light'],
+                                    text_color=APP_COLORS[4])
+        image_label.grid(row=1,column=7,columnspan=2,sticky='w')
     # CODIGO
         codigo_label = ctk.CTkLabel(self.entry_frame,
                                     text='Código',
@@ -196,6 +202,7 @@ class CargaProductosProg(ctk.CTkFrame):
                                     font=FONT['text_light'],
                                     text_color=APP_COLORS[4])
         self.precio3_label.grid(row=11,column=5,columnspan=2,sticky='wn',padx=5,pady=2)
+
     
     # BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES -BOTONES - BOTONES - BOTONES
     # BUSCAR PRODUCTO
@@ -279,7 +286,7 @@ class CargaProductosProg(ctk.CTkFrame):
     # PHOTOFRAME
         self.image_path = 'Recursos/Imagenes/Productos'
         default_image = Image.open(f"{self.image_path}/Default.png")
-        self.default_image = ctk.CTkImage(light_image=default_image, size=(200,200))
+        self.default_image = ctk.CTkImage(light_image=default_image, size=(250,250))
         
         self.image_frame = ctk.CTkFrame(self.entry_frame,fg_color=APP_COLORS[0])
         self.image_frame.grid(row=2,column=7,columnspan=2,rowspan=12,sticky='nswe',pady=5)
@@ -504,6 +511,7 @@ class CargaProductosProg(ctk.CTkFrame):
             self.ubi2_entry.bind("<Return>",lambda event:self.AgregarProducto())
             self.codigo_entry.focus()
             self.image_label.configure(image=self.default_image)
+            self.current_photo = 'Recursos/Imagenes/Productos/Default.png'
 # MODIFICAR PRECIOS - MODIFICAR PRECIOS - MODIFICAR PRECIOS - MODIFICAR PRECIOS - MODIFICAR PRECIOS - MODIFICAR PRECIOS - MODIFICAR PRECIOS - 
     def ModificarPrecios(self):
         
@@ -1143,6 +1151,7 @@ class CargaProductosProg(ctk.CTkFrame):
             image = 'Recursos/Imagenes/Productos/Default.png'
         img = Image.open(image)
         w, h = img.size
+
         photo = ctk.CTkImage(light_image=img, size=(int(w/2),int(h/2)))
         self.image_label.configure(image=photo)
 
