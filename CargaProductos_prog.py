@@ -2,7 +2,7 @@ import customtkinter as ctk
 import tkinter as tk
 import os
 from tkinter import ttk, filedialog
-from PIL import Image, ImageTk
+from PIL import Image, ImageOps
 from InventarioProductos_DB import*
 from DatabaseManager import INVENTARIO, LINE_MANAGER, PROV_MANAGER
 from style import FONT, APP_COLORS, ICONS
@@ -16,6 +16,7 @@ class CargaProductosProg(ctk.CTkFrame):
         self.validatenum = self.register(self.ValidateNum)
         self.treeview_active = False
         self.modprecios_btn_active = False
+        self.current_photo = 'Recursos/Imagenes/Productos/Default.png'
     # TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - 
         title_frame = ctk.CTkFrame(self,corner_radius=5,fg_color=APP_COLORS[3])
         title_frame.pack(fill='x')
@@ -286,7 +287,7 @@ class CargaProductosProg(ctk.CTkFrame):
         self.image_label = ctk.CTkLabel(self.image_frame,
                                         text='',
                                         image=self.ctk_image)
-        self.image_label.pack(side="top", anchor="n")
+        self.image_label.pack(side="top", anchor="n",expand=True)
     
 # FUNCION BOTONES - FUNCION BOTONES - FUNCION BOTONES - FUNCION BOTONES - FUNCION BOTONES - FUNCION BOTONES
 # FUNCION BOTON AGREGAR PRODUCTO - FUNCION BOTON AGREGAR PRODUCTO - FUNCION BOTON AGREGAR PRODUCTO - FUNCION BOTON AGREGAR PRODUCTO - 
@@ -1108,6 +1109,7 @@ class CargaProductosProg(ctk.CTkFrame):
             return
         
         img = Image.open(file_path)
+        img = ImageOps.exif_transpose(img)
         w, h = img.size
         
         max_size = 500
@@ -1130,11 +1132,13 @@ class CargaProductosProg(ctk.CTkFrame):
         save_path = os.path.join(folder, file_name)
         img_resized.save(save_path)
 
-        photo = ctk.CTkImage(light_image=img_resized, size=(200,200))
+        photo = ctk.CTkImage(light_image=img_resized, size=(int(new_w/2),int(new_h/2)))
+        self.current_photo = save_path
         self.UpdatePhoto(photo)
 
     def UpdatePhoto(self,photo):
         self.image_label.configure(image=photo)
+
 
 
         # # PHOTOFRAME

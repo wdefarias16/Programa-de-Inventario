@@ -3,7 +3,9 @@ from tkinter import messagebox
 
 # CLASE PRODUCTO (la dejamos igual, ya que solo es un contenedor de datos)
 class Product:
-    def __init__(self, codigo, linea, grupo, proveedor, nombre, costo, ubicacion1, ubicacion2, pv1, pv2, pv3, existencia=0):
+    def __init__(self, codigo, linea, grupo, proveedor,
+                 nombre, costo, ubicacion1, ubicacion2,
+                 pv1, pv2, pv3, existencia=0,image='Recursos/Imagenes/Productos/Default.png'):
         self.codigo = codigo
         self.linea = linea
         self.grupo = grupo
@@ -16,6 +18,7 @@ class Product:
         self.precio_venta_2 = pv2
         self.precio_venta_3 = pv3
         self.existencia = existencia
+        self.image = image
 
     # REGRESA EL DICCIONARIO DE UN PRODUCTO
     def ToDict(self):
@@ -31,7 +34,8 @@ class Product:
             'precio1': self.precio_venta_1,
             'precio2': self.precio_venta_2,
             'precio3': self.precio_venta_3,
-            'existencia': self.existencia
+            'existencia': self.existencia,
+            'image':self.image
         }
 
 # CLASE INVENTARIO (ahora utilizando PostgreSQL en lugar de JSON)
@@ -110,13 +114,14 @@ class Inventory:
                         precio1 = %s,
                         precio2 = %s,
                         precio3 = %s,
-                        existencia = %s
+                        existencia = %s,
+                        image = %s,
                     WHERE codigo = %s;
                 """, (
                     product['linea'], product['grupo'], product['proveedor'],
                     product['nombre'], product['costo'], product['ubicacion1'], product['ubicacion2'],
                     product['precio1'], product['precio2'], product['precio3'], product.get('existencia', 0),
-                    product['codigo']
+                    product['image'],product['codigo']
                 ))
                 self.conn.commit()
                 messagebox.showinfo('Producto modificado', f"El producto {product['codigo']} ha sido modificado.")
