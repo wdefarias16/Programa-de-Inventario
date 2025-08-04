@@ -115,7 +115,7 @@ class Inventory:
                         precio2 = %s,
                         precio3 = %s,
                         existencia = %s,
-                        image = %s,
+                        image = %s
                     WHERE codigo = %s;
                 """, (
                     product['linea'], product['grupo'], product['proveedor'],
@@ -169,13 +169,13 @@ class Inventory:
         try:
             with self.conn.cursor() as cur:
                 cur.execute("""
-                    SELECT codigo, linea, grupo, proveedor, nombre, costo, ubicacion1, ubicacion2, precio1, precio2, precio3, existencia 
+                    SELECT codigo, linea, grupo, proveedor, nombre, costo, ubicacion1, ubicacion2, precio1, precio2, precio3, existencia, image
                     FROM productos;
                 """)
                 rows = cur.fetchall()
                 inventory = {}
                 for r in rows:
-                    codigo, linea, grupo, proveedor, nombre, costo, ubicacion1, ubicacion2, precio1, precio2, precio3, existencia = r
+                    codigo, linea, grupo, proveedor, nombre, costo,ubicacion1, ubicacion2, precio1, precio2, precio3, existencia, image = r
                     inventory[codigo] = {
                         'codigo': codigo,
                         'linea': linea,
@@ -188,7 +188,8 @@ class Inventory:
                         'precio1': precio1,
                         'precio2': precio2,
                         'precio3': precio3,
-                        'existencia': existencia
+                        'existencia': existencia,
+                        'image': image
                     }
                 return inventory
         except Exception as e:
@@ -218,11 +219,11 @@ class Inventory:
         try:
             with self.conn.cursor() as cur:
                 cur.execute("""
-                    SELECT codigo, linea, grupo, proveedor, nombre, costo, ubicacion1, ubicacion2, precio1, precio2, precio3, existencia 
+                    SELECT codigo, linea, grupo, proveedor, nombre, costo, ubicacion1, ubicacion2, precio1, precio2, precio3, existencia, image
                     FROM productos WHERE codigo = %s;""", (codigo,))
                 row = cur.fetchone()
                 producto = {}
-                codigo, linea, grupo, proveedor, nombre, costo, ubicacion1, ubicacion2, precio1, precio2, precio3, existencia = row
+                codigo, linea, grupo, proveedor, nombre, costo, ubicacion1, ubicacion2, precio1, precio2, precio3, existencia, image = row
                 producto = {
                     'codigo': codigo,
                     'linea': linea,
@@ -235,7 +236,8 @@ class Inventory:
                     'precio1': precio1,
                     'precio2': precio2,
                     'precio3': precio3,
-                    'existencia': existencia
+                    'existencia': existencia,
+                    'image': image
                 }
                 return producto
         except Exception as e:
@@ -250,14 +252,14 @@ class Inventory:
         try: 
             with self.conn.cursor() as cur:
                 cur.execute("""
-                    SELECT codigo, linea, grupo, proveedor, nombre, costo, ubicacion1, ubicacion2, precio1, precio2, precio3, existencia 
+                    SELECT codigo, linea, grupo, proveedor, nombre, costo, ubicacion1, ubicacion2, precio1, precio2, precio3, existencia, image
                     FROM productos
                     WHERE nombre ILIKE %s;
                 """, ('%' + busqueda + '%',))
                 rows = cur.fetchall()
                 resultados = []
                 for r in rows:
-                    codigo, linea, grupo, proveedor, nombre, costo, ubicacion1, ubicacion2, precio1, precio2, precio3, existencia = r
+                    codigo, linea, grupo, proveedor, nombre, costo, ubicacion1, ubicacion2, precio1, precio2, precio3, existencia, image = r
                     resultados.append({
                         'codigo': codigo,
                         'linea': linea,
@@ -270,7 +272,8 @@ class Inventory:
                         'precio1': precio1,
                         'precio2': precio2,
                         'precio3': precio3,
-                        'existencia': existencia
+                        'existencia': existencia,
+                        'image': image
                     })
                 return resultados
         except Exception as e:
@@ -584,16 +587,6 @@ class Inventory:
                 f"{str(e)}"
             )
             return None
-
-
-
-
-
-
-
-
-
-
 
     def __del__(self):
         """Cierra la conexión a la base de datos cuando el objeto se destruye."""

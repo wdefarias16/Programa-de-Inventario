@@ -278,15 +278,15 @@ class CargaProductosProg(ctk.CTkFrame):
     
     # PHOTOFRAME
         self.image_path = 'Recursos/Imagenes/Productos'
-        self.product_image = Image.open(f"{self.image_path}/Default.png")
-        self.ctk_image = ctk.CTkImage(light_image=self.product_image, size=(200,200))
+        default_image = Image.open(f"{self.image_path}/Default.png")
+        self.default_image = ctk.CTkImage(light_image=default_image, size=(200,200))
         
         self.image_frame = ctk.CTkFrame(self.entry_frame,fg_color=APP_COLORS[0])
         self.image_frame.grid(row=2,column=7,columnspan=2,rowspan=12,sticky='nswe',pady=5)
         
         self.image_label = ctk.CTkLabel(self.image_frame,
                                         text='',
-                                        image=self.ctk_image)
+                                        image=self.default_image)
         self.image_label.pack(side="top", anchor="n",expand=True)
     
 # FUNCION BOTONES - FUNCION BOTONES - FUNCION BOTONES - FUNCION BOTONES - FUNCION BOTONES - FUNCION BOTONES
@@ -299,6 +299,7 @@ class CargaProductosProg(ctk.CTkFrame):
         nombre = self.nombre_var.get()
         ubi1 = self.ubi1_var.get()
         ubi2 = self.ubi2_var.get()
+        image = self.current_photo
         # CHEQUEAR SI CODIGO NO ESTA VACIO
         if codigo == '':
             messagebox.showerror('Error',f"Agregue un codigo de producto.")
@@ -329,7 +330,7 @@ class CargaProductosProg(ctk.CTkFrame):
             precios = LINE_MANAGER.GetPrecios(linea,grupo,costo)
             producto = Product(
             codigo, linea, grupo, prove, nombre, costo, ubi1, ubi2,
-            precios[0], precios[1], precios[2])
+            precios[0], precios[1], precios[2],image=image)
             # MOSTRAR PRECIOS Y PORCENTAJES
             porcentajes = LINE_MANAGER.GetPorcentajes(linea,grupo)
             self.precio1_var.set(precios[0])
@@ -352,8 +353,8 @@ class CargaProductosProg(ctk.CTkFrame):
         costo = float(self.costo_var.get())
         ubi1 = self.ubi1_var.get()
         ubi2 = self.ubi2_var.get()
-        
         product = INVENTARIO.GetProducto(self.mod_codi)
+        image = self.current_photo
 
         if not costo or costo <= 0:
             messagebox.showerror('Error',f'El costo no puede ser menor o igual a 0')
@@ -372,7 +373,7 @@ class CargaProductosProg(ctk.CTkFrame):
         if  LINE_MANAGER.CheckLine(linea) and LINE_MANAGER.CheckGrupo(linea,grupo) and PROV_MANAGER.CheckProv(prove):
             producto = Product(
             self.mod_codi, linea, grupo, prove, nombre, costo, ubi1, ubi2,
-            precio1, precio2, precio3)
+            precio1, precio2, precio3,image=image)
             INVENTARIO.EditProduct(producto.ToDict())
             self.ubi2_entry.unbind("<Return>")
             self.ubi2_entry.bind("<Return>",lambda event:self.AgregarProducto())
@@ -438,6 +439,7 @@ class CargaProductosProg(ctk.CTkFrame):
             self.precio3_label.configure(text=f'Precio 3: {porcentajes['porcentaje3']}%')
             self.ubi2_entry.unbind("<Return>")
             self.ubi2_entry.bind("<Return>",lambda event:self.ModificarProducto())
+            self.GetImage(producto['image'])
         # BLOQUEO DE ENTRADAS Y BOTONES
             self.mod_codi = self.codigo_entry.get()
             self.guardar_btn.configure(state='disabled',fg_color=APP_COLORS[3])
@@ -501,6 +503,7 @@ class CargaProductosProg(ctk.CTkFrame):
             self.ubi2_entry.unbind("<Return>")
             self.ubi2_entry.bind("<Return>",lambda event:self.AgregarProducto())
             self.codigo_entry.focus()
+            self.image_label.configure(image=self.default_image)
 # MODIFICAR PRECIOS - MODIFICAR PRECIOS - MODIFICAR PRECIOS - MODIFICAR PRECIOS - MODIFICAR PRECIOS - MODIFICAR PRECIOS - MODIFICAR PRECIOS - 
     def ModificarPrecios(self):
         
@@ -1095,61 +1098,53 @@ class CargaProductosProg(ctk.CTkFrame):
         if text == '':
             return True
         return text.isdigit()
-    
+# ADD A PHOTO TO A PRODUCT
     def AddPhoto(self):
+        # GET THE PRODUCT CODE
         codigo = self.codigo_var.get()
         if not codigo:
             messagebox.showwarning('Atención','Seleccione un producto al que agregar una foto.')
             return
-        
+        # OPEN THE SOURCE IMAGE
         file_path = filedialog.askopenfilename(
             filetypes=[("Archivos de imagen", "*.jpg *.jpeg *.png")]
         )
         if not file_path:
             return
-        
+        # CONFIGURE IMAGE
         img = Image.open(file_path)
         img = ImageOps.exif_transpose(img)
         w, h = img.size
-        
+        # RESIZE
         max_size = 500
         scale = min(max_size / w, max_size / h)
         new_w = int(w * scale)
         new_h = int(h * scale)
-        
-        # Filtro compatible según versión de Pillow
+        # PILLOW FILTER
         try:
             resample_filter = Image.Resampling.LANCZOS
         except AttributeError:
             resample_filter = Image.LANCZOS
-        
+        # FINAL IMAGE
         img_resized = img.resize((new_w, new_h), resample_filter)
-        
+        # SAVE THE IMAGE
         folder = "Recursos/Imagenes/Productos"
         os.makedirs(folder, exist_ok=True)
-        
         file_name = f'{codigo}_img.png'
         save_path = os.path.join(folder, file_name)
         img_resized.save(save_path)
-
-        photo = ctk.CTkImage(light_image=img_resized, size=(int(new_w/2),int(new_h/2)))
+        # TRACE THE CURRENT DISPLAYED IMAGE
         self.current_photo = save_path
-        self.UpdatePhoto(photo)
-
-    def UpdatePhoto(self,photo):
+        # UPDATE THE LABEL WITH THE NEW IMAGE
+        photo = ctk.CTkImage(light_image=img_resized, size=(int(new_w/2),int(new_h/2)))
+        self.image_label.configure(image=photo)
+    def GetImage(self,image):
+        if not image:
+            image = 'Recursos/Imagenes/Productos/Default.png'
+        img = Image.open(image)
+        w, h = img.size
+        photo = ctk.CTkImage(light_image=img, size=(int(w/2),int(h/2)))
         self.image_label.configure(image=photo)
 
 
 
-        # # PHOTOFRAME
-        # self.image_path = 'Recursos/Imagenes/Productos'
-        # self.product_image = Image.open(f"{self.image_path}/Default.png")
-        # self.ctk_image = ctk.CTkImage(light_image=self.product_image, size=(150,150))
-        # 
-        # self.image_frame = ctk.CTkFrame(self.entry_frame,fg_color=APP_COLORS[0])
-        # self.image_frame.grid(row=2,column=7,columnspan=2,rowspan=3,sticky='nswe')
-        # 
-        # self.image_label = ctk.CTkLabel(self.image_frame,
-        #                                 text='',
-        #                                 image=self.ctk_image)
-        # self.image_label.pack(expand=True)
