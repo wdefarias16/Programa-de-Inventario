@@ -16,6 +16,7 @@ class DashBoardMenu(ctk.CTkFrame):
                  lockscreen_callback,
                  exit_callback,
                  Inventario_CB,
+                 Facturacion_CB,
                  CuentasPorPagar_CB,
                  ProgramasDeUtilidad_CB):
         super().__init__(parent)
@@ -23,6 +24,7 @@ class DashBoardMenu(ctk.CTkFrame):
         self.lockscreen_callback = lockscreen_callback
         self.exit = exit_callback
         self.Inventario_CB = Inventario_CB
+        self.Facturacion_CB = Facturacion_CB
         self.CuentasPorPagar_CB = CuentasPorPagar_CB
         self.ProgramasDeUtilidad_CB = ProgramasDeUtilidad_CB
         self.ResizeImage()
@@ -83,7 +85,7 @@ class DashBoardMenu(ctk.CTkFrame):
                                      corner_radius=10,
                                      compound='left',
                                      anchor='w',
-                                     command=lambda: 0+0)
+                                     command=self.Facturacion_CB)
         fact_btn.grid(row=1,column=0,columnspan=2,sticky='nswe',padx=15)
         # BOTON CUENTAS POR PAGAR - BOTON CUENTAS POR PAGAR - BOTON CUENTAS POR PAGAR - BOTON CUENTAS POR PAGAR - BOTON CUENTAS POR PAGAR - 
         cuentas_xp_btn = ctk.CTkButton(self.buttons_frame,

@@ -1,12 +1,14 @@
 import customtkinter as ctk
 from DashBoard import*
 from Login import*
+from AjustesInventario_prog import*
 from CargaProductos_prog import*
 from CargaLineasGrupos_prog import*
 from CargaProveedores_prog import*
-from AjustesInventario_prog import*
+from Facturacion_prog import*
 from MaestroDeTablas_prog import*
 from Menu_Inventario import*
+from Menu_Facturacion import*
 from Menu_CuentasPorPagar import*
 from Menu_ProgramasDeUtilidad import*
 from EntradaInventario_prog import*
@@ -47,7 +49,8 @@ class App(ctk.CTk):
         self.dashboard=DashBoardMenu(self,
                                  lockscreen_callback = self.LockWindow,
                                  exit_callback = self.Salir,
-                                 Inventario_CB=self.InventarioMenu,
+                                 Inventario_CB= self.InventarioMenu,
+                                 Facturacion_CB= self.FacturacionMenu,
                                  CuentasPorPagar_CB=self.CuentasPorPagarMenu,
                                  ProgramasDeUtilidad_CB = self.ProgramasUtilidadMenu)
         self.dashboard.pack(expand=True, fill='both')
@@ -103,6 +106,28 @@ class App(ctk.CTk):
     def AjustesInventario(self):
         self.current_prog.destroy()
         self.current_prog = AjustesInventarioProg(self,GoBack_CB=self.GoBackInventario)
+        self.current_prog.pack(expand=True,fill='both')
+# -------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------
+# PROGRAMAS DE FACTURACION - PROGRAMAS DE FACTURACION - PROGRAMAS DE FACTURACION - PROGRAMAS DE FACTURACION - 
+# PROGRAMAS DE FACTURACION - PROGRAMAS DE FACTURACION - PROGRAMAS DE FACTURACION - PROGRAMAS DE FACTURACION - 
+# PROGRAMAS DE FACTURACION - PROGRAMAS DE FACTURACION - PROGRAMAS DE FACTURACION - PROGRAMAS DE FACTURACION - 
+    def FacturacionMenu(self):
+        self.dashboard.destroy()
+        self.dashboard_activo = False
+        self.current_prog = FacturacionMenu(self,
+                                           GoBack_CB = self.ReturnToDashboard,
+                                           FacturacionProg = self.FacturacionProg)
+        self.current_prog.pack(expand=True,fill='both')
+    def GoBackFacturacion(self):
+        self.current_prog.destroy()
+        self.current_prog = FacturacionMenu(self,
+                                           GoBack_CB = self.ReturnToDashboard,
+                                           FacturacionProg = self.FacturacionProg)
+        self.current_prog.pack(expand=True,fill='both')
+    def FacturacionProg(self):
+        self.current_prog.destroy()
+        self.current_prog = FacturacionProg(self,GoBack_CB=self.GoBackFacturacion)
         self.current_prog.pack(expand=True,fill='both')
 # -------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------
@@ -164,6 +189,7 @@ class App(ctk.CTk):
                                  lockscreen_callback = self.LockWindow,
                                  exit_callback = self.Salir,
                                  Inventario_CB=self.InventarioMenu,
+                                 Facturacion_CB=self.FacturacionMenu,
                                  CuentasPorPagar_CB=self.CuentasPorPagarMenu,
                                  ProgramasDeUtilidad_CB = self.ProgramasUtilidadMenu)
         self.dashboard.pack(expand=True, fill='both')
