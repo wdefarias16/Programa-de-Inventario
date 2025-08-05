@@ -10,12 +10,28 @@ FONT = {
     'text_light': ('Roboto light',15),
     'text_small': ('Roboto light',12),
 }
-APP_COLORS = ['#eaeaea','#1d1d1d','#1c9bac','#166c78',
-              '#5d5d5d',"#d4d4d4",'#ffffff','#666666',
-              '#31C74A','#D8171D','#810005']
+
 APPEARANCE_MODE = 'light'
 
+APP_COLOR = {
+    'main':'#1c9bac',
+    'sec':'#166c78',
+    'white_m':'#eaeaea',
+    'black_m':'#1d1d1d',
+    'white':'#ffffff',
+    'black':'#000000',
+    'gray':'#5d5d5d',
+    'green_m':'#31C74A',
+    'green_s':'#1A832B',
+    'red_m':'#D8171D',
+    'red_s':'#810005',
+}
 
+
+
+
+# ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - 
+# ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - 
 cancel_icon = ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_cerrar_light.png"), size=(30,30),
                                         dark_image=Image.open(r"Recursos\Iconos\btn_cerrar_dark.png"))
 search_icon = ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_search_light.png"), size=(30,30),

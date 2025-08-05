@@ -1,13 +1,13 @@
 # CREAR FRAME LOGIN
 import customtkinter as ctk
 import tkinter as tk
-from style import FONT, APP_COLORS, APPEARANCE_MODE
+from style import *
 from DatabaseManager import USER_MANAGER
 
 # LOGIN FRAME
 class LoginFrame(ctk.CTkFrame):
     def __init__(self,parent,success_callback):
-        super().__init__(parent,bg_color=APP_COLORS[0])
+        super().__init__(parent,bg_color=APP_COLOR['white_m'])
         self.success_callback = success_callback
         self.Login()
     # GRID SETUP
@@ -45,33 +45,33 @@ class LoginFrame(ctk.CTkFrame):
         label_wc = ctk.CTkLabel(self,
                                 text='Bienvenido',
                                 font=FONT['title_light'],
-                                text_color=APP_COLORS[4])
+                                text_color=APP_COLOR['gray'])
         label_wc.grid(row=3,column=2,columnspan=2,sticky='we')
         # USUARIO
         user_label = ctk.CTkLabel(self,
                                 text='Usuario',
                                 font=FONT['text_light'],
-                                text_color=APP_COLORS[4])
+                                text_color=APP_COLOR['gray'])
         user_label.grid(row=6,column=2,columnspan=1,sticky='ws')
         # CONTRASENA
         password_label = ctk.CTkLabel(self,
                                 text='Contraseña',
                                 font=FONT['text_light'],
-                                text_color=APP_COLORS[4])
+                                text_color=APP_COLOR['gray'])
         password_label.grid(row=8,column=2,columnspan=1,sticky='ws')
         # MENSAJE INFERIOR
         self.label_var = tk.StringVar(value='Ingresa tus credenciales')
         label_accses = ctk.CTkLabel(self,
                                 textvariable=self.label_var,
                                 font=FONT['text_light'],
-                                text_color=APP_COLORS[4])
+                                text_color=APP_COLOR['gray'])
         label_accses.grid(row=13,column=2,columnspan=2,sticky='we')
     # BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES -  
         # BOTON ENTRAR
         enter_button = ctk.CTkButton(self,
                                      text='Entrar',
-                                     fg_color=APP_COLORS[2],
-                                     hover_color=APP_COLORS[3],
+                                     fg_color=APP_COLOR['main'],
+                                     hover_color=APP_COLOR['sec'],
                                      command=self.Access)
         enter_button.grid(row=11,column=2,columnspan=1,sticky='we',padx=5)
         

@@ -1,7 +1,7 @@
 import tkinter as tk
 import customtkinter as ctk
 from tkinter import ttk,messagebox
-from style import FONT, ICONS, APP_COLORS
+from style import *
 from DatabaseManager import*
 
 import os
@@ -33,7 +33,7 @@ class AjustesInventarioProg(ctk.CTkFrame):
         # TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - 
         # FRAME
         title_frame = ctk.CTkFrame(self,
-                                   fg_color=APP_COLORS[3],
+                                   fg_color=APP_COLOR['sec'],
                                    corner_radius=0,
                                    height=50)
         title_frame.pack(fill='x')
@@ -41,11 +41,11 @@ class AjustesInventarioProg(ctk.CTkFrame):
         title_label = ctk.CTkLabel(title_frame,
                                    text='Ajustes de inventario',
                                    bg_color='transparent',
-                                   text_color=APP_COLORS[0],
+                                   text_color=APP_COLOR['white_m'],
                                    font=FONT['title_light'])
         title_label.pack(pady=10)
         # PROG FRAME
-        self.prog_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLORS[0])
+        self.prog_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLOR['white_m'])
         self.prog_frame.pack(expand=True,fill='both',side='left')
         self.prog_frame.bind("<Return>",lambda event:self.ProductsHelp())
 
@@ -60,8 +60,8 @@ class AjustesInventarioProg(ctk.CTkFrame):
         self.num_doc_entry_var = tk.StringVar()
         self.num_doc_entry = ctk.CTkEntry(self.prog_frame,
                                           textvariable=self.num_doc_entry_var,
-                                          fg_color=APP_COLORS[6],
-                                          border_color=APP_COLORS[2],
+                                          fg_color=APP_COLOR['white'],
+                                          border_color=APP_COLOR['main'],
                                           width=30)
         self.num_doc_entry.grid(row=4,column=1,rowspan=2,columnspan=2,sticky='nwe',pady=5)
         self.num_doc_entry.bind("<Return>", self.ObtenerAjuste)
@@ -69,8 +69,8 @@ class AjustesInventarioProg(ctk.CTkFrame):
         # MANAGER ENTRY
         self.hidden_entry = ctk.CTkEntry(self.prog_frame, width=0,
                                          state='disabled',
-                                         fg_color=APP_COLORS[0],
-                                         border_color=APP_COLORS[0])
+                                         fg_color=APP_COLOR['white_m'],
+                                         border_color=APP_COLOR['white_m'])
         self.hidden_entry.grid(row=0,column=0)
         self.hidden_entry.bind("<Return>", lambda event: self.ProductsHelp())
         # LOG TXT BOX
@@ -80,13 +80,13 @@ class AjustesInventarioProg(ctk.CTkFrame):
         # NUM DOC
         num_doc_label = ctk.CTkLabel(self.prog_frame,
                                      text='Documento',
-                                     text_color=APP_COLORS[1],
+                                     text_color=APP_COLOR['black_m'],
                                      font=FONT['text_light'])
         num_doc_label.grid(row=3,column=1,columnspan=2,sticky='ws')
         # LOG TEXT BOX
         log_label = ctk.CTkLabel(self.prog_frame,
                                      text='Motivo del ajuste',
-                                     text_color=APP_COLORS[1],
+                                     text_color=APP_COLOR['black_m'],
                                      font=FONT['text_light'])
         log_label.grid(row=15,column=1,columnspan=2,sticky='w')
         # BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - 
@@ -94,32 +94,32 @@ class AjustesInventarioProg(ctk.CTkFrame):
         self.btn_add_product = ctk.CTkButton(self.prog_frame,
                                             text="Agregar producto",
                                             width=50,
-                                            fg_color=APP_COLORS[2],
-                                            hover_color=APP_COLORS[3],
+                                            fg_color=APP_COLOR['main'],
+                                            hover_color=APP_COLOR['sec'],
                                             command=self.ProductsHelp)
         self.btn_add_product.grid(row=4,column=9,columnspan=2,sticky='nse')
         # GO BACK
         go_back_btn = ctk.CTkButton(self.prog_frame,
                                     text="Volver atrás",
                                     width=50,
-                                    fg_color=APP_COLORS[2],
-                                    hover_color=APP_COLORS[3],
+                                    fg_color=APP_COLOR['main'],
+                                    hover_color=APP_COLOR['sec'],
                                     command=self.GoBack_CB)
         go_back_btn.grid(row=0,column=0,sticky='nsew',padx=5,pady=5)
         # PRINT ADJUSTMENT
         imprimir_btn = ctk.CTkButton(
             self.prog_frame,
             text='Imprimir Ajuste',
-            fg_color=APP_COLORS[8],
-            hover_color=APP_COLORS[3],
+            fg_color=APP_COLOR['green_m'],
+            hover_color=APP_COLOR['green_s'],
             command=self.ImprimirAjustes)
         imprimir_btn.grid(row=1, column=7, columnspan=2, sticky='we', padx=5)
         # SAVE
         self.btn_guardar_ajuste = ctk.CTkButton(
             self.prog_frame,
             text="Guardar Ajuste",
-            fg_color=APP_COLORS[8],
-            hover_color=APP_COLORS[3],
+            fg_color=APP_COLOR['green_m'],
+            hover_color=APP_COLOR['green_s'],
             command=self.GuardarAjustes)
         self.btn_guardar_ajuste.grid(row=1, column=9, columnspan=2, sticky='we', padx=5)
 
@@ -128,15 +128,15 @@ class AjustesInventarioProg(ctk.CTkFrame):
         style = ttk.Style()
         style.configure(
             'Custom.Treeview',
-            background = APP_COLORS[0],
-            foreground = APP_COLORS[1],
+            background = APP_COLOR['white_m'],
+            foreground = APP_COLOR['black_m'],
             rowheight = 30,
             font = FONT['text_small'],
-            fieldbackground = APP_COLORS[0])
+            fieldbackground = APP_COLOR['white_m'])
         style.configure(
             'Custom.Treeview.Heading',
-            background = APP_COLORS[1],
-            foreground = APP_COLORS[1],
+            background = APP_COLOR['black_m'],
+            foreground = APP_COLOR['black_m'],
             font = FONT['text_light'])
         self.treeview_main = ttk.Treeview(self.prog_frame,
                                      style='Custom.Treeview',
@@ -185,7 +185,7 @@ class AjustesInventarioProg(ctk.CTkFrame):
             self.qty_entry_var.set('')
             self.search_bar_entry.after(100,
                 lambda:  self.search_bar_entry.configure(state='normal',
-                fg_color=APP_COLORS[6],border_color=APP_COLORS[6]))
+                fg_color=APP_COLOR['white'],border_color=APP_COLOR['white']))
             self.search_bar_entry_var.set('')
             self.search_bar_entry.after(100,self.search_bar_entry.focus())
             inventario = INVENTARIO.GetInventory()
@@ -226,23 +226,23 @@ class AjustesInventarioProg(ctk.CTkFrame):
             codigo = info['text']
             self.search_bar_entry_var.set(codigo)
             self.search_bar_entry.configure(state='disabled',
-                                            fg_color=APP_COLORS[4],
-                                            border_color=APP_COLORS[4])
+                                            fg_color=APP_COLOR['gray'],
+                                            border_color=APP_COLOR['gray'])
             self.qty_entry.configure(state='normal',
-                                     fg_color=APP_COLORS[6],
-                                     border_color=APP_COLORS[6])
+                                     fg_color=APP_COLOR['white'],
+                                     border_color=APP_COLOR['white'])
             self.qty_entry.focus_set()
         # -------------------------------------------------------------------------------------------------
     # CANCEL TREEVIEW SELECTION
         def RefreshSelection():
             self.qty_entry_var.set('')
             self.qty_entry.configure(state='disabled',
-                                     fg_color=APP_COLORS[4],
-                                     border_color=APP_COLORS[4])
+                                     fg_color=APP_COLOR['gray'],
+                                     border_color=APP_COLOR['gray'])
             self.search_bar_entry_var.set('')
             self.search_bar_entry.configure(state='normal',
-                                            fg_color=APP_COLORS[6],
-                                            border_color=APP_COLORS[6])
+                                            fg_color=APP_COLOR['white'],
+                                            border_color=APP_COLOR['white'])
             self.search_bar_entry.focus()
             ListInventory()
         # -------------------------------------------------------------------------------------------------
@@ -287,7 +287,7 @@ class AjustesInventarioProg(ctk.CTkFrame):
             self.hidden_entry.focus()
         # -------------------------------------------------------------------------------------------------
         # CREATE THE WINDOW
-        help_frame = ctk.CTkToplevel(self,fg_color=APP_COLORS[0])
+        help_frame = ctk.CTkToplevel(self,fg_color=APP_COLOR['white_m'])
         help_frame.title('Busqueda de productos')
         help_frame.geometry('800x450')
         help_frame.protocol("WM_DELETE_WINDOW", lambda: None)
@@ -296,7 +296,7 @@ class AjustesInventarioProg(ctk.CTkFrame):
         # TITLE - TITLE - TITLE - 
         # TITLE FRAME
         title_frame = ctk.CTkFrame(help_frame,
-                                   fg_color=APP_COLORS[3],
+                                   fg_color=APP_COLOR['sec'],
                                    height=50,
                                    corner_radius=0)
         title_frame.pack(expand=False,fill='x')
@@ -304,12 +304,12 @@ class AjustesInventarioProg(ctk.CTkFrame):
         title_label = ctk.CTkLabel(title_frame,
                                    text='Búsqueda de productos',
                                    bg_color='transparent',
-                                   text_color=APP_COLORS[0],
+                                   text_color=APP_COLOR['white_m'],
                                    font=FONT['text'])
         title_label.pack(expand=True,fill='x',pady=5)
         # PROG FRAME - PROG FRAME - PROG FRAME - PROG FRAME - 
         prog_frame = ctk.CTkFrame(help_frame,
-                                   fg_color=APP_COLORS[0],
+                                   fg_color=APP_COLOR['white_m'],
                                    height=50,
                                    corner_radius=0)
         prog_frame.pack(expand=True,fill='both')
@@ -324,8 +324,8 @@ class AjustesInventarioProg(ctk.CTkFrame):
         self.search_bar_entry_var = tk.StringVar()
         self.search_bar_entry = ctk.CTkEntry(prog_frame,
                                         textvariable=self.search_bar_entry_var,
-                                        fg_color=APP_COLORS[4],
-                                        border_color=APP_COLORS[4])
+                                        fg_color=APP_COLOR['gray'],
+                                        border_color=APP_COLOR['gray'])
         self.search_bar_entry.grid(row=2,column=1,columnspan=2,sticky='we')
         
         self.search_bar_entry.bind("<Return>",lambda event:SearchProductName())
@@ -335,8 +335,8 @@ class AjustesInventarioProg(ctk.CTkFrame):
         self.qty_entry = ctk.CTkEntry(prog_frame,
                                         state='disabled',
                                         textvariable=self.qty_entry_var,
-                                        fg_color=APP_COLORS[4],
-                                        border_color=APP_COLORS[4])
+                                        fg_color=APP_COLOR['gray'],
+                                        border_color=APP_COLOR['gray'])
         self.qty_entry.grid(row=2,column=6,sticky='we')
         self.qty_entry.bind("<Control-BackSpace>",lambda event:RefreshSelection())
         self.qty_entry.bind("<Return>",lambda event:AddProduct())
@@ -345,13 +345,13 @@ class AjustesInventarioProg(ctk.CTkFrame):
         search_bar_label = ctk.CTkLabel(prog_frame,
                                         text='Búsqueda por nombre',
                                         font=FONT['text_light'],
-                                        text_color=APP_COLORS[4])
+                                        text_color=APP_COLOR['gray'])
         search_bar_label.grid(row=1,column=1,columnspan=2,sticky='w')
         # QUANTITY
         qty_label = ctk.CTkLabel(prog_frame,
                                 text='Cantidad',
                                 font=FONT['text_light'],
-                                text_color=APP_COLORS[4])
+                                text_color=APP_COLOR['gray'])
         qty_label.grid(row=1,column=6,columnspan=2,sticky='w')
         # BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - 
         # CLOSE WINDOW
@@ -359,31 +359,31 @@ class AjustesInventarioProg(ctk.CTkFrame):
                                   text='',
                                   image=ICONS['cancel'],
                                   command=lambda:help_frame.destroy(),
-                                  fg_color=APP_COLORS[9],
-                                  hover_color=APP_COLORS[10])
+                                  fg_color=APP_COLOR['red_m'],
+                                  hover_color=APP_COLOR['red_s'])
         close_btn.grid(row=0,column=COLUMNS-1,sticky='we',padx=10,pady=10)
         # SEARCH
         search_btn = ctk.CTkButton(prog_frame,
                                   text='',
                                   image=ICONS['search'],
                                   command=SearchProductName,
-                                  fg_color=APP_COLORS[2],
-                                  hover_color=APP_COLORS[3])
+                                  fg_color=APP_COLOR['main'],
+                                  hover_color=APP_COLOR['sec'])
         search_btn.grid(row=2,column=3,sticky='w',padx=5)
         # REFRESH OR CANCEL SELECTION
         cancel_slct_btn = ctk.CTkButton(prog_frame,
                                   text='',
                                   image=ICONS['refresh'],
                                   command=RefreshSelection,
-                                  fg_color=APP_COLORS[2],
-                                  hover_color=APP_COLORS[3])
+                                  fg_color=APP_COLOR['main'],
+                                  hover_color=APP_COLOR['sec'])
         cancel_slct_btn.grid(row=2,column=4,sticky='w')
         # ACCEPT
         accept_btn = ctk.CTkButton(prog_frame,
                                   text='Aceptar',
                                   command=AddProduct,
-                                  fg_color=APP_COLORS[2],
-                                  hover_color=APP_COLORS[3])
+                                  fg_color=APP_COLOR['main'],
+                                  hover_color=APP_COLOR['sec'])
         accept_btn.grid(row=2,column=7,sticky='w',padx=5)
         # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
         # TREVIEW
@@ -469,12 +469,12 @@ class AjustesInventarioProg(ctk.CTkFrame):
         ajuste = datos[4]
         # FRAME DE EDICION DE AJUSTES
         self.edit_window = ctk.CTkToplevel(self,
-                                   fg_color=APP_COLORS[0])
+                                   fg_color=APP_COLOR['white_m'])
         self.edit_window.geometry('600x350')
         self.edit_window.title('Editar')
         self.edit_window.protocol("WM_DELETE_WINDOW", lambda: None)
         self.edit_window.transient(self)
-        edit_frame = ctk.CTkFrame(self.edit_window,corner_radius=5,fg_color=APP_COLORS[0])
+        edit_frame = ctk.CTkFrame(self.edit_window,corner_radius=5,fg_color=APP_COLOR['white_m'])
         edit_frame.pack(expand=True,fill='both')
     # GRID SETUP
         ROWS, COLUMNS = 12,10
@@ -483,12 +483,12 @@ class AjustesInventarioProg(ctk.CTkFrame):
         for columns in range(COLUMNS):
             edit_frame.columnconfigure(columns,weight=1,uniform='a')
     # TITULO
-        title_frame = ctk.CTkFrame(edit_frame,corner_radius=0,fg_color=APP_COLORS[3])
+        title_frame = ctk.CTkFrame(edit_frame,corner_radius=0,fg_color=APP_COLOR['sec'])
         title_frame.grid(row=0,column=0,rowspan=2,columnspan=10,sticky='nwe')
         title = ctk.CTkLabel(title_frame,
                              text='Editar existencia',
                              bg_color='transparent',
-                             text_color=APP_COLORS[0],
+                             text_color=APP_COLOR['white_m'],
                              height=50,
                              font=FONT['text'])
         title.pack(pady=10)
@@ -496,13 +496,13 @@ class AjustesInventarioProg(ctk.CTkFrame):
         producto_label = ctk.CTkLabel(edit_frame,
                                       text=self.nombre,
                                       font=FONT['title_bold'],
-                                      text_color=APP_COLORS[4],
+                                      text_color=APP_COLOR['gray'],
                                       bg_color='transparent')
         producto_label.grid(row = 3, column = 1, columnspan = 6, padx = 10, sticky = 'w')
         existencia_label = ctk.CTkLabel(edit_frame,
                                       text=f'Existencia actual: {existencia}',
                                       font=FONT['subtitle_bold'],
-                                      text_color=APP_COLORS[4],
+                                      text_color=APP_COLOR['gray'],
                                       bg_color='transparent')
         existencia_label.grid(row = 4, column = 1, columnspan = 6, padx = 10, sticky = 'w')
     # ENTRADAS
@@ -514,7 +514,7 @@ class AjustesInventarioProg(ctk.CTkFrame):
                                                 textvariable=self.ajuste_edit_var,
                                                 validate = 'key',
                                                 validatecommand = (self.validate,'%P'),
-                                                fg_color=APP_COLORS[6],
+                                                fg_color=APP_COLOR['white'],
                                                 border_width=0)
         self.ajuste_edit_entry.grid(row = 7, column = 1, columnspan = 2, sticky = 'we',padx = 10)
         self.ajuste_edit_entry.bind("<Return>",lambda event:ModAdjustment())
@@ -523,38 +523,38 @@ class AjustesInventarioProg(ctk.CTkFrame):
         ajuste_label = ctk.CTkLabel(edit_frame,
                                       text=f'Ajuste',
                                       font=FONT['text_light'],
-                                      text_color=APP_COLORS[4])
+                                      text_color=APP_COLOR['gray'])
         ajuste_label.grid(row = 6, column = 1, columnspan = 2, sticky = 'w',padx = 10)
     # BOTONES
         # EDITAR
         editar_btn = ctk.CTkButton(edit_frame,
                                    text='Editar',
                                    command=ModAdjustmentMode,
-                                   fg_color=APP_COLORS[2],
-                                   hover_color=APP_COLORS[3])
+                                   fg_color=APP_COLOR['main'],
+                                   hover_color=APP_COLOR['sec'])
         editar_btn.grid(row=9,column=1,columnspan=2,sticky='we',padx=10)
         # ELIMINAR
         eliminar_btn = ctk.CTkButton(edit_frame,
                                      text='',
                                      image=ICONS['trash'],
                                      command=DelAdjustment,
-                                     fg_color=APP_COLORS[9],
-                                     hover_color=APP_COLORS[10])
+                                     fg_color=APP_COLOR['red_m'],
+                                     hover_color=APP_COLOR['red_s'])
         eliminar_btn.grid(row=9,column=3,sticky='we')
         # ACEPTAR
         aceptar_btn = ctk.CTkButton(edit_frame,
                                     text='Aceptar',
                                     command=ModAdjustment,
-                                    fg_color=APP_COLORS[2],
-                                    hover_color=APP_COLORS[3])
+                                    fg_color=APP_COLOR['main'],
+                                    hover_color=APP_COLOR['sec'])
         aceptar_btn.grid(row=7,column=3,columnspan=2,sticky='we',padx=10)
         # CANCELAR
         cancelar_btn = ctk.CTkButton(edit_frame,
                                      text='',
                                      image=ICONS['cancel'],
                                      command=lambda: self.edit_window.destroy(),
-                                     fg_color=APP_COLORS[9],
-                                     hover_color=APP_COLORS[10])
+                                     fg_color=APP_COLOR['red_m'],
+                                     hover_color=APP_COLOR['red_s'])
         cancelar_btn.grid(row=3,column=COLUMNS-2,sticky='w')
 
     # VALIDATE DIGITS
@@ -737,8 +737,8 @@ class AjustesInventarioProg(ctk.CTkFrame):
         self.cancel_btn = ctk.CTkButton(
             self.prog_frame,
             text="Cancelar",
-            fg_color=APP_COLORS[9],
-            hover_color=APP_COLORS[10],
+            fg_color=APP_COLOR['red_m'],
+            hover_color=APP_COLOR['red_s'],
             command=self.CancelarVisualizacion
         )
         self.cancel_btn.grid(row=0, column=1, sticky='nw', padx=5, pady=5)

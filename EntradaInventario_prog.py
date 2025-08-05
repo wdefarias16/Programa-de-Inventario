@@ -3,7 +3,7 @@ from tkcalendar import Calendar
 import tkinter as tk
 from tkinter import ttk, messagebox
 from DatabaseManager import INVENTARIO, PROV_MANAGER
-from style import FONT, APP_COLORS, ICONS
+from style import FONT, APP_COLOR, ICONS
 import os
 from reportlab.lib.pagesizes import LETTER
 from reportlab.lib import colors
@@ -20,7 +20,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
         super().__init__(parent)
         # CALLBACK IR ATRAS
         self.GoBack_CB = GoBack_CB
-        self.configure(fg_color=APP_COLORS[0])
+        self.configure(fg_color=APP_COLOR['white_m'])
         self.validardigit = self.register(self.ValidarDigitos)
         self.lista_productos = []
         self.total_prev = 0.0
@@ -29,18 +29,18 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.flete_default = 0
         self.bind("<Return>",lambda event: self.BusquedaProducto())
     # TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - 
-        title_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLORS[3])
+        title_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLOR['sec'])
         title_frame.pack(fill='x')
 
         title = ctk.CTkLabel(title_frame,
                              text='Entradas a inventario',
                              bg_color='transparent',
-                             text_color=APP_COLORS[0],
+                             text_color=APP_COLOR['white_m'],
                              height=50,
                              font=FONT['title_light'])
         title.pack(pady=10)
     # PROG FRAME
-        self.prog_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLORS[0])
+        self.prog_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLOR['white_m'])
         self.prog_frame.pack(expand=True,fill='both',side='left')
     # GRID SETUP
         for rows in range(20):
@@ -52,8 +52,8 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.num_pedido_var = tk.StringVar()
         self.num_pedido_entry = ctk.CTkEntry(self.prog_frame,
                                              textvariable=self.num_pedido_var,
-                                             fg_color=APP_COLORS[6],
-                                             border_color=APP_COLORS[2])
+                                             fg_color=APP_COLOR['white'],
+                                             border_color=APP_COLOR['main'])
         self.num_pedido_entry.grid(row=4,column=1,columnspan=2,padx=5,sticky='we')
         self.num_pedido_entry.focus()
         self.num_pedido_entry.bind("<Return>", self.ObtenerEntrada)
@@ -61,8 +61,8 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.proveedor_var = tk.StringVar()
         self.proveedor_entry = ctk.CTkEntry(self.prog_frame,
                                             textvariable=self.proveedor_var,
-                                            fg_color=APP_COLORS[6],
-                                            border_color=APP_COLORS[2])
+                                            fg_color=APP_COLOR['white'],
+                                            border_color=APP_COLOR['main'])
         self.proveedor_entry.grid(row=4,column=3,columnspan=2,padx=5,sticky='we')
         self.proveedor_entry.bind("<Return>",lambda event:self.BuscarProvCodigo())
         # FECHA
@@ -70,8 +70,8 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.fecha_entry = ctk.CTkEntry(self.prog_frame,
                                         state='disabled',
                                         textvariable=self.fecha_entry_var,
-                                        fg_color=APP_COLORS[6],
-                                        border_color=APP_COLORS[2])
+                                        fg_color=APP_COLOR['white'],
+                                        border_color=APP_COLOR['main'])
         self.fecha_entry.grid(row=4,column=5,columnspan=1,padx=5,sticky='we')
         # TOTAL
         self.total_entry_var = tk.StringVar()
@@ -79,73 +79,73 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.total_entry = ctk.CTkEntry(self.prog_frame,
                                         state='disabled',
                                         textvariable=self.total_entry_var,
-                                        fg_color=APP_COLORS[8],
-                                        border_color=APP_COLORS[8])
+                                        fg_color=APP_COLOR['green_m'],
+                                        border_color=APP_COLOR['green_m'])
         self.total_entry.grid(row=15,column=10,columnspan=1,padx=5,sticky='we')
     # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
         # NUMERO - CODIGO DE PEDIDO
         num_pedido_label = ctk.CTkLabel(self.prog_frame,
                                         text='Número de factura',
                                         font=FONT['text_light'],
-                                        text_color=APP_COLORS[4])
+                                        text_color=APP_COLOR['gray'])
         num_pedido_label.grid(row=3,column=1,columnspan=2,padx=5,sticky='w')
         # PROVEEDOR
         proveedor_label = ctk.CTkLabel(self.prog_frame,
                                         text='Proveedor',
                                         font=FONT['text_light'],
-                                        text_color=APP_COLORS[4])
+                                        text_color=APP_COLOR['gray'])
         proveedor_label.grid(row=3,column=4,columnspan=2,padx=5,sticky='w')
         # FECHA - 
         fecha_pedido_label = ctk.CTkLabel(self.prog_frame,
                                         text='Fecha del pedido',
                                         font=FONT['text_light'],
-                                        text_color=APP_COLORS[4])
+                                        text_color=APP_COLOR['gray'])
         fecha_pedido_label.grid(row=3,column=5,columnspan=2,padx=5,sticky='w')
         # TOTAL
         total_label = ctk.CTkLabel(self.prog_frame,
                                         text='Previsualización Total:',
                                         font=FONT['text_light'],
-                                        text_color=APP_COLORS[4])
+                                        text_color=APP_COLOR['gray'])
         total_label.grid(row=15,column=8,columnspan=2,padx=5,sticky='e')
     # BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - 
         # VOLVER ATRAS
         salir_btn = ctk.CTkButton(self.prog_frame,
                                        text='Volver atrás',
                                        command=self.GoBack_CB,
-                                       text_color=APP_COLORS[0],
-                                       fg_color=APP_COLORS[4],
-                                       hover_color=APP_COLORS[3])
+                                       text_color=APP_COLOR['white_m'],
+                                       fg_color=APP_COLOR['gray'],
+                                       hover_color=APP_COLOR['sec'])
         salir_btn.grid(row=0,column=0,sticky='nw',padx=5,pady=5)
         # AYUDA DE PROVEEDORES
         self.prov_help_btn = ctk.CTkButton(self.prog_frame,
                                        text='Proveedores',
                                        command=self.AyudaProveedores,
-                                       text_color=APP_COLORS[0],
-                                       fg_color=APP_COLORS[2],
-                                       hover_color=APP_COLORS[3])
+                                       text_color=APP_COLOR['white_m'],
+                                       fg_color=APP_COLOR['main'],
+                                       hover_color=APP_COLOR['sec'])
         self.prov_help_btn.grid(row=3,column=3,columnspan=1,padx=5,sticky='we')
         # ABRIR CALENDARIO
         self.btn_calendario = ctk.CTkButton(self.prog_frame,
                                             text="←",
                                             width=25,
-                                            fg_color=APP_COLORS[2],
-                                            hover_color=APP_COLORS[3],
+                                            fg_color=APP_COLOR['main'],
+                                            hover_color=APP_COLOR['sec'],
                                             command=self.AbrirCalendario)
         self.btn_calendario.grid(row=4, column=6, sticky='w')
         # AGREGAR ENTRADA
         self.btn_agregar_entrada = ctk.CTkButton(self.prog_frame,
                                             text="Agregar producto",
                                             width=25,
-                                            fg_color=APP_COLORS[2],
-                                            hover_color=APP_COLORS[3],
+                                            fg_color=APP_COLOR['main'],
+                                            hover_color=APP_COLOR['sec'],
                                             command=self.BusquedaProducto)
         self.btn_agregar_entrada.grid(row=4,column=9,columnspan=2,sticky='we',padx=5)
         # GUARDAR ENTRADA
         self.btn_guardar_entrada = ctk.CTkButton(self.prog_frame,
                                             text="Guardar Entrada",
                                             width=25,
-                                            fg_color=APP_COLORS[8],
-                                            hover_color=APP_COLORS[3],
+                                            fg_color=APP_COLOR['green_m'],
+                                            hover_color=APP_COLOR['sec'],
                                             command=self.GuardarFactura)
         self.btn_guardar_entrada.grid(row=1,column=9,columnspan=2,sticky='we',padx=5)
 
@@ -153,8 +153,8 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.btn_imprimir_entrada = ctk.CTkButton(self.prog_frame,
                                             text="Imprimir Entrada",
                                             width=25,
-                                            fg_color=APP_COLORS[8],
-                                            hover_color=APP_COLORS[3],
+                                            fg_color=APP_COLOR['green_m'],
+                                            hover_color=APP_COLOR['sec'],
                                             command=self.ImprimirFactura)
         self.btn_imprimir_entrada.grid(row=1,column=7,columnspan=2,sticky='we',padx=5)
     # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW
@@ -205,15 +205,15 @@ class EntradasInventarioProg(ctk.CTkFrame):
         style = ttk.Style()
         style.configure(
             'Custom.Treeview',
-            background = APP_COLORS[0],
-            foreground = APP_COLORS[1],
+            background = APP_COLOR['white_m'],
+            foreground = APP_COLOR['black_m'],
             rowheight = 30,
             font = FONT['text_small'],
-            fieldbackground = APP_COLORS[0])
+            fieldbackground = APP_COLOR['white_m'])
         style.configure(
             'Custom.Treeview.Heading',
-            background = APP_COLORS[1],
-            foreground = APP_COLORS[1],
+            background = APP_COLOR['black_m'],
+            foreground = APP_COLOR['black_m'],
             font = FONT['text_light'])
         # SCROLLBAR DEL TV
         scrollbar = ctk.CTkScrollbar(self.prog_frame,
@@ -237,8 +237,8 @@ class EntradasInventarioProg(ctk.CTkFrame):
         top.focus()
         
         cal = Calendar(top, locale='es_ES', date_pattern='dd/mm/yyyy',
-                       background=APP_COLORS[3],headersforeground=APP_COLORS[0],
-                       headersbackground = APP_COLORS[4], selectbackground = APP_COLORS[2],
+                       background=APP_COLOR['sec'],headersforeground=APP_COLOR['white_m'],
+                       headersbackground = APP_COLOR['gray'], selectbackground = APP_COLOR['main'],
                        font=('Arial', 18),headersfont=('Arial', 16))
         cal.pack(pady=20, padx=20)
         def seleccionar_fecha():
@@ -247,8 +247,8 @@ class EntradasInventarioProg(ctk.CTkFrame):
             top.destroy()
             self.focus()
         btn_seleccionar = ctk.CTkButton(top,
-                                        fg_color=APP_COLORS[2],
-                                        hover_color=APP_COLORS[3],
+                                        fg_color=APP_COLOR['main'],
+                                        hover_color=APP_COLOR['sec'],
                                         text="Aceptar",
                                         command=seleccionar_fecha)
         btn_seleccionar.pack(pady=10)
@@ -262,7 +262,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
     # FRAME DEL TREEVIEW
         self.btn_agregar_entrada.configure(state='disabled')
         self.tree_frame = ctk.CTkToplevel(self,
-                                   fg_color=APP_COLORS[5])
+                                   fg_color=APP_COLOR['white_m'])
         self.tree_frame.geometry('800x550')
         self.tree_frame.title('Busqueda de productos')
         self.tree_frame.protocol("WM_DELETE_WINDOW", lambda: None)
@@ -274,13 +274,13 @@ class EntradasInventarioProg(ctk.CTkFrame):
             self.tree_frame.columnconfigure(columns,weight=1,uniform='a')
 
         # TITULO
-        title_frame = ctk.CTkFrame(self.tree_frame,corner_radius=0,fg_color=APP_COLORS[3])
+        title_frame = ctk.CTkFrame(self.tree_frame,corner_radius=0,fg_color=APP_COLOR['sec'])
         title_frame.grid(row=0,column=0,columnspan=24,sticky='nswe')
 
         title = ctk.CTkLabel(title_frame,
                              text='Busqueda de productos',
                              bg_color='transparent',
-                             text_color=APP_COLORS[0],
+                             text_color=APP_COLOR['white_m'],
                              height=50,
                              font=FONT['text'])
         title.pack(pady=10)  
@@ -290,8 +290,8 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.search_bar = ctk.CTkEntry(self.tree_frame,
                                        width=200,
                                        textvariable=self.search_bar_var,
-                                       fg_color=APP_COLORS[6],
-                                       border_color=APP_COLORS[6])
+                                       fg_color=APP_COLOR['white'],
+                                       border_color=APP_COLOR['white'])
         self.search_bar.grid(row=2,column=0,columnspan=2,sticky='we',padx=20)
         self.search_bar.bind("<Return>",lambda event:self.BuscarProductoNombre())
         self.search_bar.bind("<Control-BackSpace>", lambda event: self.ListInventory())
@@ -303,8 +303,8 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                      validatecommand = (self.validardigit,'%P'),
                                      textvariable = self.cantidad_var,
                                      width=100,
-                                     fg_color=APP_COLORS[4],
-                                     border_color=APP_COLORS[4])
+                                     fg_color=APP_COLOR['gray'],
+                                     border_color=APP_COLOR['gray'])
         self.cantidad_entry.grid(row=4,column=0,columnspan=2,sticky='wns',padx=20,pady=5)
         self.cantidad_entry.bind("<Return>",lambda event:self.costo_entry.focus_set())
         # COSTO
@@ -315,8 +315,8 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                      validatecommand = (self.validardigit,'%P'),
                                      textvariable = self.costo_var,
                                      width=100,
-                                     fg_color=APP_COLORS[4],
-                                     border_color=APP_COLORS[4])
+                                     fg_color=APP_COLOR['gray'],
+                                     border_color=APP_COLOR['gray'])
         self.costo_entry.grid(row=5,column=0,columnspan=2,sticky='wns',padx=20,pady=5)
         self.costo_entry.bind("<Return>",lambda event:self.descuento_1_entry.focus_set())
         # DESCUENTO 1
@@ -326,8 +326,8 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                             validate = 'key',
                                             validatecommand = (self.validardigit,'%P'),
                                             width=100,
-                                            fg_color=APP_COLORS[4],
-                                            border_color=APP_COLORS[4],
+                                            fg_color=APP_COLOR['gray'],
+                                            border_color=APP_COLOR['gray'],
                                             textvariable = self.descuento_1_var)
         self.descuento_1_entry.grid(row=6,column=0,columnspan=2,sticky='wns',padx=20,pady=5)
         self.descuento_1_entry.bind("<Return>",lambda event:self.descuento_2_entry.focus())
@@ -338,8 +338,8 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                             validate = 'key',
                                             validatecommand = (self.validardigit,'%P'),
                                             width=100,
-                                            fg_color=APP_COLORS[4],
-                                            border_color=APP_COLORS[4],
+                                            fg_color=APP_COLOR['gray'],
+                                            border_color=APP_COLOR['gray'],
                                             textvariable = self.descuento_2_var)
         self.descuento_2_entry.grid(row=7,column=0,columnspan=2,sticky='wns',padx=20,pady=5)
         self.descuento_2_entry.bind("<Return>",lambda event:self.descuento_3_entry.focus())
@@ -350,8 +350,8 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                             validate = 'key',
                                             validatecommand = (self.validardigit,'%P'),
                                             width=100,
-                                            fg_color=APP_COLORS[4],
-                                            border_color=APP_COLORS[4],
+                                            fg_color=APP_COLOR['gray'],
+                                            border_color=APP_COLOR['gray'],
                                             textvariable = self.descuento_3_var)
         self.descuento_3_entry.grid(row=8,column=0,columnspan=2,sticky='wns',padx=20,pady=5)
         self.descuento_3_entry.bind("<Return>",lambda event:self.flete_entry.focus())
@@ -362,8 +362,8 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                             validate = 'key',
                                             validatecommand = (self.validardigit,'%P'),
                                             width=100,
-                                            fg_color=APP_COLORS[4],
-                                            border_color=APP_COLORS[4],
+                                            fg_color=APP_COLOR['gray'],
+                                            border_color=APP_COLOR['gray'],
                                             textvariable = self.flete_entry_var)
         self.flete_entry.grid(row=9,column=0,columnspan=2,sticky='wns',padx=20,pady=5)
         self.flete_entry_var.set(self.flete_default)
@@ -376,8 +376,8 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                      validatecommand = (self.validardigit,'%P'),
                                      textvariable = self.iva_var,
                                      width=100,
-                                     fg_color=APP_COLORS[4],
-                                     border_color=APP_COLORS[4])
+                                     fg_color=APP_COLOR['gray'],
+                                     border_color=APP_COLOR['gray'])
         self.iva_entry.grid(row=10,column=0,columnspan=2,sticky='wns',padx=20,pady=5)
         self.iva_var.set(self.iva_default)
         self.iva_entry.bind("<Return>",lambda event:self.AgregarProducto())
@@ -386,57 +386,57 @@ class EntradasInventarioProg(ctk.CTkFrame):
         label_busqueda = ctk.CTkLabel(self.tree_frame,
                              text='Busqueda por nombre',
                              font=FONT['text_light'],
-                                        text_color=APP_COLORS[4])
+                                        text_color=APP_COLOR['gray'])
         label_busqueda.grid(row=1,column=0,columnspan=3,sticky='w',padx=20)
         # CANTIDAD
         label_cantidad = ctk.CTkLabel(self.tree_frame,
                                       text='Cantidad',
                                       font=FONT['text_light'],
-                                      text_color=APP_COLORS[4])
+                                      text_color=APP_COLOR['gray'])
         label_cantidad.grid(row=4,column=1,columnspan=3,sticky='w',padx=20)
         # COSTO
         label_costo = ctk.CTkLabel(self.tree_frame,
                                       text='Costo',
                                       font=FONT['text_light'],
-                                      text_color=APP_COLORS[4])
+                                      text_color=APP_COLOR['gray'])
         label_costo.grid(row=5,column=1,columnspan=3,sticky='w',padx=20)
         # DESCUENTO 1
         label_descuento_1 = ctk.CTkLabel(self.tree_frame,
                                        text='Descuento 1',
                                        font=FONT['text_light'],
-                                       text_color=APP_COLORS[4])
+                                       text_color=APP_COLOR['gray'])
         label_descuento_1.grid(row=6,column=1,columnspan=3,sticky='w',padx=20)
         # DESCUENTO 2
         label_descuento_2 = ctk.CTkLabel(self.tree_frame,
                                        text='Descuento 2',
                                        font=FONT['text_light'],
-                                       text_color=APP_COLORS[4])
+                                       text_color=APP_COLOR['gray'])
         label_descuento_2.grid(row=7,column=1,columnspan=3,sticky='w',padx=20)
         # DESCUENTO 3
         label_descuento_3 = ctk.CTkLabel(self.tree_frame,
                                        text='Descuento 3',
                                        font=FONT['text_light'],
-                                       text_color=APP_COLORS[4])
+                                       text_color=APP_COLOR['gray'])
         label_descuento_3.grid(row=8,column=1,columnspan=3,sticky='w',padx=20)
         # FLETE
         label_flete = ctk.CTkLabel(self.tree_frame,
                                        text='Flete',
                                        font=FONT['text_light'],
-                                       text_color=APP_COLORS[4])
+                                       text_color=APP_COLOR['gray'])
         label_flete.grid(row=9,column=1,columnspan=3,sticky='w',padx=20)
         # IVA
         label_iva = ctk.CTkLabel(self.tree_frame,
                                       text='I.V.A.',
                                       font=FONT['text_light'],
-                                      text_color=APP_COLORS[4])
+                                      text_color=APP_COLOR['gray'])
         label_iva.grid(row=10,column=1,columnspan=3,sticky='w',padx=20)
     # BOTONES TREEVIEW - BOTONES TREEVIEW - BOTONES TREEVIEW - BOTONES TREEVIEW - 
         # LIMPIAR BUSQUEDA
         clear_btn = ctk.CTkButton(self.tree_frame,
                                     text='Limpiar Búsqueda',
                                     command=self.ListInventory,
-                                    fg_color=APP_COLORS[2],
-                                    hover_color=APP_COLORS[3])
+                                    fg_color=APP_COLOR['main'],
+                                    hover_color=APP_COLOR['sec'])
         clear_btn.grid(row=1,column=5,columnspan=2,sticky='w',padx=10)
         # CANCELAR
         def CloseAddProdWindow():
@@ -445,8 +445,8 @@ class EntradasInventarioProg(ctk.CTkFrame):
         cancel_btn = ctk.CTkButton(self.tree_frame,
                                     text='Cancelar',
                                     command=CloseAddProdWindow,
-                                    fg_color=APP_COLORS[2],
-                                    hover_color=APP_COLORS[3])
+                                    fg_color=APP_COLOR['main'],
+                                    hover_color=APP_COLOR['sec'])
         cancel_btn.grid(row=14,column=0,columnspan=2,sticky='w',padx=10)
     # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
         self.treeview = ttk.Treeview(self.tree_frame,
@@ -582,30 +582,30 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.iva_var.set('')
         self.search_bar.after(100,
             lambda:  self.search_bar.configure(state='normal',
-                                               fg_color=APP_COLORS[6],border_color=APP_COLORS[6]))
+                                               fg_color=APP_COLOR['white'],border_color=APP_COLOR['white']))
         self.search_bar_var.set('')
         self.search_bar.after(100,self.search_bar.focus())
         self.costo_entry.after(100,
             lambda: self.costo_entry.configure(state='disabled',
-                                               fg_color=APP_COLORS[4],border_color=APP_COLORS[4]))
+                                               fg_color=APP_COLOR['gray'],border_color=APP_COLOR['gray']))
         self.cantidad_entry.after(100,
             lambda: self.cantidad_entry.configure(state='disabled',
-                                                  fg_color=APP_COLORS[4],border_color=APP_COLORS[4]))
+                                                  fg_color=APP_COLOR['gray'],border_color=APP_COLOR['gray']))
         self.descuento_1_entry.after(100,
             lambda: self.descuento_1_entry.configure(state='disabled',
-                                                   fg_color=APP_COLORS[4],border_color=APP_COLORS[4]))
+                                                   fg_color=APP_COLOR['gray'],border_color=APP_COLOR['gray']))
         self.descuento_2_entry.after(100,
             lambda: self.descuento_2_entry.configure(state='disabled',
-                                                   fg_color=APP_COLORS[4],border_color=APP_COLORS[4]))
+                                                   fg_color=APP_COLOR['gray'],border_color=APP_COLOR['gray']))
         self.descuento_3_entry.after(100,
             lambda: self.descuento_3_entry.configure(state='disabled',
-                                                   fg_color=APP_COLORS[4],border_color=APP_COLORS[4]))
+                                                   fg_color=APP_COLOR['gray'],border_color=APP_COLOR['gray']))
         self.flete_entry.after(100,
             lambda: self.flete_entry.configure(state='disabled',
-                                                   fg_color=APP_COLORS[4],border_color=APP_COLORS[4]))
+                                                   fg_color=APP_COLOR['gray'],border_color=APP_COLOR['gray']))
         self.iva_entry.after(100,
             lambda: self.iva_entry.configure(state='disabled',
-                                                   fg_color=APP_COLORS[4],border_color=APP_COLORS[4]))
+                                                   fg_color=APP_COLOR['gray'],border_color=APP_COLOR['gray']))
         inventario = INVENTARIO.GetInventory()
         for item in self.treeview.get_children():
                 self.treeview.delete(item)
@@ -642,24 +642,24 @@ class EntradasInventarioProg(ctk.CTkFrame):
         except IndexError:
             costo = ''
         self.search_bar_var.set(codigo)
-        self.search_bar.configure(state='disabled',fg_color=APP_COLORS[4],
-                                  border_color=APP_COLORS[4])
-        self.costo_entry.configure(state='normal',fg_color=APP_COLORS[6],
-                                   border_color=APP_COLORS[6])
+        self.search_bar.configure(state='disabled',fg_color=APP_COLOR['gray'],
+                                  border_color=APP_COLOR['gray'])
+        self.costo_entry.configure(state='normal',fg_color=APP_COLOR['white'],
+                                   border_color=APP_COLOR['white'])
         self.costo_var.set(costo)
-        self.cantidad_entry.configure(state='normal',fg_color=APP_COLORS[6],
-                                      border_color=APP_COLORS[6])
-        self.descuento_1_entry.configure(state='normal',fg_color=APP_COLORS[6],
-                                       border_color=APP_COLORS[6])
-        self.descuento_2_entry.configure(state='normal',fg_color=APP_COLORS[6],
-                                       border_color=APP_COLORS[6])
-        self.descuento_3_entry.configure(state='normal',fg_color=APP_COLORS[6],
-                                       border_color=APP_COLORS[6])
-        self.flete_entry.configure(state='normal',fg_color=APP_COLORS[6],
-                                       border_color=APP_COLORS[6])
+        self.cantidad_entry.configure(state='normal',fg_color=APP_COLOR['white'],
+                                      border_color=APP_COLOR['white'])
+        self.descuento_1_entry.configure(state='normal',fg_color=APP_COLOR['white'],
+                                       border_color=APP_COLOR['white'])
+        self.descuento_2_entry.configure(state='normal',fg_color=APP_COLOR['white'],
+                                       border_color=APP_COLOR['white'])
+        self.descuento_3_entry.configure(state='normal',fg_color=APP_COLOR['white'],
+                                       border_color=APP_COLOR['white'])
+        self.flete_entry.configure(state='normal',fg_color=APP_COLOR['white'],
+                                       border_color=APP_COLOR['white'])
         self.flete_entry_var.set(self.flete_default)
-        self.iva_entry.configure(state='normal',fg_color=APP_COLORS[6],
-                                       border_color=APP_COLORS[6])
+        self.iva_entry.configure(state='normal',fg_color=APP_COLOR['white'],
+                                       border_color=APP_COLOR['white'])
         self.iva_var.set(self.iva_default)
         self.cantidad_entry.focus_set()
 # SELECCIONAR ENTRADA PARA MODIFICAR - SELECCIONAR ENTRADA PARA MODIFICAR - SELECCIONAR ENTRADA PARA MODIFICAR -
@@ -685,12 +685,12 @@ class EntradasInventarioProg(ctk.CTkFrame):
         iva = float(iva_e.replace("%","").strip())
         # FRAME DE EDICION DE ENTRADAS
         self.edit_window = ctk.CTkToplevel(self,
-                                   fg_color=APP_COLORS[0])
+                                   fg_color=APP_COLOR['white_m'])
         self.edit_window.geometry('600x350')
         self.edit_window.title('Editar')
         self.edit_window.protocol("WM_DELETE_WINDOW", lambda: None)
         self.edit_window.transient(self)
-        edit_frame = ctk.CTkFrame(self.edit_window,corner_radius=5,fg_color=APP_COLORS[0])
+        edit_frame = ctk.CTkFrame(self.edit_window,corner_radius=5,fg_color=APP_COLOR['white_m'])
         edit_frame.pack(expand=True,fill='both')
     # GRID SETUP
         for rows in range(12):
@@ -698,13 +698,13 @@ class EntradasInventarioProg(ctk.CTkFrame):
         for columns in range(10):
             edit_frame.columnconfigure(columns,weight=1,uniform='column')
     # TITULO
-        title_frame = ctk.CTkFrame(edit_frame,corner_radius=0,fg_color=APP_COLORS[3])
+        title_frame = ctk.CTkFrame(edit_frame,corner_radius=0,fg_color=APP_COLOR['sec'])
         title_frame.grid(row=0,column=0,columnspan=10,sticky='nswe')
 
         title = ctk.CTkLabel(title_frame,
                              text='Editar entrada',
                              bg_color='transparent',
-                             text_color=APP_COLORS[0],
+                             text_color=APP_COLOR['white_m'],
                              height=50,
                              font=FONT['text'])
         title.pack(pady=10)
@@ -712,7 +712,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
         producto_label = ctk.CTkLabel(edit_frame,
                                       text=self.nombre,
                                       font=FONT['title_bold'],
-                                      text_color=APP_COLORS[4],
+                                      text_color=APP_COLOR['gray'],
                                       bg_color='transparent')
         producto_label.grid(row = 2, column = 1, columnspan = 6, padx = 10, sticky = 'w')
     # ENTRADAS
@@ -724,7 +724,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                                 textvariable=self.cantidad_edit_var,
                                                 validate = 'key',
                                                 validatecommand = (self.validardigit,'%P'),
-                                                fg_color=APP_COLORS[6],
+                                                fg_color=APP_COLOR['white'],
                                                 border_width=0)
         self.cantidad_edit_entry.grid(row = 4, column = 1, columnspan = 2, padx = 10, sticky = 'we')
         self.cantidad_edit_entry.bind("<Return>",lambda event:self.costo_edit_entry.focus_set())
@@ -736,7 +736,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                              validatecommand = (self.validardigit,'%P'),
                                              state='disabled',
                                              textvariable=self.costo_edit_var,
-                                             fg_color=APP_COLORS[6],
+                                             fg_color=APP_COLOR['white'],
                                              border_width=0)
         self.costo_edit_entry.grid(row = 5, column = 1, columnspan = 2, padx = 10, sticky = 'we')
         self.costo_edit_entry.bind("<Return>",lambda event:self.porcentaje_1_edit_entry.focus_set())
@@ -748,7 +748,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                                   textvariable=self.porcentaje_1_edit_var,
                                                   validate = 'key',
                                                   validatecommand = (self.validardigit,'%P'),
-                                                  fg_color=APP_COLORS[6],
+                                                  fg_color=APP_COLOR['white'],
                                                   border_width=0)
         self.porcentaje_1_edit_entry.grid(row = 6, column = 1, columnspan = 2, padx = 10, sticky = 'we')
         self.porcentaje_1_edit_entry.bind("<Return>",lambda event: self.porcentaje_2_edit_entry.focus_set())
@@ -760,7 +760,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                                   textvariable=self.porcentaje_2_edit_var,
                                                   validate = 'key',
                                                   validatecommand = (self.validardigit,'%P'),
-                                                  fg_color=APP_COLORS[6],
+                                                  fg_color=APP_COLOR['white'],
                                                   border_width=0)
         self.porcentaje_2_edit_entry.grid(row = 7, column = 1, columnspan = 2, padx = 10, sticky = 'we')
         self.porcentaje_2_edit_entry.bind("<Return>",lambda event: self.porcentaje_3_edit_entry.focus_set())
@@ -772,7 +772,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                                   textvariable=self.porcentaje_3_edit_var,
                                                   validate = 'key',
                                                   validatecommand = (self.validardigit,'%P'),
-                                                  fg_color=APP_COLORS[6],
+                                                  fg_color=APP_COLOR['white'],
                                                   border_width=0)
         self.porcentaje_3_edit_entry.grid(row = 8, column = 1, columnspan = 2, padx = 10, sticky = 'we')
         self.porcentaje_3_edit_entry.bind("<Return>",lambda event: self.iva_edit_entry.focus_set())
@@ -784,7 +784,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                                   textvariable=self.flete_edit_var,
                                                   validate = 'key',
                                                   validatecommand = (self.validardigit,'%P'),
-                                                  fg_color=APP_COLORS[6],
+                                                  fg_color=APP_COLOR['white'],
                                                   border_width=0)
         self.flete_edit_entry.grid(row = 9, column = 1, columnspan = 2, padx = 10, sticky = 'we')
         self.flete_edit_entry.bind("<Return>",lambda event: self.iva_edit_entry.focus_set())
@@ -796,7 +796,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
                                                   textvariable=self.iva_edit_var,
                                                   validate = 'key',
                                                   validatecommand = (self.validardigit,'%P'),
-                                                  fg_color=APP_COLORS[6],
+                                                  fg_color=APP_COLOR['white'],
                                                   border_width=0)
         self.iva_edit_entry.grid(row = 10, column = 1, columnspan = 2, padx = 10, sticky = 'we')
         self.iva_edit_entry.bind("<Return>",lambda event: self.ModEntrada())
@@ -805,72 +805,72 @@ class EntradasInventarioProg(ctk.CTkFrame):
         cantidad_label = ctk.CTkLabel(edit_frame,
                                       text=f'Cantidad',
                                       font=FONT['text_light'],
-                                      text_color=APP_COLORS[4])
+                                      text_color=APP_COLOR['gray'])
         cantidad_label.grid(row = 4, column = 3, columnspan = 2, sticky = 'w')
         # COSTO
         costo_label = ctk.CTkLabel(edit_frame,
                                       text=f'Costo $',
                                       font=FONT['text_light'],
-                                      text_color=APP_COLORS[4])
+                                      text_color=APP_COLOR['gray'])
         costo_label.grid(row = 5, column = 3, columnspan = 2, sticky = 'w')
         # PORCENTAJE 1
         porcentaje_1_label = ctk.CTkLabel(edit_frame,
                                       text=f'Descuento 1',
                                       font=FONT['text_light'],
-                                      text_color=APP_COLORS[4])
+                                      text_color=APP_COLOR['gray'])
         porcentaje_1_label.grid(row = 6, column = 3, columnspan = 2, sticky = 'w')
         # PORCENTAJE 2
         porcentaje_2_label = ctk.CTkLabel(edit_frame,
                                       text=f'Descuento 2',
                                       font=FONT['text_light'],
-                                      text_color=APP_COLORS[4])
+                                      text_color=APP_COLOR['gray'])
         porcentaje_2_label.grid(row = 7, column = 3, columnspan = 2, sticky = 'w')
         # PORCENTAJE 3
         porcentaje_3_label = ctk.CTkLabel(edit_frame,
                                       text=f'Descuento 3',
                                       font=FONT['text_light'],
-                                      text_color=APP_COLORS[4])
+                                      text_color=APP_COLOR['gray'])
         porcentaje_3_label.grid(row = 8, column = 3, columnspan = 2, sticky = 'w')
         # FLETE
         flete_label = ctk.CTkLabel(edit_frame,
                                       text=f'Descuento %',
                                       font=FONT['text_light'],
-                                      text_color=APP_COLORS[4])
+                                      text_color=APP_COLOR['gray'])
         flete_label.grid(row = 9, column = 3, columnspan = 2, sticky = 'w')
         # IVA
         iva_label = ctk.CTkLabel(edit_frame,
                                       text=f'I.V.A. %',
                                       font=FONT['text_light'],
-                                      text_color=APP_COLORS[4])
+                                      text_color=APP_COLOR['gray'])
         iva_label.grid(row = 10, column = 3, columnspan = 2, sticky = 'w')
     # BOTONES
         # EDITAR
         editar_btn = ctk.CTkButton(edit_frame,
                                    text='Editar',
                                    command=self.ModEntradaMode,
-                                   fg_color=APP_COLORS[2],
-                                   hover_color=APP_COLORS[3])
+                                   fg_color=APP_COLOR['main'],
+                                   hover_color=APP_COLOR['sec'])
         editar_btn.grid(row=4,column=5,columnspan=2,sticky='we',padx=10)
         # ELIMINAR
         eliminar_btn = ctk.CTkButton(edit_frame,
                                    text='Eliminar',
                                    command=self.EliminarEntrada,
-                                   fg_color=APP_COLORS[2],
-                                   hover_color=APP_COLORS[3])
+                                   fg_color=APP_COLOR['main'],
+                                   hover_color=APP_COLOR['sec'])
         eliminar_btn.grid(row=5,column=5,columnspan=2,sticky='we',padx=10)
         # CANCELAR
         cancelar_btn = ctk.CTkButton(edit_frame,
                                      text='Cancelar',
                                      command=lambda: self.edit_window.destroy(),
-                                     fg_color=APP_COLORS[9],
-                                     hover_color=APP_COLORS[10])
+                                     fg_color=APP_COLOR['red_m'],
+                                     hover_color=APP_COLOR['red_s'])
         cancelar_btn.grid(row=6,column=5,columnspan=2,sticky='we',padx=10)
         # ACEPTAR
         aceptar_btn = ctk.CTkButton(edit_frame,
                                     text='Aceptar',
                                     command=self.ModEntrada,
-                                    fg_color=APP_COLORS[2],
-                                    hover_color=APP_COLORS[3])
+                                    fg_color=APP_COLOR['main'],
+                                    hover_color=APP_COLOR['sec'])
         aceptar_btn.grid(row=8,column=5,columnspan=2,sticky='we',padx=10)
 # MODO MODIFICAR ENTRADA
     def ModEntradaMode(self):
@@ -981,7 +981,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.treeview_active = True
     # FRAME DEL TREEVIEW
         self.tree_frame = ctk.CTkToplevel(self,
-                                   fg_color=APP_COLORS[5])
+                                   fg_color=APP_COLOR['white_m'])
         self.tree_frame.geometry('600x450')
         self.tree_frame.title('Busqueda de proveedores')
         self.tree_frame.transient(self)
@@ -1002,8 +1002,8 @@ class EntradasInventarioProg(ctk.CTkFrame):
         cancel_btn = ctk.CTkButton(self.tree_frame,
                                     text='Cancelar',
                                     command=self.ListProv,
-                                    fg_color=APP_COLORS[2],
-                                    hover_color=APP_COLORS[3])
+                                    fg_color=APP_COLOR['main'],
+                                    hover_color=APP_COLOR['sec'])
         cancel_btn.grid(row=0,column=1,sticky='w',padx=5)
     
     # TREEVIEW
@@ -1236,8 +1236,8 @@ class EntradasInventarioProg(ctk.CTkFrame):
         self.cancel_btn = ctk.CTkButton(
             self.prog_frame,
             text="Cancelar",
-            fg_color=APP_COLORS[9],
-            hover_color=APP_COLORS[10],
+            fg_color=APP_COLOR['red_m'],
+            hover_color=APP_COLOR['red_s'],
             command=self.CancelarVisualizacion)
         self.cancel_btn.grid(row=0, column=1, sticky='nw', padx=5, pady=5)
         # Ubica el botón donde mejor encaje (por ejemplo junto a 'Volver atrás'):

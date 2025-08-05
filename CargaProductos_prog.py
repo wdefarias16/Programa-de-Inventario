@@ -5,33 +5,33 @@ from tkinter import ttk, filedialog
 from PIL import Image, ImageOps
 from InventarioProductos_DB import*
 from DatabaseManager import INVENTARIO, LINE_MANAGER, PROV_MANAGER
-from style import FONT, APP_COLORS, ICONS
+from style import FONT, APP_COLOR, ICONS
 
 # PROGRAMA DE CARGA DE PRODUCTOS
 class CargaProductosProg(ctk.CTkFrame):
     def __init__(self,parent,GoBack_CB):
         super().__init__(parent)
         self.GoBack_CB = GoBack_CB
-        self.configure(fg_color=APP_COLORS[0])
+        self.configure(fg_color=APP_COLOR['white_m'])
         self.validatenum = self.register(self.ValidateNum)
         self.treeview_active = False
         self.modprecios_btn_active = False
         self.current_photo = 'Recursos/Imagenes/Productos/Default.png'
     # TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - 
-        title_frame = ctk.CTkFrame(self,corner_radius=5,fg_color=APP_COLORS[3])
+        title_frame = ctk.CTkFrame(self,corner_radius=5,fg_color=APP_COLOR['sec'])
         title_frame.pack(fill='x')
 
         title = ctk.CTkLabel(title_frame,
                              text='Carga de productos',
                              bg_color='transparent',
-                             text_color=APP_COLORS[0],
+                             text_color=APP_COLOR['white_m'],
                              height=50,
                              font=FONT['title_light'])
         title.pack(pady=10)
     # CARGA ENTRADAS - CARGA ENTRADAS - CARGA ENTRADAS - CARGA ENTRADAS - CARGA ENTRADAS - CARGA ENTRADAS - 
         self.entry_frame = ctk.CTkFrame(self,
                                    width=400,
-                                   fg_color=APP_COLORS[0],
+                                   fg_color=APP_COLOR['white_m'],
                                    corner_radius=5)
         self.entry_frame.pack(fill='both',expand=True,pady=5)
     # GRID SETUP
@@ -94,8 +94,8 @@ class CargaProductosProg(ctk.CTkFrame):
         self.precio1_var = tk.StringVar()
         self.precio1_entry = ctk.CTkEntry(self.entry_frame,
                                           state='disabled',
-                                          border_color=APP_COLORS[0],
-                                          fg_color=APP_COLORS[8],
+                                          border_color=APP_COLOR['white_m'],
+                                          fg_color=APP_COLOR['green_m'],
                                    textvariable=self.precio1_var)
         self.precio1_entry.grid(row=10,column=3,columnspan=1,sticky='nswe',padx=2,pady=5)
         self.precio1_entry.bind("<Return>",lambda event:self.precio2_entry.focus())
@@ -103,8 +103,8 @@ class CargaProductosProg(ctk.CTkFrame):
         self.precio2_var = tk.StringVar()
         self.precio2_entry = ctk.CTkEntry(self.entry_frame,
                                           state='disabled',
-                                          border_color=APP_COLORS[0],
-                                          fg_color=APP_COLORS[8],
+                                          border_color=APP_COLOR['white_m'],
+                                          fg_color=APP_COLOR['green_m'],
                                    textvariable=self.precio2_var)
         self.precio2_entry.grid(row=10,column=4,columnspan=1,sticky='nswe',padx=2,pady=5)
         self.precio2_entry.bind("<Return>",lambda event:self.precio3_entry.focus())
@@ -112,8 +112,8 @@ class CargaProductosProg(ctk.CTkFrame):
         self.precio3_var = tk.StringVar()
         self.precio3_entry = ctk.CTkEntry(self.entry_frame,
                                           state='disabled',
-                                          border_color=APP_COLORS[0],
-                                          fg_color=APP_COLORS[8],
+                                          border_color=APP_COLOR['white_m'],
+                                          fg_color=APP_COLOR['green_m'],
                                    textvariable=self.precio3_var)
         self.precio3_entry.grid(row=10,column=5,columnspan=1,sticky='nswe',padx=2,pady=5)
         self.precio3_entry.bind("<Return>",lambda event:self.AceptarPrecios())
@@ -122,85 +122,85 @@ class CargaProductosProg(ctk.CTkFrame):
         he_label = ctk.CTkLabel(self.entry_frame,
                                     text='Datos del producto',
                                     font=FONT['text_light'],
-                                    text_color=APP_COLORS[4])
+                                    text_color=APP_COLOR['gray'])
         he_label.grid(row=1,column=3,columnspan=1,sticky='w')
     # IMAGEN
         image_label = ctk.CTkLabel(self.entry_frame,
                                     text='Imagen del producto',
                                     font=FONT['text_light'],
-                                    text_color=APP_COLORS[4])
+                                    text_color=APP_COLOR['gray'])
         image_label.grid(row=1,column=7,columnspan=2,sticky='w')
     # CODIGO
         codigo_label = ctk.CTkLabel(self.entry_frame,
                                     text='Código',
                                     font=FONT['text_light'],
-                                    text_color=APP_COLORS[4])
+                                    text_color=APP_COLOR['gray'])
         codigo_label.grid(row=2,column=2,columnspan=1,sticky='e',padx=5)
     # LINEA
         linea_label = ctk.CTkLabel(self.entry_frame,
                                     text='Línea',
                                     font=FONT['text_light'],
-                                    text_color=APP_COLORS[4])
+                                    text_color=APP_COLOR['gray'])
         linea_label.grid(row=3,column=2,columnspan=1,sticky='e',padx=5)
     # GRUPO
         grupo_label = ctk.CTkLabel(self.entry_frame,
                                     text='Grupo',
                                     font=FONT['text_light'],
-                                    text_color=APP_COLORS[4])
+                                    text_color=APP_COLOR['gray'])
         grupo_label.grid(row=4,column=2,columnspan=1,sticky='e',padx=5)
     # PROVEEDOR
         prove_label = ctk.CTkLabel(self.entry_frame,
                                     text='Proveedor Principal',
                                     font=FONT['text_light'],
-                                    text_color=APP_COLORS[4])
+                                    text_color=APP_COLOR['gray'])
         prove_label.grid(row=5,column=1,columnspan=2,sticky='e',padx=5)
     # NOMBRE
         nombre_label = ctk.CTkLabel(self.entry_frame,
                                     text='Nombre',
                                     font=FONT['text_light'],
-                                    text_color=APP_COLORS[4])
+                                    text_color=APP_COLOR['gray'])
         nombre_label.grid(row=6,column=2,columnspan=1,sticky='e',padx=5)        
     # COSTO
         costo_label = ctk.CTkLabel(self.entry_frame,
                                     text='Costo',
                                     font=FONT['text_light'],
-                                    text_color=APP_COLORS[4])
+                                    text_color=APP_COLOR['gray'])
         costo_label.grid(row=7,column=2,columnspan=1,sticky='e',padx=5)
     # UBICACION 1
         ubi1_label = ctk.CTkLabel(self.entry_frame,
                                     text='Ubicación 1',
                                     font=FONT['text_light'],
-                                    text_color=APP_COLORS[4])
+                                    text_color=APP_COLOR['gray'])
         ubi1_label.grid(row=8,column=2,columnspan=1,sticky='e',padx=5)
     # UBICACION 2
         ubi2_label = ctk.CTkLabel(self.entry_frame,
                                     text='Ubicación 2',
                                     font=FONT['text_light'],
-                                    text_color=APP_COLORS[4])
+                                    text_color=APP_COLOR['gray'])
         ubi2_label.grid(row=9,column=2,columnspan=1,sticky='e',padx=5)
     # PRECIOS
         precios_label = ctk.CTkLabel(self.entry_frame,
                                     text='Precios de venta',
                                     font=FONT['text_light'],
-                                    text_color=APP_COLORS[4])
+                                    text_color=APP_COLOR['gray'])
         precios_label.grid(row=10,column=1,columnspan=2,sticky='e',padx=5)
     # PRECIO 1
         self.precio1_label = ctk.CTkLabel(self.entry_frame,
                                     text='Precio 1',
                                     font=FONT['text_light'],
-                                    text_color=APP_COLORS[4])
+                                    text_color=APP_COLOR['gray'])
         self.precio1_label.grid(row=11,column=3,columnspan=2,sticky='wn',padx=5,pady=2)
     # PRECIO 2
         self.precio2_label = ctk.CTkLabel(self.entry_frame,
                                     text='Precio 2',
                                     font=FONT['text_light'],
-                                    text_color=APP_COLORS[4])
+                                    text_color=APP_COLOR['gray'])
         self.precio2_label.grid(row=11,column=4,columnspan=2,sticky='wn',padx=5,pady=2)
     # PRECIO 3
         self.precio3_label = ctk.CTkLabel(self.entry_frame,
                                     text='Precio 3',
                                     font=FONT['text_light'],
-                                    text_color=APP_COLORS[4])
+                                    text_color=APP_COLOR['gray'])
         self.precio3_label.grid(row=11,column=5,columnspan=2,sticky='wn',padx=5,pady=2)
 
     
@@ -211,76 +211,76 @@ class CargaProductosProg(ctk.CTkFrame):
                                      image=ICONS['search'],
                                      anchor='w',
                                      width=10,
-                                     fg_color=APP_COLORS[2],
-                                     hover_color=APP_COLORS[3],
+                                     fg_color=APP_COLOR['main'],
+                                     hover_color=APP_COLOR['sec'],
                                      command=lambda: self.BusquedaProducto() if not self.treeview_active else None)
         self.busqueda_btn.grid(row=2,column=5,sticky='nsw',padx=5,pady=5)
     # CANCELAR
         self.cancelar_btn = ctk.CTkButton(self.entry_frame,
                                      text='Cancelar',
                                      state='disabled',
-                                     fg_color=APP_COLORS[10],
-                                     hover_color=APP_COLORS[10],
+                                     fg_color=APP_COLOR['red_s'],
+                                     hover_color=APP_COLOR['red_s'],
                                      command=self.Restablecer)
         self.cancelar_btn.grid(row=13,column=2,sticky='nswe',padx=4,pady=4)
     # BUSCAR LINEA
         self.find_line_btn = ctk.CTkButton(self.entry_frame,
                                      text='Líneas',
                                      command=self.LineHelp,
-                                     fg_color=APP_COLORS[2],
-                                     hover_color=APP_COLORS[3])
+                                     fg_color=APP_COLOR['main'],
+                                     hover_color=APP_COLOR['sec'])
         self.find_line_btn.grid(row=3,column=5,columnspan=1,sticky='nswe',padx=5,pady=5)
     # BUSCAR GRUPO
         self.find_group_btn = ctk.CTkButton(self.entry_frame,
                                      text='Grupos',
                                      command=self.GroupHelp,
-                                     fg_color=APP_COLORS[2],
-                                     hover_color=APP_COLORS[3])
+                                     fg_color=APP_COLOR['main'],
+                                     hover_color=APP_COLOR['sec'])
         self.find_group_btn.grid(row=4,column=5,columnspan=1,sticky='nswe',padx=5,pady=5)
     # BUSCAR PROVEEDOR
         self.find_prov_btn = ctk.CTkButton(self.entry_frame,
                                      text='Proveedores',
                                      command=self.ProvHelp,
-                                     fg_color=APP_COLORS[2],
-                                     hover_color=APP_COLORS[3])
+                                     fg_color=APP_COLOR['main'],
+                                     hover_color=APP_COLOR['sec'])
         self.find_prov_btn.grid(row=5,column=5,columnspan=1,sticky='nswe',padx=5,pady=5)
     # AGREGAR FOTO
         self.add_foto_btn = ctk.CTkButton(self.entry_frame,
                                      text='Agregar Foto',
                                      command=self.AddPhoto,
-                                     fg_color=APP_COLORS[2],
-                                     hover_color=APP_COLORS[3])
+                                     fg_color=APP_COLOR['main'],
+                                     hover_color=APP_COLOR['sec'])
         self.add_foto_btn.grid(row=12,column=3,columnspan=2,sticky='nswe',padx=4,pady=4)
     # GUARDAR
         self.guardar_btn = ctk.CTkButton(self.entry_frame,
                                      text='Agregar',
-                                     fg_color=APP_COLORS[2],
-                                     hover_color=APP_COLORS[3],
+                                     fg_color=APP_COLOR['main'],
+                                     hover_color=APP_COLOR['sec'],
                                      command=self.AgregarProducto)
         self.guardar_btn.grid(row=12,column=5,columnspan=2,sticky='nswe',padx=4,pady=4)
     # MODIFICAR
         self.modificar_btn = ctk.CTkButton(self.entry_frame,
                                      state='disabled',
                                      text='Modificar',
-                                     fg_color=APP_COLORS[3],
-                                     hover_color=APP_COLORS[3],
+                                     fg_color=APP_COLOR['sec'],
+                                     hover_color=APP_COLOR['sec'],
                                      command=self.ModificarProducto)
         self.modificar_btn.grid(row=13,column=3,columnspan=2,sticky='nswe',padx=4,pady=4)
     # ELIMINAR
         self.eliminar_btn = ctk.CTkButton(self.entry_frame,
                                      state='disabled',
                                      text='Eliminar',
-                                     fg_color=APP_COLORS[10],
-                                     hover_color=APP_COLORS[10],
+                                     fg_color=APP_COLOR['red_s'],
+                                     hover_color=APP_COLOR['red_s'],
                                      command=self.EliminarProducto)
         self.eliminar_btn.grid(row=13,column=5,columnspan=2,sticky='nswe',padx=4,pady=4)
     # VOLVER ATRAS
         salir_btn = ctk.CTkButton(self.entry_frame,
                                        text='Volver atrás',
                                        command=self.GoBack_CB,
-                                       text_color=APP_COLORS[0],
-                                       fg_color=APP_COLORS[4],
-                                       hover_color=APP_COLORS[3])
+                                       text_color=APP_COLOR['white_m'],
+                                       fg_color=APP_COLOR['gray'],
+                                       hover_color=APP_COLOR['sec'])
         salir_btn.grid(row=0,column=0,sticky='nw',padx=5)
     
     # PHOTOFRAME
@@ -288,7 +288,7 @@ class CargaProductosProg(ctk.CTkFrame):
         default_image = Image.open(f"{self.image_path}/Default.png")
         self.default_image = ctk.CTkImage(light_image=default_image, size=(250,250))
         
-        self.image_frame = ctk.CTkFrame(self.entry_frame,fg_color=APP_COLORS[0])
+        self.image_frame = ctk.CTkFrame(self.entry_frame,fg_color=APP_COLOR['white_m'])
         self.image_frame.grid(row=2,column=7,columnspan=2,rowspan=12,sticky='nswe',pady=5)
         
         self.image_label = ctk.CTkLabel(self.image_frame,
@@ -449,17 +449,17 @@ class CargaProductosProg(ctk.CTkFrame):
             self.GetImage(producto['image'])
         # BLOQUEO DE ENTRADAS Y BOTONES
             self.mod_codi = self.codigo_entry.get()
-            self.guardar_btn.configure(state='disabled',fg_color=APP_COLORS[3])
+            self.guardar_btn.configure(state='disabled',fg_color=APP_COLOR['sec'])
             self.codigo_entry.configure(state='disabled',fg_color='#666')
-            self.modificar_btn.configure(state='enabled',fg_color=APP_COLORS[2])
-            self.eliminar_btn.configure(state='enabled',fg_color=APP_COLORS[9],hover_color=APP_COLORS[10])
-            self.cancelar_btn.configure(state='enabled',fg_color=APP_COLORS[9])
+            self.modificar_btn.configure(state='enabled',fg_color=APP_COLOR['main'])
+            self.eliminar_btn.configure(state='enabled',fg_color=APP_COLOR['red_m'],hover_color=APP_COLOR['red_s'])
+            self.cancelar_btn.configure(state='enabled',fg_color=APP_COLOR['red_m'])
         # MODIFICAR PRECIOS
             if not self.modprecios_btn_active:
                 self.modprecios_btn = ctk.CTkButton(self.entry_frame,
                                              text='Modificar precios',
-                                             fg_color=APP_COLORS[2],
-                                             hover_color=APP_COLORS[3],
+                                             fg_color=APP_COLOR['main'],
+                                             hover_color=APP_COLOR['sec'],
                                              command=self.ModificarPrecios)
                 self.modprecios_btn.grid(row=10,column=6,sticky='nswe',padx=4,pady=4)
                 self.modprecios_btn_active = True
@@ -484,11 +484,11 @@ class CargaProductosProg(ctk.CTkFrame):
             if self.modprecios_btn_active:
                 self.modprecios_btn.destroy()
                 self.modprecios_btn_active = False
-            self.guardar_btn.configure(state='enabled',fg_color=APP_COLORS[2])
-            self.add_foto_btn.configure(state='enabled',fg_color=APP_COLORS[2])
-            self.modificar_btn.configure(state='disabled',fg_color=APP_COLORS[3])
-            self.eliminar_btn.configure(state='disabled',fg_color=APP_COLORS[10])
-            self.cancelar_btn.configure(state='disabled',fg_color=APP_COLORS[10])
+            self.guardar_btn.configure(state='enabled',fg_color=APP_COLOR['main'])
+            self.add_foto_btn.configure(state='enabled',fg_color=APP_COLOR['main'])
+            self.modificar_btn.configure(state='disabled',fg_color=APP_COLOR['sec'])
+            self.eliminar_btn.configure(state='disabled',fg_color=APP_COLOR['red_s'])
+            self.cancelar_btn.configure(state='disabled',fg_color=APP_COLOR['red_s'])
             self.codigo_entry.configure(state='normal',fg_color='#fff')
             self.precio1_entry.configure(state='disabled')
             self.precio2_entry.configure(state='disabled')
@@ -527,18 +527,18 @@ class CargaProductosProg(ctk.CTkFrame):
         self.costo_entry.configure(state='disabled',fg_color='#666')
         self.ubi1_entry.configure(state='disabled',fg_color='#666')
         self.ubi2_entry.configure(state='disabled',fg_color='#666')
-        self.find_line_btn.configure(state='disabled',fg_color=APP_COLORS[3])
-        self.find_group_btn.configure(state='disabled',fg_color=APP_COLORS[3])
-        self.find_prov_btn.configure(state='disabled',fg_color=APP_COLORS[3])
+        self.find_line_btn.configure(state='disabled',fg_color=APP_COLOR['sec'])
+        self.find_group_btn.configure(state='disabled',fg_color=APP_COLOR['sec'])
+        self.find_prov_btn.configure(state='disabled',fg_color=APP_COLOR['sec'])
         self.modprecios_btn.configure(state='enabled',
-                                   fg_color=APP_COLORS[2],
+                                   fg_color=APP_COLOR['main'],
                                    text='Guardar precios',
                                    command=self.AceptarPrecios)
-        self.add_foto_btn.configure(state='disabled',fg_color=APP_COLORS[3])
-        self.modificar_btn.configure(state='disabled',fg_color=APP_COLORS[3])
-        self.eliminar_btn.configure(state='disabled',fg_color=APP_COLORS[10])
-        self.busqueda_btn.configure(state='disabled',fg_color=APP_COLORS[3])
-        self.cancelar_btn.configure(state='disabled',fg_color=APP_COLORS[10])
+        self.add_foto_btn.configure(state='disabled',fg_color=APP_COLOR['sec'])
+        self.modificar_btn.configure(state='disabled',fg_color=APP_COLOR['sec'])
+        self.eliminar_btn.configure(state='disabled',fg_color=APP_COLOR['red_s'])
+        self.busqueda_btn.configure(state='disabled',fg_color=APP_COLOR['sec'])
+        self.cancelar_btn.configure(state='disabled',fg_color=APP_COLOR['red_s'])
 
     # GUARDAR LOS CAMBIOS DE LOS PRECIOS
     def AceptarPrecios(self):
@@ -552,13 +552,13 @@ class CargaProductosProg(ctk.CTkFrame):
     def RestablecerModificarPrecios(self):
         self.modprecios_btn_active = False
         self.modprecios_btn.destroy()
-        self.add_foto_btn.configure(state='enabled',fg_color=APP_COLORS[2])
-        self.busqueda_btn.configure(state='enabled',fg_color=APP_COLORS[2])
-        self.modificar_btn.configure(state='disabled',fg_color=APP_COLORS[3])
-        self.eliminar_btn.configure(state='disabled',fg_color=APP_COLORS[10])
-        self.find_line_btn.configure(state='enabled',fg_color=APP_COLORS[2])
-        self.find_group_btn.configure(state='enabled',fg_color=APP_COLORS[2])
-        self.find_prov_btn.configure(state='enabled',fg_color=APP_COLORS[2])
+        self.add_foto_btn.configure(state='enabled',fg_color=APP_COLOR['main'])
+        self.busqueda_btn.configure(state='enabled',fg_color=APP_COLOR['main'])
+        self.modificar_btn.configure(state='disabled',fg_color=APP_COLOR['sec'])
+        self.eliminar_btn.configure(state='disabled',fg_color=APP_COLOR['red_s'])
+        self.find_line_btn.configure(state='enabled',fg_color=APP_COLOR['main'])
+        self.find_group_btn.configure(state='enabled',fg_color=APP_COLOR['main'])
+        self.find_prov_btn.configure(state='enabled',fg_color=APP_COLOR['main'])
         self.precio1_entry.configure(state='disabled')
         self.precio2_entry.configure(state='disabled')
         self.precio3_entry.configure(state='disabled')
@@ -594,7 +594,7 @@ class CargaProductosProg(ctk.CTkFrame):
     # FRAME DEL TREEVIEW
         self.treeview_active = True
         self.tree_frame = ctk.CTkToplevel(self,
-                                   fg_color=APP_COLORS[5])
+                                   fg_color=APP_COLOR['white_m'])
         self.tree_frame.geometry('900x450')
         self.tree_frame.title('Busqueda de productos')
         self.tree_frame.protocol("WM_DELETE_WINDOW", lambda: None)
@@ -605,12 +605,12 @@ class CargaProductosProg(ctk.CTkFrame):
         for columns in range(10):
             self.tree_frame.columnconfigure(columns,weight=1,uniform='column')
     # TITULO
-        title_frame = ctk.CTkFrame(self.tree_frame,corner_radius=0,fg_color=APP_COLORS[3])
+        title_frame = ctk.CTkFrame(self.tree_frame,corner_radius=0,fg_color=APP_COLOR['sec'])
         title_frame.grid(row=0,column=0,columnspan=16,sticky='nswe')
         title = ctk.CTkLabel(title_frame,
                              text='Busqueda de productos',
                              bg_color='transparent',
-                             text_color=APP_COLORS[0],
+                             text_color=APP_COLOR['white_m'],
                              height=50,
                              font=FONT['text'])
         title.pack(pady=10)
@@ -618,7 +618,7 @@ class CargaProductosProg(ctk.CTkFrame):
         label_sb = ctk.CTkLabel(self.tree_frame,
                              text='Busqueda por nombre',
                              bg_color='transparent',
-                             text_color=APP_COLORS[4],
+                             text_color=APP_COLOR['gray'],
                              font=FONT['text_light'])
         label_sb.grid(row=1,column=0,columnspan=3,sticky='ws',padx=15)
         self.search_bar_var = tk.StringVar()
@@ -634,15 +634,15 @@ class CargaProductosProg(ctk.CTkFrame):
         cancel_btn = ctk.CTkButton(self.tree_frame,
                                     text='Listar',
                                     command=self.ListInventory,
-                                    fg_color=APP_COLORS[2],
-                                    hover_color=APP_COLORS[3])
+                                    fg_color=APP_COLOR['main'],
+                                    hover_color=APP_COLOR['sec'])
         cancel_btn.grid(row=2,column=2,columnspan=2,sticky='we')
     # CERRAR
         cerrar_btn = ctk.CTkButton(self.tree_frame,
                                     text='Cerrar',
                                     command=self.Cerrar,
-                                    fg_color=APP_COLORS[9],
-                                    hover_color=APP_COLORS[10])
+                                    fg_color=APP_COLOR['red_m'],
+                                    hover_color=APP_COLOR['red_s'])
         cerrar_btn.grid(row=2,column=7,columnspan=2,sticky='we')
 
     # TREEVIEW
@@ -674,15 +674,15 @@ class CargaProductosProg(ctk.CTkFrame):
         style = ttk.Style()
         style.configure(
             'Custom.Treeview',
-            background = APP_COLORS[0],
-            foreground = APP_COLORS[1],
+            background = APP_COLOR['white_m'],
+            foreground = APP_COLOR['black_m'],
             rowheight = 30,
             font = FONT['text_small'],
-            fieldbackground = APP_COLORS[0])
+            fieldbackground = APP_COLOR['white_m'])
         style.configure(
             'Custom.Treeview.Heading',
-            background = APP_COLORS[1],
-            foreground = APP_COLORS[1],
+            background = APP_COLOR['black_m'],
+            foreground = APP_COLOR['black_m'],
             font = FONT['text_light'])
     # SCROLLBAR DEL TV
         scrollbar = ctk.CTkScrollbar(self.tree_frame,
@@ -715,7 +715,7 @@ class CargaProductosProg(ctk.CTkFrame):
 # LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - 
 # FRAME DEL TREEVIEW
     def LineHelp(self):
-        self.line_help_frame = ctk.CTkToplevel(self,fg_color=APP_COLORS[5])
+        self.line_help_frame = ctk.CTkToplevel(self,fg_color=APP_COLOR['white_m'])
         self.line_help_frame.geometry('600x400')
         self.line_help_frame.title('Ayuda de lineas')
         self.line_help_frame.transient(self)
@@ -725,12 +725,12 @@ class CargaProductosProg(ctk.CTkFrame):
         for columns in range(10):
             self.line_help_frame.columnconfigure(columns,weight=1,uniform='column')
     # TITULO
-        title_frame = ctk.CTkFrame(self.line_help_frame,corner_radius=0,fg_color=APP_COLORS[3])
+        title_frame = ctk.CTkFrame(self.line_help_frame,corner_radius=0,fg_color=APP_COLOR['sec'])
         title_frame.grid(row=0,column=0,columnspan=10,sticky='nswe')
         title = ctk.CTkLabel(title_frame,
                              text='Ayuda de líneas',
                              bg_color='transparent',
-                             text_color=APP_COLORS[0],
+                             text_color=APP_COLOR['white_m'],
                              height=50,
                              font=FONT['text'])
         title.pack(pady=10)   
@@ -748,15 +748,15 @@ class CargaProductosProg(ctk.CTkFrame):
         search_btn = ctk.CTkButton(self.line_help_frame,
                                    text='Buscar',
                                    command=self.SearchLine,
-                                   fg_color=APP_COLORS[2],
-                                   hover_color=APP_COLORS[3])
+                                   fg_color=APP_COLOR['main'],
+                                   hover_color=APP_COLOR['sec'])
         search_btn.grid(row=1,column=2,columnspan=2,sticky='w',padx=5,pady=5)  
         # CANCELAR
         cancel_btn = ctk.CTkButton(self.line_help_frame,
                                    text='Cancelar',
                                    command=self.ListLines,
-                                   fg_color=APP_COLORS[9],
-                                   hover_color=APP_COLORS[10])
+                                   fg_color=APP_COLOR['red_m'],
+                                   hover_color=APP_COLOR['red_s'])
         cancel_btn.grid(row=1,column=7,columnspan=2,sticky='w',padx=5,pady=5)
     # TREEVIEW
         self.line_help_treeview = ttk.Treeview(self.line_help_frame,
@@ -846,7 +846,7 @@ class CargaProductosProg(ctk.CTkFrame):
             if not LINE_MANAGER.CheckLine(self.current_line):
                 messagebox.showerror('Error','Seleccione una línea válida.')
                 return
-            self.help_frame = ctk.CTkToplevel(self,fg_color=APP_COLORS[5])
+            self.help_frame = ctk.CTkToplevel(self,fg_color=APP_COLOR['white_m'])
             self.help_frame.geometry('600x400')
             self.help_frame.title('Ayuda de Grupos')
             self.help_frame.transient(self)
@@ -856,12 +856,12 @@ class CargaProductosProg(ctk.CTkFrame):
             for columns in range(10):
                 self.help_frame.columnconfigure(columns,weight=1,uniform='column')
         # TITULO
-            title_frame = ctk.CTkFrame(self.help_frame,corner_radius=0,fg_color=APP_COLORS[3])
+            title_frame = ctk.CTkFrame(self.help_frame,corner_radius=0,fg_color=APP_COLOR['sec'])
             title_frame.grid(row=0,column=0,columnspan=10,sticky='nswe')
             title = ctk.CTkLabel(title_frame,
                                  text='Ayuda de Grupos',
                                  bg_color='transparent',
-                                 text_color=APP_COLORS[0],
+                                 text_color=APP_COLOR['white_m'],
                                  height=50,
                                  font=FONT['text'])
             title.pack(pady=10)   
@@ -879,15 +879,15 @@ class CargaProductosProg(ctk.CTkFrame):
             search_btn = ctk.CTkButton(self.help_frame,
                                        text='Buscar',
                                        command=self.SearchGroup,
-                                       fg_color=APP_COLORS[2],
-                                       hover_color=APP_COLORS[3])
+                                       fg_color=APP_COLOR['main'],
+                                       hover_color=APP_COLOR['sec'])
             search_btn.grid(row=1,column=2,columnspan=2,sticky='w',padx=5,pady=5)  
             # CANCELAR
             cancel_btn = ctk.CTkButton(self.help_frame,
                                        text='Cancelar',
                                        command=self.ListGroups,
-                                       fg_color=APP_COLORS[9],
-                                       hover_color=APP_COLORS[10])
+                                       fg_color=APP_COLOR['red_m'],
+                                       hover_color=APP_COLOR['red_s'])
             cancel_btn.grid(row=1,column=7,columnspan=2,sticky='w',padx=5,pady=5)
         # TREEVIEW
             self.help_treeview = ttk.Treeview(self.help_frame,
@@ -983,7 +983,7 @@ class CargaProductosProg(ctk.CTkFrame):
 # PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - 
 # PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - 
     def ProvHelp(self):
-        self.help_frame = ctk.CTkToplevel(self,fg_color=APP_COLORS[5])
+        self.help_frame = ctk.CTkToplevel(self,fg_color=APP_COLOR['white_m'])
         self.help_frame.geometry('600x400')
         self.help_frame.title('Ayuda de Proveedores')
         self.help_frame.transient(self)
@@ -993,12 +993,12 @@ class CargaProductosProg(ctk.CTkFrame):
         for columns in range(10):
             self.help_frame.columnconfigure(columns,weight=1,uniform='column')
     # TITULO
-        title_frame = ctk.CTkFrame(self.help_frame,corner_radius=0,fg_color=APP_COLORS[3])
+        title_frame = ctk.CTkFrame(self.help_frame,corner_radius=0,fg_color=APP_COLOR['sec'])
         title_frame.grid(row=0,column=0,columnspan=10,sticky='nswe')
         title = ctk.CTkLabel(title_frame,
                              text='Ayuda de Proveedores',
                              bg_color='transparent',
-                             text_color=APP_COLORS[0],
+                             text_color=APP_COLOR['white_m'],
                              height=50,
                              font=FONT['text'])
         title.pack(pady=10)   
@@ -1016,15 +1016,15 @@ class CargaProductosProg(ctk.CTkFrame):
         search_btn = ctk.CTkButton(self.help_frame,
                                    text='Buscar',
                                    command=self.SearchLine,
-                                   fg_color=APP_COLORS[2],
-                                   hover_color=APP_COLORS[3])
+                                   fg_color=APP_COLOR['main'],
+                                   hover_color=APP_COLOR['sec'])
         search_btn.grid(row=1,column=2,columnspan=2,sticky='w',padx=5,pady=5)  
         # CANCELAR
         cancel_btn = ctk.CTkButton(self.help_frame,
                                    text='Cancelar',
                                    command=self.ListLines,
-                                   fg_color=APP_COLORS[9],
-                                   hover_color=APP_COLORS[10])
+                                   fg_color=APP_COLOR['red_m'],
+                                   hover_color=APP_COLOR['red_s'])
         cancel_btn.grid(row=1,column=7,columnspan=2,sticky='w',padx=5,pady=5)
     # TREEVIEW
         self.help_treeview = ttk.Treeview(self.help_frame,

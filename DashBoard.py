@@ -9,7 +9,7 @@ from Menu_Inventario import*
 from Menu_CuentasPorPagar import*
 import datetime
 from threading import Timer
-from style import FONT, APP_COLORS, ICONS
+from style import *
 
 class DashBoardMenu(ctk.CTkFrame):
     def __init__(self,parent,
@@ -34,18 +34,18 @@ class DashBoardMenu(ctk.CTkFrame):
     # BARRA INFERIOR
         self.inf_bar_frame = ctk.CTkFrame(self,
                                           corner_radius=0,
-                                          fg_color=APP_COLORS[3])
+                                          fg_color=APP_COLOR['sec'])
         self.inf_bar_frame.grid(row=20,column=0,columnspan=21,sticky='nsew')
         
         self.barra_inf_label = ctk.CTkLabel(self.inf_bar_frame,
-                                            fg_color=APP_COLORS[3],
-                                            text_color=APP_COLORS[0],
+                                            fg_color=APP_COLOR['sec'],
+                                            text_color=APP_COLOR['white_m'],
                                             text='Programa de gestion')
         self.barra_inf_label.pack(side='left',padx=20)
     # RELOJ
         self.date_time = ctk.CTkLabel(self.inf_bar_frame,
                                       text='',
-                                      text_color=APP_COLORS[0],
+                                      text_color=APP_COLOR['white_m'],
                                       font=FONT['text_light'],
                                       height=10,
                                       )
@@ -55,7 +55,7 @@ class DashBoardMenu(ctk.CTkFrame):
 # INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - 
     # PANEL LATERAL - PANEL LATERAL - PANEL LATERAL - PANEL LATERAL - PANEL LATERAL - PANEL LATERAL - 
     # CREA EL FRAME DONDE ESTARAN LOS BOTONES DEL DASHBOARD
-        self.buttons_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLORS[2])
+        self.buttons_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLOR['main'])
         self.buttons_frame.grid(row=0,rowspan=20,column=0,columnspan=2,sticky='nsew')
         for rows in range(12):
             self.buttons_frame.rowconfigure(rows,weight=1,uniform='row')
@@ -65,8 +65,8 @@ class DashBoardMenu(ctk.CTkFrame):
         invt_btn = ctk.CTkButton(self.buttons_frame,
                                      text='Inventario',
                                      font=FONT['text'],
-                                     fg_color=APP_COLORS[2],
-                                     hover_color=APP_COLORS[3],
+                                     fg_color=APP_COLOR['main'],
+                                     hover_color=APP_COLOR['sec'],
                                      image=ICONS['inventory'],
                                      corner_radius=10,
                                      compound='left',
@@ -77,8 +77,8 @@ class DashBoardMenu(ctk.CTkFrame):
         fact_btn = ctk.CTkButton(self.buttons_frame,
                                      text='Facturacion',
                                      font=FONT['text'],
-                                     fg_color=APP_COLORS[2],
-                                     hover_color=APP_COLORS[3],
+                                     fg_color=APP_COLOR['main'],
+                                     hover_color=APP_COLOR['sec'],
                                      image=ICONS['fact'],
                                      corner_radius=10,
                                      compound='left',
@@ -89,8 +89,8 @@ class DashBoardMenu(ctk.CTkFrame):
         cuentas_xp_btn = ctk.CTkButton(self.buttons_frame,
                                      text='Cuentas por pagar',
                                      font=FONT['text'],
-                                     fg_color=APP_COLORS[2],
-                                     hover_color=APP_COLORS[3],
+                                     fg_color=APP_COLOR['main'],
+                                     hover_color=APP_COLOR['sec'],
                                      image=ICONS['cxp'],
                                      corner_radius=10,
                                      compound='left',
@@ -101,8 +101,8 @@ class DashBoardMenu(ctk.CTkFrame):
         cuentas_xc_btn = ctk.CTkButton(self.buttons_frame,
                                      text='Cuentas por cobrar',
                                      font=FONT['text'],
-                                     fg_color=APP_COLORS[2],
-                                     hover_color=APP_COLORS[3],
+                                     fg_color=APP_COLOR['main'],
+                                     hover_color=APP_COLOR['sec'],
                                      image=ICONS['cxc'],
                                      corner_radius=10,
                                      compound='left',
@@ -113,8 +113,8 @@ class DashBoardMenu(ctk.CTkFrame):
         pdutilidad_btn = ctk.CTkButton(self.buttons_frame,
                                      text='Programas de utilidad',
                                      font=FONT['text'],
-                                     fg_color=APP_COLORS[2],
-                                     hover_color=APP_COLORS[3],
+                                     fg_color=APP_COLOR['main'],
+                                     hover_color=APP_COLOR['sec'],
                                      image=ICONS['proutil'],
                                      corner_radius=10,
                                      compound='left',
@@ -126,8 +126,8 @@ class DashBoardMenu(ctk.CTkFrame):
                                      text='',
                                      image=ICONS['lock'],
                                      corner_radius=10,
-                                     fg_color=APP_COLORS[2],
-                                     hover_color=APP_COLORS[3],
+                                     fg_color=APP_COLOR['main'],
+                                     hover_color=APP_COLOR['sec'],
                                      command=lambda: self.lockscreen_callback()
                                      )
         lockscreen_btn.grid(row=11,column=0,columnspan=1,sticky='nswe',pady=10,padx=5)
@@ -136,13 +136,13 @@ class DashBoardMenu(ctk.CTkFrame):
                                      text='',
                                      image=ICONS['exit'],
                                      corner_radius=10,
-                                     fg_color=APP_COLORS[2],
-                                     hover_color=APP_COLORS[3],
+                                     fg_color=APP_COLOR['main'],
+                                     hover_color=APP_COLOR['sec'],
                                      command=self.exit
                                      )
         exit_btn.grid(row=11,column=1,columnspan=1,sticky='nswe',pady=10,padx=5)
     # INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - 
-        title_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLORS[0])
+        title_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLOR['white_m'])
         title_frame.grid(row=0,rowspan=20,column=2,columnspan=19,sticky='nsew')
         for rows in range(20):
             title_frame.rowconfigure(rows, weight=1, uniform='row')
@@ -152,7 +152,7 @@ class DashBoardMenu(ctk.CTkFrame):
         imagen_logo = Image.open(r"Recursos\Cliente\logo_cliente_resized.png")
         imagen_logo_ctk = ctk.CTkImage(imagen_logo,size=(200,32))
 
-        head = ctk.CTkLabel(title_frame, image=imagen_logo_ctk, text="",fg_color=APP_COLORS[0])
+        head = ctk.CTkLabel(title_frame, image=imagen_logo_ctk, text="",fg_color=APP_COLOR['white_m'])
         head.grid(row=8,column=0,rowspan=2,columnspan=20,sticky='nsew')
 
         

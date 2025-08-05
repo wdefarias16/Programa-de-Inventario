@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 from DatabaseManager import PROV_MANAGER
-from style import FONT, APP_COLORS
+from style import FONT, APP_COLOR
 # PROGRAMA DE CARGA DE PROVEEDORES - PROGRAMA DE CARGA DE PROVEEDORES - PROGRAMA DE CARGA DE PROVEEDORES - 
 class ProveedoresProg(ctk.CTkFrame):
     def __init__(self,parent,GoBack_CB):
@@ -17,17 +17,17 @@ class ProveedoresProg(ctk.CTkFrame):
         PREFIJOS = ['0212','0239','0241','0281','0273','0286']
         ID_FISCAL= ['J','V','E','P','R','G']
     # TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - 
-        title_frame = ctk.CTkFrame(self,corner_radius=5,fg_color=APP_COLORS[3])
+        title_frame = ctk.CTkFrame(self,corner_radius=5,fg_color=APP_COLOR['sec'])
         title_frame.pack(fill='x')
         title = ctk.CTkLabel(title_frame,
                              text='Carga de proveedores',
                              bg_color='transparent',
-                             text_color=APP_COLORS[0],
+                             text_color=APP_COLOR['white_m'],
                              height=50,
                              font=FONT['title_light'])
         title.pack(pady=5)
     # FRAME PROVEDORES - FRAME PROVEDORES - FRAME PROVEDORES - FRAME PROVEDORES - FRAME PROVEDORES - 
-        prov_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLORS[0])
+        prov_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLOR['white_m'])
         prov_frame.pack(expand=True,fill='both',side='left')
     # GRID SETUP
         for rows in range(18):
@@ -43,42 +43,42 @@ class ProveedoresProg(ctk.CTkFrame):
                                          textvariable=self.codigo_entry_var,
                                          validate='key',
                                          validatecommand = (validarcodigo,'%P'),
-                                         fg_color=APP_COLORS[6])
+                                         fg_color=APP_COLOR['white'])
         self.codigo_entry.grid(row=2,column=6,columnspan=1,sticky='we',padx=5)
         self.codigo_entry.bind("<Return>",lambda event:self.BuscarProveedor())
         # NOMBRE
         self.nombre_entry_var = tk.StringVar()
         self.nombre_entry = ctk.CTkEntry(prov_frame,
                                          textvariable=self.nombre_entry_var,
-                                         fg_color=APP_COLORS[6])
+                                         fg_color=APP_COLOR['white'])
         self.nombre_entry.grid(row=3,column=6,columnspan=4,sticky='we',padx=5)
         self.nombre_entry.bind("<Return>", lambda event: self.contacto_entry.focus())
         # CONTACTO
         self.contacto_entry_var = tk.StringVar()
         self.contacto_entry = ctk.CTkEntry(prov_frame,
                                          textvariable=self.contacto_entry_var,
-                                         fg_color=APP_COLORS[6])
+                                         fg_color=APP_COLOR['white'])
         self.contacto_entry.grid(row=4,column=6,columnspan=4,sticky='we',padx=5)
         self.contacto_entry.bind("<Return>", lambda event: self.direccion1_entry.focus())
         # DIRECCION 1
         self.direccion1_entry_var = tk.StringVar()
         self.direccion1_entry = ctk.CTkEntry(prov_frame,
                                          textvariable=self.direccion1_entry_var,
-                                         fg_color=APP_COLORS[6])
+                                         fg_color=APP_COLOR['white'])
         self.direccion1_entry.grid(row=5,column=6,columnspan=4,sticky='we',padx=5)
         self.direccion1_entry.bind("<Return>", lambda event: self.direccion2_entry.focus())
         # DIRECCION 2
         self.direccion2_entry_var = tk.StringVar()
         self.direccion2_entry = ctk.CTkEntry(prov_frame,
                                          textvariable=self.direccion2_entry_var,
-                                         fg_color=APP_COLORS[6])
+                                         fg_color=APP_COLOR['white'])
         self.direccion2_entry.grid(row=6,column=6,columnspan=4,sticky='we',padx=5)
         self.direccion2_entry.bind("<Return>", lambda event: self.ciudad_entry.focus())
         # CIUDAD
         self.ciudad_entry_var = tk.StringVar()
         self.ciudad_entry = ctk.CTkEntry(prov_frame,
                                          textvariable=self.ciudad_entry_var,
-                                         fg_color=APP_COLORS[6])
+                                         fg_color=APP_COLOR['white'])
         self.ciudad_entry.grid(row=7,column=6,columnspan=4,sticky='we',padx=5)
         self.ciudad_entry.bind("<Return>", lambda event: self.telefono1_codigo_entry.focus())
         # TELEFONO - CODIGO 1
@@ -89,7 +89,7 @@ class ProveedoresProg(ctk.CTkFrame):
                                          validate='key',
                                          validatecommand = (validate_phone_pre,'%P'),
                                          textvariable=self.telefono1_codigo_entry_var,
-                                         fg_color=APP_COLORS[6])
+                                         fg_color=APP_COLOR['white'])
         self.telefono1_codigo_entry.grid(row=8,column=7,columnspan=1,sticky='w')
         self.telefono1_codigo_entry.bind("<Return>", lambda event: self.telefono1_entry.focus())
         # TELEFONO 1
@@ -99,7 +99,7 @@ class ProveedoresProg(ctk.CTkFrame):
                                             validate='key',
                                             validatecommand = (validate_phone,'%P'),
                                             textvariable=self.telefono1_entry_var,
-                                            fg_color=APP_COLORS[6])
+                                            fg_color=APP_COLOR['white'])
         self.telefono1_entry.grid(row=8,column=8,columnspan=2,sticky='we',padx=5)
         self.telefono1_entry.bind("<Return>", lambda event: self.telefono2_codigo_entry.focus())
         # TELEFONO - CODIGO 2
@@ -109,7 +109,7 @@ class ProveedoresProg(ctk.CTkFrame):
                                          validate='key',
                                          validatecommand = (validate_phone_pre,'%P'),
                                          textvariable=self.telefono2_codigo_entry_var,
-                                         fg_color=APP_COLORS[6])
+                                         fg_color=APP_COLOR['white'])
         self.telefono2_codigo_entry.grid(row=9,column=7,columnspan=1,sticky='w')
         self.telefono2_codigo_entry.bind("<Return>", lambda event: self.telefono2_entry.focus())
         # TELEFONO 2
@@ -118,7 +118,7 @@ class ProveedoresProg(ctk.CTkFrame):
                                             validate='key',
                                             validatecommand = (validate_phone,'%P'),
                                             textvariable=self.telefono2_entry_var,
-                                            fg_color=APP_COLORS[6])
+                                            fg_color=APP_COLOR['white'])
         self.telefono2_entry.grid(row=9,column=8,columnspan=2,sticky='we',padx=5)
         self.telefono2_entry.bind("<Return>", lambda event: self.celular1_codigo_entry.focus())
         # CELULAR - CODIGO 1
@@ -128,7 +128,7 @@ class ProveedoresProg(ctk.CTkFrame):
                                          validate='key',
                                          validatecommand = (validate_phone_pre,'%P'),
                                          textvariable=self.celular1_codigo_entry_var,
-                                         fg_color=APP_COLORS[6])
+                                         fg_color=APP_COLOR['white'])
         self.celular1_codigo_entry.grid(row=10,column=7,columnspan=1,sticky='w')
         self.celular1_codigo_entry.bind("<Return>", lambda event: self.celular1_entry.focus())
         # CELULAR 1
@@ -137,7 +137,7 @@ class ProveedoresProg(ctk.CTkFrame):
                                            validate='key',
                                            validatecommand = (validate_phone,'%P'),
                                            textvariable=self.celular1_entry_var,
-                                           fg_color=APP_COLORS[6])
+                                           fg_color=APP_COLOR['white'])
         self.celular1_entry.grid(row=10,column=8,columnspan=2,sticky='we',padx=5)
         self.celular1_entry.bind("<Return>", lambda event: self.celular2_codigo_entry.focus())
         # CELULAR - CODIGO 2
@@ -147,7 +147,7 @@ class ProveedoresProg(ctk.CTkFrame):
                                          validate='key',
                                          validatecommand = (validate_phone_pre,'%P'),
                                          textvariable=self.celular2_codigo_entry_var,
-                                         fg_color=APP_COLORS[6])
+                                         fg_color=APP_COLOR['white'])
         self.celular2_codigo_entry.grid(row=11,column=7,columnspan=1,sticky='w')
         self.celular2_codigo_entry.bind("<Return>", lambda event: self.celular2_entry.focus())
         # CELULAR 2
@@ -156,61 +156,61 @@ class ProveedoresProg(ctk.CTkFrame):
                                            validate='key',
                                            validatecommand = (validate_phone,'%P'),
                                            textvariable=self.celular2_entry_var,
-                                           fg_color=APP_COLORS[6])
+                                           fg_color=APP_COLOR['white'])
         self.celular2_entry.grid(row=11,column=8,columnspan=2,sticky='we',padx=5)
         self.celular2_entry.bind("<Return>", lambda event: self.email_entry.focus())
         # EMAIL
         self.email_entry_var = tk.StringVar()
         self.email_entry = ctk.CTkEntry(prov_frame,
                                          textvariable=self.email_entry_var,
-                                         fg_color=APP_COLORS[6])
+                                         fg_color=APP_COLOR['white'])
         self.email_entry.grid(row=12,column=6,columnspan=4,sticky='we',padx=5)
         self.email_entry.bind("<Return>", lambda event: self.rif_entry.focus())
         # RIF
         self.rif_entry_var = tk.StringVar()
         self.rif_entry = ctk.CTkEntry(prov_frame,
                                          textvariable=self.rif_entry_var,
-                                         fg_color=APP_COLORS[6])
+                                         fg_color=APP_COLOR['white'])
         self.rif_entry.grid(row=13,column=7,columnspan=3,sticky='we',padx=5)
         self.rif_entry.bind("<Return>", lambda event: self.AgregarProv())
     # PHONE CODES MENU
         # MENU TELEFONO 1
         self.telefono1_menu = ctk.CTkOptionMenu(prov_frame,
-                                               fg_color=APP_COLORS[2],
-                                               button_color=APP_COLORS[3],
-                                               button_hover_color=APP_COLORS[3],
+                                               fg_color=APP_COLOR['main'],
+                                               button_color=APP_COLOR['sec'],
+                                               button_hover_color=APP_COLOR['sec'],
                                                command=lambda opcion:self.telefono1_codigo_entry_var.set(opcion),
                                                values=PREFIJOS)
         self.telefono1_menu.grid(row=8,column=6,columnspan=1,sticky='we',padx=5)
         # MENU TELEFONO 2
         self.telefono2_menu = ctk.CTkOptionMenu(prov_frame,
-                                               fg_color=APP_COLORS[2],
-                                               button_color=APP_COLORS[3],
-                                               button_hover_color=APP_COLORS[3],
+                                               fg_color=APP_COLOR['main'],
+                                               button_color=APP_COLOR['sec'],
+                                               button_hover_color=APP_COLOR['sec'],
                                                command=lambda opcion:self.telefono2_codigo_entry_var.set(opcion),
                                                values=PREFIJOS)
         self.telefono2_menu.grid(row=9,column=6,columnspan=1,sticky='we',padx=5)
         # MENU CELULAR 1
         self.celular1_menu = ctk.CTkOptionMenu(prov_frame,
-                                               fg_color=APP_COLORS[2],
-                                               button_color=APP_COLORS[3],
-                                               button_hover_color=APP_COLORS[3],
+                                               fg_color=APP_COLOR['main'],
+                                               button_color=APP_COLOR['sec'],
+                                               button_hover_color=APP_COLOR['sec'],
                                                command=lambda opcion:self.celular1_codigo_entry_var.set(opcion),
                                                values=['0412','0414','0424','0416','0426'])
         self.celular1_menu.grid(row=10,column=6,columnspan=1,sticky='we',padx=5)
         # MENU CELULAR 2
         self.celular2_menu = ctk.CTkOptionMenu(prov_frame,
-                                               fg_color=APP_COLORS[2],
-                                               button_color=APP_COLORS[3],
-                                               button_hover_color=APP_COLORS[3],
+                                               fg_color=APP_COLOR['main'],
+                                               button_color=APP_COLOR['sec'],
+                                               button_hover_color=APP_COLOR['sec'],
                                                command=lambda opcion:self.celular2_codigo_entry_var.set(opcion),
                                                values=['0412','0414','0424','0416','0426'])
         self.celular2_menu.grid(row=11,column=6,columnspan=1,sticky='we',padx=5)
         # RIF
         self.rif_menu = ctk.CTkOptionMenu(prov_frame,
-                                               fg_color=APP_COLORS[2],
-                                               button_color=APP_COLORS[3],
-                                               button_hover_color=APP_COLORS[3],
+                                               fg_color=APP_COLOR['main'],
+                                               button_color=APP_COLOR['sec'],
+                                               button_hover_color=APP_COLOR['sec'],
                                                command=lambda opcion:self.rif_entry_var.set(f'{opcion}-'),
                                                values=ID_FISCAL)
         self.rif_menu.grid(row=13,column=6,columnspan=1,sticky='we',padx=5)
@@ -285,46 +285,46 @@ class ProveedoresProg(ctk.CTkFrame):
         self.goback_btn = ctk.CTkButton(prov_frame,
                                      text='Volver atrás',
                                      command=self.GoBack_CB,
-                                     fg_color=APP_COLORS[4],
-                                     hover_color=APP_COLORS[3])
+                                     fg_color=APP_COLOR['gray'],
+                                     hover_color=APP_COLOR['sec'])
         self.goback_btn.grid(row=0,column=0,columnspan=2,sticky='we',padx=5,pady=5)
         # AGREGAR
         self.agregar_btn = ctk.CTkButton(prov_frame,
                                      text='Agregar',
                                      command=self.AgregarProv,
-                                     fg_color=APP_COLORS[2],
-                                     hover_color=APP_COLORS[3])
+                                     fg_color=APP_COLOR['main'],
+                                     hover_color=APP_COLOR['sec'])
         self.agregar_btn.grid(row=15,column=6,columnspan=2,sticky='we',padx=5,pady=5)
         # CANCELAR
         self.cancelar_btn = ctk.CTkButton(prov_frame,
                                      text='Cancelar',
                                      command=self.Restablecer,
                                      state='disabled',
-                                     fg_color=APP_COLORS[10],
-                                     hover_color=APP_COLORS[10])
+                                     fg_color=APP_COLOR['red_s'],
+                                     hover_color=APP_COLOR['red_s'])
         self.cancelar_btn.grid(row=15,column=8,columnspan=2,sticky='we',padx=5,pady=5)
         # MODIFICAR
         self.mod_btn = ctk.CTkButton(prov_frame,
                                      text='Modificar',
                                      command=self.ModificarProv,
                                      state='disabled',
-                                     fg_color=APP_COLORS[3],
-                                     hover_color=APP_COLORS[3])
+                                     fg_color=APP_COLOR['sec'],
+                                     hover_color=APP_COLOR['sec'])
         self.mod_btn.grid(row=16,column=6,columnspan=2,sticky='we',padx=5,pady=5)
         # ELIMINAR
         self.del_btn = ctk.CTkButton(prov_frame,
                                      text='Eliminar',
                                      command=self.EliminarProv,
                                      state='disabled',
-                                     fg_color=APP_COLORS[10],
-                                     hover_color=APP_COLORS[10])
+                                     fg_color=APP_COLOR['red_s'],
+                                     hover_color=APP_COLOR['red_s'])
         self.del_btn.grid(row=16,column=8,columnspan=2,sticky='we',padx=5,pady=5)
         # BUSCAR PROVEEDOR
         self.buscar_prov_btn = ctk.CTkButton(prov_frame,
                                      text='Buscar proveedor',
                                      command=self.AyudaProveedores,
-                                     fg_color=APP_COLORS[2],
-                                     hover_color=APP_COLORS[3])
+                                     fg_color=APP_COLOR['main'],
+                                     hover_color=APP_COLOR['sec'])
         self.buscar_prov_btn.grid(row=2,column=7,columnspan=3,sticky='we',padx=5,pady=5)
 # FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - 
 # FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - FUNCIONES - 
@@ -460,12 +460,12 @@ class ProveedoresProg(ctk.CTkFrame):
         self.email_entry_var.set('')
         self.rif_entry_var.set('')
         # DESBLOQUEAR EL CODIGO DE PROVEEDOR
-        self.codigo_entry.configure(state='normal',fg_color=APP_COLORS[6])
+        self.codigo_entry.configure(state='normal',fg_color=APP_COLOR['white'])
         # CONFIGURAR BOTONES
-        self.agregar_btn.configure(state='enabled',fg_color=APP_COLORS[2])
-        self.del_btn.configure(state='disabled',fg_color=APP_COLORS[10])
-        self.mod_btn.configure(state='disabled',fg_color=APP_COLORS[3])
-        self.cancelar_btn.configure(state='disabled',fg_color=APP_COLORS[10])
+        self.agregar_btn.configure(state='enabled',fg_color=APP_COLOR['main'])
+        self.del_btn.configure(state='disabled',fg_color=APP_COLOR['red_s'])
+        self.mod_btn.configure(state='disabled',fg_color=APP_COLOR['sec'])
+        self.cancelar_btn.configure(state='disabled',fg_color=APP_COLOR['red_s'])
         # FOCUS EN CODIGO
         self.codigo_entry.focus()
 # BUSCAR UN PROVEEDOR POR CODIGO Y PONERLO EN PANTALLA
@@ -515,12 +515,12 @@ class ProveedoresProg(ctk.CTkFrame):
 # MODO EDICION - MODO EDICION - MODO EDICION - MODO EDICION - MODO EDICION - MODO EDICION - MODO EDICION - 
     def ModoEdicion(self):
         # BLOQUEAR EL CODIGO DE PROVEEDOR
-        self.codigo_entry.configure(state='disabled',fg_color=APP_COLORS[4])
+        self.codigo_entry.configure(state='disabled',fg_color=APP_COLOR['gray'])
         # CONFIGURAR BOTONES
-        self.agregar_btn.configure(state='disabled',fg_color=APP_COLORS[3])
-        self.cancelar_btn.configure(state='enabled',fg_color=APP_COLORS[9])
-        self.del_btn.configure(state='enabled',fg_color=APP_COLORS[9])
-        self.mod_btn.configure(state='enabled',fg_color=APP_COLORS[2])
+        self.agregar_btn.configure(state='disabled',fg_color=APP_COLOR['sec'])
+        self.cancelar_btn.configure(state='enabled',fg_color=APP_COLOR['red_m'])
+        self.del_btn.configure(state='enabled',fg_color=APP_COLOR['red_m'])
+        self.mod_btn.configure(state='enabled',fg_color=APP_COLOR['main'])
 # BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - 
 # BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - 
 # BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - BUSQUEDA DE PROVEEDORES - 
@@ -530,7 +530,7 @@ class ProveedoresProg(ctk.CTkFrame):
         self.treeview_active = True
     # FRAME DEL TREEVIEW
         self.tree_frame = ctk.CTkToplevel(self,
-                                   fg_color=APP_COLORS[5])
+                                   fg_color=APP_COLOR['white_m'])
         self.tree_frame.geometry('600x450')
         self.tree_frame.title('Busqueda de proveedores')
         self.tree_frame.transient(self)
@@ -551,8 +551,8 @@ class ProveedoresProg(ctk.CTkFrame):
         cancel_btn = ctk.CTkButton(self.tree_frame,
                                     text='Cancelar',
                                     command=self.ListProv,
-                                    fg_color=APP_COLORS[2],
-                                    hover_color=APP_COLORS[3])
+                                    fg_color=APP_COLOR['main'],
+                                    hover_color=APP_COLOR['sec'])
         cancel_btn.grid(row=0,column=1,sticky='w',padx=5)
     
     # TREEVIEW
@@ -572,15 +572,15 @@ class ProveedoresProg(ctk.CTkFrame):
         style = ttk.Style()
         style.configure(
             'Custom.Treeview',
-            background = APP_COLORS[0],
-            foreground = APP_COLORS[1],
+            background = APP_COLOR['white_m'],
+            foreground = APP_COLOR['black_m'],
             rowheight = 30,
             font = FONT['text_small'],
-            fieldbackground = APP_COLORS[0])
+            fieldbackground = APP_COLOR['white_m'])
         style.configure(
             'Custom.Treeview.Heading',
-            background = APP_COLORS[1],
-            foreground = APP_COLORS[1],
+            background = APP_COLOR['black_m'],
+            foreground = APP_COLOR['black_m'],
             font = FONT['text_light'])
     # SCROLLBAR DEL TV
         scrollbar = ctk.CTkScrollbar(self.tree_frame,
