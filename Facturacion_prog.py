@@ -11,6 +11,7 @@ class FacturacionProg(ctk.CTkFrame):
         # CALLBACK IR ATRAS
         self.GoBack_CB = GoBack_CB
         ROWS, COLUMNS = 20, 12
+        window_width , window_height = 1920,1080
         self.inventory_codes = INVENTARIO.GetCodigos()
         self.product_list = []
         #-------------------------------------------------------------------------------------
@@ -37,10 +38,10 @@ class FacturacionProg(ctk.CTkFrame):
         self.prog_frame.bind("<Return>",lambda event:self.ProductsHelp())
 
         # GRID SETUP
-        for rows in range(ROWS):
-            self.prog_frame.rowconfigure(rows,weight=1,uniform='a')
-        for columns in range(COLUMNS):
-            self.prog_frame.columnconfigure(columns,weight=1,uniform='a')
+        # for rows in range(ROWS):
+        #     self.prog_frame.rowconfigure(rows,weight=1,uniform='a')
+        # for columns in range(COLUMNS):
+        #     self.prog_frame.columnconfigure(columns,weight=1,uniform='a')
         # BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - 
         # BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - 
         add_product_btn = ctk.CTkButton(self.prog_frame,
@@ -48,7 +49,7 @@ class FacturacionProg(ctk.CTkFrame):
                                         fg_color=APP_COLOR['main'],
                                         hover_color=APP_COLOR['sec'],
                                         command=self.ProductsHelp)
-        add_product_btn.grid(row=4,column=COLUMNS-4,sticky='e')
+        add_product_btn.place(x=20,y=20)
         # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
         # CONFIGURACION VISUAL DEL TV
         style = ttk.Style()
@@ -64,11 +65,13 @@ class FacturacionProg(ctk.CTkFrame):
             background = APP_COLOR['black_m'],
             foreground = APP_COLOR['black_m'],
             font = FONT['text_light'])
+        tree_width, tree_height = 1600,400
+
         self.treeview_main = ttk.Treeview(self.prog_frame,
                                      style='Custom.Treeview',
                                      columns=('Cod','Descripcion','Cantidad','Bolivares',
                                               'Dolares'))
-        self.treeview_main.grid(row=5,column=1,sticky='nswe',pady=10,rowspan=3,columnspan=COLUMNS-2)
+        self.treeview_main.place(relx=0.5, rely=0.6, anchor='center',width=tree_width, height=tree_height)
         self.treeview_main.bind("<<TreeviewSelect>>",ClickLista)
         # IMAGEN
         self.treeview_main.heading('#0',text='img')
@@ -91,11 +94,17 @@ class FacturacionProg(ctk.CTkFrame):
         
         # SCROLLBAR DEL TV
         scrollbar = ctk.CTkScrollbar(self.prog_frame,
+                                      width=20,
+                                      height=tree_height,
                                      orientation='vertical',
                                      command=self.treeview_main.yview)
-        scrollbar.grid(row=5,column=COLUMNS-1,sticky='nsw',padx=5,pady=5,rowspan=5)
+        scrollbar.place(x=window_width-(window_width - tree_width), y=tree_height-tree_width)
         self.treeview_main.configure(yscrollcommand=scrollbar.set)
         self.update_idletasks()
+        ancho = self.winfo_width()
+        alto = self.winfo_height()
+        print(f"Tamaño actual: {ancho} x {alto}")
+
     
 # FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS -  
 # FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS -  
@@ -173,6 +182,7 @@ class FacturacionProg(ctk.CTkFrame):
             # GET PRODUCT DATA
             producto = INVENTARIO.GetProducto(codigo)
             existencia = producto['existencia']
+            cantidad = 1
             valor_dolar = 130
             precio_bs = float(producto['precio1']) * valor_dolar
 
@@ -185,10 +195,11 @@ class FacturacionProg(ctk.CTkFrame):
             self.image_refs[codigo] = image
 
             self.treeview_main.insert("", 'end',
-                text=producto['codigo'],
+                text='',
                 image=image,
                 values=(producto['codigo'],
                         producto['nombre'],
+                        cantidad,
                         precio_bs,
                         producto['precio1']))
             self.product_list.append(str(codigo).strip())
