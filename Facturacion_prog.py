@@ -11,7 +11,6 @@ class FacturacionProg(ctk.CTkFrame):
         # CALLBACK IR ATRAS
         self.GoBack_CB = GoBack_CB
         ROWS, COLUMNS = 20, 12
-        window_width , window_height = 1920,1080
         self.inventory_codes = INVENTARIO.GetCodigos()
         self.product_list = []
         #-------------------------------------------------------------------------------------
@@ -38,10 +37,10 @@ class FacturacionProg(ctk.CTkFrame):
         self.prog_frame.bind("<Return>",lambda event:self.ProductsHelp())
 
         # GRID SETUP
-        # for rows in range(ROWS):
-        #     self.prog_frame.rowconfigure(rows,weight=1,uniform='a')
-        # for columns in range(COLUMNS):
-        #     self.prog_frame.columnconfigure(columns,weight=1,uniform='a')
+        for rows in range(ROWS):
+            self.prog_frame.rowconfigure(rows,weight=1,uniform='a')
+        for columns in range(COLUMNS):
+            self.prog_frame.columnconfigure(columns,weight=1,uniform='a')
         # BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - 
         # BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - 
         add_product_btn = ctk.CTkButton(self.prog_frame,
@@ -49,7 +48,7 @@ class FacturacionProg(ctk.CTkFrame):
                                         fg_color=APP_COLOR['main'],
                                         hover_color=APP_COLOR['sec'],
                                         command=self.ProductsHelp)
-        add_product_btn.place(x=20,y=20)
+        add_product_btn.grid(row=1,column=1,sticky='we')
         # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
         # CONFIGURACION VISUAL DEL TV
         style = ttk.Style()
@@ -57,7 +56,7 @@ class FacturacionProg(ctk.CTkFrame):
             'Custom.Treeview',
             background = APP_COLOR['white_m'],
             foreground = APP_COLOR['black_m'],
-            rowheight = 100,
+            rowheight = 30,
             font = FONT['text_small'],
             fieldbackground = APP_COLOR['white_m'])
         style.configure(
@@ -65,13 +64,12 @@ class FacturacionProg(ctk.CTkFrame):
             background = APP_COLOR['black_m'],
             foreground = APP_COLOR['black_m'],
             font = FONT['text_light'])
-        tree_width, tree_height = 1600,400
 
         self.treeview_main = ttk.Treeview(self.prog_frame,
                                      style='Custom.Treeview',
                                      columns=('Cod','Descripcion','Cantidad','Bolivares',
                                               'Dolares'))
-        self.treeview_main.place(relx=0.5, rely=0.6, anchor='center',width=tree_width, height=tree_height)
+        self.treeview_main.grid(row=10,column=1,rowspan=ROWS-12,columnspan=COLUMNS-3,sticky='nswe')
         self.treeview_main.bind("<<TreeviewSelect>>",ClickLista)
         # IMAGEN
         self.treeview_main.heading('#0',text='img')
@@ -95,15 +93,14 @@ class FacturacionProg(ctk.CTkFrame):
         # SCROLLBAR DEL TV
         scrollbar = ctk.CTkScrollbar(self.prog_frame,
                                       width=20,
-                                      height=tree_height,
+                                      height=200,
                                      orientation='vertical',
                                      command=self.treeview_main.yview)
-        scrollbar.place(x=window_width-(window_width - tree_width), y=tree_height-tree_width)
+        scrollbar.grid(row=6,column=COLUMNS-2,rowspan=ROWS-3)
         self.treeview_main.configure(yscrollcommand=scrollbar.set)
         self.update_idletasks()
-        ancho = self.winfo_width()
-        alto = self.winfo_height()
-        print(f"Tamaño actual: {ancho} x {alto}")
+        
+        
 
     
 # FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS -  
