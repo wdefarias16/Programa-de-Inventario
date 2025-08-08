@@ -13,6 +13,12 @@ class FacturacionProg(ctk.CTkFrame):
         ROWS, COLUMNS = 20, 12
         self.inventory_codes = INVENTARIO.GetCodigos()
         self.product_list = []
+        # GRID CONFIG ------------------------------------------------------------------------
+        for rows in range(6):
+            self.rowconfigure(rows,weight=1,uniform='a')
+        for columns in range(10):
+            self.columnconfigure(columns,weight=1,uniform='a')
+        # GRID CONFIG ------------------------------------------------------------------------
         #-------------------------------------------------------------------------------------
         def ClickLista():
             pass
@@ -23,7 +29,7 @@ class FacturacionProg(ctk.CTkFrame):
                                    fg_color=APP_COLOR['sec'],
                                    corner_radius=0,
                                    height=50)
-        title_frame.pack(fill='x')
+        title_frame.grid(row=0,column=0,columnspan=10,sticky='nswe')
         # LABEL
         title_label = ctk.CTkLabel(title_frame,
                                    text='Facturación',
@@ -31,12 +37,41 @@ class FacturacionProg(ctk.CTkFrame):
                                    text_color=APP_COLOR['white_m'],
                                    font=FONT['title_light'])
         title_label.pack(pady=10)
-        # PROG FRAME
+        # PRODUCT FRAME - PRODUCT FRAME - PRODUCT FRAME - PRODUCT FRAME - PRODUCT FRAME - PRODUCT FRAME - 
+        # PRODUCT FRAME - PRODUCT FRAME - PRODUCT FRAME - PRODUCT FRAME - PRODUCT FRAME - PRODUCT FRAME - 
+        # PRODUCT FRAME - PRODUCT FRAME - PRODUCT FRAME - PRODUCT FRAME - PRODUCT FRAME - PRODUCT FRAME - 
+        self.product_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLOR['sec'])
+        self.product_frame.grid(row=1,column=0,columnspan=3,rowspan=9,sticky='nswe')
+        # GRID SETUP PRODUCT FRAME
+        for rows in range(20):
+            self.product_frame.rowconfigure(rows,weight=1,uniform='a')
+        for columns in range(6):
+            self.product_frame.columnconfigure(columns,weight=1,uniform='a')
+        # IMAGE FRAME
+        self.image_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLOR['sec'])
+        self.image_frame.grid(row=1,column=1,columnspan=4,rowspan=6,sticky='nswe')
+        # LABELS
+        # IMAGE LABEL
+        self.image_path = 'Recursos/Imagenes/Productos'
+        default_image = Image.open(f"{self.image_path}/Default.png")
+        self.default_image = ctk.CTkImage(light_image=default_image, size=(250,250))
+        self.image_product_label = ctk.CTkLabel(self.image_frame,
+                                        text='',
+                                        image=self.default_image)
+        self.image_product_label.pack(side="top", anchor="n",expand=True)
+        # PRODUCT FRAME - PRODUCT FRAME - PRODUCT FRAME - PRODUCT FRAME - PRODUCT FRAME - PRODUCT FRAME - 
+        # PRODUCT FRAME - PRODUCT FRAME - PRODUCT FRAME - PRODUCT FRAME - PRODUCT FRAME - PRODUCT FRAME - 
+        # PRODUCT FRAME - PRODUCT FRAME - PRODUCT FRAME - PRODUCT FRAME - PRODUCT FRAME - PRODUCT FRAME - 
+        # ------------------------------------------------------------------------------------------------
+        # ------------------------------------------------------------------------------------------------
+        # PROG FRAME - PROG FRAME - PROG FRAME - PROG FRAME - PROG FRAME - PROG FRAME - PROG FRAME - 
+        # PROG FRAME - PROG FRAME - PROG FRAME - PROG FRAME - PROG FRAME - PROG FRAME - PROG FRAME - 
+        # PROG FRAME - PROG FRAME - PROG FRAME - PROG FRAME - PROG FRAME - PROG FRAME - PROG FRAME - 
         self.prog_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLOR['white_m'])
-        self.prog_frame.pack(expand=True,fill='both',side='left')
+        self.prog_frame.grid(row=1,column=3,rowspan=9,columnspan=6,sticky='nswe')
         self.prog_frame.bind("<Return>",lambda event:self.ProductsHelp())
 
-        # GRID SETUP
+        # GRID SETUP PROG FRAME
         for rows in range(ROWS):
             self.prog_frame.rowconfigure(rows,weight=1,uniform='a')
         for columns in range(COLUMNS):
@@ -96,7 +131,7 @@ class FacturacionProg(ctk.CTkFrame):
                                       height=200,
                                      orientation='vertical',
                                      command=self.treeview_main.yview)
-        scrollbar.grid(row=6,column=COLUMNS-2,rowspan=ROWS-3)
+        scrollbar.grid(row=6,column=COLUMNS-2,rowspan=ROWS-3,sticky='w')
         self.treeview_main.configure(yscrollcommand=scrollbar.set)
         self.update_idletasks()
         
