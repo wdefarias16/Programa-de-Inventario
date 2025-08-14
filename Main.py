@@ -27,7 +27,10 @@ class App(ctk.CTk):
     def __init__(self):
         super().__init__()
         self.title('Sistema')
-        self.geometry('1000x500')
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+        self.geometry(f"{screen_width}x{screen_height}+0+0")
+
         self.dashboard_activo = False
     # ATAJOS
         # ATAJO CERRAR SESION
