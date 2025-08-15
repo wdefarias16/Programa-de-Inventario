@@ -29,3 +29,7 @@ USER_MANAGER = Users(dbname=DATABASE_INFO[0],
                             password=DATABASE_INFO[2],
                             host=DATABASE_INFO[3],
                             port=DATABASE_INFO[4])
+
+VALOR_DOLAR = INVENTARIO.GetLastDolar()
+if not VALOR_DOLAR:
+    VALOR_DOLAR = 0
