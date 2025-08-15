@@ -185,8 +185,8 @@ class FacturacionProg(ctk.CTkFrame):
             'Custom.Treeview',
             background = APP_COLOR['white_m'],
             foreground = APP_COLOR['black_m'],
-            rowheight = 30,
-            font = FONT['text_small'],
+            rowheight = 40,
+            font = FONT['text'],
             fieldbackground = APP_COLOR['white_m'])
         style.configure(
             'Custom.Treeview.Heading',
@@ -202,19 +202,19 @@ class FacturacionProg(ctk.CTkFrame):
         self.treeview_main.bind("<<TreeviewSelect>>",ClickLista)
         # CODIGO
         self.treeview_main.heading('#0',text='Cod.')
-        self.treeview_main.column('#0',width=200,anchor='center')
+        self.treeview_main.column('#0', width=120, anchor='center', stretch=False)
         # DESCRIPCION
         self.treeview_main.heading('Descripcion',text='Descripción')
-        self.treeview_main.column('Descripcion',width=200,anchor='center')
+        self.treeview_main.column('Descripcion', width=300, anchor='w', minwidth=200, stretch=True)
         # CANTIDAD
         self.treeview_main.heading('Cantidad',text='Cant.')
-        self.treeview_main.column('Cantidad',width=200,anchor='center')
+        self.treeview_main.column('Cantidad', width=200, anchor='center', stretch=False)
         # BOLIVARES
         self.treeview_main.heading('Bolivares',text='Bs.')
-        self.treeview_main.column('Bolivares',width=50,anchor='center')
+        self.treeview_main.column('Bolivares', width=200, anchor='center', stretch=False)
         # DOLARES
         self.treeview_main.heading('Dolares',text='$')
-        self.treeview_main.column('Dolares',width=50,anchor='center')
+        self.treeview_main.column('Dolares', width=200, anchor='center', stretch=False)
     # -----------------------------------------------------------------------------------------------
     # -----------------------------------------------------------------------------------------------
     # FOOTER BAR - FOOTER BAR - FOOTER BAR - FOOTER BAR - FOOTER BAR - FOOTER BAR - FOOTER BAR - 
@@ -325,7 +325,7 @@ class FacturacionProg(ctk.CTkFrame):
                 self.qty_entry.focus()
                 return
             dolar = 200
-            precio_v1 = int(producto['precio1'])
+            precio_v1 = int(producto['precio1']) * ajuste
             precio_bs = dolar * precio_v1
             
 
