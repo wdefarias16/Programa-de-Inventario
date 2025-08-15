@@ -587,6 +587,77 @@ class Inventory:
                 f"{str(e)}"
             )
             return None
+# MANEJO DEL DOLAR - MANEJO DEL DOLAR - MANEJO DEL DOLAR - MANEJO DEL DOLAR - MANEJO DEL DOLAR - 
+# MANEJO DEL DOLAR - MANEJO DEL DOLAR - MANEJO DEL DOLAR - MANEJO DEL DOLAR - MANEJO DEL DOLAR - 
+    # GUARDAR EL VALOR DEL DOLAR
+    def GuardarDolar(self, fecha: str, tasa: float, log: str = 'Manual'):
+        """
+        Guarda la tasa del dólar en la tabla 'dolar'.
+        Si ya existe una entrada para esa fecha, no la sobrescribe.
+        """
+        try:
+            with self.conn.cursor() as cur:
+                cur.execute("""
+                    INSERT INTO dolar (fecha, tasa, log)
+                    VALUES (%s, %s, %s);
+                """, (fecha, tasa, log))
+                self.conn.commit()
+                messagebox.showinfo("Guardado", f"Tasa del dólar para {fecha} registrada correctamente.")
+        except Exception as e:
+            self.conn.rollback()
+            messagebox.showerror("Error", f"No se pudo guardar la tasa: {str(e)}")
+    # OBTENER EL VALOR DEL DOLAR
+    def GetDolar(self, fecha: str) -> float | None:
+        """
+        Devuelve la última tasa del dólar registrada para una fecha específica.
+        Si no existe, retorna None.
+        """
+        try:
+            with self.conn.cursor() as cur:
+                cur.execute("""
+                    SELECT tasa
+                      FROM dolar
+                     WHERE fecha = %s
+                     ORDER BY hora DESC
+                     LIMIT 1;
+                """, (fecha,))
+                row = cur.fetchone()
+                if row:
+                    return float(row[0])
+                else:
+                    messagebox.showinfo("Sin datos", f"No hay tasa registrada para {fecha}.")
+                    return None
+        except Exception as e:
+            messagebox.showerror("Error", f"No se pudo obtener la tasa: {str(e)}")
+            return None
+    # OBTENER VALORES DEL DOLAR EN UN RANGO DE FECHAS
+    def GetDolarRango(self, fecha_inicio: str, fecha_fin: str) -> list:
+        """
+        Devuelve una lista de registros de la tabla 'dolar' entre dos fechas.
+        Cada registro es un diccionario con: fecha, tasa, log, hora.
+        """
+        try:
+            with self.conn.cursor() as cur:
+                cur.execute("""
+                    SELECT fecha, tasa, log, hora
+                      FROM dolar
+                     WHERE fecha BETWEEN %s AND %s
+                     ORDER BY fecha ASC;
+                """, (fecha_inicio, fecha_fin))
+                rows = cur.fetchall()
+                resultados = []
+                for fecha, tasa, log, hora in rows:
+                    resultados.append({
+                        'fecha': fecha,
+                        'tasa': float(tasa),
+                        'log': log,
+                        'hora': hora
+                    })
+                return resultados
+        except Exception as e:
+            messagebox.showerror("Error", f"No se pudo obtener el rango: {str(e)}")
+            return []
+
 
     def __del__(self):
         """Cierra la conexión a la base de datos cuando el objeto se destruye."""

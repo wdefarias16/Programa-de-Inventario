@@ -5,6 +5,7 @@ from AjustesInventario_prog import*
 from CargaProductos_prog import*
 from CargaLineasGrupos_prog import*
 from CargaProveedores_prog import*
+from CargaDolar_prog import*
 from Facturacion_prog import*
 from MaestroDeTablas_prog import*
 from Menu_Inventario import*
@@ -167,19 +168,26 @@ class App(ctk.CTk):
         self.dashboard_activo = False
         self.current_prog = ProgramasDeUtilidadMenu(self,
                                            GoBack_CB = self.ReturnToDashboard,
-                                           MaestroDeTablas = self.MaestroDeTablas)
+                                           MaestroDeTablas = self.MaestroDeTablas,
+                                           CargaDolar = self.CargaDolar)
         self.current_prog.pack(expand=True,fill='both')
     # GO BACJ PDU MENU
     def GoBackProgramasUtilidadMenu(self):
         self.current_prog.destroy()
         self.current_prog = ProgramasDeUtilidadMenu(self,
                                            GoBack_CB = self.ReturnToDashboard,
-                                           MaestroDeTablas = self.MaestroDeTablas)
+                                           MaestroDeTablas = self.MaestroDeTablas,
+                                           CargaDolar = self.CargaDolar)
         self.current_prog.pack(expand=True,fill='both')
     # PROG MAESTRO DE TABLAS
     def MaestroDeTablas(self):
         self.current_prog.destroy()
         self.current_prog = MaestroDeTablas_prog(self,GoBack_CB=self.GoBackProgramasUtilidadMenu)
+        self.current_prog.pack(expand=True,fill='both')
+    # PROG CARGA DOLAR
+    def CargaDolar(self):
+        self.current_prog.destroy()
+        self.current_prog = CargaDolar(self,GoBack_CB=self.GoBackProgramasUtilidadMenu)
         self.current_prog.pack(expand=True,fill='both')
 # -------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------
