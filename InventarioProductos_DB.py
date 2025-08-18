@@ -686,6 +686,33 @@ class Inventory:
             messagebox.showerror("Error", f"No se pudo obtener el último valor: {str(e)}")
             return None
 
+    def GetDolarLastMonth(self) -> list:
+        """
+        Devuelve los últimos 30 valores de dólar cargados.
+        Cada elemento es un diccionario con: fecha, tasa, log, hora.
+        """
+        try:
+            with self.conn.cursor() as cur:
+                cur.execute("""
+                    SELECT fecha, tasa, log, hora
+                      FROM dolar
+                     ORDER BY hora DESC
+                     LIMIT 30;
+                """)
+                rows = cur.fetchall()
+                resultados = []
+                for fecha, tasa, log, hora in rows:
+                    resultados.append({
+                        'fecha': fecha,
+                        'tasa': float(tasa),
+                        'log': log,
+                        'hora': hora
+                    })
+                return resultados
+        except Exception as e:
+            messagebox.showerror("Error", f"No se pudo obtener los últimos valores: {str(e)}")
+            return []
+
 
     def __del__(self):
         """Cierra la conexión a la base de datos cuando el objeto se destruye."""
