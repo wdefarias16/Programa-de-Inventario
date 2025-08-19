@@ -14,6 +14,7 @@ class FacturacionProg(ctk.CTkFrame):
         self.GoBack_CB = GoBack_CB
         self.inventory_codes = INVENTARIO.GetCodigos()
         self.product_list = []
+        self.DOLAR = INVENTARIO.GetLastDolarValue()
     # -----------------------------------------------------------------------------------------------
     # -----------------------------------------------------------------------------------------------
     # TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - 
@@ -196,7 +197,7 @@ class FacturacionProg(ctk.CTkFrame):
 
         self.treeview_main = ttk.Treeview(main_frame,
                                     style='Custom.Treeview',
-                                    columns=('Descripcion','Cantidad','Bolivares',
+                                    columns=('Descripcion','Cantidad','Unidad','Bolivares',
                                              'Dolares'))
         self.treeview_main.place(relx=0.5,y=360,relwidth=0.85,height=400,anchor='n')
         self.treeview_main.bind("<<TreeviewSelect>>",ClickLista)
@@ -209,6 +210,9 @@ class FacturacionProg(ctk.CTkFrame):
         # CANTIDAD
         self.treeview_main.heading('Cantidad',text='Cant.')
         self.treeview_main.column('Cantidad', width=200, anchor='center', stretch=False)
+        # UNIDAD
+        self.treeview_main.heading('Unidad',text='Unidad')
+        self.treeview_main.column('Unidad', width=200, anchor='center', stretch=False)
         # BOLIVARES
         self.treeview_main.heading('Bolivares',text='Bs.')
         self.treeview_main.column('Bolivares', width=200, anchor='center', stretch=False)
@@ -324,15 +328,16 @@ class FacturacionProg(ctk.CTkFrame):
                 messagebox.showerror('Error', 'Verifica que el campo "Cantidad" este correcto.')
                 self.qty_entry.focus()
                 return
-            dolar = 200
+            
             precio_v1 = int(producto['precio1']) * ajuste
-            precio_bs = dolar * precio_v1
+            precio_bs = self.DOLAR * precio_v1
             
 
             self.treeview_main.insert("", 'end',
                 text=producto['codigo'],
                 values=(producto['nombre'],
                         ajuste,
+                        producto['precio1'],
                         precio_bs,
                         precio_v1))
             self.product_list.append(str(codigo).strip())

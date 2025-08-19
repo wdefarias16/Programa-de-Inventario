@@ -2,7 +2,7 @@ import tkinter as tk
 import customtkinter as ctk
 from tkinter import ttk, messagebox
 from style import FONT, ICONS, APP_COLOR
-from DatabaseManager import INVENTARIO,VALOR_DOLAR,FUNCIONES
+from DatabaseManager import INVENTARIO
 import datetime
 from datetime import date
 
@@ -13,9 +13,8 @@ class CargaDolar(ctk.CTkFrame):
         # CALLBACK IR ATRÁS
         self.GoBack_CB = GoBack_CB
         self.validate = self.register(self.ValidateDigit)
-
         # OBTENER VALOR DOLAR
-        self.VALOR_DOLAR = VALOR_DOLAR
+        self.DOLAR = INVENTARIO.GetLastDolarValue()
         
              
     # -----------------------------------------------------------------------------------------------
@@ -30,7 +29,7 @@ class CargaDolar(ctk.CTkFrame):
         title_frame.place(relx=0.5,rely=0,relwidth=1,anchor='n')
         # LABEL
         title_label = ctk.CTkLabel(title_frame,
-                                   text='Carga diaria del dólar',
+                                   text='Carga del dólar',
                                    bg_color='transparent',
                                    text_color=APP_COLOR['white_m'],
                                    font=FONT['title_light'])
@@ -58,8 +57,8 @@ class CargaDolar(ctk.CTkFrame):
                                     width=120,
                                     height=45,
                                     corner_radius=2,
-                                    fg_color=APP_COLOR['main'])
-        self.fecha_label.place(relx=0.10,rely=0.15,anchor='n')
+                                    fg_color=APP_COLOR['sec'])
+        self.fecha_label.place(relx=0.10,rely=0.25,anchor='n')
         # FECHA LABEL
         fecha_text_label = ctk.CTkLabel(self,
                                     text='Fecha',
@@ -67,7 +66,7 @@ class CargaDolar(ctk.CTkFrame):
                                     font=FONT['text'],
                                     width=60,
                                     height=25)
-        fecha_text_label.place(relx=0.10,rely=0.11,anchor='n')
+        fecha_text_label.place(relx=0.10,rely=0.21,anchor='n')
         # HORA
         self.hora_label = ctk.CTkLabel(self,
                                     text='',
@@ -76,8 +75,8 @@ class CargaDolar(ctk.CTkFrame):
                                     width=120,
                                     height=45,
                                     corner_radius=2,
-                                    fg_color=APP_COLOR['main'])
-        self.hora_label.place(relx=0.90,rely=0.15,anchor='n')
+                                    fg_color=APP_COLOR['sec'])
+        self.hora_label.place(relx=0.90,rely=0.25,anchor='n')
         # HORA LABEL
         hora_text_label = ctk.CTkLabel(self,
                                     text='Hora',
@@ -85,10 +84,10 @@ class CargaDolar(ctk.CTkFrame):
                                     font=FONT['text'],
                                     width=60,
                                     height=25)
-        hora_text_label.place(relx=0.90,rely=0.11,anchor='n')
+        hora_text_label.place(relx=0.90,rely=0.21,anchor='n')
         # DOLAR
         self.dolar_label = ctk.CTkLabel(self,
-                                    text=f'Bs. {self.VALOR_DOLAR}',
+                                    text=f'Bs. {self.DOLAR}',
                                     text_color=APP_COLOR['gray'],
                                     font=FONT['subtitle_bold'],
                                     width=120,
@@ -106,6 +105,7 @@ class CargaDolar(ctk.CTkFrame):
         self.GetDate()
         # BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - 
         # BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - 
+        # ACTUALIZAR DOLAR
         self.update_dolar_btn = ctk.CTkButton(self,
                                     text='Actualizar',
                                     command = self.UpdateDolarWindow,
@@ -116,6 +116,14 @@ class CargaDolar(ctk.CTkFrame):
                                     height=25,
                                     corner_radius=2)
         self.update_dolar_btn.place(relx=0.50,rely=0.30,anchor='n')
+        # VOLVER ATRAS
+        self.goback_btn = ctk.CTkButton(self,
+                                     text='Volver atrás',
+                                     command=self.GoBack_CB,
+                                     width=40,
+                                     fg_color=APP_COLOR['gray'],
+                                     hover_color=APP_COLOR['sec'])
+        self.goback_btn.place(relx=0.01,rely=0.11,anchor='nw')
         # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
         # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
         # CONFIGURACION VISUAL DEL TV
@@ -145,10 +153,14 @@ class CargaDolar(ctk.CTkFrame):
         # BOLIVARES
         self.treeview_main.heading('Valor',text='Valor.')
         self.treeview_main.column('Valor', width=100, anchor='w', stretch=True)
+        self.ListDolarValues()
         
     # -----------------------------------------------------------------------------------------------
     # -----------------------------------------------------------------------------------------------
-        def ListDolarValues():
+        
+    # FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - 
+    # FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - 
+    def ListDolarValues(self):
             dolars_last_month = INVENTARIO.GetDolarLastMonth()
             for item in self.treeview_main.get_children():
                 self.treeview_main.delete(item)
@@ -163,11 +175,9 @@ class CargaDolar(ctk.CTkFrame):
                                            tags=(tag,))
             self.treeview_main.tag_configure('Odd.Treeview', background="#ffffff")
             self.treeview_main.tag_configure('Even.Treeview', background="#eaeaea")
-        ListDolarValues()
-    # FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - 
-    # FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - 
 # ACTUALIZACION DEL DOLAR
     def UpdateDolarWindow(self):
+        # ACTUALIZAR EL DOLAR
         def UpdateDolar():
             fecha = date.today()
             valor_dolar = nuevo_valor_entry_var.get()
@@ -181,13 +191,12 @@ class CargaDolar(ctk.CTkFrame):
 
             INVENTARIO.GuardarDolar(fecha,valor_dolar,motivo)
 
-            self.VALOR_DOLAR = valor_dolar
-            self.dolar_label.configure(text=f'Bs. {self.VALOR_DOLAR}')
-
-            actualizardolar=FUNCIONES['UpdateDolarValue']
-            actualizardolar()
+            self.DOLAR = valor_dolar
+            self.dolar_label.configure(text=f'Bs. {self.DOLAR}')
+            self.ListDolarValues()
             dolar_window.destroy()
-            
+        # ---------------------------------------------- 
+        # ---------------------------------------------- 
 
         # FRAME 
         dolar_window = ctk.CTkToplevel(self,
@@ -245,6 +254,10 @@ class CargaDolar(ctk.CTkFrame):
                                 fg_color=APP_COLOR['red_m'],
                                 hover_color=APP_COLOR['red_s'])
         exit_button.place(relx=0.90,rely=0.05,anchor='nw')
+
+
+
+
 
 
 # MOSTAR LA FECHA Y HORA

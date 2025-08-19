@@ -31,31 +31,3 @@ USER_MANAGER = Users(dbname=DATABASE_INFO[0],
                             port=DATABASE_INFO[4])
 
 
-
-def UpdateDolarValue():
-    dolar = INVENTARIO.GetLastDolar()
-    if dolar is None:
-        print("No se encontró tasa de dólar.")
-        VALOR_DOLAR = 0.0
-    else:
-        try:
-            VALOR_DOLAR = dolar['tasa']
-        except KeyError:
-            print("La clave 'tasa' no existe en el resultado.")
-            VALOR_DOLAR = 0.0
-            
-dolar = INVENTARIO.GetLastDolar()
-if dolar is None:
-    print("No se encontró tasa de dólar.")
-    VALOR_DOLAR = 0.0
-else:
-    try:
-        VALOR_DOLAR = dolar['tasa']
-    except KeyError:
-        print("La clave 'tasa' no existe en el resultado.")
-        VALOR_DOLAR = 0.0
-# FUNCIONES CALLBACK
-
-FUNCIONES = {
-        'UpdateDolarValue':UpdateDolarValue
-    }

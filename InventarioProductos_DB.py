@@ -685,6 +685,28 @@ class Inventory:
         except Exception as e:
             messagebox.showerror("Error", f"No se pudo obtener el último valor: {str(e)}")
             return None
+    
+    def GetLastDolarValue(self) -> float | None:
+        """
+        Devuelve el último valor de dólar cargado en la tabla.
+        Retorna un diccionario con: fecha, tasa, log, hora.
+        """
+        try:
+            with self.conn.cursor() as cur:
+                cur.execute("""
+                    SELECT tasa
+                      FROM dolar
+                     ORDER BY hora DESC
+                     LIMIT 1;
+                """)
+                row = cur.fetchone()
+                if row:
+                    return float(row[0])
+                else:
+                    return None
+        except Exception as e:
+            messagebox.showerror("Error", f"No se pudo obtener el último valor: {str(e)}")
+            return None
 
     def GetDolarLastMonth(self) -> list:
         """
