@@ -208,6 +208,8 @@ class DatabaseManagerApp(ctk.CTk):
                         """CREATE TABLE IF NOT EXISTS usuarios (
                             codigo SERIAL PRIMARY KEY,
                             nombre VARCHAR(100) NOT NULL,
+                            usuario VARCHAR(100) NOT NULL,
+                            opcode INT NOT NULL,
                             clave VARCHAR(255) NOT NULL,
                             correo VARCHAR(255) UNIQUE,
                             rol INT NOT NULL,

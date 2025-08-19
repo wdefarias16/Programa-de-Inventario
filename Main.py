@@ -7,6 +7,7 @@ from CargaLineasGrupos_prog import*
 from CargaProveedores_prog import*
 from CargaDolar_prog import*
 from Facturacion_prog import*
+from GestionDeUsuarios_prog import*
 from MaestroDeTablas_prog import*
 from Menu_Inventario import*
 from Menu_Facturacion import*
@@ -169,7 +170,8 @@ class App(ctk.CTk):
         self.current_prog = ProgramasDeUtilidadMenu(self,
                                            GoBack_CB = self.ReturnToDashboard,
                                            MaestroDeTablas = self.MaestroDeTablas,
-                                           CargaDolar = self.CargaDolar)
+                                           CargaDolar = self.CargaDolar,
+                                           GestionUsuarios=self.GestionUsuarios)
         self.current_prog.pack(expand=True,fill='both')
     # GO BACJ PDU MENU
     def GoBackProgramasUtilidadMenu(self):
@@ -177,7 +179,8 @@ class App(ctk.CTk):
         self.current_prog = ProgramasDeUtilidadMenu(self,
                                            GoBack_CB = self.ReturnToDashboard,
                                            MaestroDeTablas = self.MaestroDeTablas,
-                                           CargaDolar = self.CargaDolar)
+                                           CargaDolar = self.CargaDolar,
+                                           GestionUsuarios=self.GestionUsuarios)
         self.current_prog.pack(expand=True,fill='both')
     # PROG MAESTRO DE TABLAS
     def MaestroDeTablas(self):
@@ -188,6 +191,11 @@ class App(ctk.CTk):
     def CargaDolar(self):
         self.current_prog.destroy()
         self.current_prog = CargaDolar(self,GoBack_CB=self.GoBackProgramasUtilidadMenu)
+        self.current_prog.pack(expand=True,fill='both')
+    # PROG GESTION DE USUARIOS
+    def GestionUsuarios(self):
+        self.current_prog.destroy()
+        self.current_prog = GestionUsuariosProg(self,GoBack_CB=self.GoBackProgramasUtilidadMenu)
         self.current_prog.pack(expand=True,fill='both')
 # -------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------

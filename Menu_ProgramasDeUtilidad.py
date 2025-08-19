@@ -9,12 +9,14 @@ class ProgramasDeUtilidadMenu(ctk.CTkFrame):
     def __init__(self,parent,
                  GoBack_CB,
                  MaestroDeTablas,
-                 CargaDolar):
+                 CargaDolar,
+                 GestionUsuarios):
         super().__init__(parent)
     # CALLBACKS
         self.GoBack_CB =  GoBack_CB
         self.MaestroDeTablas = MaestroDeTablas
         self.CargaDolar = CargaDolar
+        self.GestionUsuarios = GestionUsuarios
 
     # MENU OPCIONES - MENU OPCIONES - MENU OPCIONES - MENU OPCIONES - MENU OPCIONES - 
         # CONFIGURACION DE ESTILO DEL MENU
@@ -31,9 +33,14 @@ class ProgramasDeUtilidadMenu(ctk.CTkFrame):
         carga_dolar_menu = tk.Menu(menu_bar,tearoff=0)
         carga_dolar_menu.add_command(label='Carga del dólar',
                                     command = self.CargaDolar)
+        # GESTION DE USUARIOS
+        gestion_usuarios_menu = tk.Menu(menu_bar,tearoff=0)
+        gestion_usuarios_menu.add_command(label='Gestión de usuarios',
+                                    command = self.GestionUsuarios)
         
         # AGREGAR A MENU PRINCIPAL
         menu_bar.add_cascade(label='Tablas', menu=maestro_de_tablas_menu)
         menu_bar.add_cascade(label='Dólar', menu=carga_dolar_menu)
+        menu_bar.add_cascade(label='Usuarios', menu=gestion_usuarios_menu)
 
         parent.configure(menu=menu_bar)

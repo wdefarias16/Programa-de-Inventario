@@ -26,20 +26,22 @@ class Users:
             messagebox.showerror("Base de datos", f"Error al conectarse a la base de datos: {e}")
 
     def CreateAdminUser(self):
+        default_nombre = "William De Farias"
         default_usuario = "a"
-        default_correo = "admin@example.com"
         default_password = "a"   # Cambia este valor por el que desees
+        default_opcode = 0000
+        default_correo = "admin@example.com"
         default_rol = 1                 # Por ejemplo, 1 = rol de administrador
         try:
             with self.conn.cursor() as cur:
-                cur.execute("SELECT 1 FROM usuarios WHERE nombre = %s;", (default_usuario,))
+                cur.execute("SELECT 1 FROM usuarios WHERE usuario = %s;", (default_usuario,))
                 if cur.fetchone() is None:
                     # Si no existe, se crea el usuario por defecto
                     hashed_password = self.HashPassword(default_password)
                     cur.execute("""
-                        INSERT INTO usuarios (nombre, correo, clave, rol, estado)
-                        VALUES (%s, %s, %s, %s, %s);
-                    """, (default_usuario, default_correo, hashed_password, default_rol, True))
+                        INSERT INTO usuarios (opcode,nombre,usuario, correo, clave, rol, estado)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s);
+                    """, (default_opcode,default_nombre,default_usuario, default_correo, hashed_password, default_rol, True))
                     self.conn.commit()
         except Exception as e:
             self.conn.rollback()
@@ -62,12 +64,12 @@ class Users:
             hashed_password.encode('utf-8')
         )
 
-    # ACCESS: Verifica si el usuario existe (identificado por la columna "nombre")
+    # ACCESS: Verifica si el usuario existe (identificado por la columna "usuario")
     # y si la clave coincide, devolviendo True o False.
     def Access(self, usuario, password):
         try:
             with self.conn.cursor() as cur:
-                cur.execute("SELECT clave FROM usuarios WHERE nombre = %s;", (usuario,))
+                cur.execute("SELECT clave FROM usuarios WHERE usuario = %s;", (usuario,))
                 row = cur.fetchone()
                 if row is None:
                     return False
@@ -78,18 +80,18 @@ class Users:
             return False
 
     # AGREGA UN NUEVO USUARIO.
-    # Se requiere: usuario (nombre que identifica al usuario), correo, clave, rol y estado.
-    # Se verifica previamente que no exista otro usuario con ese mismo nombre.
+    # Se requiere: usuario (usuario que identifica al usuario), correo, clave, rol y estado.
+    # Se verifica previamente que no exista otro usuario con ese mismo usuario.
     def AddUser(self, usuario, correo, password, rol, estado=True):
         try:
             with self.conn.cursor() as cur:
-                # Verificar si el usuario ya existe usando la columna "nombre"
-                cur.execute("SELECT 1 FROM usuarios WHERE nombre = %s;", (usuario,))
+                # Verificar si el usuario ya existe usando la columna "usuario"
+                cur.execute("SELECT 1 FROM usuarios WHERE usuario = %s;", (usuario,))
                 if cur.fetchone():
                     raise ValueError("El usuario ya existe.")
                 hashed_password = self.HashPassword(password)
                 cur.execute("""
-                    INSERT INTO usuarios (nombre, correo, clave, rol, estado)
+                    INSERT INTO usuarios (usuario, correo, clave, rol, estado)
                     VALUES (%s, %s, %s, %s, %s);
                 """, (usuario, correo, hashed_password, rol, estado))
                 self.conn.commit()
