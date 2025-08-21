@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from tkinter import ttk
 from style import FONT,APP_COLOR
+from DatabaseManager import USER_MANAGER
 
 class GestionUsuariosProg(ctk.CTkFrame):
     def __init__(self,parent,GoBack_CB):
@@ -37,8 +38,8 @@ class GestionUsuariosProg(ctk.CTkFrame):
             background = APP_COLOR['white_m'],
             foreground = APP_COLOR['black_m'],
             rowheight = 40,
-            font = FONT['text'],
-            fieldbackground = APP_COLOR['white_m'])
+            font = FONT['text_light'],
+            fieldbackground = APP_COLOR['gray'])
         style.configure(
             'Custom.Treeview.Heading',
             background = APP_COLOR['black_m'],
@@ -46,16 +47,61 @@ class GestionUsuariosProg(ctk.CTkFrame):
             font = FONT['text_light'])
         self.treeview_main = ttk.Treeview(self,
                                     style='Custom.Treeview',
-                                    columns=('Hora','Valor'))
-        self.treeview_main.place(relx=0.5,y=300,relwidth=0.70,height=320,anchor='n')
-        # DESCRIPCION
-        self.treeview_main.heading('#0',text='Fecha')
-        self.treeview_main.column('#0', width=100, anchor='w', minwidth=100, stretch=True)
-        # CANTIDAD
-        self.treeview_main.heading('Hora',text='Hora')
-        self.treeview_main.column('Hora', width=100, anchor='center', stretch=True)
-        # BOLIVARES
-        self.treeview_main.heading('Valor',text='Valor.')
-        self.treeview_main.column('Valor', width=100, anchor='w', stretch=True)
+                                    columns=('Nombre','Usuario','Contrasena',
+                                             'Cod_Op','Rol','Correo','Estado'))
+        self.treeview_main.place(relx=0.5,y=300,relwidth=0.90,height=320,anchor='n')
+        # CODIGO
+        self.treeview_main.heading('#0',text='Cod.')
+        self.treeview_main.column('#0', width=100, anchor='center', minwidth=30, stretch=False)
+        # NOMBRE
+        self.treeview_main.heading('Nombre',text='Nombre')
+        self.treeview_main.column('Nombre', width=300, anchor='center', stretch=False)
+        # USUARIO
+        self.treeview_main.heading('Usuario',text='Usuario')
+        self.treeview_main.column('Usuario', width=100, anchor='w', stretch=True)
+        # CONTRASEÑA
+        self.treeview_main.heading('Contrasena',text='Contraseña')
+        self.treeview_main.column('Contrasena', width=100, anchor='w', stretch=True)
+        # CODIGO DE OPERACION
+        self.treeview_main.heading('Cod_Op',text='Cod. Op')
+        self.treeview_main.column('Cod_Op', width=100, anchor='center', stretch=False)
+        # ROL
+        self.treeview_main.heading('Rol',text='Rol')
+        self.treeview_main.column('Rol', width=100, anchor='center', stretch=False)
+        # CORREO
+        self.treeview_main.heading('Correo',text='Correo')
+        self.treeview_main.column('Correo', width=300, anchor='w', stretch=False)
+        # ESTADO
+        self.treeview_main.heading('Estado',text='Estado')
+        self.treeview_main.column('Estado', width=100, anchor='center', stretch=False)
+        # LISTAR EL TREEVIEW
+        self.ListUsers()
+    # -----------------------------------------------------------------------------------------------
+    # -----------------------------------------------------------------------------------------------
+# FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - 
+# FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - 
+    def ListUsers(self):
+        # OBTENER LOS USUARIOS
+        usuarios = USER_MANAGER.GetAllUsers()
+        # LIMPIAR EL TREEVIEW
+        for item in self.treeview_main.get_children():
+            self.treeview_main.delete(item)
+        # CARGAR LOS USUARIOS AL TREEVIEW
+        for i, user in enumerate(usuarios.values()):
+            tag = "Even.Treview" if i % 2 == 0 else "Odd.Treview"
+            self.treeview_main.insert(
+                "",'end',
+                text=str(user['codigo']),
+                values=(
+                    user['nombre'],
+                    user['usuario'],
+                    user['clave'],
+                    user['opcode'],
+                    user['rol'],
+                    user['correo'],
+                    user['estado']),
+                    tag=(tag,))
+        self.treeview_main.tag_configure('Odd.Treeview', background="#ffffff")
+        self.treeview_main.tag_configure('Even.Treeview', background="#eaeaea")
     # -----------------------------------------------------------------------------------------------
     # -----------------------------------------------------------------------------------------------

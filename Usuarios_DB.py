@@ -28,10 +28,10 @@ class Users:
     def CreateAdminUser(self):
         default_nombre = "William De Farias"
         default_usuario = "a"
-        default_password = "a"   # Cambia este valor por el que desees
+        default_password = "a"
         default_opcode = 0000
         default_correo = "admin@example.com"
-        default_rol = 1                 # Por ejemplo, 1 = rol de administrador
+        default_rol = 1                 
         try:
             with self.conn.cursor() as cur:
                 cur.execute("SELECT 1 FROM usuarios WHERE usuario = %s;", (default_usuario,))
@@ -101,7 +101,32 @@ class Users:
             self.conn.rollback()
             messagebox.showerror("Base de datos", f"Error al agregar el usuario: {e}")
             return False
-
+    # OBTENER TODOS LOS USUARIOS
+    def GetAllUsers(self):
+        try:
+            with self.conn.cursor() as cur:
+                cur.execute("""
+                    SELECT codigo,nombre,usuario,clave,opcode,rol,correo,estado
+                    FROM usuarios;
+                    """)
+                rows = cur.fetchall()
+                usuarios = {}
+                for r in rows:
+                    codigo,nombre,usuario,clave,opcode,rol,correo,estado = r
+                    usuarios[codigo] = {
+                        'codigo':codigo,
+                        'nombre':nombre,
+                        'usuario':usuario,
+                        'clave':clave,
+                        'opcode':opcode,
+                        'rol':rol,
+                        'correo':correo,
+                        'estado':estado}
+                return usuarios
+        except Exception as e:
+            messagebox.showerror('Error', f"Error obteniendo usuarios: {str(e)}")
+            return {}
+            
     # CIERRA LA CONEXIÓN CUANDO EL OBJETO SE DESTRUYA
     def __del__(self):
         if self.conn:

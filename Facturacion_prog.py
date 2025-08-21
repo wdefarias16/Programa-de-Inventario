@@ -244,7 +244,7 @@ class FacturacionProg(ctk.CTkFrame):
             self.search_bar_entry.after(100,self.search_bar_entry.focus())
             inventario = INVENTARIO.GetInventory()
             for item in self.product_tv.get_children():
-                    self.product_tv.delete(item)
+                    self.product_tv.delete(item) 
             for i, producto in enumerate(inventario.values()):
                 color = '#eaeaea' if i % 2 == 0 else '#ffffff'
                 tag_name = f'row{i}'

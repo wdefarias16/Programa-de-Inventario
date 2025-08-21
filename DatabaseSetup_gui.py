@@ -209,12 +209,12 @@ class DatabaseManagerApp(ctk.CTk):
                             codigo SERIAL PRIMARY KEY,
                             nombre VARCHAR(100) NOT NULL,
                             usuario VARCHAR(100) NOT NULL,
-                            opcode INT NOT NULL,
                             clave VARCHAR(255) NOT NULL,
+                            opcode INT NOT NULL,
                             correo VARCHAR(255) UNIQUE,
                             rol INT NOT NULL,
                             estado BOOLEAN DEFAULT TRUE,
-                            FOREIGN KEY (rol) REFERENCES roles(codigo) ON DELETE RESTRICT  
+                            FOREIGN KEY (rol) REFERENCES roles(codigo) ON DELETE RESTRICT 
                         )""",
                         # TABLA CLIENTES
                         """CREATE TABLE IF NOT EXISTS clientes(
