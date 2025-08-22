@@ -1,6 +1,7 @@
+import tkinter as tk
 import customtkinter as ctk
 from tkinter import ttk
-from style import FONT,APP_COLOR
+from style import FONT,APP_COLOR,ICONS
 from DatabaseManager import USER_MANAGER
 
 class GestionUsuariosProg(ctk.CTkFrame):
@@ -29,6 +30,28 @@ class GestionUsuariosProg(ctk.CTkFrame):
     # -----------------------------------------------------------------------------------------------
     # MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - 
     # MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - 
+        # BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS -
+        # BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS -
+        # BOTON ATRAS
+        self.btn_back = ctk.CTkButton(self,
+                                    text='Volver Atrás',
+                                    command=self.GoBack_CB,
+                                    width=40,
+                                    fg_color=APP_COLOR['gray'],
+                                    hover_color=APP_COLOR['sec'],
+                                    font=FONT['text_light'])
+        self.btn_back.place(relx=0.01,rely=0.11,anchor='nw')
+        # BOTON AGREGAR USUARIO
+        self.btn_add_user = ctk.CTkButton(self,
+                                    text='+',
+                                    command=self.AddUser,
+                                    width=40,
+                                    fg_color=APP_COLOR['main'],
+                                    hover_color=APP_COLOR['sec'],
+                                    font=FONT['text_light'])
+        self.btn_add_user.place(relx=0.95,y=150,anchor='ne')
+
+
         # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
         # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
         # CONFIGURACION VISUAL DEL TV
@@ -80,6 +103,7 @@ class GestionUsuariosProg(ctk.CTkFrame):
     # -----------------------------------------------------------------------------------------------
 # FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - 
 # FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - 
+    # LISTAR USUARIOS - LISTAR USUARIOS - LISTAR USUARIOS - LISTAR USUARIOS -
     def ListUsers(self):
         # OBTENER LOS USUARIOS
         usuarios = USER_MANAGER.GetAllUsers()
@@ -87,7 +111,7 @@ class GestionUsuariosProg(ctk.CTkFrame):
         for item in self.treeview_main.get_children():
             self.treeview_main.delete(item)
         # CARGAR LOS USUARIOS AL TREEVIEW
-        for i, user in enumerate(usuarios.values()):
+        for i, user in enumerate(usuarios):
             tag = "Even.Treview" if i % 2 == 0 else "Odd.Treview"
             self.treeview_main.insert(
                 "",'end',
@@ -95,7 +119,7 @@ class GestionUsuariosProg(ctk.CTkFrame):
                 values=(
                     user['nombre'],
                     user['usuario'],
-                    user['clave'],
+                    '•••••••••',
                     user['opcode'],
                     user['rol'],
                     user['correo'],
@@ -103,5 +127,115 @@ class GestionUsuariosProg(ctk.CTkFrame):
                     tag=(tag,))
         self.treeview_main.tag_configure('Odd.Treeview', background="#ffffff")
         self.treeview_main.tag_configure('Even.Treeview', background="#eaeaea")
+    # AGREGAR USUARIO - AGREGAR USUARIO - AGREGAR USUARIO - AGREGAR USUARIO -
+    def AddUser(self):
+        
+        # ---------------------------------------------- 
+        # ---------------------------------------------- 
+        # FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME -
+        add_user_window = ctk.CTkToplevel(self,
+                                   fg_color=APP_COLOR['white_m'])
+        add_user_window.geometry('600x350')
+        add_user_window.title('Agregar Usuario')
+        add_user_window.protocol("WM_DELETE_WINDOW", lambda: None)
+        add_user_window.transient(self)
+        add_user_window.grab_set()
+        add_user_frame = ctk.CTkFrame(add_user_window,
+                                corner_radius=0,
+                                fg_color=APP_COLOR['white_m'])
+        add_user_frame.place(relx=0,rely=0,relheight=1,relwidth=1,anchor='nw')
+        # TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE -
+        # FRAME TITLE
+        title_frame = ctk.CTkFrame(add_user_frame,
+                                   fg_color=APP_COLOR['sec'],
+                                   corner_radius=0)
+        title_frame.place(relx=0.5,rely=0,relwidth=1,relheight=0.10,anchor='n')
+        # LABEL TITLE
+        title_label = ctk.CTkLabel(title_frame,
+                                   text='Agregar Usuario',
+                                   bg_color='transparent',
+                                   text_color=APP_COLOR['white_m'],
+                                   font=FONT['subtitle_light'])
+        title_label.place(relx=0.5,rely=0.5,anchor='center')
+        # ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS -
+        # NOMBRE
+        name_entry_var = tk.StringVar()
+        name_entry = ctk.CTkEntry(add_user_frame,
+                                  placeholder_text='Nombre',
+                                  textvariable=name_entry_var,
+                                  width=300,
+                                  height=40,
+                                  font=FONT['text_light'],
+                                  fg_color=APP_COLOR['white_m'],
+                                  border_color=APP_COLOR['gray'])
+        name_entry.place(relx=0.5,rely=0.15,anchor='n')
+        # USUARIO
+        user_entry_var = tk.StringVar()
+        user_entry = ctk.CTkEntry(add_user_frame,
+                                  placeholder_text='Usuario',
+                                  textvariable=user_entry_var,
+                                  width=300,
+                                  height=40,
+                                  font=FONT['text_light'],
+                                  fg_color=APP_COLOR['white_m'],
+                                  border_color=APP_COLOR['gray'])
+        user_entry.place(relx=0.5,rely=0.25,anchor='n')
+        # CONTRASEÑA
+        password_entry_var = tk.StringVar()
+        password_entry = ctk.CTkEntry(add_user_frame,
+                                      placeholder_text='Contraseña',
+                                      textvariable=password_entry_var,
+                                      width=300,
+                                      height=40,
+                                      font=FONT['text_light'],
+                                      fg_color=APP_COLOR['white_m'],
+                                      border_color=APP_COLOR['gray'],
+                                      show='*')
+        password_entry.place(relx=0.5,rely=0.35,anchor='n')
+        # CODIGO DE OPERACION
+        cod_op_entry_var = tk.StringVar()
+        cod_op_entry = ctk.CTkEntry(add_user_frame,
+                                    placeholder_text='Código de Operación',
+                                    textvariable=cod_op_entry_var,
+                                    width=300,
+                                    height=40,
+                                    font=FONT['text_light'],
+                                    fg_color=APP_COLOR['white_m'],
+                                    border_color=APP_COLOR['gray'])
+        cod_op_entry.place(relx=0.5,rely=0.45,anchor='n')
+        # CORREO
+        email_entry_var = tk.StringVar()
+        email_entry = ctk.CTkEntry(add_user_frame,
+                                   placeholder_text='Correo Electrónico',
+                                   textvariable=email_entry_var,
+                                   width=300,
+                                   height=40,
+                                   font=FONT['text_light'],
+                                   fg_color=APP_COLOR['white_m'],
+                                   border_color=APP_COLOR['gray'])
+        email_entry.place(relx=0.5,rely=0.55,anchor='n')
+        # ROL
+        role_entry_var = tk.StringVar()
+        role_entry = ctk.CTkOptionMenu(add_user_frame,
+                                       variable=role_entry_var,
+                                       values=['Administrador', 'Usuario'],
+                                       width=300,
+                                       height=40,
+                                       font=FONT['text_light'],
+                                       fg_color=APP_COLOR['white_m'],
+                                       border_color=APP_COLOR['gray'])
+        role_entry.place(relx=0.5,rely=0.65,anchor='n')
+       
+        # BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS -
+        # EXIT
+        exit_button = ctk.CTkButton(add_user_frame,
+                                    text='',
+                                    image= ICONS['cancel'],
+                                    command=add_user_window.destroy,
+                                    width=40,
+                                    fg_color=APP_COLOR['red_m'],
+                                    hover_color=APP_COLOR['red_s'])
+        exit_button.place(relx=0.98,rely=0.12,anchor='ne')
+
     # -----------------------------------------------------------------------------------------------
     # -----------------------------------------------------------------------------------------------
