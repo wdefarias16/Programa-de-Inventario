@@ -7,8 +7,9 @@ FONT = {
     'subtitle_bold': ('Roboto Bold',20),
     'subtitle_light': ('Roboto light',20),
     'text': ('Roboto',15),
+    'text_small': ('Roboto',12),
     'text_light': ('Roboto light',15),
-    'text_small': ('Roboto light',12),
+    'text_light_small': ('Roboto light',12),
 }
 
 APPEARANCE_MODE = 'light'

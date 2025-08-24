@@ -81,7 +81,7 @@ class Users:
 # CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD -
     # AGREGA UN NUEVO USUARIO - AGREGA UN NUEVO USUARIO - AGREGA UN NUEVO USUARIO - 
     # AGREGA UN NUEVO USUARIO - AGREGA UN NUEVO USUARIO - AGREGA UN NUEVO USUARIO - 
-    def AddUser(self, nombre,usuario, password,password_nohash,cod_op,correo,rol, estado=False):
+    def AddUser(self, nombre,usuario, password,cod_op,correo,rol, estado=False):
         try:
             with self.conn.cursor() as cur:
                 # Verificar si el usuario ya existe usando la columna "usuario"
@@ -92,7 +92,7 @@ class Users:
                 cur.execute("""
                     INSERT INTO usuarios (nombre,usuario,clave,clave_nohash,opcode,correo,rol,estado)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
-                """, (nombre, usuario, hashed_password, password_nohash, cod_op, correo, rol, estado))
+                """, (nombre, usuario, hashed_password, password, cod_op, correo, rol, estado))
                 self.conn.commit()
                 messagebox.showinfo("Info", "El usuario se ha agregado correctamente.")
                 return True
@@ -177,7 +177,25 @@ class Users:
         return users
     # -----------------------------------------------------------------------------------------------
     # -----------------------------------------------------------------------------------------------
-    
+    # OBTENER ROLES DE USUARIO DE LA TABLA ROLES
+    """ LA TABLA ROLES ES ASI:
+    CREATE TABLE IF NOT EXISTS roles (
+        codigo SERIAL PRIMARY KEY,
+        rol VARCHAR(50) UNIQUE NOT NULL),
+    """
+    # LA FUNCION DEVOLVERA UNA LISTA CON LOS ROLES EN FORMATO:['1 - Admin','2 - User'...]
+    def GetRoles(self):
+        roles = []
+        try:
+            with self.conn.cursor() as cur:
+                cur.execute("SELECT codigo, rol FROM roles;")
+                rows = cur.fetchall()
+                for row in rows:
+                    role = f"{row[0]} - {row[1]}"
+                    roles.append(role)
+        except Exception as e:
+            messagebox.showerror("Base de datos", f"Error al obtener los roles: {e}")
+        return roles
     
     # CIERRA LA CONEXIÓN CUANDO EL OBJETO SE DESTRUYA
     def __del__(self):
