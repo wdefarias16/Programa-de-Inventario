@@ -214,7 +214,7 @@ class DatabaseManagerApp(ctk.CTk):
                             opcode VARCHAR(10) NOT NULL,
                             correo VARCHAR(255) UNIQUE,
                             rol INT NOT NULL,
-                            estado BOOLEAN DEFAULT TRUE,
+                            estado BOOLEAN DEFAULT FALSE,
                             FOREIGN KEY (rol) REFERENCES roles(codigo) ON DELETE RESTRICT 
                         )""",
                         # TABLA CLIENTES
