@@ -1,14 +1,13 @@
 import tkinter as tk
 import customtkinter as ctk
 from tkinter import ttk
-from CargaProductos_prog import*
-from CargaLineasGrupos_prog import*
-from CargaProveedores_prog import*
+from prog_CargaProductos import*
+from prog_CargaLineasGrupos import*
+from prog_CargaProveedores import*
 from DatabaseManager import*
 from Menu_Inventario import*
 from Menu_CuentasPorPagar import*
 import datetime
-from threading import Timer
 from style import FONT, ICONS, APP_COLOR
 from DatabaseManager import GetCurrentUser
 
@@ -44,7 +43,7 @@ class DashBoardMenu(ctk.CTkFrame):
         self.barra_inf_label = ctk.CTkLabel(self.inf_bar_frame,
                                             fg_color=APP_COLOR['sec'],
                                             text_color=APP_COLOR['white_m'],
-                                            text=f'Programa de gestion | Usuario: {user}')
+                                            text=f'Programa de gestion | {user}')
         self.barra_inf_label.pack(side='left',padx=20)
     # RELOJ
         self.date_time = ctk.CTkLabel(self.inf_bar_frame,

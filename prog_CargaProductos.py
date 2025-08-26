@@ -3,7 +3,7 @@ import tkinter as tk
 import os
 from tkinter import ttk, filedialog
 from PIL import Image, ImageOps
-from InventarioProductos_DB import*
+from DB_InventarioProductos import*
 from DatabaseManager import INVENTARIO, LINE_MANAGER, PROV_MANAGER
 from style import FONT, APP_COLOR, ICONS
 

@@ -138,18 +138,14 @@ class DatabaseManagerApp(ctk.CTk):
                                   host=DB_HOST, port=DB_PORT) as conn:
                 with conn.cursor() as cursor:
                     statements = [
-                        # MASTER TABLE
-                        """CREATE TABLE master_table (
-                            table_id SERIAL PRIMARY KEY,
-                            table_name TEXT UNIQUE NOT NULL
-                        )""",
-                        '''CREATE TABLE dolar (
+                        # Tabla del dolar
+                        """CREATE TABLE dolar (
                             codigo SERIAL PRIMARY KEY,
                             fecha DATE NOT NULL,
                             tasa DECIMAL(12, 4) NOT NULL,
                             log TEXT,
                             hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                        )''',
+                        )""",
                         # Tabla proveedores
                         """CREATE TABLE IF NOT EXISTS proveedores (
                             codigo SERIAL PRIMARY KEY,
@@ -272,21 +268,7 @@ class DatabaseManagerApp(ctk.CTk):
                             cantidad INTEGER NOT NULL,
                             ajuste INTEGER NOT NULL,
                             final INTEGER NOT NULL
-                        )""",
-
-                        # INSERT TABLES IN MASTER TABLE
-                        """INSERT INTO master_table (table_name)
-                        VALUES ('proveedores'),
-                               ('lineas'),
-                               ('grupos'),
-                               ('productos'),
-                               ('roles'),
-                               ('usuarios'),
-                               ('entradas_inventario'),
-                               ('detalle_entrada'),
-                               ('ajustes_inventario'),
-                               ('detalle_ajustes')
-                        """
+                        )"""
                     ]
                     for stmt in statements:
                         cursor.execute(stmt)

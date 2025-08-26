@@ -1,19 +1,18 @@
 import customtkinter as ctk
 from DashBoard import*
 from Login import*
-from AjustesInventario_prog import*
-from CargaProductos_prog import*
-from CargaLineasGrupos_prog import*
-from CargaProveedores_prog import*
-from CargaDolar_prog import*
-from Facturacion_prog import*
-from GestionDeUsuarios_prog import*
-from MaestroDeTablas_prog import*
+from prog_AjustesInventario import*
+from prog_CargaProductos import*
+from prog_CargaLineasGrupos import*
+from prog_CargaProveedores import*
+from prog_CargaDolar import*
+from prog_Facturacion import*
+from prog_GestionDeUsuarios import*
 from Menu_Inventario import*
 from Menu_Facturacion import*
 from Menu_CuentasPorPagar import*
 from Menu_ProgramasDeUtilidad import*
-from EntradaInventario_prog import*
+from prog_EntradaInventario import*
 from style import APPEARANCE_MODE
 from DatabaseManager import GetCurrentUser
 
@@ -31,6 +30,7 @@ class App(ctk.CTk):
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
         self.geometry(f"{screen_width}x{screen_height}+0+0")
+        self.protocol("WM_DELETE_WINDOW", lambda: None)
 
         self.dashboard_activo = False
     # ATAJOS
@@ -168,7 +168,6 @@ class App(ctk.CTk):
         self.dashboard_activo = False
         self.current_prog = ProgramasDeUtilidadMenu(self,
                                            GoBack_CB = self.ReturnToDashboard,
-                                           MaestroDeTablas = self.MaestroDeTablas,
                                            CargaDolar = self.CargaDolar,
                                            GestionUsuarios=self.GestionUsuarios)
         self.current_prog.pack(expand=True,fill='both')
@@ -177,14 +176,8 @@ class App(ctk.CTk):
         self.current_prog.destroy()
         self.current_prog = ProgramasDeUtilidadMenu(self,
                                            GoBack_CB = self.ReturnToDashboard,
-                                           MaestroDeTablas = self.MaestroDeTablas,
                                            CargaDolar = self.CargaDolar,
                                            GestionUsuarios=self.GestionUsuarios)
-        self.current_prog.pack(expand=True,fill='both')
-    # PROG MAESTRO DE TABLAS
-    def MaestroDeTablas(self):
-        self.current_prog.destroy()
-        self.current_prog = MaestroDeTablas_prog(self,GoBack_CB=self.GoBackProgramasUtilidadMenu)
         self.current_prog.pack(expand=True,fill='both')
     # PROG CARGA DOLAR
     def CargaDolar(self):

@@ -1,7 +1,7 @@
-from InventarioProductos_DB import Inventory
-from LineasGrupos_DB import LineasGrupos
-from Proveedores_DB import Proveedores
-from Usuarios_DB import Users
+from DB_InventarioProductos import Inventory
+from DB_LineasGrupos import LineasGrupos
+from DB_Proveedores import Proveedores
+from DB_Usuarios import Users
 
 DATABASE_INFO = ['AppDatabase','postgres','admin1234','localhost','5432']
 CLIENT_INFO = ['Mercaduo C.A.']
