@@ -110,7 +110,7 @@ class GestionUsuariosProg(ctk.CTkFrame):
             self.treeview_main.delete(item)
         # CARGAR LOS USUARIOS AL TREEVIEW
         for i, user in enumerate(usuarios):
-            tag = "Even.Treview" if i % 2 == 0 else "Odd.Treview"
+            tag = "Even.Treeview" if i % 2 == 0 else "Odd.Treeview"
             self.treeview_main.insert(
                 "",'end',
                 text=str(user['codigo']),
@@ -190,90 +190,90 @@ class GestionUsuariosProg(ctk.CTkFrame):
         title_frame.place(relx=0.5,rely=0,relwidth=1,relheight=0.10,anchor='n')
         # LABEL TITLE
         title_label = ctk.CTkLabel(title_frame,
-                                   text='Agregar Usuario',
-                                   bg_color='transparent',
-                                   text_color=APP_COLOR['white_m'],
-                                   font=FONT['subtitle_light'])
+                                    text='Agregar Usuario',
+                                    bg_color='transparent',
+                                    text_color=APP_COLOR['white_m'],
+                                    font=FONT['subtitle_light'])
         title_label.place(relx=0.5,rely=0.5,anchor='center')
         # ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS -
         # ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS -
         # NOMBRE
         name_entry_var = tk.StringVar()
         name_entry = ctk.CTkEntry(add_user_frame,
-                                  textvariable=name_entry_var,
-                                  width=220,
-                                  height=20,
-                                  fg_color=APP_COLOR['white'],
-                                  border_color=APP_COLOR['white'])
+                                    textvariable=name_entry_var,
+                                    width=220,
+                                    height=20,
+                                    fg_color=APP_COLOR['white'],
+                                    border_color=APP_COLOR['white'])
         name_entry.place(relx=0.5,rely=0.20,anchor='center')
         name_entry.bind("<Return>", lambda event: user_entry.focus())
         name_entry.focus()
         # USUARIO
         user_entry_var = tk.StringVar()
         user_entry = ctk.CTkEntry(add_user_frame,
-                                  textvariable=user_entry_var,
-                                  width=220,
-                                  height=20,
-                                  fg_color=APP_COLOR['white'],
-                                  border_color=APP_COLOR['white'])
+                                    textvariable=user_entry_var,
+                                    width=220,
+                                    height=20,
+                                    fg_color=APP_COLOR['white'],
+                                    border_color=APP_COLOR['white'])
         user_entry.place(relx=0.5,rely=0.30,anchor='center')
         user_entry.bind("<Return>", lambda event: password_entry.focus())
         # CONTRASEÑA
         password_entry_var = tk.StringVar()
         password_entry = ctk.CTkEntry(add_user_frame,
-                                  textvariable=password_entry_var,
-                                  width=220,
-                                  height=20,
-                                  fg_color=APP_COLOR['white'],
-                                  border_color=APP_COLOR['white'])
+                                    textvariable=password_entry_var,
+                                    width=220,
+                                    height=20,
+                                    fg_color=APP_COLOR['white'],
+                                    border_color=APP_COLOR['white'])
         password_entry.place(relx=0.5,rely=0.40,anchor='center')
         password_entry.bind("<Return>", lambda event: opcode_entry.focus())
         # CODIGO DE OPERACION
         opcode_entry_var = tk.StringVar()
         opcode_entry = ctk.CTkEntry(add_user_frame,
-                                  textvariable=opcode_entry_var,
-                                  width=220,
-                                  height=20,
-                                  fg_color=APP_COLOR['white'],
-                                  border_color=APP_COLOR['white'])
+                                    textvariable=opcode_entry_var,
+                                    width=220,
+                                    height=20,
+                                    fg_color=APP_COLOR['white'],
+                                    border_color=APP_COLOR['white'])
         opcode_entry.place(relx=0.5,rely=0.50,anchor='center')
         opcode_entry.bind("<Return>", lambda event: email_entry.focus())
         # CORREO
         email_entry_var = tk.StringVar()
         email_entry = ctk.CTkEntry(add_user_frame,
-                                  textvariable=email_entry_var,
-                                  width=220,
-                                  height=20,
-                                  fg_color=APP_COLOR['white'],
-                                  border_color=APP_COLOR['white'])
+                                    textvariable=email_entry_var,
+                                    width=220,
+                                    height=20,
+                                    fg_color=APP_COLOR['white'],
+                                    border_color=APP_COLOR['white'])
         email_entry.place(relx=0.5,rely=0.60,anchor='center')
         email_entry.bind("<Return>", lambda event: AddUser())
         # ROL
         role_entry_var = tk.StringVar()
         role_entry = ctk.CTkEntry(add_user_frame,
-                                  textvariable=role_entry_var,
-                                  state='disabled',
-                                  width=63,
-                                  height=20,
-                                  fg_color=APP_COLOR['white'],
-                                  border_color=APP_COLOR['white'])
+                                    textvariable=role_entry_var,
+                                    state='disabled',
+                                    width=63,
+                                    height=20,
+                                    fg_color=APP_COLOR['white'],
+                                    border_color=APP_COLOR['white'])
         role_entry.place(relx=0.58,rely=0.70,anchor='w')
         # -----------------------------------------------
         # -----------------------------------------------
         # OPTION MENU ROLES
         # OPTION MENU ROLES
         roles_menu = ctk.CTkOptionMenu(add_user_frame,
-                                        values=USER_MANAGER.GetRoles(),
-                                        command=lambda opcion: role_entry_var.set(opcion.split(" - ")[0]),
-                                        width=145,
-                                        height=22,
-                                        fg_color=APP_COLOR['main'],
-                                        button_color=APP_COLOR['sec'],
-                                        button_hover_color=APP_COLOR['main'],
-                                        dropdown_fg_color=APP_COLOR['white_m'],
-                                        dropdown_hover_color=APP_COLOR['gray'],
-                                        text_color=APP_COLOR['white'],
-                                        font=FONT['text_small'])
+                                    values=USER_MANAGER.GetRoles(),
+                                    command=lambda opcion: role_entry_var.set(opcion.split(" - ")[0]),
+                                    width=145,
+                                    height=22,
+                                    fg_color=APP_COLOR['main'],
+                                    button_color=APP_COLOR['sec'],
+                                    button_hover_color=APP_COLOR['main'],
+                                    dropdown_fg_color=APP_COLOR['white_m'],
+                                    dropdown_hover_color=APP_COLOR['gray'],
+                                    text_color=APP_COLOR['white'],
+                                    font=FONT['text_small'])
         roles_menu.place(relx=0.32,rely=0.70,anchor='w')
         # -----------------------------------------------
         # -----------------------------------------------
@@ -281,33 +281,33 @@ class GestionUsuariosProg(ctk.CTkFrame):
         # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS -
         # NOMBRE
         name_label = ctk.CTkLabel(add_user_frame,
-                                  text='Nombre:',
-                                  text_color=APP_COLOR['gray'],
-                                  font=FONT['text'])
+                                    text='Nombre:',
+                                    text_color=APP_COLOR['gray'],
+                                    font=FONT['text'])
         name_label.place(relx=0.30,rely=0.20,anchor='e')
         # USUARIO
         user_label = ctk.CTkLabel(add_user_frame,
-                                  text='Usuario:',
-                                  text_color=APP_COLOR['gray'],
-                                  font=FONT['text'])
+                                    text='Usuario:',
+                                    text_color=APP_COLOR['gray'],
+                                    font=FONT['text'])
         user_label.place(relx=0.30,rely=0.30,anchor='e')
         # CONTRASEÑA
         password_label = ctk.CTkLabel(add_user_frame,
-                                  text='Contraseña:',
-                                  text_color=APP_COLOR['gray'],
-                                  font=FONT['text'])
+                                    text='Contraseña:',
+                                    text_color=APP_COLOR['gray'],
+                                    font=FONT['text'])
         password_label.place(relx=0.30,rely=0.40,anchor='e')
         # CODIGO DE OPERACION
         opcode_label = ctk.CTkLabel(add_user_frame,
-                                  text='Cod. Op.:',
-                                  text_color=APP_COLOR['gray'],
-                                  font=FONT['text'])
+                                    text='Cod. Op.:',
+                                    text_color=APP_COLOR['gray'],
+                                    font=FONT['text'])
         opcode_label.place(relx=0.30,rely=0.50,anchor='e')
         # CORREO
         email_label = ctk.CTkLabel(add_user_frame,
-                                  text='Correo:',
-                                  text_color=APP_COLOR['gray'],
-                                  font=FONT['text'])
+                                    text='Correo:',
+                                    text_color=APP_COLOR['gray'],
+                                    font=FONT['text'])
         email_label.place(relx=0.30,rely=0.60,anchor='e')
         # ROL
         role_label = ctk.CTkLabel(add_user_frame,

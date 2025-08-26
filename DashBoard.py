@@ -9,7 +9,8 @@ from Menu_Inventario import*
 from Menu_CuentasPorPagar import*
 import datetime
 from threading import Timer
-from style import *
+from style import FONT, ICONS, APP_COLOR
+from DatabaseManager import GetCurrentUser
 
 class DashBoardMenu(ctk.CTkFrame):
     def __init__(self,parent,
@@ -33,16 +34,17 @@ class DashBoardMenu(ctk.CTkFrame):
             self.rowconfigure(rows, weight=1, uniform='row')
         for columns in range(21):
             self.columnconfigure(columns, weight=1, uniform='column')
-    # BARRA INFERIOR
+# BARRA INFERIOR - BARRA INFERIOR - BARRA INFERIOR - BARRA INFERIOR - BARRA INFERIOR - BARRA INFERIOR
+# BARRA INFERIOR - BARRA INFERIOR - BARRA INFERIOR - BARRA INFERIOR - BARRA INFERIOR - BARRA INFERIOR
         self.inf_bar_frame = ctk.CTkFrame(self,
                                           corner_radius=0,
                                           fg_color=APP_COLOR['sec'])
         self.inf_bar_frame.grid(row=20,column=0,columnspan=21,sticky='nsew')
-        
+        user = GetCurrentUser()
         self.barra_inf_label = ctk.CTkLabel(self.inf_bar_frame,
                                             fg_color=APP_COLOR['sec'],
                                             text_color=APP_COLOR['white_m'],
-                                            text='Programa de gestion')
+                                            text=f'Programa de gestion | Usuario: {user}')
         self.barra_inf_label.pack(side='left',padx=20)
     # RELOJ
         self.date_time = ctk.CTkLabel(self.inf_bar_frame,

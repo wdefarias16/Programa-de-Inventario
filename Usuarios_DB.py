@@ -175,6 +175,47 @@ class Users:
         except Exception as e:
             messagebox.showerror("Base de datos", f"Error al obtener los usuarios: {e}")
         return users
+    # GET USER - GET USER - GET USER - GET USER - GET USER - GET USER - GET USER -
+    # GET USER - GET USER - GET USER - GET USER - GET USER - GET USER - GET USER -
+    def GetUser(self, usuario):
+        try:
+            with self.conn.cursor() as cur:
+                cur.execute("""
+                    SELECT codigo, nombre, usuario, clave, clave_nohash, opcode, correo, rol, estado
+                    FROM usuarios WHERE usuario = %s;
+                """, (usuario,))
+                row = cur.fetchone()
+                if row:
+                    user_data = {
+                        'codigo': row[0],
+                        'nombre': row[1],
+                        'usuario': row[2],
+                        'clave': row[3],
+                        'clave_nohash': row[4],
+                        'opcode': row[5],
+                        'correo': row[6],
+                        'rol': row[7],
+                        'estado': row[8]
+                    }
+                    return user_data
+                else:
+                    return None
+        except Exception as e:
+            messagebox.showerror("Base de datos", f"Error al obtener los datos del usuario: {e}")
+            return None
+    # CHANGE USER STATUS - CHANGE USER STATUS - CHANGE USER STATUS -
+    # CHANGE USER STATUS - CHANGE USER STATUS - CHANGE USER STATUS -
+    def ChangeUserStatus(self, usuario, estado):
+        try:
+            with self.conn.cursor() as cur:
+                cur.execute("UPDATE usuarios SET estado = %s WHERE usuario = %s;", (estado, usuario))
+                if cur.rowcount == 0:
+                    raise ValueError("El usuario no existe.")
+                self.conn.commit()
+                return True
+        except Exception as e:
+            self.conn.rollback()
+            return False
     # -----------------------------------------------------------------------------------------------
     # -----------------------------------------------------------------------------------------------
     # OBTENER ROLES DE USUARIO DE LA TABLA ROLES

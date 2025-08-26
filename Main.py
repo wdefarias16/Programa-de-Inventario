@@ -15,8 +15,7 @@ from Menu_CuentasPorPagar import*
 from Menu_ProgramasDeUtilidad import*
 from EntradaInventario_prog import*
 from style import APPEARANCE_MODE
-import psycopg2
-from psycopg2 import sql
+from DatabaseManager import GetCurrentUser
 
 DB_NAME = "AppDatabase"
 DB_USER = "postgres"
@@ -219,6 +218,9 @@ class App(ctk.CTk):
     def Salir(self):
         answer = messagebox.askyesno('Salir','¿Está seguro que desea salir de la aplicación?')
         if answer:
+            user = GetCurrentUser()
+            user_state = False
+            USER_MANAGER.ChangeUserStatus(user,user_state)
             self.quit()
 # ATAJOS
 # ATAJOS

@@ -2,7 +2,7 @@
 import customtkinter as ctk
 import tkinter as tk
 from style import *
-from DatabaseManager import USER_MANAGER
+from DatabaseManager import USER_MANAGER, LoginUser
 
 # LOGIN FRAME
 class LoginFrame(ctk.CTkFrame):
@@ -13,11 +13,17 @@ class LoginFrame(ctk.CTkFrame):
     # LOGIN - LOGIN - LOGIN - LOGIN - LOGIN - LOGIN - LOGIN - LOGIN - LOGIN - LOGIN - LOGIN - LOGIN - 
     # LOGIN - LOGIN - LOGIN - LOGIN - LOGIN - LOGIN - LOGIN - LOGIN - LOGIN - LOGIN - LOGIN - LOGIN - 
     def Login(self):
+    # FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME -
+    # FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME -
+        self.login_frame = ctk.CTkFrame(self,
+                                fg_color=APP_COLOR['white_m'],
+                                corner_radius=0)
+        self.login_frame.place(relx=0.5, rely=0.5, relwidth=1, relheight=1, anchor='center')
     # ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - 
     # ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - 
         # ENTRADA USUARIO
         self.user_var = tk.StringVar()
-        self.login_entry = ctk.CTkEntry(self,placeholder_text='Usuario',
+        self.login_entry = ctk.CTkEntry(self.login_frame,placeholder_text='Usuario',
                                 height=30,
                                 textvariable=self.user_var,
                                 corner_radius=5,
@@ -29,7 +35,7 @@ class LoginFrame(ctk.CTkFrame):
         self.login_entry.after(100, lambda: self.login_entry.focus_set())
         # ENTRADA CONTRASENA
         self.password_var = tk.StringVar()
-        self.password_entry = ctk.CTkEntry(self,placeholder_text='Contraseña',
+        self.password_entry = ctk.CTkEntry(self.login_frame,placeholder_text='Contraseña',
                                 width=30,
                                 textvariable=self.password_var,
                                 corner_radius=5,
@@ -37,35 +43,41 @@ class LoginFrame(ctk.CTkFrame):
                                 border_color='#fff')
         self.password_entry.place(relx=0.5, rely=0.45, relwidth = 0.30, anchor='center')
         self.password_entry.bind("<Return>",lambda event:self.Access())
+    # ----------------------------------------------------------------------------
+    # ----------------------------------------------------------------------------
+    # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
     # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
         # MENSAJE BIENVENIDO
-        label_wc = ctk.CTkLabel(self,
+        label_wc = ctk.CTkLabel(self.login_frame,
                                 text='Bienvenido',
                                 font=FONT['title_light'],
                                 text_color=APP_COLOR['gray'])
         label_wc.place(relx=0.5, rely=15, anchor='center')
         # USUARIO
-        user_label = ctk.CTkLabel(self,
+        user_label = ctk.CTkLabel(self.login_frame,
                                 text='Usuario',
                                 font=FONT['text_light'],
                                 text_color=APP_COLOR['gray'])
         user_label.place(relx=0.35, rely=0.30, anchor='w')
         # CONTRASENA
-        password_label = ctk.CTkLabel(self,
+        password_label = ctk.CTkLabel(self.login_frame,
                                 text='Contraseña',
                                 font=FONT['text_light'],
                                 text_color=APP_COLOR['gray'])
         password_label.place(relx=0.35, rely=0.40, anchor='w')
         # MENSAJE INFERIOR
         self.label_var = tk.StringVar(value='Ingresa tus credenciales')
-        label_accses = ctk.CTkLabel(self,
+        label_accses = ctk.CTkLabel(self.login_frame,
                                 textvariable=self.label_var,
                                 font=FONT['text_light'],
                                 text_color=APP_COLOR['gray'])
         label_accses.place(relx=0.5, rely=0.70, anchor='center')
+    # ----------------------------------------------------------------------------
+    # ----------------------------------------------------------------------------
+    # BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES -  
     # BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES -  
         # BOTON ENTRAR
-        enter_button = ctk.CTkButton(self,
+        enter_button = ctk.CTkButton(self.login_frame,
                                 text='Entrar',
                                 height=35,
                                 fg_color=APP_COLOR['main'],
@@ -73,13 +85,15 @@ class LoginFrame(ctk.CTkFrame):
                                 command=self.Access)
         enter_button.place(relx=0.35, rely=0.53, relwidth=0.13,anchor='w')
         # BOTON REGISTRAR
-        register_button = ctk.CTkButton(self,
+        register_button = ctk.CTkButton(self.login_frame,
                                 text='Registrarse',
                                 height=35,
                                 fg_color=APP_COLOR['main'],
                                 hover_color=APP_COLOR['sec'],
                                 command=self.Access)
         register_button.place(relx=0.65, rely=0.53, relwidth=0.13,anchor='e')
+    # --------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
         
 
         
@@ -93,7 +107,12 @@ class LoginFrame(ctk.CTkFrame):
         user = self.user_var.get()
         password = self.password_var.get()
         if USER_MANAGER.Access(user,password):
-            self.label_var.set('Bienvenido')
+            user_data = USER_MANAGER.GetUser(user)
+            CURRENT_USER = user_data['usuario']
+            self.label_var.set(f'Bienvenido {CURRENT_USER}')
+            LoginUser(user_data)
+            user_state = True
+            USER_MANAGER.ChangeUserStatus(CURRENT_USER,user_state)
             self.after(500,self.success_callback)
         else:
             self.label_var.set('Acceso denegado')
