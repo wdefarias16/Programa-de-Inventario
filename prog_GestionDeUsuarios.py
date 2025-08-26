@@ -131,6 +131,7 @@ class GestionUsuariosProg(ctk.CTkFrame):
     # AGREGAR USUARIO - AGREGAR USUARIO - AGREGAR USUARIO - AGREGAR USUARIO -
     # AGREGAR USUARIO - AGREGAR USUARIO - AGREGAR USUARIO - AGREGAR USUARIO -
     def AddUserWindow(self):
+        # AGREGAR USUARIO AL TREEVIEW
         def AddUser():
             name = name_entry_var.get().strip()
             user = user_entry_var.get().strip()
@@ -315,7 +316,6 @@ class GestionUsuariosProg(ctk.CTkFrame):
                                     text_color=APP_COLOR['gray'],
                                     font=FONT['text'])
         role_label.place(relx=0.30,rely=0.70,anchor='e')
-        
         # -----------------------------------------------
         # -----------------------------------------------
         # BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS -

@@ -219,12 +219,6 @@ class Users:
     # -----------------------------------------------------------------------------------------------
     # -----------------------------------------------------------------------------------------------
     # OBTENER ROLES DE USUARIO DE LA TABLA ROLES
-    """ LA TABLA ROLES ES ASI:
-    CREATE TABLE IF NOT EXISTS roles (
-        codigo SERIAL PRIMARY KEY,
-        rol VARCHAR(50) UNIQUE NOT NULL),
-    """
-    # LA FUNCION DEVOLVERA UNA LISTA CON LOS ROLES EN FORMATO:['1 - Admin','2 - User'...]
     def GetRoles(self):
         roles = []
         try:
@@ -237,6 +231,23 @@ class Users:
         except Exception as e:
             messagebox.showerror("Base de datos", f"Error al obtener los roles: {e}")
         return roles
+    # -----------------------------------------------------------------------------------------------
+    # -----------------------------------------------------------------------------------------------
+# CHEQUEO DE DATOS - CHEQUEO DE DATOS - CHEQUEO DE DATOS - CHEQUEO DE DATOS -
+# CHEQUEO DE DATOS - CHEQUEO DE DATOS - CHEQUEO DE DATOS - CHEQUEO DE DATOS -
+    # CHEQUEAR EL ROL DE UN USUARIO - CHEQUEAR EL ROL DE UN USUARIO -
+    def CheckUserRol(self,usuario):
+        try:
+            with self.conn.cursor() as cur:
+                cur.execute("SELECT rol FROM usuarios WHERE usuario = %s;", (usuario,))
+                row = cur.fetchone()
+                if row:
+                    return row[0]
+                else:
+                    return None
+        except Exception as e:
+            messagebox.showerror("Base de datos", f"Error al obtener el rol del usuario: {e}")
+            return None
     
     # CIERRA LA CONEXIÓN CUANDO EL OBJETO SE DESTRUYA
     def __del__(self):

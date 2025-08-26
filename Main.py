@@ -15,7 +15,8 @@ from Menu_ProgramasDeUtilidad import*
 from prog_EntradaInventario import*
 from style import APPEARANCE_MODE
 from DatabaseManager import GetCurrentUser
-
+from DatabaseManager import USER_MANAGER
+from tkinter import messagebox
 DB_NAME = "AppDatabase"
 DB_USER = "postgres"
 DB_PASSWORD = "admin1234"
@@ -181,6 +182,11 @@ class App(ctk.CTk):
         self.current_prog.pack(expand=True,fill='both')
     # PROG CARGA DOLAR
     def CargaDolar(self):
+        user = GetCurrentUser()
+        rol = USER_MANAGER.CheckUserRol(user)
+        if rol != 1:
+            messagebox.showinfo('Acceso Denegado','No tiene permisos para acceder a este módulo.')
+            return
         self.current_prog.destroy()
         self.current_prog = CargaDolar(self,GoBack_CB=self.GoBackProgramasUtilidadMenu)
         self.current_prog.pack(expand=True,fill='both')
@@ -223,6 +229,9 @@ class App(ctk.CTk):
             self.ReturnToDashboard()
     def CloseSession(self, event):
         if self.dashboard_activo:
+            user = GetCurrentUser()
+            user_state = False
+            USER_MANAGER.ChangeUserStatus(user,user_state)
             self.LockWindow()
 # INNICIO DE LA APLICACION
 # INNICIO DE LA APLICACION
