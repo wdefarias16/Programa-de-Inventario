@@ -17,12 +17,7 @@ from style import APPEARANCE_MODE
 from DatabaseManager import GetCurrentUser
 from DatabaseManager import USER_MANAGER
 from tkinter import messagebox
-DB_NAME = "AppDatabase"
-DB_USER = "postgres"
-DB_PASSWORD = "admin1234"
-DB_HOST = "localhost"
-DB_PORT = "5432"
-
+# ----------------------------------------------------------------------------
 # VENTANA PRINCIPAL (APLICACION)
 class App(ctk.CTk):
     def __init__(self):
@@ -31,8 +26,7 @@ class App(ctk.CTk):
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
         self.geometry(f"{screen_width}x{screen_height}+0+0")
-        self.protocol("WM_DELETE_WINDOW", lambda: None)
-
+        #self.protocol("WM_DELETE_WINDOW", lambda: None)
         self.dashboard_activo = False
     # ATAJOS
         # ATAJO CERRAR SESION
@@ -45,10 +39,10 @@ class App(ctk.CTk):
         self.login_frame.pack(expand=True,fill='both')
     # INICIALIZAR EL PROGRAMA ACTIVO COMO NONE
         self.current_prog = None
-
     # RUN
         self.mainloop()
-# BLOQUEO Y DESBLOQUEO DE SESION
+# BLOQUEO Y DESBLOQUEO DE SESION - BLOQUEO Y DESBLOQUEO DE SESION - BLOQUEO Y DESBLOQUEO DE SESION - 
+# BLOQUEO Y DESBLOQUEO DE SESION - BLOQUEO Y DESBLOQUEO DE SESION - BLOQUEO Y DESBLOQUEO DE SESION - 
     def LoginSuccess(self):
         self.login_frame.destroy()
         self.dashboard=DashBoardMenu(self,
@@ -211,9 +205,8 @@ class App(ctk.CTk):
                                  ProgramasDeUtilidad_CB = self.ProgramasUtilidadMenu)
         self.dashboard.pack(expand=True, fill='both')
         self.dashboard_activo = True
-# SALIR DEL PROGRAMA
-# SALIR DEL PROGRAMA
-# SALIR DEL PROGRAMA
+# SALIR DEL PROGRAMA - SALIR DEL PROGRAMA - SALIR DEL PROGRAMA - SALIR DEL PROGRAMA - SALIR DEL PROGRAMA - 
+# SALIR DEL PROGRAMA - SALIR DEL PROGRAMA - SALIR DEL PROGRAMA - SALIR DEL PROGRAMA - SALIR DEL PROGRAMA - 
     def Salir(self):
         answer = messagebox.askyesno('Salir','¿Está seguro que desea salir de la aplicación?')
         if answer:
@@ -221,9 +214,8 @@ class App(ctk.CTk):
             user_state = False
             USER_MANAGER.ChangeUserStatus(user,user_state)
             self.quit()
-# ATAJOS
-# ATAJOS
-# ATAJOS
+# ATAJOS - ATAJOS - ATAJOS - ATAJOS - ATAJOS - ATAJOS - ATAJOS - ATAJOS - ATAJOS
+# ATAJOS - ATAJOS - ATAJOS - ATAJOS - ATAJOS - ATAJOS - ATAJOS - ATAJOS - ATAJOS
     def F4_Pressed(self,event):
         if self.dashboard_activo == False:
             self.ReturnToDashboard()

@@ -199,26 +199,34 @@ class FacturacionProg(ctk.CTkFrame):
                                     style='Custom.Treeview',
                                     columns=('Descripcion','Cantidad','Unidad','Bolivares',
                                              'Dolares'))
-        self.treeview_main.place(relx=0.5,y=360,relwidth=0.85,height=400,anchor='n')
+        self.treeview_main.place(relx=0.5,rely=0.34,relwidth=0.85,height=300,anchor='n')
         self.treeview_main.bind("<<TreeviewSelect>>",ClickLista)
         # CODIGO
-        self.treeview_main.heading('#0',text='Cod.')
-        self.treeview_main.column('#0', width=120, anchor='center', stretch=False)
+        self.treeview_main.heading('#0',text='Cod.',anchor='w')
+        self.treeview_main.column('#0', width=120, anchor='w', stretch=False)
         # DESCRIPCION
-        self.treeview_main.heading('Descripcion',text='Descripción')
+        self.treeview_main.heading('Descripcion',text='Descripción',anchor='w')
         self.treeview_main.column('Descripcion', width=300, anchor='w', minwidth=200, stretch=True)
         # CANTIDAD
-        self.treeview_main.heading('Cantidad',text='Cant.')
-        self.treeview_main.column('Cantidad', width=200, anchor='center', stretch=False)
+        self.treeview_main.heading('Cantidad',text='Cant.',anchor='w')
+        self.treeview_main.column('Cantidad', width=100, anchor='w', stretch=False)
         # UNIDAD
-        self.treeview_main.heading('Unidad',text='Unidad')
-        self.treeview_main.column('Unidad', width=200, anchor='center', stretch=False)
+        self.treeview_main.heading('Unidad',text='Unidad',anchor='w')
+        self.treeview_main.column('Unidad', width=120, anchor='w', stretch=False)
         # BOLIVARES
-        self.treeview_main.heading('Bolivares',text='Bs.')
-        self.treeview_main.column('Bolivares', width=200, anchor='center', stretch=False)
+        self.treeview_main.heading('Bolivares',text='Bs.',anchor='w')
+        self.treeview_main.column('Bolivares', width=200, anchor='w', stretch=False)
         # DOLARES
-        self.treeview_main.heading('Dolares',text='$')
-        self.treeview_main.column('Dolares', width=200, anchor='center', stretch=False)
+        self.treeview_main.heading('Dolares',text='$',anchor='w')
+        self.treeview_main.column('Dolares', width=200, anchor='w', stretch=False)
+        # SCROLLBAR DEL TV
+        scrollbar = ctk.CTkScrollbar(main_frame,
+                                     orientation='vertical',
+                                     width=20,
+                                     height=205,
+                                     command=self.treeview_main.yview)
+        scrollbar.place(relx=0.94,rely=0.34,anchor='n')
+        self.treeview_main.configure(yscrollcommand=scrollbar.set)
     # -----------------------------------------------------------------------------------------------
     # -----------------------------------------------------------------------------------------------
     # FOOTER BAR - FOOTER BAR - FOOTER BAR - FOOTER BAR - FOOTER BAR - FOOTER BAR - FOOTER BAR - 
@@ -231,10 +239,13 @@ class FacturacionProg(ctk.CTkFrame):
         footer_frame.place(relx=0.5,rely=1,relwidth=1,anchor='s')
     # -----------------------------------------------------------------------------------------------
     # -----------------------------------------------------------------------------------------------
-
-    # FUNCTIONS -
+# FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - 
+# FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - 
+# AYUDA DE PRODUCTOS - AYUDA DE PRODUCTOS - AYUDA DE PRODUCTOS - AYUDA DE PRODUCTOS
+# AYUDA DE PRODUCTOS - AYUDA DE PRODUCTOS - AYUDA DE PRODUCTOS - AYUDA DE PRODUCTOS
     def ProductsHelp(self):
-        # LIST INVENTORY IN TREEVIEW
+        # LIST INVENTORY IN TREEVIEW - LIST INVENTORY IN TREEVIEW - LIST INVENTORY IN TREEVIEW -
+        # LIST INVENTORY IN TREEVIEW - LIST INVENTORY IN TREEVIEW - LIST INVENTORY IN TREEVIEW -
         def ListInventory():
             self.qty_entry_var.set('')
             self.search_bar_entry.after(100,
@@ -251,12 +262,14 @@ class FacturacionProg(ctk.CTkFrame):
                 self.product_tv.insert(
                     "", 'end',
                     text=producto['codigo'],
-                    values=(producto['nombre'], producto['existencia']),
+                    values=(producto['nombre'],f'${producto['precio1']}' ,producto['existencia']),
                     tags=(tag_name,)
                 )
                 self.product_tv.tag_configure(tag_name, background=color)
         # ------------------------------------------------------------------------------------------------        
-    # SEARCH A PRODUCT BY NAME
+        # ------------------------------------------------------------------------------------------------        
+        # SEARCH A PRODUCT BY NAME - SEARCH A PRODUCT BY NAME - SEARCH A PRODUCT BY NAME - 
+        # SEARCH A PRODUCT BY NAME - SEARCH A PRODUCT BY NAME - SEARCH A PRODUCT BY NAME - 
         def SearchProductName():
             for item in self.product_tv.get_children():
                 self.product_tv.delete(item)
@@ -273,7 +286,9 @@ class FacturacionProg(ctk.CTkFrame):
                 )
                 self.product_tv.tag_configure(tag_name, background=color)
         # -------------------------------------------------------------------------------------------------
-    # SELECT A PRODUCT WHEN CLICK ON TREEVIEW
+        # -------------------------------------------------------------------------------------------------
+        # SELECT A PRODUCT WHEN CLICK ON TREEVIEW - SELECT A PRODUCT WHEN CLICK ON TREEVIEW - 
+        # SELECT A PRODUCT WHEN CLICK ON TREEVIEW - SELECT A PRODUCT WHEN CLICK ON TREEVIEW - 
         def ClickTreeview(event):
             item_id = self.product_tv.selection()
             info = self.product_tv.item(item_id)
@@ -287,7 +302,8 @@ class FacturacionProg(ctk.CTkFrame):
                                      border_color=APP_COLOR['white'])
             self.qty_entry.focus_set()
         # -------------------------------------------------------------------------------------------------
-    # CANCEL TREEVIEW SELECTION
+    # CANCEL TREEVIEW SELECTION - CANCEL TREEVIEW SELECTION - CANCEL TREEVIEW SELECTION -
+    # CANCEL TREEVIEW SELECTION - CANCEL TREEVIEW SELECTION - CANCEL TREEVIEW SELECTION -
         def RefreshSelection():
             self.qty_entry_var.set('')
             self.qty_entry.configure(state='disabled',
@@ -300,6 +316,9 @@ class FacturacionProg(ctk.CTkFrame):
             self.search_bar_entry.focus()
             ListInventory()
         # -------------------------------------------------------------------------------------------------
+        # -------------------------------------------------------------------------------------------------
+        # GET AND DISPLAY PRODUCT IMAGE - GET AND DISPLAY PRODUCT IMAGE -
+        # GET AND DISPLAY PRODUCT IMAGE - GET AND DISPLAY PRODUCT IMAGE -
         def GetImage(image):
             if not image:
                 image = 'Recursos/Imagenes/Productos/Default.png'
@@ -307,7 +326,10 @@ class FacturacionProg(ctk.CTkFrame):
             w, h = img.size
             photo = ctk.CTkImage(light_image=img, size=(200,200))
             self.image_label.configure(image=photo)
-    # ADD PRODUCT TO MAIN TREEVIEW
+        # -------------------------------------------------------------------------------------------------
+        # -------------------------------------------------------------------------------------------------
+        # ADD PRODUCT TO MAIN TREEVIEW - ADD PRODUCT TO MAIN TREEVIEW -
+        # ADD PRODUCT TO MAIN TREEVIEW - ADD PRODUCT TO MAIN TREEVIEW -
         def AddProduct():
             # GET CURRENT PRODUCT CODE
             codigo = self.search_bar_entry_var.get()
@@ -321,40 +343,54 @@ class FacturacionProg(ctk.CTkFrame):
             # GET PRODUCT DATA
             producto = INVENTARIO.GetProducto(codigo)
             # GET ADJUSTMENT
-            ajuste = self.qty_entry_var.get()
+            qty = self.qty_entry_var.get()
             try:
-                ajuste = int(ajuste)
+                qty = int(qty)
             except ValueError:
                 messagebox.showerror('Error', 'Verifica que el campo "Cantidad" este correcto.')
                 self.qty_entry.focus()
                 return
-            
-            precio_v1 = int(producto['precio1']) * ajuste
-            precio_bs = self.DOLAR * precio_v1
-            
-
+            # PRECIO POR UNIDAD EN DOLARES CON FORMATO '000,000.00'
+            precio_unidad = "{:,.2f}".format(producto['precio1'])
+            # -----------------------------------------------------
+            # PRECIO FINAL EN DOLARES
+            precio_dolar = float(producto['precio1']) * qty
+            # FORMATO AL PRECIO FINAL EN DOLARES
+            precio_dolar_format = "{:,.2f}".format(precio_dolar)
+            # -----------------------------------------------------
+            # PRECIO FINAL EN BOLIVARES
+            precio_bs = float(self.DOLAR * precio_dolar)
+            # FORMATO AL PRECIO FINAL EN BOLIVARES
+            precio_bs_format = "{:,.2f}".format(precio_bs)
+            # -----------------------------------------------------
+            # INSERT PRODUCT IN MAIN TREEVIEW
             self.treeview_main.insert("", 'end',
                 text=producto['codigo'],
                 values=(producto['nombre'],
-                        ajuste,
-                        producto['precio1'],
-                        precio_bs,
-                        precio_v1))
+                        qty,
+                        f'$ {precio_unidad}',
+                        f'Bs. {precio_bs_format}',
+                        f'$ {precio_dolar_format}'))
             self.product_list.append(str(codigo).strip())
-
+            # GET AND DISPLAY PRODUCT IMAGE
             image = producto['image']
             GetImage(image)
-
+            # CERRAR EL PRODUCT HELP FRAME
             help_frame.destroy()
         # -------------------------------------------------------------------------------------------------
-        # CREATE THE WINDOW
+        # -------------------------------------------------------------------------------------------------
+        # CREATE THE WINDOW - CREATE THE WINDOW - CREATE THE WINDOW - CREATE THE WINDOW -
+        # CREATE THE WINDOW - CREATE THE WINDOW - CREATE THE WINDOW - CREATE THE WINDOW -
+        # CREATE THE WINDOW - CREATE THE WINDOW - CREATE THE WINDOW - CREATE THE WINDOW -
+        # CREATE THE WINDOW - CREATE THE WINDOW - CREATE THE WINDOW - CREATE THE WINDOW -
         help_frame = ctk.CTkToplevel(self,fg_color=APP_COLOR['white_m'])
         help_frame.title('Busqueda de productos')
         help_frame.geometry('800x450')
         help_frame.protocol("WM_DELETE_WINDOW", lambda: None)
         help_frame.transient(self)
         help_frame.grab_set()
-        # TITLE - TITLE - TITLE - 
+        # TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE -
+        # TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE -
         # TITLE FRAME
         title_frame = ctk.CTkFrame(help_frame,
                                    fg_color=APP_COLOR['sec'],
@@ -368,6 +404,7 @@ class FacturacionProg(ctk.CTkFrame):
                                    text_color=APP_COLOR['white_m'],
                                    font=FONT['text'])
         title_label.pack(expand=True,fill='x',pady=5)
+        # PROG FRAME - PROG FRAME - PROG FRAME - PROG FRAME - 
         # PROG FRAME - PROG FRAME - PROG FRAME - PROG FRAME - 
         prog_frame = ctk.CTkFrame(help_frame,
                                    fg_color=APP_COLOR['white_m'],
@@ -447,20 +484,24 @@ class FacturacionProg(ctk.CTkFrame):
                                   hover_color=APP_COLOR['sec'])
         accept_btn.grid(row=2,column=7,sticky='w',padx=5)
         # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
+        # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
         # TREVIEW
         self.product_tv = ttk.Treeview(prog_frame,
                                   style='Custom.Treeview',
-                                  columns = ('Descripcion','Existencia'))
+                                  columns = ('Descripcion','Precio','Existencia'))
         self.product_tv.grid(row=4,column=1,rowspan=6,columnspan=COLUMNS-2,sticky='nswe')
         self.product_tv.bind("<<TreeviewSelect>>",ClickTreeview)
         # CODIGO
-        self.product_tv.heading('#0',text='Cod')
-        self.product_tv.column('#0',width=25,anchor='center')
+        self.product_tv.heading('#0',text='Cod',anchor='w')
+        self.product_tv.column('#0',width=200,anchor='w',minwidth=20, stretch=False)
         # DESCRIPCION
-        self.product_tv.heading('Descripcion',text='Descripción')
-        self.product_tv.column('Descripcion',width=60,anchor='w')
-        # CODIGO
-        self.product_tv.heading('Existencia',text='Existencia')
-        self.product_tv.column('Existencia',width=25,anchor='center')
+        self.product_tv.heading('Descripcion',text='Descripción',anchor='w')
+        self.product_tv.column('Descripcion',width=500,anchor='w',minwidth=50,stretch=True)
+        # PRECIO
+        self.product_tv.heading('Precio',text='Precio',anchor='w')
+        self.product_tv.column('Precio',width=130,anchor='w',minwidth=15, stretch=False)
+        # EXISTENCIA
+        self.product_tv.heading('Existencia',text='Existencia',anchor='w')
+        self.product_tv.column('Existencia',width=130,anchor='w',minwidth=15, stretch=False)
         # LIST INVENTORY WHEN OPENING THE HELP WINDOW
         ListInventory()
