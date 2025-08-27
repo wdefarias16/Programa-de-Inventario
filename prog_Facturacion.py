@@ -241,6 +241,8 @@ class FacturacionProg(ctk.CTkFrame):
     # -----------------------------------------------------------------------------------------------
 # FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - 
 # FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - 
+# FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - 
+# FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - 
 # AYUDA DE PRODUCTOS - AYUDA DE PRODUCTOS - AYUDA DE PRODUCTOS - AYUDA DE PRODUCTOS
 # AYUDA DE PRODUCTOS - AYUDA DE PRODUCTOS - AYUDA DE PRODUCTOS - AYUDA DE PRODUCTOS
     def ProductsHelp(self):
@@ -350,6 +352,8 @@ class FacturacionProg(ctk.CTkFrame):
                 messagebox.showerror('Error', 'Verifica que el campo "Cantidad" este correcto.')
                 self.qty_entry.focus()
                 return
+            # -----------------------------------------------------
+            # -----------------------------------------------------
             # PRECIO POR UNIDAD EN DOLARES CON FORMATO '000,000.00'
             precio_unidad = "{:,.2f}".format(producto['precio1'])
             # -----------------------------------------------------
@@ -362,6 +366,7 @@ class FacturacionProg(ctk.CTkFrame):
             precio_bs = float(self.DOLAR * precio_dolar)
             # FORMATO AL PRECIO FINAL EN BOLIVARES
             precio_bs_format = "{:,.2f}".format(precio_bs)
+            # -----------------------------------------------------
             # -----------------------------------------------------
             # INSERT PRODUCT IN MAIN TREEVIEW
             self.treeview_main.insert("", 'end',
