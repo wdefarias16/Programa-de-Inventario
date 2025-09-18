@@ -114,13 +114,12 @@ class Inventory:
                         precio1 = %s,
                         precio2 = %s,
                         precio3 = %s,
-                        existencia = %s,
                         image = %s
                     WHERE codigo = %s;
                 """, (
                     product['linea'], product['grupo'], product['proveedor'],
                     product['nombre'], product['costo'], product['ubicacion1'], product['ubicacion2'],
-                    product['precio1'], product['precio2'], product['precio3'], product.get('existencia', 0),
+                    product['precio1'], product['precio2'], product['precio3'],
                     product['image'],product['codigo']
                 ))
                 self.conn.commit()
