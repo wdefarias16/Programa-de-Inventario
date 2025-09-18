@@ -352,6 +352,10 @@ class FacturacionProg(ctk.CTkFrame):
                 messagebox.showerror('Error', 'Verifica que el campo "Cantidad" este correcto.')
                 self.qty_entry.focus()
                 return
+            if qty > producto['existencia']:
+                messagebox.showerror('Error', 'La cantidad supera la existencia.')
+                self.qty_entry_var.set('')
+                return
             # -----------------------------------------------------
             # -----------------------------------------------------
             # PRECIO POR UNIDAD EN DOLARES CON FORMATO '000,000.00'
