@@ -510,7 +510,7 @@ class LineasGruposProg(ctk.CTkFrame):
         self.line_help_treeview.column('#0',width=25,anchor='center')
         # LINEA
         self.line_help_treeview.heading('Linea',text='Linea')
-        self.line_help_treeview.column('Linea',width=100,anchor='center')
+        self.line_help_treeview.column('Linea',width=100,anchor='w')
     # CONFIGURACION VISUAL DEL TV
         style = ttk.Style()
         style.configure(
