@@ -36,7 +36,6 @@ class LineasGrupos:
                 if cur.fetchone() is None:
                     # Insertar línea por defecto
                     cur.execute("INSERT INTO lineas (codigo, nombre) VALUES (%s, %s);", ("1", "Linea 1"))
-
                     cur.execute("""
                         INSERT INTO grupos (codigo, linea, nombre, porcentaje1, porcentaje2, porcentaje3)
                         VALUES (%s, %s, %s, %s, %s, %s);
@@ -79,6 +78,37 @@ class LineasGrupos:
                         ))
                 self.conn.commit()
                 messagebox.showinfo('Info', f'La línea {codigo} se ha cargado correctamente')
+                return True
+        except Exception as e:
+            self.conn.rollback()
+            messagebox.showerror("Base de datos", f"Error al agregar la línea: {str(e)}")
+            return False
+    def Add_LineNM(self, codigo, nombre, grupos=None):
+        try:
+            with self.conn.cursor() as cur:
+                cur.execute("SELECT 1 FROM lineas WHERE codigo = %s;", (codigo,))
+                if cur.fetchone():
+                    print(f'El código de línea {codigo} ya se encuentra en la base de datos')
+                    return False
+                cur.execute("INSERT INTO lineas (codigo, nombre) VALUES (%s, %s);", (codigo, nombre))
+                if grupos:
+                    # Se espera que 'grupos' sea un diccionario del tipo:
+                    # { codigo_interno: { "nombre_grupo": ..., "porcentaje1": ..., "porcentaje2": ..., "porcentaje3": ... }, ... }
+                    for codigo_interno, data in grupos.items():
+                        full_codigo = f"{codigo}-{codigo_interno}"
+                        cur.execute("""
+                            INSERT INTO grupos (codigo, linea, nombre, porcentaje1, porcentaje2, porcentaje3)
+                            VALUES (%s, %s, %s, %s, %s, %s);
+                        """, (
+                            full_codigo,
+                            codigo,
+                            data.get("nombre_grupo", ""),
+                            data.get("porcentaje1", 0.0),
+                            data.get("porcentaje2", 0.0),
+                            data.get("porcentaje3", 0.0)
+                        ))
+                self.conn.commit()
+                print(f'La línea {codigo} se ha cargado correctamente')
                 return True
         except Exception as e:
             self.conn.rollback()
@@ -144,6 +174,33 @@ class LineasGrupos:
                 """, (full_codigo, linea, nombre_grupo, porcentaje1, porcentaje2, porcentaje3))
                 self.conn.commit()
                 messagebox.showinfo('Info', f'El grupo {full_codigo} - {nombre_grupo} se ha agregado correctamente a la línea {linea}')
+                return True
+        except Exception as e:
+            self.conn.rollback()
+            messagebox.showerror("Base de datos", f"Error al agregar el grupo: {str(e)}")
+            return False
+    def Add_GroupNM(self, linea, codigo_interno, nombre_grupo, porcentaje1, porcentaje2, porcentaje3):
+        full_codigo = f"{linea}.{codigo_interno}"
+        try:
+            with self.conn.cursor() as cur:
+                # Verificar que la línea exista
+                cur.execute("SELECT 1 FROM lineas WHERE codigo = %s;", (linea,))
+                if not cur.fetchone():
+                    print(f'La línea con código {linea} no existe')
+                    return False
+
+                # Verificar si el grupo ya existe en esa línea (usando el código concatenado)
+                cur.execute("SELECT 1 FROM grupos WHERE linea = %s AND codigo = %s;", (linea, full_codigo))
+                if cur.fetchone():
+                    print(f'El grupo con código {full_codigo} ya existe en la línea {linea}')
+                    return False
+
+                cur.execute("""
+                    INSERT INTO grupos (codigo, linea, nombre, porcentaje1, porcentaje2, porcentaje3)
+                    VALUES (%s, %s, %s, %s, %s, %s);
+                """, (full_codigo, linea, nombre_grupo, porcentaje1, porcentaje2, porcentaje3))
+                self.conn.commit()
+                print(f'El grupo {full_codigo} - {nombre_grupo} se ha agregado correctamente a la línea {linea}')
                 return True
         except Exception as e:
             self.conn.rollback()
@@ -353,6 +410,18 @@ class LineasGrupos:
         except Exception as e:
             messagebox.showerror("Base de datos", f"Error al chequear la línea: {str(e)}")
             return False
+    def CheckLineNM(self, codigo):
+        try:
+            with self.conn.cursor() as cur:
+                cur.execute("SELECT 1 FROM lineas WHERE codigo = %s;", (codigo,))
+                if cur.fetchone():
+                    return True
+                else:
+                    print(f'El código {codigo} no pertenece a ninguna línea cargada.')
+                    return False
+        except Exception as e:
+            print(f"Error al chequear la línea: {str(e)}")
+            return False
     # CHEQUEA SI UN GRUPO PERTENECE A LA LÍNEA - CHEQUEA SI UN GRUPO PERTENECE A LA LÍNEA -
     # CHEQUEA SI UN GRUPO PERTENECE A LA LÍNEA - CHEQUEA SI UN GRUPO PERTENECE A LA LÍNEA -
     def CheckGrupo(self, linea, grupo):
@@ -366,6 +435,18 @@ class LineasGrupos:
                     return False
         except Exception as e:
             messagebox.showerror("Base de datos", f"Error al chequear el grupo: {str(e)}")
+            return False
+    def CheckGrupoNM(self, linea, grupo):
+        try:
+            with self.conn.cursor() as cur:
+                cur.execute("SELECT 1 FROM grupos WHERE linea = %s AND codigo = %s;", (linea, grupo))
+                if cur.fetchone():
+                    return True
+                else:
+                    print(f'El grupo {grupo} no pertenece a la línea {linea}.')
+                    return False
+        except Exception as e:
+            print(f"Error al chequear el grupo: {str(e)}")
             return False
     # ------------------------------------------------------------------
     # ------------------------------------------------------------------
