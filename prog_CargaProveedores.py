@@ -485,6 +485,22 @@ class ProveedoresProg(ctk.CTkFrame):
             self.treeview.tag_configure('Even.Treeview', background="#eaeaea")
         # -----------------------------------------------------------
         # -----------------------------------------------------------
+        # SEARCH PROV BY NAME - SEARCH PROV BY NAME - SEARCH PROV BY NAME - SEARCH PROV BY NAME - 
+        # SEARCH PROV BY NAME - SEARCH PROV BY NAME - SEARCH PROV BY NAME - SEARCH PROV BY NAME - 
+        def BuscarProvNombre():
+            # CLEAN TREEVIEW
+            for item in self.treeview.get_children():
+                self.treeview.delete(item)
+            # GET RESULTS
+            busqueda = self.search_bar_var.get().lower()
+            resultados = PROV_MANAGER.SearchProvByName(busqueda)
+            # FILL TREEVIEW WITH RESULTS
+            for proveedor in resultados:
+                self.treeview.insert("", 'end',
+                                     text=proveedor['codigo'],
+                                     values=(proveedor['nombre']))
+        # -----------------------------------------------------------
+        # -----------------------------------------------------------
         # AYUDA BUSQUEDA DE PROVEEDORES - AYUDA BUSQUEDA DE PROVEEDORES - AYUDA BUSQUEDA DE PROVEEDORES - 
         # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
         self.treeview_active = True
@@ -505,7 +521,7 @@ class ProveedoresProg(ctk.CTkFrame):
                                   width=200,
                                   textvariable=self.search_bar_var)
         self.search_bar.grid(row=0,column=2,sticky='we',padx=5)
-        self.search_bar.bind("<Return>",lambda event: self.BuscarProvNombre())
+        self.search_bar.bind("<Return>",lambda event: BuscarProvNombre())
         # BOTONES TREEVIEW     
         # CANCELAR
         cancel_btn = ctk.CTkButton(self.tree_frame,
@@ -647,22 +663,6 @@ class ProveedoresProg(ctk.CTkFrame):
         # SET THE LAST ENTRY TO MODIFY PROV
         self.rif_entry.unbind("<Return>")
         self.rif_entry.bind("<Return>", lambda event: self.ModificarProv())
-    # -------------------------------------------------------------------------------
-    # -------------------------------------------------------------------------------
-    # SEARCH PROV BY NAME - SEARCH PROV BY NAME - SEARCH PROV BY NAME - SEARCH PROV BY NAME - 
-    # SEARCH PROV BY NAME - SEARCH PROV BY NAME - SEARCH PROV BY NAME - SEARCH PROV BY NAME - 
-    def BuscarProvNombre(self):
-        # CLEAN TREEVIEW
-        for item in self.treeview.get_children():
-            self.treeview.delete(item)
-        # GET RESULTS
-        busqueda = self.search_bar_var.get().lower()
-        resultados = PROV_MANAGER.SearchProvByName(busqueda)
-        # FILL TREEVIEW WITH RESULTS
-        for proveedor in resultados:
-            self.treeview.insert("", 'end',
-                                 text=proveedor['codigo'],
-                                 values=(proveedor['nombre']))
     # -------------------------------------------------------------------------------
     # -------------------------------------------------------------------------------
 # INFO VALIDATION - INFO VALIDATION - INFO VALIDATION - INFO VALIDATION - INFO VALIDATION
