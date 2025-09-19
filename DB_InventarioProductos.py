@@ -1,7 +1,9 @@
 import psycopg2
 from tkinter import messagebox
-
-# CLASE PRODUCTO (la dejamos igual, ya que solo es un contenedor de datos)
+# --------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------
+# PRODUCT CLASS - PRODUCT CLASS - PRODUCT CLASS - PRODUCT CLASS - PRODUCT CLASS - PRODUCT CLASS - 
+# PRODUCT CLASS - PRODUCT CLASS - PRODUCT CLASS - PRODUCT CLASS - PRODUCT CLASS - PRODUCT CLASS - 
 class Product:
     def __init__(self, codigo, linea, grupo, proveedor,
                  nombre, costo, ubicacion1, ubicacion2,
@@ -19,7 +21,7 @@ class Product:
         self.precio_venta_3 = pv3
         self.existencia = existencia
         self.image = image
-
+    # REGRESA EL DICCIONARIO DE UN PRODUCTO
     # REGRESA EL DICCIONARIO DE UN PRODUCTO
     def ToDict(self):
         return {
@@ -35,10 +37,11 @@ class Product:
             'precio2': self.precio_venta_2,
             'precio3': self.precio_venta_3,
             'existencia': self.existencia,
-            'image':self.image
-        }
-
-# CLASE INVENTARIO (ahora utilizando PostgreSQL en lugar de JSON)
+            'image':self.image}
+# --------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------
+# CLASE INVENTARIO - CLASE INVENTARIO - CLASE INVENTARIO - CLASE INVENTARIO - CLASE INVENTARIO - 
+# CLASE INVENTARIO - CLASE INVENTARIO - CLASE INVENTARIO - CLASE INVENTARIO - CLASE INVENTARIO - 
 class Inventory:
     def __init__(self, dbname,user,password,host,port):
         self.dbname = dbname
@@ -48,28 +51,29 @@ class Inventory:
         self.port = port
         self.conn = None
         self.connect_db()
-
+    # CONNECT TO DATABASE - CONNECT TO DATABASE - CONNECT TO DATABASE - CONNECT TO DATABASE - 
+    # CONNECT TO DATABASE - CONNECT TO DATABASE - CONNECT TO DATABASE - CONNECT TO DATABASE - 
     def connect_db(self):
-        """Establece la conexión con la base de datos."""
+        # CONNECT TO DATABASE
         try:
             self.conn = psycopg2.connect(
                 dbname=self.dbname,
                 user=self.user,
                 password=self.password,
                 host=self.host,
-                port=self.port
-            )
+                port=self.port)
         except Exception as e:
             messagebox.showerror("Database Connection Error", f"Error conectando a la base de datos: {str(e)}")
-
+# CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - 
+# CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - 
+# CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - 
+# CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - 
+    # ADD PRODUCT - ADD PRODUCT - ADD PRODUCT - ADD PRODUCT - ADD PRODUCT - ADD PRODUCT - 
+    # ADD PRODUCT - ADD PRODUCT - ADD PRODUCT - ADD PRODUCT - ADD PRODUCT - ADD PRODUCT - 
     def AddProduct(self, product):
-        """
-        Agrega un producto nuevo a la tabla 'productos'.
-        Primero se verifica si ya existe el código. 
-        """
         try:
             with self.conn.cursor() as cur:
-                # Verificar si el producto ya existe
+                # VALIDATE PRODUCT
                 cur.execute("SELECT 1 FROM productos WHERE codigo = %s;", (product['codigo'],))
                 if cur.fetchone():
                     messagebox.showinfo('Producto existente', f"El producto con el código {product['codigo']} ya existe.")
@@ -77,8 +81,7 @@ class Inventory:
                 if product['codigo'] == '':
                     messagebox.showerror('Error', "Agregue un código de producto.")
                     return
-
-                # Insertar el nuevo producto
+                # INSERT NEW PRODUCT
                 cur.execute("""
                     INSERT INTO productos 
                         (codigo, linea, grupo, proveedor, nombre, costo, ubicacion1, ubicacion2, precio1, precio2, precio3, existencia,image)
@@ -95,7 +98,10 @@ class Inventory:
         except Exception as e:
             self.conn.rollback()
             messagebox.showerror('Error', f"Error agregando producto: {str(e)}")
-
+    # --------------------------------------------------------------------------------------
+    # --------------------------------------------------------------------------------------
+    # MOD PRODUCT - MOD PRODUCT - MOD PRODUCT - MOD PRODUCT - MOD PRODUCT - MOD PRODUCT - 
+    # MOD PRODUCT - MOD PRODUCT - MOD PRODUCT - MOD PRODUCT - MOD PRODUCT - MOD PRODUCT - 
     def EditProduct(self, product):
         """
         Modifica los datos del producto utilizando su código.
@@ -127,7 +133,10 @@ class Inventory:
         except Exception as e:
             self.conn.rollback()
             messagebox.showerror('Error', f"Error modificando producto: {str(e)}")
-
+    # --------------------------------------------------------------------------------------
+    # --------------------------------------------------------------------------------------
+    # EDIT PRICE - EDIT PRICE - EDIT PRICE - EDIT PRICE - EDIT PRICE - EDIT PRICE - EDIT PRICE - 
+    # EDIT PRICE - EDIT PRICE - EDIT PRICE - EDIT PRICE - EDIT PRICE - EDIT PRICE - EDIT PRICE - 
     def EditPrecio(self, codigo, p1, p2, p3):
         """
         Modifica únicamente los precios de un producto existente.
@@ -146,7 +155,10 @@ class Inventory:
         except Exception as e:
             self.conn.rollback()
             messagebox.showerror('Error', f"Error modificando precios del producto: {str(e)}")
-
+    # --------------------------------------------------------------------------------------
+    # --------------------------------------------------------------------------------------
+    # DEL PRODUCT - DEL PRODUCT - DEL PRODUCT - DEL PRODUCT - DEL PRODUCT - DEL PRODUCT - DEL PRODUCT - 
+    # DEL PRODUCT - DEL PRODUCT - DEL PRODUCT - DEL PRODUCT - DEL PRODUCT - DEL PRODUCT - DEL PRODUCT - 
     def DelProduct(self, codigo):
         """
         Elimina el producto de la base de datos utilizando su código.
@@ -159,12 +171,16 @@ class Inventory:
         except Exception as e:
             self.conn.rollback()
             messagebox.showerror('Error', f"Error eliminando producto: {str(e)}")
-
+    # --------------------------------------------------------------------------------------
+    # --------------------------------------------------------------------------------------
+# GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - 
+# GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - 
+# GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - 
+# GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - 
+    # GET WHOLE INVENTORY - GET WHOLE INVENTORY - GET WHOLE INVENTORY - GET WHOLE INVENTORY
+    # GET WHOLE INVENTORY - GET WHOLE INVENTORY - GET WHOLE INVENTORY - GET WHOLE INVENTORY
     def GetInventory(self):
-        """
-        Obtiene todos los productos de la tabla 'productos' y los devuelve en forma de diccionario.
-        Cada clave es el 'codigo' del producto.
-        """
+       # GET ALL PRODUCTS AND RETURN A DICTIONARY
         try:
             with self.conn.cursor() as cur:
                 cur.execute("""
@@ -194,10 +210,12 @@ class Inventory:
         except Exception as e:
             messagebox.showerror('Error', f"Error obteniendo el inventario: {str(e)}")
             return {}
+    # ---------------------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------------------
+    # GET ALL INVENTORY CODES - GET ALL INVENTORY CODES - GET ALL INVENTORY CODES
+    # GET ALL INVENTORY CODES - GET ALL INVENTORY CODES - GET ALL INVENTORY CODES
     def GetCodigos(self):
-        """
-        Obtiene todos los codigos de producto productos de la tabla 'productos' y los devuelve en forma de lista.
-        """
+        # RETURN A LIST OF ALL THE INVENTORY CODES
         try:
             with self.conn.cursor() as cur:
                 cur.execute("""
@@ -209,12 +227,12 @@ class Inventory:
         except Exception as e:
             messagebox.showerror('Error', f"Error obteniendo el inventario: {str(e)}")
             return {}
-        
+    # ---------------------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------------------
+    # GET PRODUCT - GET PRODUCT - GET PRODUCT - GET PRODUCT - GET PRODUCT - GET PRODUCT - 
+    # GET PRODUCT - GET PRODUCT - GET PRODUCT - GET PRODUCT - GET PRODUCT - GET PRODUCT - 
     def GetProducto(self,codigo):
-        """
-        Obtiene un  producto de la tabla 'productos' y los devuelve en forma de diccionario.
-        Cada clave es el 'codigo' del producto.
-        """
+        # RETURN A DICT OF A PRODUCT
         try:
             with self.conn.cursor() as cur:
                 cur.execute("""
@@ -242,12 +260,12 @@ class Inventory:
         except Exception as e:
             messagebox.showerror('Error', f"Error obteniendo el inventario: {str(e)}")
             return None
-
+    # ---------------------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------------------
+    # SEARCH NY NAME - SEARCH NY NAME - SEARCH NY NAME - SEARCH NY NAME - SEARCH NY NAME - 
+    # SEARCH NY NAME - SEARCH NY NAME - SEARCH NY NAME - SEARCH NY NAME - SEARCH NY NAME - 
     def BuscarNombres(self, busqueda):
-        """
-        Busca productos cuyo nombre contenga la cadena de búsqueda (sin importar mayúsculas/minúsculas).
-        Devuelve una lista de diccionarios con los productos encontrados.
-        """
+        # SEARCH PRODUCTS BY NAME USING A STRIGN
         try: 
             with self.conn.cursor() as cur:
                 cur.execute("""
@@ -278,9 +296,16 @@ class Inventory:
         except Exception as e:
             messagebox.showerror('Error', f"Error buscando producto: {str(e)}")
             return []
-
-    # VERIFICAR SI UN CODIGO YA EXISTE PARA EVITAR DOBLE CARGA DE CODIGO
+    # ---------------------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------------------
+# VALIDATE INFO - VALIDATE INFO - VALIDATE INFO - VALIDATE INFO - VALIDATE INFO - VALIDATE INFO - VALIDATE INFO - 
+# VALIDATE INFO - VALIDATE INFO - VALIDATE INFO - VALIDATE INFO - VALIDATE INFO - VALIDATE INFO - VALIDATE INFO - 
+# VALIDATE INFO - VALIDATE INFO - VALIDATE INFO - VALIDATE INFO - VALIDATE INFO - VALIDATE INFO - VALIDATE INFO - 
+# VALIDATE INFO - VALIDATE INFO - VALIDATE INFO - VALIDATE INFO - VALIDATE INFO - VALIDATE INFO - VALIDATE INFO - 
+    # CHECK A PRODUCT CODE - CHECK A PRODUCT CODE - CHECK A PRODUCT CODE - CHECK A PRODUCT CODE - CHECK A PRODUCT CODE - 
+    # CHECK A PRODUCT CODE - CHECK A PRODUCT CODE - CHECK A PRODUCT CODE - CHECK A PRODUCT CODE - CHECK A PRODUCT CODE - 
     def CheckCode(self, codigo):
+        # CHECKS IF A CODE ALREADY EXISTS IN THE DATABASE AND IF SO, SHOWS ERROR
         try:
             with self.conn.cursor() as cur:
                 cur.execute("SELECT 1 FROM productos WHERE codigo = %s;", (codigo,))
@@ -291,8 +316,12 @@ class Inventory:
                     return True
         except Exception as e:
             return False
-    # VERIFICAR SI UN CODIGO DE PRODUCTO
+    # ---------------------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------------------
+    # VALIDATE PRODUCT CODE - VALIDATE PRODUCT CODE - VALIDATE PRODUCT CODE - VALIDATE PRODUCT CODE - 
+    # VALIDATE PRODUCT CODE - VALIDATE PRODUCT CODE - VALIDATE PRODUCT CODE - VALIDATE PRODUCT CODE - 
     def CheckCodeValidate(self, codigo):
+        # CHECKS IF A CODE ALREADY EXISTS IN THE DATABASE AND IF DONT, SHOWS ERROR
         try:
             with self.conn.cursor() as cur:
                 cur.execute("SELECT 1 FROM productos WHERE codigo = %s;", (codigo,))
@@ -304,28 +333,16 @@ class Inventory:
         except Exception as e:
             messagebox.showerror('Error', f"Error verificando código: {str(e)}")
             return False
-
-    def CheckName(self, name):
-        """
-        Valida que se haya ingresado un nombre para el producto.
-        """
-        if name == '':
-            messagebox.showerror('Error', 'Ingrese un nombre de producto')
-            return False
-        return True
-
-    def GuardarEntradaInventario(self,
-                                 num_factura: str,
-                                 proveedor: int,
-                                 fecha: str,
-                                 total: float,
-                                 detalle_entrada: list):
-        """
-        Inserta en entradas_inventario y detalle_entrada.
-        Cada línea en detalle_entrada debe contener:
-          codigo, cantidad, costo, descuento1, descuento2, descuento3,
-          flete, iva, neto, neto_iva, subtotal
-        """
+    # ---------------------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------------------
+# DATA ENTRY - DATA ENTRY - DATA ENTRY - DATA ENTRY - DATA ENTRY - DATA ENTRY - DATA ENTRY - DATA ENTRY - 
+# DATA ENTRY - DATA ENTRY - DATA ENTRY - DATA ENTRY - DATA ENTRY - DATA ENTRY - DATA ENTRY - DATA ENTRY - 
+# DATA ENTRY - DATA ENTRY - DATA ENTRY - DATA ENTRY - DATA ENTRY - DATA ENTRY - DATA ENTRY - DATA ENTRY - 
+# DATA ENTRY - DATA ENTRY - DATA ENTRY - DATA ENTRY - DATA ENTRY - DATA ENTRY - DATA ENTRY - DATA ENTRY - 
+    # SAVES A ENTRY TO INVENTORY - SAVES A ENTRY TO INVENTORY - SAVES A ENTRY TO INVENTORY - SAVES A ENTRY TO INVENTORY - 
+    # SAVES A ENTRY TO INVENTORY - SAVES A ENTRY TO INVENTORY - SAVES A ENTRY TO INVENTORY - SAVES A ENTRY TO INVENTORY - 
+    def GuardarEntradaInventario(self,num_factura: str,proveedor: int,fecha: str,
+                                 total: float,detalle_entrada: list):
         try:
             with self.conn.cursor() as cur:
                 # Cabecera
@@ -336,7 +353,6 @@ class Inventory:
                     RETURNING id;
                 """, (num_factura, proveedor, fecha, total))
                 entrada_id = cur.fetchone()[0]
-
                 # Detalle por línea
                 for item in detalle_entrada:
                     cur.execute("""
@@ -359,14 +375,12 @@ class Inventory:
                         item['neto_iva'],
                         item['subtotal'],
                     ))
-
-                    # Actualizar stock
+                    # UPDATE STOCK
                     cur.execute("""
                         UPDATE productos
                         SET existencia = existencia + %s
                         WHERE codigo = %s;
                     """, (item['cantidad'], item['codigo']))
-
                 self.conn.commit()
                 messagebox.showinfo("Éxito", "Entrada guardada correctamente.")
         except Exception as e:
@@ -374,10 +388,12 @@ class Inventory:
             messagebox.showerror("Error BD",
                                   f"Al guardar la entrada: {str(e)}")
             raise
-
+    # ---------------------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------------------
+    # GET THE DATA FROM AN ENTRY - GET THE DATA FROM AN ENTRY - GET THE DATA FROM AN ENTRY - 
+    # GET THE DATA FROM AN ENTRY - GET THE DATA FROM AN ENTRY - GET THE DATA FROM AN ENTRY - 
     def ObtenerEntrada(self, num_factura: str) -> dict | None:
         """
-        Devuelve None si no existe. Si existe, retorna:
         {
           'id': int,
           'num_factura': str,
@@ -415,7 +431,6 @@ class Inventory:
             if not row:
                 return None
             entrada_id, prov, nombre_prov, fecha, total = row
-
             # 2) Detalle
             cur.execute("""
                 SELECT d.codigo, pr.nombre, d.cantidad, d.costo,
@@ -442,7 +457,6 @@ class Inventory:
                     'neto_iva':   float(neto_iva),
                     'subtotal':   float(subtotal)
                 })
-
             return {
                 'id':               entrada_id,
                 'num_factura':      num_factura,
@@ -450,9 +464,11 @@ class Inventory:
                 'nombre_proveedor': nombre_prov,
                 'fecha':            fecha,
                 'total':            float(total),
-                'detalle':          detalles
-            }
-
+                'detalle':          detalles}
+    # ---------------------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------------------
+    # SAVES AN AJUSTMENT TO INVENTORY - SAVES AN AJUSTMENT TO INVENTORY - SAVES AN AJUSTMENT TO INVENTORY - 
+    # SAVES AN AJUSTMENT TO INVENTORY - SAVES AN AJUSTMENT TO INVENTORY - SAVES AN AJUSTMENT TO INVENTORY - 
     def GuardarAjusteInventario(self,
                                  num_documento: str,
                                  motivo: str,
@@ -461,7 +477,6 @@ class Inventory:
         """
         Inserta un ajuste en 'ajustes_inventario' y su detalle en 'detalle_ajustes',
         y actualiza la existencia en 'productos'.
-
         Parámetros:
           - num_documento: identificador único del ajuste.
           - motivo: texto explicando la razón del ajuste.
@@ -487,7 +502,6 @@ class Inventory:
                     fecha
                 ))
                 ajuste_id = cur.fetchone()[0]
-
                 # 3) Insertar cada línea de detalle y actualizar stock
                 for item in detalle_ajuste:
                     cur.execute("""
@@ -514,9 +528,7 @@ class Inventory:
                 self.conn.commit()
                 messagebox.showinfo(
                     "Éxito",
-                    f"Ajuste {num_documento} guardado correctamente."
-                )
-
+                    f"Ajuste {num_documento} guardado correctamente.")
         except Exception as e:
             self.conn.rollback()
             messagebox.showerror(
@@ -524,7 +536,10 @@ class Inventory:
                 f"{str(e)}"
             )
             raise
-
+    # ---------------------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------------------
+    # GET THE DATA FROM AN ADJUSTMENT - GET THE DATA FROM AN ADJUSTMENT - GET THE DATA FROM AN ADJUSTMENT - 
+    # GET THE DATA FROM AN ADJUSTMENT - GET THE DATA FROM AN ADJUSTMENT - GET THE DATA FROM AN ADJUSTMENT - 
     def ObtenerAjuste(self, num_documento: str) -> dict | None:
         """
         Recupera un ajuste por su num_documento.
@@ -555,9 +570,7 @@ class Inventory:
                 row = cur.fetchone()
                 if not row:
                     return None
-
                 ajuste_id, motivo, fecha = row
-
                 # 2) Leer detalle asociado
                 cur.execute("""
                     SELECT codigo, cantidad, ajuste, final
@@ -571,7 +584,6 @@ class Inventory:
                     'ajuste': r[2],
                     'final': r[3]
                 } for r in cur.fetchall()]
-
                 return {
                     'id':             ajuste_id,
                     'num_documento':  num_documento,
@@ -579,16 +591,19 @@ class Inventory:
                     'fecha':          fecha,
                     'detalle':        detalle
                 }
-
         except Exception as e:
             messagebox.showerror(
                 "Error al obtener ajuste",
-                f"{str(e)}"
-            )
+                f"{str(e)}")
             return None
-# MANEJO DEL DOLAR - MANEJO DEL DOLAR - MANEJO DEL DOLAR - MANEJO DEL DOLAR - MANEJO DEL DOLAR - 
-# MANEJO DEL DOLAR - MANEJO DEL DOLAR - MANEJO DEL DOLAR - MANEJO DEL DOLAR - MANEJO DEL DOLAR - 
-    # GUARDAR EL VALOR DEL DOLAR
+    # ---------------------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------------------
+# DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - 
+# DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - 
+# DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - 
+# DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - 
+    # SAVES DOLAR VALUE - SAVES DOLAR VALUE - SAVES DOLAR VALUE - SAVES DOLAR VALUE - SAVES DOLAR VALUE - SAVES DOLAR VALUE - 
+    # SAVES DOLAR VALUE - SAVES DOLAR VALUE - SAVES DOLAR VALUE - SAVES DOLAR VALUE - SAVES DOLAR VALUE - SAVES DOLAR VALUE - 
     def GuardarDolar(self, fecha: str, tasa: float, log: str = 'Manual'):
         """
         Guarda la tasa del dólar en la tabla 'dolar'.
@@ -605,7 +620,10 @@ class Inventory:
         except Exception as e:
             self.conn.rollback()
             messagebox.showerror("Error", f"No se pudo guardar la tasa: {str(e)}")
-    # OBTENER EL VALOR DEL DOLAR
+    # ---------------------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------------------
+    # GET DOLAR WITH DATE - GET DOLAR WITH DATE - GET DOLAR WITH DATE - GET DOLAR WITH DATE - GET DOLAR WITH DATE - 
+    # GET DOLAR WITH DATE - GET DOLAR WITH DATE - GET DOLAR WITH DATE - GET DOLAR WITH DATE - GET DOLAR WITH DATE - 
     def GetDolar(self, fecha: str) -> float | None:
         """
         Devuelve la última tasa del dólar registrada para una fecha específica.
@@ -629,7 +647,10 @@ class Inventory:
         except Exception as e:
             messagebox.showerror("Error", f"No se pudo obtener la tasa: {str(e)}")
             return None
-    # OBTENER VALORES DEL DOLAR EN UN RANGO DE FECHAS
+    # ---------------------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------------------
+    # GET DOLAR VALUES FROM A DATE RANGE - GET DOLAR VALUES FROM A DATE RANGE - 
+    # GET DOLAR VALUES FROM A DATE RANGE - GET DOLAR VALUES FROM A DATE RANGE - 
     def GetDolarRango(self, fecha_inicio: str, fecha_fin: str) -> list:
         """
         Devuelve una lista de registros de la tabla 'dolar' entre dos fechas.
@@ -656,7 +677,10 @@ class Inventory:
         except Exception as e:
             messagebox.showerror("Error", f"No se pudo obtener el rango: {str(e)}")
             return []
-        
+    # ---------------------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------------------
+    # GET LAST DOLAR - GET LAST DOLAR - GET LAST DOLAR - GET LAST DOLAR - GET LAST DOLAR - GET LAST DOLAR - 
+    # GET LAST DOLAR - GET LAST DOLAR - GET LAST DOLAR - GET LAST DOLAR - GET LAST DOLAR - GET LAST DOLAR - 
     def GetLastDolar(self) -> dict | None:
         """
         Devuelve el último valor de dólar cargado en la tabla.
@@ -684,7 +708,9 @@ class Inventory:
         except Exception as e:
             messagebox.showerror("Error", f"No se pudo obtener el último valor: {str(e)}")
             return None
-    
+    # ---------------------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------------------
+    # GET
     def GetLastDolarValue(self) -> float | None:
         """
         Devuelve el último valor de dólar cargado en la tabla.

@@ -5,7 +5,6 @@ from tkinter import messagebox
 def import_excel_data(db_params, excel_file_path):
     """
     Import data from Excel file to database using LineasGrupos class
-    
     Args:
         db_params (dict): Database connection parameters
         excel_file_path (str): Path to the Excel file

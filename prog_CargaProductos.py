@@ -437,6 +437,7 @@ class CargaProductosProg(ctk.CTkFrame):
     # --------------------------------------------------------------------------------
     # --------------------------------------------------------------------------------
 # LISTA TOD0 EL INVENTARIO EN EL TREEVIEW DE PRODUCTOS
+# LISTA TOD0 EL INVENTARIO EN EL TREEVIEW DE PRODUCTOS
     def ListInventory(self):
         self.search_bar_var.set('')
         inventario = INVENTARIO.GetInventory()
@@ -450,6 +451,7 @@ class CargaProductosProg(ctk.CTkFrame):
                                          producto['proveedor'],
                                          producto['nombre'],
                                          f'${producto['costo']}'))
+# BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - 
 # BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - 
     # BUSQUEDA POR CODIGO
     def BuscarProducto(self):
@@ -521,6 +523,7 @@ class CargaProductosProg(ctk.CTkFrame):
                                          product['nombre'],
                                          product['costo']))
 # RESTABLECER - RESTABLECER - RESTABLECER - RESTABLECER - RESTABLECER - RESTABLECER - RESTABLECER - RESTABLECER - RESTABLECER - 
+# RESTABLECER - RESTABLECER - RESTABLECER - RESTABLECER - RESTABLECER - RESTABLECER - RESTABLECER - RESTABLECER - RESTABLECER - 
     def Restablecer(self):
             if self.modprecios_btn_active:
                 self.modprecios_btn.destroy()
@@ -555,7 +558,6 @@ class CargaProductosProg(ctk.CTkFrame):
             self.current_photo = 'Recursos/Imagenes/Productos/Default.png'
 # MODIFICAR PRECIOS - MODIFICAR PRECIOS - MODIFICAR PRECIOS - MODIFICAR PRECIOS - MODIFICAR PRECIOS - MODIFICAR PRECIOS - MODIFICAR PRECIOS - 
     def ModificarPrecios(self):
-        
         self.precio1_entry.focus()
         self.precio1_entry.configure(state='normal')
         self.precio2_entry.configure(state='normal')
@@ -733,8 +735,6 @@ class CargaProductosProg(ctk.CTkFrame):
         self.treeview.configure(yscrollcommand=scrollbar.set)
     # LISTAR TODOS LOS PRODUCTOS CARGADOS AL INICIO DEL PROGRAMA
         self.ListInventory()
-        
-        
 # SELECIONAR PRODUCTO EN EL TREEVIEW
     def ClickTreeview(self,event):
         inventario = INVENTARIO.GetCodigos()
