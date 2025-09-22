@@ -351,7 +351,8 @@ class CargaProductosProg(ctk.CTkFrame):
             messagebox.showerror('Error',f"Debe agregar línea, Grupo y Proveedor válidos.")
             return
         # CHECK NAME
-        if not INVENTARIO.CheckName(nombre):
+        if not nombre:
+            messagebox.showerror('Error',f'La entrada "Nombre" no puede estar vacia')
             self.nombre_entry.focus()
             return
         # COST TO FLOAT
@@ -387,9 +388,6 @@ class CargaProductosProg(ctk.CTkFrame):
 # MOD PRODUCT - MOD PRODUCT - MOD PRODUCT - MOD PRODUCT - MOD PRODUCT - MOD PRODUCT - MOD PRODUCT - 
 # MOD PRODUCT - MOD PRODUCT - MOD PRODUCT - MOD PRODUCT - MOD PRODUCT - MOD PRODUCT - MOD PRODUCT - 
     def ModificarProducto(self):
-        anwser = messagebox.askyesno('¡Atención!','¿Está seguro que desea modificar el producto con estos cambios?')
-        if not anwser:
-            return
         linea = self.line_var.get().split(" - ")[0].strip()
         grupo = self.grupo_var.get().split(" - ")[0].strip()
         prove = self.prove_var.get().split(" - ")[0].strip()
@@ -411,7 +409,14 @@ class CargaProductosProg(ctk.CTkFrame):
             precio1 = float(self.precio1_var.get())
             precio2 = float(self.precio2_var.get())
             precio3 = float(self.precio3_var.get())
-        if not INVENTARIO.CheckName(nombre):
+        # CHECK NAME
+        if not nombre:
+            messagebox.showerror('Error',f'La entrada "Nombre" no puede estar vacia')
+            self.nombre_entry.focus()
+            return
+        # VALIDATE CHANGES
+        anwser = messagebox.askyesno('¡Atención!','¿Está seguro que desea modificar el producto con estos cambios?')
+        if not anwser:
             return
         if  LINE_MANAGER.CheckLine(linea) and LINE_MANAGER.CheckGrupo(linea,grupo) and PROV_MANAGER.CheckProv(prove):
             producto = Product(
@@ -430,7 +435,7 @@ class CargaProductosProg(ctk.CTkFrame):
         if not answer1:
             return
         answer2 = messagebox.askyesno('Atencion','Esto modificará los datos de inventario.'
-                                      ' Está seguro de eliminar el producto?')
+                                      ' ¿Está seguro de eliminar el producto?')
         if answer1 and answer2:
             INVENTARIO.DelProduct(self.mod_codi)
             self.Restablecer()
