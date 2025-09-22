@@ -1,4 +1,9 @@
-from DatabaseManager import USER_MANAGER
+from DatabaseManager import INVENTARIO
 
-usuarios = USER_MANAGER.GetAllUsers()
-print(usuarios)
+code = '96350161'
+user = INVENTARIO.SellProduct(code,9)
+
+if user:
+    print("Venta realizada con éxito")
+else:
+    print("Error en la venta")

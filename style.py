@@ -10,6 +10,8 @@ FONT = {
     'text_small': ('Roboto',12),
     'text_light': ('Roboto light',15),
     'text_light_small': ('Roboto light',12),
+    'text_big': ('Roboto Bold',40),
+    'text_big2': ('Roboto Bold',30),
 }
 
 APPEARANCE_MODE = 'light'

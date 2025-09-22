@@ -598,6 +598,39 @@ class Inventory:
             return None
     # ---------------------------------------------------------------------------------------
     # ---------------------------------------------------------------------------------------
+# UPDATE DATA - UPDATE DATA - UPDATE DATA - UPDATE DATA - UPDATE DATA - UPDATE DATA - UPDATE DATA - 
+# UPDATE DATA - UPDATE DATA - UPDATE DATA - UPDATE DATA - UPDATE DATA - UPDATE DATA - UPDATE DATA - 
+# UPDATE DATA - UPDATE DATA - UPDATE DATA - UPDATE DATA - UPDATE DATA - UPDATE DATA - UPDATE DATA - 
+# UPDATE DATA - UPDATE DATA - UPDATE DATA - UPDATE DATA - UPDATE DATA - UPDATE DATA - UPDATE DATA -
+    # LOCK A PRODUCT TO MODIFY STOCK WHEN SELLING
+    # LOCK A PRODUCT TO MODIFY STOCK WHEN SELLING
+    def SellProduct(self,code,qty):
+        try:
+            # START TRANSACTION
+            with self.conn:
+                with self.conn.cursor() as cur:
+                        # LOCK ROW OR PRODUCT
+                        cur.execute("""
+                            SELECT existencia FROM productos
+                            WHERE codigo = %s FOR UPDATE;""",(code,))
+                        # GET THE INFO
+                        row = cur.fetchone()
+                        # IF NOT INFO RETURN NONE
+                        if not row:
+                            messagebox.showerror('Base de Datos','Producto no encontrado')
+                            return False
+                        stock = row[0]
+                        newstock = stock - qty
+                        # UPDATE STOCK
+                        cur.execute("""
+                            UPDATE productos
+                            SET existencia = %s WHERE codigo = %s""",(newstock,code))
+            return True
+        except Exception as e:
+            messagebox.showerror("Base de Datos",f"{str(e)}")
+            return False
+    # ---------------------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------------------
 # DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - 
 # DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - 
 # DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - 
