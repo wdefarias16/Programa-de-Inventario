@@ -23,17 +23,16 @@ class FacturacionProg(ctk.CTkFrame):
 # TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - 
         # FRAME
         title_frame = ctk.CTkFrame(self,
-                                   height=70,
-                                   fg_color=APP_COLOR['sec'],
-                                   corner_radius=0)
+                        height=70,
+                        fg_color=APP_COLOR['sec'],
+                        corner_radius=0)
         title_frame.place(relx=0.5,rely=0,relwidth=1,anchor='n')
-
         # LABEL
         title_label = ctk.CTkLabel(title_frame,
-                                   text='Facturación',
-                                   bg_color='transparent',
-                                   text_color=APP_COLOR['white_m'],
-                                   font=FONT['title_light'])
+                        text='Facturación',
+                        bg_color='transparent',
+                        text_color=APP_COLOR['white_m'],
+                        font=FONT['title_light'])
         title_label.place(relx=0.5,rely=0.5,anchor='center')
     # -----------------------------------------------------------------------------------------------
     # -----------------------------------------------------------------------------------------------
@@ -41,12 +40,25 @@ class FacturacionProg(ctk.CTkFrame):
 # PRODUCTS FRAME - PRODUCTS FRAME - PRODUCTS FRAME - PRODUCTS FRAME - PRODUCTS FRAME -  
 # PRODUCTS FRAME - PRODUCTS FRAME - PRODUCTS FRAME - PRODUCTS FRAME - PRODUCTS FRAME -  
 # PRODUCTS FRAME - PRODUCTS FRAME - PRODUCTS FRAME - PRODUCTS FRAME - PRODUCTS FRAME -  
-        # FRAME
+        # FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - 
+        # FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - 
         product_frame = ctk.CTkFrame(self,
                         fg_color=APP_COLOR['main'],
                         corner_radius=0)
         product_frame.place(relx=0,y=69.5,relwidth=0.25,relheight=1,anchor='nw')
-        # PRODUCT IMAGE
+    # --------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
+        # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
+        # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS -
+        self.product_name_label = ctk.CTkLabel(product_frame,
+                        text='Producto',
+                        font=FONT['text'],
+                        text_color=APP_COLOR['white_m'])
+        self.product_name_label.place(relx=0.5,rely=0.5,ancho='center')
+    # --------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
+# PRODUCT IMAGE - PRODUCT IMAGE - PRODUCT IMAGE - PRODUCT IMAGE - PRODUCT IMAGE - PRODUCT IMAGE - 
+# PRODUCT IMAGE - PRODUCT IMAGE - PRODUCT IMAGE - PRODUCT IMAGE - PRODUCT IMAGE - PRODUCT IMAGE - 
         # IMAGE
         self.image_path = 'Recursos/Imagenes/Productos'
         default_image = Image.open(f"{self.image_path}/Default.png")
@@ -239,8 +251,8 @@ class FacturacionProg(ctk.CTkFrame):
 
         self.treeview_main = ttk.Treeview(main_frame,
                                     style='Custom.Treeview',
-                                    columns=('Descripcion','Cantidad','Unidad','Bolivares',
-                                             'Dolares'))
+                                    columns=('Descripcion','Cantidad','Unidad',
+                                             'Bolivares','Dolares'))
         self.treeview_main.place(relx=0.5,rely=0.34,relwidth=0.85,height=300,anchor='n')
         self.treeview_main.bind("<<TreeviewSelect>>",ClickLista)
         # CODIGO
@@ -447,6 +459,8 @@ class FacturacionProg(ctk.CTkFrame):
             # GET AND DISPLAY PRODUCT IMAGE
             image = producto['image']
             GetImage(image)
+            # DIPLAY PRODUCT NAME ON PRODUCT FRAME
+            self.product_name_label.configure(text=producto['nombre'])
             # CERRAR EL PRODUCT HELP FRAME
             help_frame.destroy()
             UpdateTotal()
@@ -466,23 +480,23 @@ class FacturacionProg(ctk.CTkFrame):
         # TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE -
         # TITLE FRAME
         title_frame = ctk.CTkFrame(help_frame,
-                                   fg_color=APP_COLOR['sec'],
-                                   height=50,
-                                   corner_radius=0)
+                        fg_color=APP_COLOR['sec'],
+                        height=50,
+                        corner_radius=0)
         title_frame.pack(expand=False,fill='x')
         # TITLE LABEL - TITLE LABEL - TITLE LABEL
         title_label = ctk.CTkLabel(title_frame,
-                                   text='Búsqueda de productos',
-                                   bg_color='transparent',
-                                   text_color=APP_COLOR['white_m'],
-                                   font=FONT['text'])
+                        text='Búsqueda de productos',
+                        bg_color='transparent',
+                        text_color=APP_COLOR['white_m'],
+                        font=FONT['text'])
         title_label.pack(expand=True,fill='x',pady=5)
         # PROG FRAME - PROG FRAME - PROG FRAME - PROG FRAME - 
         # PROG FRAME - PROG FRAME - PROG FRAME - PROG FRAME - 
         prog_frame = ctk.CTkFrame(help_frame,
-                                   fg_color=APP_COLOR['white_m'],
-                                   height=50,
-                                   corner_radius=0)
+                        fg_color=APP_COLOR['white_m'],
+                        height=50,
+                        corner_radius=0)
         prog_frame.pack(expand=True,fill='both')
         # PROG FRAME GRID SETUP
         ROWS, COLUMNS = 12,10
@@ -494,74 +508,73 @@ class FacturacionProg(ctk.CTkFrame):
         # SEARCH BAR
         self.search_bar_entry_var = tk.StringVar()
         self.search_bar_entry = ctk.CTkEntry(prog_frame,
-                                        textvariable=self.search_bar_entry_var,
-                                        fg_color=APP_COLOR['gray'],
-                                        border_color=APP_COLOR['gray'])
+                        textvariable=self.search_bar_entry_var,
+                        fg_color=APP_COLOR['gray'],
+                        border_color=APP_COLOR['gray'])
         self.search_bar_entry.grid(row=2,column=1,columnspan=2,sticky='we')
-        
         self.search_bar_entry.bind("<Return>",lambda event:SearchProductName())
         self.search_bar_entry.bind("<Control-BackSpace>",lambda event:RefreshSelection())
         # QUANTITY
         self.qty_entry_var = tk.StringVar()
         self.qty_entry = ctk.CTkEntry(prog_frame,
-                                        state='disabled',
-                                        textvariable=self.qty_entry_var,
-                                        fg_color=APP_COLOR['gray'],
-                                        border_color=APP_COLOR['gray'])
+                        state='disabled',
+                        textvariable=self.qty_entry_var,
+                        fg_color=APP_COLOR['gray'],
+                        border_color=APP_COLOR['gray'])
         self.qty_entry.grid(row=2,column=6,sticky='we')
         self.qty_entry.bind("<Control-BackSpace>",lambda event:RefreshSelection())
         self.qty_entry.bind("<Return>",lambda event:AddProduct())
         # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
         # SEARCH BAR
         search_bar_label = ctk.CTkLabel(prog_frame,
-                                        text='Búsqueda por nombre',
-                                        font=FONT['text_light'],
-                                        text_color=APP_COLOR['gray'])
+                        text='Búsqueda por nombre',
+                        font=FONT['text_light'],
+                        text_color=APP_COLOR['gray'])
         search_bar_label.grid(row=1,column=1,columnspan=2,sticky='w')
         # QUANTITY
         qty_label = ctk.CTkLabel(prog_frame,
-                                text='Cantidad',
-                                font=FONT['text_light'],
-                                text_color=APP_COLOR['gray'])
+                        text='Cantidad',
+                        font=FONT['text_light'],
+                        text_color=APP_COLOR['gray'])
         qty_label.grid(row=1,column=6,columnspan=2,sticky='w')
         # BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - 
         # CLOSE WINDOW
         close_btn = ctk.CTkButton(prog_frame,
-                                  text='',
-                                  image=ICONS['cancel'],
-                                  command=lambda:help_frame.destroy(),
-                                  fg_color=APP_COLOR['red_m'],
-                                  hover_color=APP_COLOR['red_s'])
+                        text='',
+                        image=ICONS['cancel'],
+                        command=lambda:help_frame.destroy(),
+                        fg_color=APP_COLOR['red_m'],
+                        hover_color=APP_COLOR['red_s'])
         close_btn.grid(row=0,column=COLUMNS-1,sticky='we',padx=10,pady=10)
         # SEARCH
         search_btn = ctk.CTkButton(prog_frame,
-                                  text='',
-                                  image=ICONS['search'],
-                                  command=SearchProductName,
-                                  fg_color=APP_COLOR['main'],
-                                  hover_color=APP_COLOR['sec'])
+                        text='',
+                        image=ICONS['search'],
+                        command=SearchProductName,
+                        fg_color=APP_COLOR['main'],
+                        hover_color=APP_COLOR['sec'])
         search_btn.grid(row=2,column=3,sticky='w',padx=5)
         # REFRESH OR CANCEL SELECTION
         cancel_slct_btn = ctk.CTkButton(prog_frame,
-                                  text='',
-                                  image=ICONS['refresh'],
-                                  command=RefreshSelection,
-                                  fg_color=APP_COLOR['main'],
-                                  hover_color=APP_COLOR['sec'])
+                        text='',
+                        image=ICONS['refresh'],
+                        command=RefreshSelection,
+                        fg_color=APP_COLOR['main'],
+                        hover_color=APP_COLOR['sec'])
         cancel_slct_btn.grid(row=2,column=4,sticky='w')
         # ACCEPT
         accept_btn = ctk.CTkButton(prog_frame,
-                                  text='Aceptar',
-                                  command=AddProduct,
-                                  fg_color=APP_COLOR['main'],
-                                  hover_color=APP_COLOR['sec'])
+                        text='Aceptar',
+                        command=AddProduct,
+                        fg_color=APP_COLOR['main'],
+                        hover_color=APP_COLOR['sec'])
         accept_btn.grid(row=2,column=7,sticky='w',padx=5)
         # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
         # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
         # TREVIEW
         self.product_tv = ttk.Treeview(prog_frame,
-                                  style='Custom.Treeview',
-                                  columns = ('Descripcion','Precio','Existencia'))
+                        style='Custom.Treeview',
+                        columns = ('Descripcion','Precio','Existencia'))
         self.product_tv.grid(row=4,column=1,rowspan=6,columnspan=COLUMNS-2,sticky='nswe')
         self.product_tv.bind("<<TreeviewSelect>>",ClickTreeview)
         # CODIGO
@@ -578,3 +591,5 @@ class FacturacionProg(ctk.CTkFrame):
         self.product_tv.column('Existencia',width=130,anchor='w',minwidth=15, stretch=False)
         # LIST INVENTORY WHEN OPENING THE HELP WINDOW
         ListInventory()
+# ----------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------
