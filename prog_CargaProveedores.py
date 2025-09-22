@@ -550,7 +550,7 @@ class ProveedoresProg(ctk.CTkFrame):
             background = APP_COLOR['white_m'],
             foreground = APP_COLOR['black_m'],
             rowheight = 30,
-            font = FONT['text_small'],
+            font = FONT['text'],
             fieldbackground = APP_COLOR['white_m'])
         style.configure(
             'Custom.Treeview.Heading',
