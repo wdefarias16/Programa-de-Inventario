@@ -91,10 +91,10 @@ class FacturacionProg(ctk.CTkFrame):
                         fg_color=APP_COLOR['white_m'],
                         corner_radius=0)
         main_frame.place(relx=0.25,y=69.5,relwidth=0.75,relheight=1,anchor='nw')
-# ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - 
-# ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - 
-# ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - 
-# ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - 
+# ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS - 
+# ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS -
+# ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS -
+# ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS -
         # CODIGO DE CLIENTE 
         self.cod_client_entry_var = tk.StringVar()
         self.cod_client_entry = ctk.CTkEntry(main_frame,
@@ -149,6 +149,8 @@ class FacturacionProg(ctk.CTkFrame):
                         border_width = 0,
                         fg_color = APP_COLOR['white'])
         self.address_client_entry.place(x=235,y=190,anchor='nw')
+    # --------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
 # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
 # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
@@ -193,6 +195,32 @@ class FacturacionProg(ctk.CTkFrame):
         address_label.place(x=235,y=160,anchor='nw')
     # --------------------------------------------------------------------------
     # --------------------------------------------------------------------------
+# ENTRIES PRODUCT DATA - ENTRIES PRODUCT DATA - ENTRIES PRODUCT DATA - ENTRIES PRODUCT DATA - 
+# ENTRIES PRODUCT DATA - ENTRIES PRODUCT DATA - ENTRIES PRODUCT DATA - ENTRIES PRODUCT DATA -
+# ENTRIES PRODUCT DATA - ENTRIES PRODUCT DATA - ENTRIES PRODUCT DATA - ENTRIES PRODUCT DATA -
+# ENTRIES PRODUCT DATA - ENTRIES PRODUCT DATA - ENTRIES PRODUCT DATA - ENTRIES PRODUCT DATA -
+        # CODIGO DE PRODUCTO
+        self.product_code_entry_var = tk.StringVar()
+        self.product_code_entry = ctk.CTkEntry(main_frame,
+                        width=100,
+                        height=30,
+                        textvariable = self.product_code_entry_var,
+                        border_width = 0,
+                        fg_color = APP_COLOR['white'])
+        self.product_code_entry.place(relx=0.75,y=190,anchor='nw')
+        self.product_code_entry.bind("<Return>",lambda event:self.SearchProductByCode())
+    # --------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
+# LABELS PRODUCT DATA - LABELS PRODUCT DATA - LABELS PRODUCT DATA - LABELS PRODUCT DATA -
+# LABELS PRODUCT DATA - LABELS PRODUCT DATA - LABELS PRODUCT DATA - LABELS PRODUCT DATA -
+# LABELS PRODUCT DATA - LABELS PRODUCT DATA - LABELS PRODUCT DATA - LABELS PRODUCT DATA -
+# LABELS PRODUCT DATA - LABELS PRODUCT DATA - LABELS PRODUCT DATA - LABELS PRODUCT DATA -
+        # CODIGO DE PRODUCTO
+        product_code_label = ctk.CTkLabel(main_frame,
+                        text='Producto',
+                        text_color=APP_COLOR['gray'],
+                        font=FONT['text'])
+        product_code_label.place(relx=0.75,y=160,anchor='nw')
     # TOTAL FACT - TOTAL FACT - TOTAL FACT - TOTAL FACT - TOTAL FACT - TOTAL FACT - TOTAL FACT - 
     # TOTAL FACT - TOTAL FACT - TOTAL FACT - TOTAL FACT - TOTAL FACT - TOTAL FACT - TOTAL FACT - 
         # TOTAL DOLARES
@@ -229,7 +257,7 @@ class FacturacionProg(ctk.CTkFrame):
                         fg_color=APP_COLOR['main'],
                         hover_color=APP_COLOR['sec'],
                         command=self.ProductsHelp)
-        self.btn_add_product.place(relx=0.85,rely=0.25,anchor='nw')
+        self.btn_add_product.place(relx=0.87,y=190,anchor='nw')
 # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
 # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
 # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
@@ -383,26 +411,6 @@ class FacturacionProg(ctk.CTkFrame):
             self.image_label.configure(image=photo)
         # -------------------------------------------------------------------------------------------------
         # -------------------------------------------------------------------------------------------------
-        # UPDATE TOTAL - UPDATE TOTAL - UPDATE TOTAL - UPDATE TOTAL - UPDATE TOTAL - 
-        # UPDATE TOTAL - UPDATE TOTAL - UPDATE TOTAL - UPDATE TOTAL - UPDATE TOTAL - 
-        def UpdateTotal():
-            self.total_DOLAR = 0
-            self.total_BOLIVAR = 0
-            for item in self.treeview_main.get_children():
-                info = self.treeview_main.item(item)
-                # DOLARS
-                subtotal_dolar = info['values'][4].split(' ')[1].strip()
-                subtotal_dolar = float(subtotal_dolar.replace(',', ''))
-                self.total_DOLAR += subtotal_dolar
-                # BOLIVARES
-                subtotal_bolivar = info['values'][3].split(' ')[1].strip()
-                subtotal_bolivar = float(subtotal_bolivar.replace(',', ''))
-                self.total_BOLIVAR += subtotal_bolivar
-            # UPDATE LABELS
-            self.total_fact_dolar_label.configure(text=f'$ {format(self.total_DOLAR,',.2f')}')
-            self.total_fact_bs_label.configure(text=f'Bs. {format(self.total_BOLIVAR,',.2f')}')
-        # -------------------------------------------------------------------------------------------------
-        # -------------------------------------------------------------------------------------------------
         # ADD PRODUCT TO MAIN TREEVIEW - ADD PRODUCT TO MAIN TREEVIEW -
         # ADD PRODUCT TO MAIN TREEVIEW - ADD PRODUCT TO MAIN TREEVIEW -
         def AddProduct():
@@ -463,7 +471,7 @@ class FacturacionProg(ctk.CTkFrame):
             self.product_name_label.configure(text=producto['nombre'])
             # CERRAR EL PRODUCT HELP FRAME
             help_frame.destroy()
-            UpdateTotal()
+            self.UpdateTotal()
         # -------------------------------------------------------------------------------------------------
         # -------------------------------------------------------------------------------------------------
         # CREATE THE WINDOW - CREATE THE WINDOW - CREATE THE WINDOW - CREATE THE WINDOW -
@@ -593,3 +601,59 @@ class FacturacionProg(ctk.CTkFrame):
         ListInventory()
 # ----------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------
+# SEARCH PRODUCT BY CODE - SEARCH PRODUCT BY CODE - SEARCH PRODUCT BY CODE -
+# SEARCH PRODUCT BY CODE - SEARCH PRODUCT BY CODE - SEARCH PRODUCT BY CODE -
+    def SearchProductByCode(self):
+        codigo = self.product_code_entry_var.get()
+        if codigo in self.inventory_codes:
+            producto = INVENTARIO.GetProducto(codigo)
+            INVENTARIO.SellProduct(codigo,1)
+            self.treeview_main.insert("", 'end',
+                text=producto['codigo'],
+                values=(producto['nombre'],
+                        '1',
+                        f'$ {producto['precio1']}',
+                        f'Bs. {format(float(self.DOLAR * float(producto['precio1'])),',.2f')}',
+                        f'$ {format(producto['precio1'],',.2f')}'))
+            self.product_list.append(str(codigo).strip())
+            # GET AND DISPLAY PRODUCT IMAGE
+            image = producto['image']
+            if not image:
+                image = 'Recursos/Imagenes/Productos/Default.png'
+            img = Image.open(image)
+            w, h = img.size
+            photo = ctk.CTkImage(light_image=img, size=(200,200))
+            self.image_label.configure(image=photo)
+            # DIPLAY PRODUCT NAME ON PRODUCT FRAME
+            self.product_name_label.configure(text=producto['nombre'])
+            # CLEAR ENTRY
+            self.product_code_entry_var.set('')
+            self.product_code_entry.focus()
+            # UPDATE TOTAL
+            self.UpdateTotal()
+        else:
+            messagebox.showerror('Error', f'Producto con código {codigo} no se encuentra en la base de datos.')
+            self.product_code_entry_var.set('')
+            self.product_code_entry.focus()
+# ----------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------
+# UPDATE TOTAL - UPDATE TOTAL - UPDATE TOTAL - UPDATE TOTAL - UPDATE TOTAL - 
+# UPDATE TOTAL - UPDATE TOTAL - UPDATE TOTAL - UPDATE TOTAL - UPDATE TOTAL - 
+    def UpdateTotal(self):
+        self.total_DOLAR = 0
+        self.total_BOLIVAR = 0
+        for item in self.treeview_main.get_children():
+            info = self.treeview_main.item(item)
+            # DOLARS
+            subtotal_dolar = info['values'][4].split(' ')[1].strip()
+            subtotal_dolar = float(subtotal_dolar.replace(',', ''))
+            self.total_DOLAR += subtotal_dolar
+            # BOLIVARES
+            subtotal_bolivar = info['values'][3].split(' ')[1].strip()
+            subtotal_bolivar = float(subtotal_bolivar.replace(',', ''))
+            self.total_BOLIVAR += subtotal_bolivar
+        # UPDATE LABELS
+        self.total_fact_dolar_label.configure(text=f'$ {format(self.total_DOLAR,',.2f')}')
+        self.total_fact_bs_label.configure(text=f'Bs. {format(self.total_BOLIVAR,',.2f')}')
+    # -------------------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------------------------------
