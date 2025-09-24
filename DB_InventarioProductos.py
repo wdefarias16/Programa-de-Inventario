@@ -160,21 +160,25 @@ class Inventory:
     # DEL PRODUCT - DEL PRODUCT - DEL PRODUCT - DEL PRODUCT - DEL PRODUCT - DEL PRODUCT - DEL PRODUCT - 
     # DEL PRODUCT - DEL PRODUCT - DEL PRODUCT - DEL PRODUCT - DEL PRODUCT - DEL PRODUCT - DEL PRODUCT - 
     def DelProduct(self, codigo):
-        """
-        Elimina el producto de la base de datos utilizando su código.
-        """
+        """Eliminación LÓGICA del producto (marca como inactivo en lugar de eliminar)."""
         try:
             with self.conn.cursor() as cur:
-                cur.execute("DELETE FROM productos WHERE codigo = %s;", (codigo,))
+                # Verificar si el producto existe
+                cur.execute("SELECT 1 FROM productos WHERE codigo = %s;", (codigo,))
+                if not cur.fetchone():
+                    messagebox.showerror('Error', f"El producto {codigo} no existe.")
+                    return
+                # Marcar como inactivo en lugar de eliminar
+                cur.execute("UPDATE productos SET activo = FALSE WHERE codigo = %s;", (codigo,))
                 self.conn.commit()
-                messagebox.showinfo('Producto Eliminado', "El producto ha sido eliminado.")
+                messagebox.showinfo('Producto Desactivado', f"El producto {codigo} ha sido marcado como inactivo.")
         except Exception as e:
             self.conn.rollback()
-            messagebox.showerror('Error', f"Error eliminando producto: {str(e)}")
+            messagebox.showerror('Error', f"Error desactivando producto: {str(e)}")
     # --------------------------------------------------------------------------------------
     # --------------------------------------------------------------------------------------
 # GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - 
-# GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - 
+# GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - J
 # GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - 
 # GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - GET INFO - 
     # GET WHOLE INVENTORY - GET WHOLE INVENTORY - GET WHOLE INVENTORY - GET WHOLE INVENTORY
@@ -185,7 +189,42 @@ class Inventory:
             with self.conn.cursor() as cur:
                 cur.execute("""
                     SELECT codigo, linea, grupo, proveedor, nombre, costo, ubicacion1, ubicacion2, precio1, precio2, precio3, existencia, image
-                    FROM productos;
+                    FROM productos WHERE activo = TRUE;
+                """)
+                rows = cur.fetchall()
+                inventory = {}
+                for r in rows:
+                    codigo, linea, grupo, proveedor, nombre, costo,ubicacion1, ubicacion2, precio1, precio2, precio3, existencia, image = r
+                    inventory[codigo] = {
+                        'codigo': codigo,
+                        'linea': linea,
+                        'grupo': grupo,
+                        'proveedor': proveedor,
+                        'nombre': nombre,
+                        'costo': costo,
+                        'ubicacion1': ubicacion1,
+                        'ubicacion2': ubicacion2,
+                        'precio1': precio1,
+                        'precio2': precio2,
+                        'precio3': precio3,
+                        'existencia': existencia,
+                        'image': image
+                    }
+                return inventory
+        except Exception as e:
+            messagebox.showerror('Error', f"Error obteniendo el inventario: {str(e)}")
+            return {}
+    # ---------------------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------------------
+    # GET INACTIVES - GET INACTIVES - GET INACTIVES - GET INACTIVES - GET INACTIVES - GET INACTIVES - GET INACTIVES - 
+    # GET INACTIVES - GET INACTIVES - GET INACTIVES - GET INACTIVES - GET INACTIVES - GET INACTIVES - GET INACTIVES - 
+    def GetInactives(self):
+       # GET ALL INACTIVE PRODUCTS AND RETURN A DICTIONARY
+        try:
+            with self.conn.cursor() as cur:
+                cur.execute("""
+                    SELECT codigo, linea, grupo, proveedor, nombre, costo, ubicacion1, ubicacion2, precio1, precio2, precio3, existencia, image
+                    FROM productos WHERE activo = FALSE;
                 """)
                 rows = cur.fetchall()
                 inventory = {}
@@ -219,7 +258,7 @@ class Inventory:
         try:
             with self.conn.cursor() as cur:
                 cur.execute("""
-                    SELECT codigo FROM productos;
+                    SELECT codigo FROM productos WHERE activo = TRUE;
                 """)
                 rows = cur.fetchall()
                 inventory = [r[0] for r in rows]
@@ -237,7 +276,7 @@ class Inventory:
             with self.conn.cursor() as cur:
                 cur.execute("""
                     SELECT codigo, linea, grupo, proveedor, nombre, costo, ubicacion1, ubicacion2, precio1, precio2, precio3, existencia, image
-                    FROM productos WHERE codigo = %s;""", (codigo,))
+                    FROM productos WHERE codigo = %s AND activo = TRUE;""", (codigo,))
                 row = cur.fetchone()
                 producto = {}
                 codigo, linea, grupo, proveedor, nombre, costo, ubicacion1, ubicacion2, precio1, precio2, precio3, existencia, image = row
@@ -271,7 +310,7 @@ class Inventory:
                 cur.execute("""
                     SELECT codigo, linea, grupo, proveedor, nombre, costo, ubicacion1, ubicacion2, precio1, precio2, precio3, existencia, image
                     FROM productos
-                    WHERE nombre ILIKE %s;
+                    WHERE nombre ILIKE %s AND activo = TRUE;
                 """, ('%' + busqueda + '%',))
                 rows = cur.fetchall()
                 resultados = []
@@ -308,12 +347,28 @@ class Inventory:
         # CHECKS IF A CODE ALREADY EXISTS IN THE DATABASE AND IF SO, SHOWS ERROR
         try:
             with self.conn.cursor() as cur:
-                cur.execute("SELECT 1 FROM productos WHERE codigo = %s;", (codigo,))
+                cur.execute("SELECT 1 FROM productos WHERE codigo = %s AND activo = TRUE;", (codigo,))
                 if cur.fetchone():
                     messagebox.showerror('Error', f'El código {codigo} ya se encuentra en la base de datos.')
                     return False
                 else:
                     return True
+        except Exception as e:
+            return False
+    # ---------------------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------------------
+    # CHECK INACTIVE - CHECK INACTIVE - CHECK INACTIVE - CHECK INACTIVE - CHECK INACTIVE - CHECK INACTIVE - 
+    # CHECK INACTIVE - CHECK INACTIVE - CHECK INACTIVE - CHECK INACTIVE - CHECK INACTIVE - CHECK INACTIVE - 
+    def CheckInactive(self, codigo):
+        # CHECKS IF A CODE IS INACTIVE
+        try:
+            with self.conn.cursor() as cur:
+                cur.execute("SELECT 1 FROM productos WHERE codigo = %s AND activo = FALSE;", (codigo,))
+                if cur.fetchone():
+                    messagebox.showerror('Base de datos', f"El código {codigo} está en la base de datos pero se encuentra inactivo.")
+                    return True
+                else:
+                    return False
         except Exception as e:
             return False
     # ---------------------------------------------------------------------------------------
@@ -324,7 +379,7 @@ class Inventory:
         # CHECKS IF A CODE ALREADY EXISTS IN THE DATABASE AND IF DONT, SHOWS ERROR
         try:
             with self.conn.cursor() as cur:
-                cur.execute("SELECT 1 FROM productos WHERE codigo = %s;", (codigo,))
+                cur.execute("SELECT 1 FROM productos WHERE codigo = %s AND activo = TRUE;", (codigo,))
                 if cur.fetchone():
                     return True
                 else:
@@ -612,7 +667,7 @@ class Inventory:
                         # LOCK ROW OR PRODUCT
                         cur.execute("""
                             SELECT existencia FROM productos
-                            WHERE codigo = %s FOR UPDATE;""",(code,))
+                            WHERE codigo = %s AND activo = TRUE FOR UPDATE;""",(code,))
                         # GET THE INFO
                         row = cur.fetchone()
                         # IF NOT INFO RETURN NONE

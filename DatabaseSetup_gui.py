@@ -132,7 +132,7 @@ class DatabaseManagerApp(ctk.CTk):
             self.log(f"Error al eliminar la base de datos: {repr(e)}")
 
     def init_tables(self):
-        """Inicializa (crea) las tablas dentro de la base de datos."""
+        """Inicializa (crea) las tablas dentro de la base de datos con las constraints correctas."""
         try:
             with psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD,
                                   host=DB_HOST, port=DB_PORT) as conn:
@@ -159,28 +159,31 @@ class DatabaseManagerApp(ctk.CTk):
                             celular1 VARCHAR(50),
                             celular2 VARCHAR(50),
                             email VARCHAR(255),
-                            rif VARCHAR(50) NOT NULL
+                            rif VARCHAR(50) NOT NULL,
+                            activo BOOLEAN DEFAULT TRUE
                         )""",
                         # Tabla lineas
                         """CREATE TABLE IF NOT EXISTS lineas (
                             codigo SERIAL PRIMARY KEY,
-                            nombre VARCHAR(255) NOT NULL
+                            nombre VARCHAR(255) NOT NULL,
+                            activo BOOLEAN DEFAULT TRUE
                         )""",
-                        # Tabla grupos
+                        # Tabla grupos - RESTRICT para mantener integridad
                         """CREATE TABLE IF NOT EXISTS grupos (
                             codigo VARCHAR(10) PRIMARY KEY,
-                            linea INT REFERENCES lineas(codigo),
+                            linea INT REFERENCES lineas(codigo) ON DELETE RESTRICT,
                             nombre VARCHAR(255) NOT NULL,
                             porcentaje1 NUMERIC(10,2),
                             porcentaje2 NUMERIC(10,2),
-                            porcentaje3 NUMERIC(10,2)
+                            porcentaje3 NUMERIC(10,2),
+                            activo BOOLEAN DEFAULT TRUE
                         )""",
-                        # Tabla productos
+                        # Tabla productos - RESTRICT para mantener integridad
                         """CREATE TABLE IF NOT EXISTS productos (
                             codigo VARCHAR(255) PRIMARY KEY,
-                            linea INT REFERENCES lineas(codigo),
-                            grupo VARCHAR(10) REFERENCES grupos(codigo),
-                            proveedor INT REFERENCES proveedores(codigo),
+                            linea INT REFERENCES lineas(codigo) ON DELETE RESTRICT,
+                            grupo VARCHAR(10) REFERENCES grupos(codigo) ON DELETE RESTRICT,
+                            proveedor INT REFERENCES proveedores(codigo) ON DELETE RESTRICT,
                             nombre VARCHAR(255) NOT NULL,
                             costo NUMERIC(10,2),
                             ubicacion1 VARCHAR(50),
@@ -189,18 +192,19 @@ class DatabaseManagerApp(ctk.CTk):
                             precio2 NUMERIC(10,2),
                             precio3 NUMERIC(10,2),
                             existencia INT DEFAULT 0,
-                            image TEXT
+                            image TEXT,
+                            activo BOOLEAN DEFAULT TRUE
                         )""",
                         # Tabla roles
                         """CREATE TABLE IF NOT EXISTS roles (
                             codigo SERIAL PRIMARY KEY,
                             rol VARCHAR(50) UNIQUE NOT NULL
                         )""",
-                        # Insertar roles (agregamos ON CONFLICT DO NOTHING para evitar duplicados)
+                        # Insertar roles
                         """INSERT INTO roles (rol) 
                            VALUES ('Administrador'), ('Supervisor'), ('Gerente'), ('Vendedor')
                            ON CONFLICT DO NOTHING""",
-                        # Tabla usuarios
+                        # Tabla usuarios - RESTRICT para evitar usuarios sin rol
                         """CREATE TABLE IF NOT EXISTS usuarios (
                             codigo SERIAL PRIMARY KEY,
                             nombre VARCHAR(100) NOT NULL,
@@ -211,7 +215,8 @@ class DatabaseManagerApp(ctk.CTk):
                             correo VARCHAR(255) UNIQUE,
                             rol INT NOT NULL,
                             estado BOOLEAN DEFAULT FALSE,
-                            FOREIGN KEY (rol) REFERENCES roles(codigo) ON DELETE RESTRICT 
+                            FOREIGN KEY (rol) REFERENCES roles(codigo) ON DELETE RESTRICT,
+                            activo BOOLEAN DEFAULT TRUE
                         )""",
                         # TABLA CLIENTES
                         """CREATE TABLE IF NOT EXISTS clientes(
@@ -222,24 +227,25 @@ class DatabaseManagerApp(ctk.CTk):
                             direccion1 TEXT,
                             direccion2 TEXT,
                             ciudad VARCHAR(50),
-                            email VARCHAR(100)
+                            email VARCHAR(100),
+                            activo BOOLEAN DEFAULT TRUE
                         )""",
-                        # TABLA ENTRADAS INVENTARIO
+                        # TABLA ENTRADAS INVENTARIO - RESTRICT para mantener historial
                         """CREATE TABLE IF NOT EXISTS entradas_inventario (
                             id SERIAL PRIMARY KEY,
                             num_factura VARCHAR(50) NOT NULL,
-                            proveedor   INT     NOT NULL REFERENCES proveedores(codigo),
+                            proveedor   INT     NOT NULL REFERENCES proveedores(codigo) ON DELETE RESTRICT,
                             fecha       DATE    NOT NULL,
                             total       NUMERIC(12,2) NOT NULL,
                             created_at  TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP
                         )""",
-                        # TABLA DETALLES DE ENTRADA A INVENTARIO
+                        # TABLA DETALLES DE ENTRADA - RESTRICT para proteger historial
                         """CREATE TABLE IF NOT EXISTS detalle_entrada (
                             id          SERIAL PRIMARY KEY,
                             entrada_id  INTEGER     NOT NULL
-                                           REFERENCES entradas_inventario(id) ON DELETE CASCADE,
+                                           REFERENCES entradas_inventario(id) ON DELETE RESTRICT,
                             codigo      VARCHAR(255) NOT NULL
-                                           REFERENCES productos(codigo),
+                                           REFERENCES productos(codigo) ON DELETE RESTRICT,  -- ¡IMPORTANTE!
                             cantidad    INTEGER     NOT NULL,
                             costo       NUMERIC(12,2) NOT NULL,
                             descuento1  NUMERIC(5,2)  DEFAULT 0,
@@ -258,13 +264,13 @@ class DatabaseManagerApp(ctk.CTk):
                             log TEXT,
                             fecha DATE NOT NULL
                         )""",
-                        # TABLA DETALLES DE AJUSTES A INVENTARIO
+                        # TABLA DETALLES DE AJUSTES - RESTRICT para proteger historial
                         """CREATE TABLE IF NOT EXISTS detalle_ajustes (
                             id SERIAL PRIMARY KEY,
                             ajuste_id INTEGER NOT NULL
-                              REFERENCES ajustes_inventario(id) ON DELETE CASCADE,
+                              REFERENCES ajustes_inventario(id) ON DELETE RESTRICT,
                             codigo VARCHAR(255) NOT NULL
-                              REFERENCES productos(codigo),
+                              REFERENCES productos(codigo) ON DELETE RESTRICT,  -- ¡IMPORTANTE!
                             cantidad INTEGER NOT NULL,
                             ajuste INTEGER NOT NULL,
                             final INTEGER NOT NULL
@@ -273,7 +279,7 @@ class DatabaseManagerApp(ctk.CTk):
                     for stmt in statements:
                         cursor.execute(stmt)
                     conn.commit()
-                    self.log("Tablas inicializadas correctamente.")
+                    self.log("Tablas inicializadas correctamente con ON DELETE RESTRICT.")
         except Exception as e:
             self.log(f"Error al inicializar las tablas: {repr(e)}")
 

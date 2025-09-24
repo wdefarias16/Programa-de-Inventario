@@ -17,6 +17,7 @@ class CargaProductosProg(ctk.CTkFrame):
         self.treeview_active = False
         self.modprecios_btn_active = False
         self.current_photo = 'Recursos/Imagenes/Productos/Default.png'
+        self.inventario = INVENTARIO.GetCodigos()
     # TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - 
     # TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - 
         # FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - 
@@ -382,6 +383,7 @@ class CargaProductosProg(ctk.CTkFrame):
             self.precio2_label.configure(text=f'Precio 2: {porcentajes['porcentaje2']}%')
             self.precio3_label.configure(text=f'Precio 3: {porcentajes['porcentaje3']}%')
             INVENTARIO.AddProduct(producto.ToDict())
+            self.inventario = INVENTARIO.GetCodigos()
             self.Restablecer()
     # --------------------------------------------------------------------------------
     # --------------------------------------------------------------------------------
@@ -431,6 +433,7 @@ class CargaProductosProg(ctk.CTkFrame):
 # DEL PRODUCT - DEL PRODUCT - DEL PRODUCT - DEL PRODUCT - DEL PRODUCT - DEL PRODUCT - DEL PRODUCT - 
 # DEL PRODUCT - DEL PRODUCT - DEL PRODUCT - DEL PRODUCT - DEL PRODUCT - DEL PRODUCT - DEL PRODUCT - 
     def EliminarProducto(self):
+        print(self.mod_codi)
         answer1 = messagebox.askyesno('Atencion','¿Desea eliminar el producto?')
         if not answer1:
             return
@@ -441,36 +444,29 @@ class CargaProductosProg(ctk.CTkFrame):
             self.Restablecer()
     # --------------------------------------------------------------------------------
     # --------------------------------------------------------------------------------
-# LISTA TOD0 EL INVENTARIO EN EL TREEVIEW DE PRODUCTOS
-# LISTA TOD0 EL INVENTARIO EN EL TREEVIEW DE PRODUCTOS
-    def ListInventory(self):
-        self.search_bar_var.set('')
-        inventario = INVENTARIO.GetInventory()
-        for item in self.treeview.get_children():
-                self.treeview.delete(item)
-        for producto in inventario.values():
-            self.treeview.insert("",'end',
-                                 text=producto['codigo'],
-                                 values=(producto['linea'],
-                                         producto['grupo'],
-                                         producto['proveedor'],
-                                         producto['nombre'],
-                                         f'${producto['costo']}'))
+
 # BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - 
 # BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - 
     # BUSQUEDA POR CODIGO
     def BuscarProducto(self):
-        inventario = INVENTARIO.GetCodigos()
+        # IF TREEVIEW IS ACTIVE, GETS THE CODE FROM THAT WINDOW
         if self.treeview_active:
             codigo = self.search_bar_var.get()
             self.treeview_active = False
+        # IF TREEVIEW IS NOT ACTIVE, GETS THE CODE FROM MAIN CODE ENTRY
         else:
             codigo = self.codigo_entry.get()
-        if codigo not in inventario:
+        # VERIFY IF CODE IS INACTIVE
+        if INVENTARIO.CheckInactive(codigo):
+            self.codigo_var.set('')
+            return
+        # IF CODE NOT IN INVENTORY, JUMPS TO NEXT ENTRY TO ADD NEW PRODUCT
+        if codigo not in self.inventario:
             self.linea_entry.focus()
             return
+        # VERIFY CODE IS IN INVENTORY LIST
         if INVENTARIO.CheckCodeValidate(codigo):
-            for search in inventario:
+            for search in self.inventario:
                 if search == codigo:
                     producto = INVENTARIO.GetProducto(search)
         # LLENAR LAS ENTRADAS CON LOS DATOS DE PRODUCTO ELEGIDO
@@ -635,69 +631,126 @@ class CargaProductosProg(ctk.CTkFrame):
         self.ubi2_entry.unbind("<Return>")
         self.ubi2_entry.bind("<Return>",lambda event:self.AgregarProducto())
         self.codigo_entry.focus()
-# TREVIEW BUSQUEDA DE PRODUCTOS - TREVIEW BUSQUEDA DE PRODUCTOS - TREVIEW BUSQUEDA DE PRODUCTOS - TREVIEW BUSQUEDA DE PRODUCTOS - 
-# TABLA DE BUSQUEDA DE PRODUCTOS
+# PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - 
+# PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - 
+# PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - 
+# PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW -  
     def BusquedaProducto(self):
+        # LISTA TOD0 EL INVENTARIO EN EL TREEVIEW DE PRODUCTOS
+        # LISTA TOD0 EL INVENTARIO EN EL TREEVIEW DE PRODUCTOS
+        def ListInventory():
+            self.search_bar_var.set('')
+            inventario = INVENTARIO.GetInventory()
+            for item in self.treeview.get_children():
+                    self.treeview.delete(item)
+            for producto in inventario.values():
+                self.treeview.insert("",'end',
+                                     text=producto['codigo'],
+                                     values=(producto['linea'],
+                                             producto['grupo'],
+                                             producto['proveedor'],
+                                             producto['nombre'],
+                                             f'${producto['costo']}'))
+        # ----------------------------------------------------------------
+        # ----------------------------------------------------------------
+        # LISTA PRODUCTOS INACTIVOS - LISTA PRODUCTOS INACTIVOS - 
+        # LISTA PRODUCTOS INACTIVOS - LISTA PRODUCTOS INACTIVOS - 
+        def ListInactives():
+            self.search_bar_var.set('')
+            inventario = INVENTARIO.GetInactives()
+            for item in self.treeview.get_children():
+                    self.treeview.delete(item)
+            for producto in inventario.values():
+                self.treeview.insert("",'end',
+                                     text=producto['codigo'],
+                                     values=(producto['linea'],
+                                             producto['grupo'],
+                                             producto['proveedor'],
+                                             producto['nombre'],
+                                             f'${producto['costo']}'))
+        # ----------------------------------------------------------------
+        # ----------------------------------------------------------------
+    # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
     # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
     # FRAME DEL TREEVIEW
         self.treeview_active = True
-        self.tree_frame = ctk.CTkToplevel(self,
+        help_frame = ctk.CTkToplevel(self,
                                    fg_color=APP_COLOR['white_m'])
-        self.tree_frame.geometry('900x450')
-        self.tree_frame.title('Busqueda de productos')
-        self.tree_frame.protocol("WM_DELETE_WINDOW", lambda: None)
-        self.tree_frame.transient(self)
-    # GRID SETUP
-        for rows in range(10):
-            self.tree_frame.rowconfigure(rows, weight=1,uniform='row')
-        for columns in range(10):
-            self.tree_frame.columnconfigure(columns,weight=1,uniform='column')
-    # TITULO
-        title_frame = ctk.CTkFrame(self.tree_frame,corner_radius=0,fg_color=APP_COLOR['sec'])
-        title_frame.grid(row=0,column=0,columnspan=16,sticky='nswe')
-        title = ctk.CTkLabel(title_frame,
-                             text='Busqueda de productos',
-                             bg_color='transparent',
-                             text_color=APP_COLOR['white_m'],
-                             height=50,
-                             font=FONT['text'])
-        title.pack(pady=10)
+        help_frame.geometry('900x450')
+        help_frame.title('Busqueda de productos')
+        help_frame.protocol("WM_DELETE_WINDOW", lambda: None)
+        help_frame.transient(self)
+    # TITLE FRAME
+        title_frame = ctk.CTkFrame(help_frame,
+                        fg_color=APP_COLOR['sec'],
+                        height=50,
+                        corner_radius=0)
+        title_frame.place(relx=0.5,rely=0,relwidth=1,relheight=0.10,anchor='n')
+        # TITLE LABEL - TITLE LABEL - TITLE LABEL
+        title_label = ctk.CTkLabel(title_frame,
+                        text='Búsqueda de productos',
+                        bg_color='transparent',
+                        text_color=APP_COLOR['white_m'],
+                        font=FONT['text'])
+        title_label.pack(expand=True,fill='x',pady=5)
+    # PROG FRAME - PROG FRAME - PROG FRAME - PROG FRAME - PROG FRAME - 
+        prog_frame = ctk.CTkFrame(help_frame,
+                        fg_color=APP_COLOR['white_m'],
+                        height=50,
+                        corner_radius=0)
+        prog_frame.place(relx=0.5,rely=0.10,relwidth=1,relheight=0.90,anchor='n')
     # BARRA DE BUSQUEDA
-        label_sb = ctk.CTkLabel(self.tree_frame,
+        # LABEL
+        label_sb = ctk.CTkLabel(prog_frame,
                              text='Busqueda por nombre',
                              bg_color='transparent',
                              text_color=APP_COLOR['gray'],
                              font=FONT['text_light'])
-        label_sb.grid(row=1,column=0,columnspan=3,sticky='ws',padx=15)
+        label_sb.place(relx=0.05,rely=0.08,anchor='nw')
+        # ENTRY
         self.search_bar_var = tk.StringVar()
-        self.search_bar = ctk.CTkEntry(self.tree_frame,
+        self.search_bar = ctk.CTkEntry(prog_frame,
                                   width=200,
                                   textvariable=self.search_bar_var)
-        self.search_bar.grid(row=2,column=0,columnspan=2,sticky='we',padx=15)
+        self.search_bar.place(relx=0.05,rely=0.18,anchor='w')
         self.search_bar.bind("<Return>",lambda event:self.BuscarProductoNombre())
-        self.search_bar.bind("<Control-BackSpace>", lambda event: self.ListInventory())
+        self.search_bar.bind("<Control-BackSpace>", lambda event: ListInventory())
         self.search_bar.after(100,lambda:self.search_bar.focus())
-    # BOTONES TREEVIEW     
-    # CANCELAR
-        cancel_btn = ctk.CTkButton(self.tree_frame,
-                                    text='Listar',
-                                    command=self.ListInventory,
+    # BOTONES TREEVIEW - BOTONES TREEVIEW - BOTONES TREEVIEW - BOTONES TREEVIEW - 
+    # LIST
+        list_btn = ctk.CTkButton(prog_frame,
+                                    text='',
+                                    width=30,
+                                    height=10,
+                                    image=ICONS['refresh'],
+                                    command=ListInventory,
                                     fg_color=APP_COLOR['main'],
                                     hover_color=APP_COLOR['sec'])
-        cancel_btn.grid(row=2,column=2,columnspan=2,sticky='we')
+        list_btn.place(relx=0.30,rely=0.18,anchor='w')
+    # LIST INACTIVE
+        list_inactive_btn = ctk.CTkButton(prog_frame,
+                                    text='',
+                                    width=30,
+                                    height=10,
+                                    image=ICONS['cancel'],
+                                    command=ListInactives,
+                                    fg_color=APP_COLOR['main'],
+                                    hover_color=APP_COLOR['sec'])
+        list_inactive_btn.place(relx=0.36,rely=0.18,anchor='w')
     # CERRAR
-        cerrar_btn = ctk.CTkButton(self.tree_frame,
-                                    text='Cerrar',
-                                    command=self.Cerrar,
+        cerrar_btn = ctk.CTkButton(prog_frame,
+                                    text='',
+                                    width=30,
+                                    image=ICONS['cancel'],
+                                    command=help_frame.destroy,
                                     fg_color=APP_COLOR['red_m'],
                                     hover_color=APP_COLOR['red_s'])
-        cerrar_btn.grid(row=2,column=7,columnspan=2,sticky='we')
-
+        cerrar_btn.place(relx=0.95,rely=0.05,anchor='ne')
     # TREEVIEW
-        self.treeview = ttk.Treeview(self.tree_frame,
-                                     style='Custom.Treeview',
+        self.treeview = ttk.Treeview(prog_frame,
+                                style='Custom.Treeview',
                                 columns=('Linea','Grupo','Proveedor','Nombre','Costo'))
-        self.treeview.grid(row=3,column=0,sticky='nswe',padx=20,pady=10,rowspan=7,columnspan=10)
+        self.treeview.place(relx=0.5,rely=0.3,relwidth=0.90,relheight=0.60,anchor='n')
         # EVENTO DE SELECCIONAR PRODUCTO
         self.treeview.bind("<<TreeviewSelect>>",self.ClickTreeview)
     # CODIGO
@@ -733,13 +786,13 @@ class CargaProductosProg(ctk.CTkFrame):
             foreground = APP_COLOR['black_m'],
             font = FONT['text_light'])
     # SCROLLBAR DEL TV
-        scrollbar = ctk.CTkScrollbar(self.tree_frame,
+        scrollbar = ctk.CTkScrollbar(prog_frame,
                                      orientation='vertical',
                                      command=self.treeview.yview)
-        scrollbar.grid(row=3,column=15,sticky='wns',pady=5,rowspan=7)
+        #scrollbar.grid(row=3,column=15,sticky='wns',pady=5,rowspan=7)
         self.treeview.configure(yscrollcommand=scrollbar.set)
     # LISTAR TODOS LOS PRODUCTOS CARGADOS AL INICIO DEL PROGRAMA
-        self.ListInventory()
+        ListInventory()
 # SELECIONAR PRODUCTO EN EL TREEVIEW
     def ClickTreeview(self,event):
         inventario = INVENTARIO.GetCodigos()
