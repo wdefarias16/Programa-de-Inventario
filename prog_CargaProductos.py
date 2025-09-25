@@ -583,7 +583,6 @@ class CargaProductosProg(ctk.CTkFrame):
         self.eliminar_btn.configure(state='disabled',fg_color=APP_COLOR['red_s'])
         self.busqueda_btn.configure(state='disabled',fg_color=APP_COLOR['sec'])
         self.cancelar_btn.configure(state='disabled',fg_color=APP_COLOR['red_s'])
-
     # GUARDAR LOS CAMBIOS DE LOS PRECIOS
     def AceptarPrecios(self):
         codigo = self.codigo_var.get()
@@ -670,6 +669,14 @@ class CargaProductosProg(ctk.CTkFrame):
                                              f'${producto['costo']}'))
         # ----------------------------------------------------------------
         # ----------------------------------------------------------------
+        # SELECIONAR PRODUCTO EN EL TREEVIEW
+        def ClickTreeview(event):
+            item_id = self.treeview.selection()
+            info = self.treeview.item(item_id)
+            self.search_bar_var.set(info['text'])
+            if info['text'] in self.inventario:
+                self.BuscarProducto()
+            help_frame.destroy()
     # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
     # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
     # FRAME DEL TREEVIEW
@@ -752,7 +759,7 @@ class CargaProductosProg(ctk.CTkFrame):
                                 columns=('Linea','Grupo','Proveedor','Nombre','Costo'))
         self.treeview.place(relx=0.5,rely=0.3,relwidth=0.90,relheight=0.60,anchor='n')
         # EVENTO DE SELECCIONAR PRODUCTO
-        self.treeview.bind("<<TreeviewSelect>>",self.ClickTreeview)
+        self.treeview.bind("<<TreeviewSelect>>",ClickTreeview)
     # CODIGO
         self.treeview.heading('#0',text='Codigo')
         self.treeview.column('#0',width=50,anchor='center')
@@ -793,21 +800,8 @@ class CargaProductosProg(ctk.CTkFrame):
         self.treeview.configure(yscrollcommand=scrollbar.set)
     # LISTAR TODOS LOS PRODUCTOS CARGADOS AL INICIO DEL PROGRAMA
         ListInventory()
-# SELECIONAR PRODUCTO EN EL TREEVIEW
-    def ClickTreeview(self,event):
-        inventario = INVENTARIO.GetCodigos()
-        item_id = self.treeview.selection()
-        info = self.treeview.item(item_id)
-        self.search_bar_var.set(info['text'])
-        if info['text'] in inventario:
-            self.BuscarProducto()
-        self.tree_frame.destroy()
-    def Cerrar(self):
-        self.tree_frame.destroy()
-        self.treeview_active = False
-
-
-
+    # --------------------------------------------------------------------------------
+    # --------------------------------------------------------------------------------
 # LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - 
 # LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - 
 # LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - 
