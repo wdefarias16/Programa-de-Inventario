@@ -298,11 +298,11 @@ class CargaProductosProg(ctk.CTkFrame):
         self.eliminar_btn.grid(row=13,column=5,columnspan=2,sticky='nswe',padx=4,pady=4)
         # VOLVER ATRAS - VOLVER ATRAS - VOLVER ATRAS - VOLVER ATRAS - VOLVER ATRAS - 
         salir_btn = ctk.CTkButton(self.entry_frame,
-                                       text='Volver atrás',
-                                       command=self.GoBack_CB,
-                                       text_color=APP_COLOR['white_m'],
-                                       fg_color=APP_COLOR['gray'],
-                                       hover_color=APP_COLOR['sec'])
+                                     text='Volver atrás',
+                                     command=self.GoBack_CB,
+                                     text_color=APP_COLOR['white_m'],
+                                     fg_color=APP_COLOR['gray'],
+                                     hover_color=APP_COLOR['sec'])
         salir_btn.grid(row=0,column=0,sticky='nw',padx=5)
     # --------------------------------------------------------------------------------
     # --------------------------------------------------------------------------------
@@ -444,7 +444,6 @@ class CargaProductosProg(ctk.CTkFrame):
             self.Restablecer()
     # --------------------------------------------------------------------------------
     # --------------------------------------------------------------------------------
-
 # BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - 
 # BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - BUSCAR UN PRODUCTO - 
     # BUSQUEDA POR CODIGO

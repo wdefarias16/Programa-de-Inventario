@@ -675,6 +675,9 @@ class Inventory:
                             messagebox.showerror('Base de Datos','Producto no encontrado')
                             return False
                         stock = row[0]
+                        if qty > stock:
+                            messagebox.showerror('Base de Datos','Cantidad excede la existencia.')
+                            return False
                         newstock = stock - qty
                         # UPDATE STOCK
                         cur.execute("""
