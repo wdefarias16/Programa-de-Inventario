@@ -104,6 +104,7 @@ class FacturacionProg(ctk.CTkFrame):
                         border_width = 0,
                         fg_color = APP_COLOR['white'])
         self.cod_client_entry.place(x=70,y=70,anchor='nw')
+        self.cod_client_entry.bind("<Return>",lambda event:self.SearchClient())
         # NOMBRE
         self.name_client_entry_var = tk.StringVar()
         self.name_client_entry = ctk.CTkEntry(main_frame,
@@ -655,5 +656,26 @@ class FacturacionProg(ctk.CTkFrame):
         # UPDATE LABELS
         self.total_fact_dolar_label.configure(text=f'$ {format(self.total_DOLAR,',.2f')}')
         self.total_fact_bs_label.configure(text=f'Bs. {format(self.total_BOLIVAR,',.2f')}')
+    # -------------------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------------------------------
+# SEARCH CLIENT - SEARCH CLIENT - SEARCH CLIENT - SEARCH CLIENT - SEARCH CLIENT - SEARCH CLIENT - 
+# SEARCH CLIENT - SEARCH CLIENT - SEARCH CLIENT - SEARCH CLIENT - SEARCH CLIENT - SEARCH CLIENT - 
+    def SearchClient(self):
+        code = self.cod_client_entry_var.get().strip()
+        try:
+            code = int(code)
+        except ValueError:
+            messagebox.showerror('Error','Ingrese un codigo de cliente valido')
+            self.cod_client_entry_var.set('')
+            self.cod_client_entry.focus()
+            return
+        
+        client_data = CLIENT_MANAGER.GetClientByCode(code)
+        self.name_client_entry_var.set(client_data['nombre'])
+        self.fiscal_client_entry_var.set(client_data['id_fiscal'])
+        self.phone_client_entry_var.set(client_data['telefono'] or '')
+        self.address_client_entry_var.set(client_data['direccion1'] or '')
+        self.mail_client_entry_var.set(client_data['email'] or '')
+
     # -------------------------------------------------------------------------------------------------
     # -------------------------------------------------------------------------------------------------
