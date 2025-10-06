@@ -26,8 +26,9 @@ class App(ctk.CTk):
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
         self.geometry(f"{screen_width}x{screen_height}+0+0")
-        #self.protocol("WM_DELETE_WINDOW", lambda: None)
+        self.protocol("WM_DELETE_WINDOW", lambda: None)
         self.dashboard_activo = False
+        self.current_prog_name = 0
     # ATAJOS
         # ATAJO CERRAR SESION
         self.winfo_toplevel().bind("<Control-Q>", self.CloseSession)
@@ -112,6 +113,7 @@ class App(ctk.CTk):
 # PROGRAMAS DE FACTURACION - PROGRAMAS DE FACTURACION - PROGRAMAS DE FACTURACION - PROGRAMAS DE FACTURACION - 
 # PROGRAMAS DE FACTURACION - PROGRAMAS DE FACTURACION - PROGRAMAS DE FACTURACION - PROGRAMAS DE FACTURACION - 
     def FacturacionMenu(self):
+        self.current_prog_name = 0
         self.dashboard.destroy()
         self.dashboard_activo = False
         self.current_prog = FacturacionMenu(self,
@@ -119,12 +121,14 @@ class App(ctk.CTk):
                                            FacturacionProg = self.FacturacionProg)
         self.current_prog.pack(expand=True,fill='both')
     def GoBackFacturacion(self):
+        self.current_prog_name = 0
         self.current_prog.destroy()
         self.current_prog = FacturacionMenu(self,
                                            GoBack_CB = self.ReturnToDashboard,
                                            FacturacionProg = self.FacturacionProg)
         self.current_prog.pack(expand=True,fill='both')
     def FacturacionProg(self):
+        self.current_prog_name = 1
         self.current_prog.destroy()
         self.current_prog = FacturacionProg(self,GoBack_CB=self.GoBackFacturacion)
         self.current_prog.pack(expand=True,fill='both')
@@ -196,6 +200,7 @@ class App(ctk.CTk):
 # REGRESAR AL DASHBOARD
     def ReturnToDashboard(self):
         self.current_prog.destroy()
+        self.current_prog_name = 0
         self.dashboard=DashBoardMenu(self,
                                  lockscreen_callback = self.LockWindow,
                                  exit_callback = self.Salir,
@@ -217,6 +222,8 @@ class App(ctk.CTk):
 # ATAJOS - ATAJOS - ATAJOS - ATAJOS - ATAJOS - ATAJOS - ATAJOS - ATAJOS - ATAJOS
 # ATAJOS - ATAJOS - ATAJOS - ATAJOS - ATAJOS - ATAJOS - ATAJOS - ATAJOS - ATAJOS
     def F4_Pressed(self,event):
+        if self.current_prog_name == 1:
+            return
         if self.dashboard_activo == False:
             self.ReturnToDashboard()
     def CloseSession(self, event):

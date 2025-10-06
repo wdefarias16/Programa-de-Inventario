@@ -689,6 +689,44 @@ class Inventory:
             return False
     # ---------------------------------------------------------------------------------------
     # ---------------------------------------------------------------------------------------
+    # RETURN PRODUCTS - RETURN PRODUCTS - RETURN PRODUCTS - RETURN PRODUCTS - RETURN PRODUCTS - 
+    # RETURN PRODUCTS - RETURN PRODUCTS - RETURN PRODUCTS - RETURN PRODUCTS - RETURN PRODUCTS - 
+    def ReturnProducts(self, product_list):
+        """
+        Revierte el stock de una lista de productos
+        product_list: lista de tuplas (codigo, cantidad)
+        """
+        try:
+            with self.conn:
+                with self.conn.cursor() as cur:
+                    for codigo, cantidad in product_list:
+                        # Bloquear la fila para actualización
+                        cur.execute("""
+                            SELECT existencia FROM productos 
+                            WHERE codigo = %s AND activo = TRUE FOR UPDATE;
+                        """, (codigo,))
+
+                        row = cur.fetchone()
+                        if not row:
+                            print(f"Advertencia: Producto {codigo} no encontrado")
+                            continue
+                        
+                        stock_actual = row[0]
+                        nuevo_stock = stock_actual + cantidad
+
+                        # Revertir el stock
+                        cur.execute("""
+                            UPDATE productos 
+                            SET existencia = %s 
+                            WHERE codigo = %s;
+                        """, (nuevo_stock, codigo))
+
+            return True
+        except Exception as e:
+            print(f"Error revirtiendo productos: {str(e)}")
+            return False
+    # ---------------------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------------------
 # DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - 
 # DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - 
 # DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - DOLAR MANEGEMENT - 

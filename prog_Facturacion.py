@@ -48,35 +48,7 @@ class FacturacionProg(ctk.CTkFrame):
         product_frame.place(relx=0,y=69.5,relwidth=0.25,relheight=1,anchor='nw')
     # --------------------------------------------------------------------------
     # --------------------------------------------------------------------------
-        # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
-        # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS -
-        self.product_name_label = ctk.CTkLabel(product_frame,
-                        text='Producto',
-                        font=FONT['text'],
-                        text_color=APP_COLOR['white_m'])
-        self.product_name_label.place(relx=0.5,rely=0.5,ancho='center')
-    # --------------------------------------------------------------------------
-    # --------------------------------------------------------------------------
-# PRODUCT IMAGE - PRODUCT IMAGE - PRODUCT IMAGE - PRODUCT IMAGE - PRODUCT IMAGE - PRODUCT IMAGE - 
-# PRODUCT IMAGE - PRODUCT IMAGE - PRODUCT IMAGE - PRODUCT IMAGE - PRODUCT IMAGE - PRODUCT IMAGE - 
-        # IMAGE
-        self.image_path = 'Recursos/Imagenes/Productos'
-        default_image = Image.open(f"{self.image_path}/Default.png")
-        self.default_image = ctk.CTkImage(light_image=default_image, size=(200,200))
-        # IMAGE FRAME
-        image_frame = ctk.CTkFrame(product_frame,
-                        fg_color=APP_COLOR['white'],
-                        width=220,
-                        height=220,
-                        corner_radius=0)
-        image_frame.place(relx=0.5,y=140,anchor='center')
-        # IMAGE DISPLAY
-        self.image_label = ctk.CTkLabel(image_frame,
-                        text='',
-                        image=self.default_image)
-        self.image_label.pack()
-    # -----------------------------------------------------------------------------------------------
-    # -----------------------------------------------------------------------------------------------
+
 # MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - 
 # MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - 
 # MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - 
@@ -84,6 +56,21 @@ class FacturacionProg(ctk.CTkFrame):
         # FUNCTIONS
         def ClickLista():
             pass
+        # --------------------------------------------------------------------
+        # --------------------------------------------------------------------
+        # GO BACK
+        # Reemplazar la función GoBack existente
+        def GoBack():
+            if self.product_list:
+                respuesta = messagebox.askyesno(
+                    '¡Atención!',
+                    'Hay productos en la factura. ¿Desea cancelar la factura y volver atrás?'
+                )
+                if respuesta:
+                    self.CancelFact()
+                    self.GoBack_CB()
+            else:
+                self.GoBack_CB()
         # --------------------------------------------------------------------
         # --------------------------------------------------------------------
         # FRAME
@@ -259,6 +246,23 @@ class FacturacionProg(ctk.CTkFrame):
                         hover_color=APP_COLOR['sec'],
                         command=self.ProductsHelp)
         self.btn_add_product.place(relx=0.87,y=190,anchor='nw')
+        # GO BACK
+        self.btn_goback = ctk.CTkButton(main_frame,
+                        text="Volver atrás",
+                        corner_radius=0,
+                        fg_color=APP_COLOR['gray'],
+                        hover_color=APP_COLOR['sec'],
+                        command=GoBack)
+        self.btn_goback.place(relx=0,y=0,anchor='nw')
+        # CANCEL FACT
+        self.btn_cancel_fact = ctk.CTkButton(main_frame,
+                            text="Cancelar Factura",
+                            width=120,
+                            height=30,
+                            fg_color=APP_COLOR['red_m'],
+                            hover_color=APP_COLOR['red_s'],
+                            command=self.CancelFact)
+        self.btn_cancel_fact.place(relx=0.20,y=0,anchor='nw')
 # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
 # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
 # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
@@ -401,17 +405,6 @@ class FacturacionProg(ctk.CTkFrame):
             ListInventory()
         # -------------------------------------------------------------------------------------------------
         # -------------------------------------------------------------------------------------------------
-        # GET AND DISPLAY PRODUCT IMAGE - GET AND DISPLAY PRODUCT IMAGE -
-        # GET AND DISPLAY PRODUCT IMAGE - GET AND DISPLAY PRODUCT IMAGE -
-        def GetImage(image):
-            if not image:
-                image = 'Recursos/Imagenes/Productos/Default.png'
-            img = Image.open(image)
-            w, h = img.size
-            photo = ctk.CTkImage(light_image=img, size=(200,200))
-            self.image_label.configure(image=photo)
-        # -------------------------------------------------------------------------------------------------
-        # -------------------------------------------------------------------------------------------------
         # ADD PRODUCT TO MAIN TREEVIEW - ADD PRODUCT TO MAIN TREEVIEW -
         # ADD PRODUCT TO MAIN TREEVIEW - ADD PRODUCT TO MAIN TREEVIEW -
         def AddProduct():
@@ -465,11 +458,6 @@ class FacturacionProg(ctk.CTkFrame):
                         f'Bs. {precio_bs_format}',
                         f'$ {precio_dolar_format}'))
             self.product_list.append(str(codigo).strip())
-            # GET AND DISPLAY PRODUCT IMAGE
-            image = producto['image']
-            GetImage(image)
-            # DIPLAY PRODUCT NAME ON PRODUCT FRAME
-            self.product_name_label.configure(text=producto['nombre'])
             # CERRAR EL PRODUCT HELP FRAME
             help_frame.destroy()
             self.UpdateTotal()
@@ -608,7 +596,22 @@ class FacturacionProg(ctk.CTkFrame):
         codigo = self.product_code_entry_var.get()
         if codigo in self.inventory_codes:
             producto = INVENTARIO.GetProducto(codigo)
-            INVENTARIO.SellProduct(codigo,1)
+
+            # Validar stock antes de vender
+            if producto['existencia'] < 1:
+                messagebox.showerror('Error', 'No hay suficiente stock disponible.')
+                self.product_code_entry_var.set('')
+                self.product_code_entry.focus()
+                return
+
+            # Intentar vender el producto
+            if not INVENTARIO.SellProduct(codigo, 1):
+                messagebox.showerror('Error', 'No se pudo procesar la venta. Intente nuevamente.')
+                self.product_code_entry_var.set('')
+                self.product_code_entry.focus()
+                return
+
+            # Resto del código igual...
             self.treeview_main.insert("", 'end',
                 text=producto['codigo'],
                 values=(producto['nombre'],
@@ -617,16 +620,7 @@ class FacturacionProg(ctk.CTkFrame):
                         f'Bs. {format(float(self.DOLAR * float(producto['precio1'])),',.2f')}',
                         f'$ {format(producto['precio1'],',.2f')}'))
             self.product_list.append(str(codigo).strip())
-            # GET AND DISPLAY PRODUCT IMAGE
-            image = producto['image']
-            if not image:
-                image = 'Recursos/Imagenes/Productos/Default.png'
-            img = Image.open(image)
-            w, h = img.size
-            photo = ctk.CTkImage(light_image=img, size=(200,200))
-            self.image_label.configure(image=photo)
-            # DIPLAY PRODUCT NAME ON PRODUCT FRAME
-            self.product_name_label.configure(text=producto['nombre'])
+
             # CLEAR ENTRY
             self.product_code_entry_var.set('')
             self.product_code_entry.focus()
@@ -669,13 +663,80 @@ class FacturacionProg(ctk.CTkFrame):
             self.cod_client_entry_var.set('')
             self.cod_client_entry.focus()
             return
-        
         client_data = CLIENT_MANAGER.GetClientByCode(code)
         self.name_client_entry_var.set(client_data['nombre'])
         self.fiscal_client_entry_var.set(client_data['id_fiscal'])
         self.phone_client_entry_var.set(client_data['telefono'] or '')
         self.address_client_entry_var.set(client_data['direccion1'] or '')
         self.mail_client_entry_var.set(client_data['email'] or '')
+    # -------------------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------------------------------
 
+# CANCEL BILL - CANCEL BILL - CANCEL BILL - CANCEL BILL - CANCEL BILL - CANCEL BILL - 
+# CANCEL BILL - CANCEL BILL - CANCEL BILL - CANCEL BILL - CANCEL BILL - CANCEL BILL - 
+    # Agregar en la clase FacturacionProg, en la sección FUNCTIONS
+    def CancelFact(self):
+        """
+        Cancela la factura actual, revierte el stock y limpia la interfaz
+        """
+        if not self.product_list:
+            messagebox.showinfo("Información", "No hay productos para cancelar")
+            return
+        
+        # Confirmar cancelación
+        respuesta = messagebox.askyesno(
+            "Cancelar Factura", 
+            "¿Está seguro de cancelar la factura?\nSe revertirá el stock de todos los productos."
+        )
+        
+        if not respuesta:
+            return
+        
+        try:
+            # Preparar lista de productos a revertir (código, cantidad)
+            productos_a_revertir = []
+            for item in self.treeview_main.get_children():
+                info = self.treeview_main.item(item)
+                codigo = info['text']
+                cantidad = int(info['values'][1])  # La cantidad está en el índice 1
+                
+                productos_a_revertir.append((codigo, cantidad))
+            
+            # Llamar a la función de la base de datos
+            if INVENTARIO.ReturnProducts(productos_a_revertir):
+                # Limpiar interfaz
+                self.ClearInterface()
+                messagebox.showinfo("Éxito", "Factura cancelada y stock revertido correctamente")
+            else:
+                messagebox.showerror("Error", "No se pudo revertir el stock. Contacte al administrador.")
+        
+        except Exception as e:
+            messagebox.showerror("Error", f"Error al cancelar factura: {str(e)}")
+    
+    def ClearInterface(self):
+        """
+        Limpia toda la interfaz de facturación
+        """
+        # Limpiar treeview
+        for item in self.treeview_main.get_children():
+            self.treeview_main.delete(item)
+        
+        # Limpiar lista de productos
+        self.product_list.clear()
+        
+        # Limpiar campos de cliente
+        self.cod_client_entry_var.set('')
+        self.name_client_entry_var.set('')
+        self.phone_client_entry_var.set('')
+        self.fiscal_client_entry_var.set('')
+        self.mail_client_entry_var.set('')
+        self.address_client_entry_var.set('')
+        
+        # Limpiar campos de producto
+        self.product_code_entry_var.set('')
+        
+        
+        # Actualizar totales a cero
+        self.UpdateTotal()
     # -------------------------------------------------------------------------------------------------
     # -------------------------------------------------------------------------------------------------

@@ -56,7 +56,6 @@ class Clientes:
                     messagebox.showinfo("Base de Datos", "Cliente general creado correctamente.")
                     return True
                 else:
-                    messagebox.showinfo("Base de Datos", "El cliente general ya existe.")
                     return False
         except Exception as e:
             self.conn.rollback()
