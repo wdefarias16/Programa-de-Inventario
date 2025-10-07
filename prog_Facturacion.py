@@ -64,8 +64,7 @@ class FacturacionProg(ctk.CTkFrame):
             if self.product_list:
                 respuesta = messagebox.askyesno(
                     '¡Atención!',
-                    'Hay productos en la factura. ¿Desea cancelar la factura y volver atrás?'
-                )
+                    'Hay productos en la factura. ¿Desea cancelar la factura y volver atrás?')
                 if respuesta:
                     self.CancelFact()
                     self.GoBack_CB()
@@ -190,13 +189,22 @@ class FacturacionProg(ctk.CTkFrame):
         # CODIGO DE PRODUCTO
         self.product_code_entry_var = tk.StringVar()
         self.product_code_entry = ctk.CTkEntry(main_frame,
-                        width=100,
+                        width=150,
                         height=30,
                         textvariable = self.product_code_entry_var,
                         border_width = 0,
                         fg_color = APP_COLOR['white'])
-        self.product_code_entry.place(relx=0.75,y=190,anchor='nw')
+        self.product_code_entry.place(relx=0.60,y=190,anchor='nw')
         self.product_code_entry.bind("<Return>",lambda event:self.SearchProductByCode())
+        # CANTIDAD DE PRODUCTO
+        self.product_qty_entry_var = tk.StringVar()
+        self.product_qty_entry = ctk.CTkEntry(main_frame,
+                        width=65,
+                        height=30,
+                        textvariable = self.product_qty_entry_var,
+                        border_width = 0,
+                        fg_color = APP_COLOR['white'])
+        self.product_qty_entry.place(relx=0.78,y=190,anchor='nw')
     # --------------------------------------------------------------------------
     # --------------------------------------------------------------------------
 # LABELS PRODUCT DATA - LABELS PRODUCT DATA - LABELS PRODUCT DATA - LABELS PRODUCT DATA -
@@ -208,7 +216,13 @@ class FacturacionProg(ctk.CTkFrame):
                         text='Producto',
                         text_color=APP_COLOR['gray'],
                         font=FONT['text'])
-        product_code_label.place(relx=0.75,y=160,anchor='nw')
+        product_code_label.place(relx=0.60,y=160,anchor='nw')
+        # CANTIDAD DE PRODUCTO
+        product_qty_label = ctk.CTkLabel(main_frame,
+                        text='Cantidad',
+                        text_color=APP_COLOR['gray'],
+                        font=FONT['text'])
+        product_qty_label.place(relx=0.78,y=160,anchor='nw')
     # TOTAL FACT - TOTAL FACT - TOTAL FACT - TOTAL FACT - TOTAL FACT - TOTAL FACT - TOTAL FACT - 
     # TOTAL FACT - TOTAL FACT - TOTAL FACT - TOTAL FACT - TOTAL FACT - TOTAL FACT - TOTAL FACT - 
         # TOTAL DOLARES
@@ -256,13 +270,22 @@ class FacturacionProg(ctk.CTkFrame):
         self.btn_goback.place(relx=0,y=0,anchor='nw')
         # CANCEL FACT
         self.btn_cancel_fact = ctk.CTkButton(main_frame,
-                            text="Cancelar Factura",
-                            width=120,
-                            height=30,
+                            text="",
+                            image=ICONS['cancel'],
+                            width=10,
                             fg_color=APP_COLOR['red_m'],
                             hover_color=APP_COLOR['red_s'],
                             command=self.CancelFact)
-        self.btn_cancel_fact.place(relx=0.20,y=0,anchor='nw')
+        self.btn_cancel_fact.place(relx=0.08,rely=0.65,anchor='nw')
+        # DEL PRODUCT
+        self.btn_del_product = ctk.CTkButton(main_frame,
+                            text="",
+                            image=ICONS['trash'],
+                            width=10,
+                            fg_color=APP_COLOR['red_m'],
+                            hover_color=APP_COLOR['red_s'],
+                            command=self.DeleteSelectedProduct)
+        self.btn_del_product.place(relx=0.15,rely=0.65,anchor='nw')
 # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
 # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
 # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
@@ -613,19 +636,27 @@ class FacturacionProg(ctk.CTkFrame):
 # SEARCH PRODUCT BY CODE - SEARCH PRODUCT BY CODE - SEARCH PRODUCT BY CODE -
 # SEARCH PRODUCT BY CODE - SEARCH PRODUCT BY CODE - SEARCH PRODUCT BY CODE -
     def SearchProductByCode(self):
+        # GET DATA
         codigo = self.product_code_entry_var.get()
+        qty = self.product_qty_entry_var.get()
+        # CATCH QTY ERROR
+        try:
+            qty = int(qty)
+        except ValueError:
+            qty = 1
+        # GET PRODUCT INFO
         if codigo in self.inventory_codes:
             producto = INVENTARIO.GetProducto(codigo)
 
             # Validar stock antes de vender
-            if producto['existencia'] < 1:
+            if producto['existencia'] < qty:
                 messagebox.showerror('Error', 'No hay suficiente stock disponible.')
                 self.product_code_entry_var.set('')
                 self.product_code_entry.focus()
                 return
 
             # Intentar vender el producto
-            if not INVENTARIO.SellProduct(codigo, 1):
+            if not INVENTARIO.SellProduct(codigo, qty):
                 messagebox.showerror('Error', 'No se pudo procesar la venta. Intente nuevamente.')
                 self.product_code_entry_var.set('')
                 self.product_code_entry.focus()
@@ -637,10 +668,10 @@ class FacturacionProg(ctk.CTkFrame):
                     values = self.treeview_main.item(item)
                     if values['text'] == codigo:
                         name = values['values'][0]
-                        qty = values['values'][1]
+                        current_qty = values['values'][1]
                         cost = values['values'][2].split(' ')[1].strip()
                         cost = float(cost)
-                        new_qty = int(qty) + 1
+                        new_qty = int(current_qty) + qty
                         cost_bs = new_qty * self.DOLAR
                         cost_dolar = new_qty * cost
                         self.treeview_main.item(item, values=(name,new_qty,f'$ {cost}',f'Bs. {cost_bs:,.2f}',f'$ {cost_dolar:,.2f}'))
@@ -648,6 +679,7 @@ class FacturacionProg(ctk.CTkFrame):
                         self.UpdateTotal()
                         # CLEAN ENTRIES
                         self.product_code_entry_var.set('')
+                        self.product_qty_entry_var.set('')
                         self.product_code_entry.focus()
                         return
 
@@ -655,7 +687,7 @@ class FacturacionProg(ctk.CTkFrame):
             self.treeview_main.insert("", 'end',
                 text=producto['codigo'],
                 values=(producto['nombre'],
-                        '1',
+                        qty,
                         f'$ {producto['precio1']}',
                         f'Bs. {format(float(self.DOLAR * float(producto['precio1'])),',.2f')}',
                         f'$ {format(producto['precio1'],',.2f')}'))
@@ -663,6 +695,7 @@ class FacturacionProg(ctk.CTkFrame):
 
             # CLEAR ENTRY
             self.product_code_entry_var.set('')
+            self.product_qty_entry_var.set('')
             self.product_code_entry.focus()
             # UPDATE TOTAL
             self.UpdateTotal()
@@ -752,7 +785,48 @@ class FacturacionProg(ctk.CTkFrame):
         
         except Exception as e:
             messagebox.showerror("Error", f"Error al cancelar factura: {str(e)}")
-    
+# DELETE PRODUCT - DELETE PRODUCT - DELETE PRODUCT - DELETE PRODUCT - DELETE PRODUCT - 
+# DELETE PRODUCT - DELETE PRODUCT - DELETE PRODUCT - DELETE PRODUCT - DELETE PRODUCT - 
+    # DELETE A PRODUCT ON THE LIST
+    def DeleteSelectedProduct(self):
+        """
+        Elimina un producto seleccionado del treeview y revierte su stock
+        """
+        selected = self.treeview_main.selection()
+        if not selected:
+            messagebox.showinfo("Seleccionar", "Seleccione un producto para eliminar")
+            return
+
+        item = selected[0]
+        info = self.treeview_main.item(item)
+        codigo = info['text']
+        cantidad = int(info['values'][1])
+
+        # Confirmar eliminación
+        respuesta = messagebox.askyesno(
+            "Eliminar Producto", 
+            f"¿Eliminar {info['values'][0]} de la factura?"
+        )
+
+        if not respuesta:
+            return
+
+        try:
+            # Revertir stock
+            if INVENTARIO.ReturnProducts([(codigo, cantidad)]):
+                # Eliminar de la lista y treeview
+                if codigo in self.product_list:
+                    self.product_list.remove(codigo)
+                self.treeview_main.delete(item)
+                self.UpdateTotal()
+                messagebox.showinfo("Éxito", "Producto eliminado correctamente")
+            else:
+                messagebox.showerror("Error", "No se pudo revertir el stock")
+
+        except Exception as e:
+            messagebox.showerror("Error", f"Error al eliminar producto: {str(e)}")
+    # -------------------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------------------------------
     def ClearInterface(self):
         """
         Limpia toda la interfaz de facturación
@@ -780,5 +854,4 @@ class FacturacionProg(ctk.CTkFrame):
         self.UpdateTotal()
     # -------------------------------------------------------------------------------------------------
     # -------------------------------------------------------------------------------------------------
-    def CalculatePrices(self,qty,cost):
-        pass
+    
