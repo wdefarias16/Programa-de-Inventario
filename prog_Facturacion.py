@@ -45,7 +45,7 @@ class FacturacionProg(ctk.CTkFrame):
         product_frame = ctk.CTkFrame(self,
                         fg_color=APP_COLOR['main'],
                         corner_radius=0)
-        product_frame.place(relx=0,y=69.5,relwidth=0.25,relheight=1,anchor='nw')
+        product_frame.place(relx=0.75,y=69.5,relwidth=0.25,relheight=1,anchor='nw')
     # --------------------------------------------------------------------------
     # --------------------------------------------------------------------------
 
@@ -54,7 +54,7 @@ class FacturacionProg(ctk.CTkFrame):
 # MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - 
 # MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - 
         # FUNCTIONS
-        def ClickLista():
+        def ClickLista(event):
             pass
         # --------------------------------------------------------------------
         # --------------------------------------------------------------------
@@ -77,7 +77,7 @@ class FacturacionProg(ctk.CTkFrame):
         main_frame = ctk.CTkFrame(self,
                         fg_color=APP_COLOR['white_m'],
                         corner_radius=0)
-        main_frame.place(relx=0.25,y=69.5,relwidth=0.75,relheight=1,anchor='nw')
+        main_frame.place(relx=0,y=69.5,relwidth=0.75,relheight=1,anchor='nw')
 # ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS - 
 # ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS -
 # ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS -
@@ -410,13 +410,6 @@ class FacturacionProg(ctk.CTkFrame):
         def AddProduct():
             # GET CURRENT PRODUCT CODE
             codigo = self.search_bar_entry_var.get()
-            # IF CODE ALREADY IN MAIN TREEVIEW, CANNOT BE ADDED
-            if codigo in self.product_list:
-                messagebox.showerror('Error', f'Producto con código {codigo} ya se encuentra en la lista.')
-                return
-            if codigo not in self.inventory_codes:
-                messagebox.showerror('Error', f'Producto con código {codigo} no se encuentra en la base de datos.')
-                return
             # GET PRODUCT DATA
             producto = INVENTARIO.GetProducto(codigo)
             # GET ADJUSTMENT
@@ -431,8 +424,34 @@ class FacturacionProg(ctk.CTkFrame):
                 messagebox.showerror('Error', 'La cantidad supera la existencia.')
                 self.qty_entry_var.set('')
                 return
-            # SUBTRACT IN STOCK
-            INVENTARIO.SellProduct(codigo,qty)
+            
+            # IF THE PRODUCT IS ALREADY IN THE LIST, IT ADDS THE QTY
+            if codigo in self.product_list:
+                for item in self.treeview_main.get_children():
+                    values = self.treeview_main.item(item)
+                    if values['text'] == codigo:
+                        name = values['values'][0]
+                        current_qty = values['values'][1]
+                        cost = values['values'][2].split(' ')[1].strip()
+                        cost = float(cost)
+                        new_qty = int(current_qty) + qty
+                        cost_bs = new_qty * self.DOLAR
+                        cost_dolar = new_qty * cost
+                        self.treeview_main.item(item, values=(name,new_qty,f'$ {cost}',f'Bs. {cost_bs:,.2f}',f'$ {cost_dolar:,.2f}'))
+                        # RECALCULATE TOTAL
+                        self.UpdateTotal()
+                        # CLEAN ENTRIES
+                        self.product_code_entry_var.set('')
+                        self.product_code_entry.focus()
+                        # SUBTRACT IN STOCK
+                        INVENTARIO.SellProduct(codigo,qty)
+                        help_frame.destroy()
+                        return
+            if codigo not in self.inventory_codes:
+                messagebox.showerror('Error', f'Producto con código {codigo} no se encuentra en la base de datos.')
+                return
+            
+            
             # -----------------------------------------------------
             # -----------------------------------------------------
             # PRECIO POR UNIDAD EN DOLARES CON FORMATO '000,000.00'
@@ -458,6 +477,7 @@ class FacturacionProg(ctk.CTkFrame):
                         f'Bs. {precio_bs_format}',
                         f'$ {precio_dolar_format}'))
             self.product_list.append(str(codigo).strip())
+            INVENTARIO.SellProduct(codigo,qty)
             # CERRAR EL PRODUCT HELP FRAME
             help_frame.destroy()
             self.UpdateTotal()
@@ -610,6 +630,26 @@ class FacturacionProg(ctk.CTkFrame):
                 self.product_code_entry_var.set('')
                 self.product_code_entry.focus()
                 return
+            
+            # IF THE PRODUCT IS ALREADY IN THE LIST, IT ADDS ONE MORE TO QTY
+            if codigo in self.product_list:
+                for item in self.treeview_main.get_children():
+                    values = self.treeview_main.item(item)
+                    if values['text'] == codigo:
+                        name = values['values'][0]
+                        qty = values['values'][1]
+                        cost = values['values'][2].split(' ')[1].strip()
+                        cost = float(cost)
+                        new_qty = int(qty) + 1
+                        cost_bs = new_qty * self.DOLAR
+                        cost_dolar = new_qty * cost
+                        self.treeview_main.item(item, values=(name,new_qty,f'$ {cost}',f'Bs. {cost_bs:,.2f}',f'$ {cost_dolar:,.2f}'))
+                        # RECALCULATE TOTAL
+                        self.UpdateTotal()
+                        # CLEAN ENTRIES
+                        self.product_code_entry_var.set('')
+                        self.product_code_entry.focus()
+                        return
 
             # Resto del código igual...
             self.treeview_main.insert("", 'end',
@@ -740,3 +780,5 @@ class FacturacionProg(ctk.CTkFrame):
         self.UpdateTotal()
     # -------------------------------------------------------------------------------------------------
     # -------------------------------------------------------------------------------------------------
+    def CalculatePrices(self,qty,cost):
+        pass
