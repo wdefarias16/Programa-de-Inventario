@@ -770,7 +770,10 @@ class FacturacionProg(ctk.CTkFrame):
             if total_pagado_dolar < self.total_DOLAR:
                 # SI NO ES SUFICIENTE, REBAJAR EL MONTO PAGADO Y ACTUALIZAR EL LABEL DEL FALANTE
                 faltante = self.total_DOLAR - total_pagado_dolar
-                messagebox.showerror('Error', f'Faltan $ {faltante:,.2f}')
+                self.total_to_pay_dolar_value.configure(text=f'$ {format(faltante,",.2f")}')
+                self.total_to_pay_bs_value.configure(text=f'Bs. {format(faltante * self.DOLAR,",.2f")}')
+                self.total_paid_value.configure(text=f'$ {format(total_pagado_dolar,",.2f")}')
+                self.total_paid_bs_value.configure(text=f'Bs. {format(total_pagado_dolar * self.DOLAR,",.2f")}')
                 return
             # CALCULAR CAMBIO
             cambio_dolar = total_pagado_dolar - self.total_DOLAR
@@ -850,22 +853,48 @@ class FacturacionProg(ctk.CTkFrame):
                         font=FONT['text_light'],
                         text_color=APP_COLOR['gray'])
         total_to_pay_dolar_label.place(relx=0.1,rely=0.2,anchor='w')
-        total_to_pay_dolar_value = ctk.CTkLabel(prog_frame,
+        self.total_to_pay_dolar_value = ctk.CTkLabel(prog_frame,
                         text=f'$ {format(self.total_DOLAR,",.2f")}',
                         font=FONT['text_big'],
                         text_color=APP_COLOR['black_m'])
-        total_to_pay_dolar_value.place(relx=0.1,rely=0.3,anchor='w')
+        self.total_to_pay_dolar_value.place(relx=0.1,rely=0.3,anchor='w')
         # TOTAL A PAGAR EN BOLIVARES
         total_to_pay_bs_label = ctk.CTkLabel(prog_frame,
                         text='Total a pagar en Bs.',
                         font=FONT['text_light'],
                         text_color=APP_COLOR['gray'])
         total_to_pay_bs_label.place(relx=0.1,rely=0.5,anchor='w')
-        total_to_pay_bs_value = ctk.CTkLabel(prog_frame,
+        self.total_to_pay_bs_value = ctk.CTkLabel(prog_frame,
                         text=f'Bs. {format(self.total_BOLIVAR,",.2f")}',
                         font=FONT['text_big'],
                         text_color=APP_COLOR['black_m'])
-        total_to_pay_bs_value.place(relx=0.1,rely=0.6,anchor='w')
+        self.total_to_pay_bs_value.place(relx=0.1,rely=0.6,anchor='w')
+        # ----------------------------------------------------------------------------------------------
+        # ----------------------------------------------------------------------------------------------
+        # TOTAL PAGADO EN DOLARES
+        total_paid_label = ctk.CTkLabel(prog_frame,
+                        text='Total pagado en $',
+                        font=FONT['text_light'],
+                        text_color=APP_COLOR['gray'])
+        total_paid_label.place(relx=0.1,rely=0.8,anchor='w')
+        self.total_paid_value = ctk.CTkLabel(prog_frame,
+                        text=f'$ 0.00',
+                        font=FONT['text_big'],
+                        text_color=APP_COLOR['black_m'])
+        self.total_paid_value.place(relx=0.1,rely=0.9,anchor='w')
+        # TOTAL PAGADO EN BOLIVARES
+        total_paid_bs_label = ctk.CTkLabel(prog_frame,
+                        text='Total pagado en Bs.',
+                        font=FONT['text_light'],
+                        text_color=APP_COLOR['gray'])
+        total_paid_bs_label.place(relx=0.35,rely=0.8,anchor='w')
+        self.total_paid_bs_value = ctk.CTkLabel(prog_frame,
+                        text=f'Bs. 0.00',
+                        font=FONT['text_big'],
+                        text_color=APP_COLOR['black_m'])
+        self.total_paid_bs_value.place(relx=0.35,rely=0.9,anchor='w')
+        # ----------------------------------------------------------------------------------------------
+        # ----------------------------------------------------------------------------------------------
         # EFECTIVO RECIBIDO EN DOLARES
         cash_received_dolar_label = ctk.CTkLabel(prog_frame,
                         text='Efectivo recibido en $',
@@ -885,19 +914,21 @@ class FacturacionProg(ctk.CTkFrame):
         # EFECTIVO RECIBIDO EN DOLARES
         cash_received_dolar_var = tk.StringVar()
         cash_received_dolar_entry = ctk.CTkEntry(prog_frame,
+                        width=200,
                         textvariable=cash_received_dolar_var,
                         fg_color=APP_COLOR['white'],
                         border_color=APP_COLOR['gray'])
-        cash_received_dolar_entry.place(relx=0.6,rely=0.3,anchor='w',width=200)
+        cash_received_dolar_entry.place(relx=0.6,rely=0.3,anchor='w')
         cash_received_dolar_entry.focus()
         cash_received_dolar_entry.bind("<Return>",lambda event:ProcessPayment())
         # EFECTIVO RECIBIDO EN BOLIVARES
         cash_received_bs_var = tk.StringVar()
         cash_received_bs_entry = ctk.CTkEntry(prog_frame,
+                        width=200,
                         textvariable=cash_received_bs_var,
                         fg_color=APP_COLOR['white'],
                         border_color=APP_COLOR['gray'])
-        cash_received_bs_entry.place(relx=0.6,rely=0.6,anchor='w',width=200)
+        cash_received_bs_entry.place(relx=0.6,rely=0.6,anchor='w')
         cash_received_bs_entry.bind("<Return>",lambda event:ProcessPayment())
                                         
         # ----------------------------------------------------------------------------------------------
@@ -913,6 +944,15 @@ class FacturacionProg(ctk.CTkFrame):
                         fg_color=APP_COLOR['red_m'],
                         hover_color=APP_COLOR['red_s'])
         close_btn.place(relx=0.95,rely=0.02,anchor='ne')
+        # PROCESS PAYMENT
+        process_payment_btn = ctk.CTkButton(prog_frame,
+                        text='Procesar pago',
+                        width=200,
+                        command=ProcessPayment,
+                        fg_color=APP_COLOR['main'],
+                        hover_color=APP_COLOR['sec'])
+        process_payment_btn.place(relx=0.6,rely=0.8,anchor='w')
+
         # ----------------------------------------------------------------------------------------------
         # ----------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------
@@ -1059,4 +1099,4 @@ class FacturacionProg(ctk.CTkFrame):
         self.UpdateTotal()
 # -------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------
-    
+
