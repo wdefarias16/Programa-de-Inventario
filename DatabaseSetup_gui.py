@@ -274,6 +274,26 @@ class DatabaseManagerApp(ctk.CTk):
                             cantidad INTEGER NOT NULL,
                             ajuste INTEGER NOT NULL,
                             final INTEGER NOT NULL
+                        )""",
+                        # Tabla de facturas
+                        """CREATE TABLE facturas (
+                            id SERIAL PRIMARY KEY,
+                            numero_factura VARCHAR(50) UNIQUE NOT NULL,
+                            cliente_codigo VARCHAR(50),
+                            fecha DATE NOT NULL,
+                            total_dolares DECIMAL(10,2) NOT NULL,
+                            total_bolivares DECIMAL(10,2) NOT NULL,
+                            creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                        )""",
+                        # Tabla de detalles de factura
+                        """CREATE TABLE detalle_factura (
+                            id SERIAL PRIMARY KEY,
+                            factura_id INTEGER REFERENCES facturas(id),
+                            producto_codigo VARCHAR(50) NOT NULL,
+                            cantidad INTEGER NOT NULL,
+                            precio_unitario DECIMAL(10,2) NOT NULL,
+                            subtotal_dolares DECIMAL(10,2) NOT NULL,
+                            subtotal_bolivares DECIMAL(10,2) NOT NULL
                         )"""
                     ]
                     for stmt in statements:

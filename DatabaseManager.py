@@ -37,6 +37,7 @@ CLIENT_MANAGER = Clientes(dbname=DATABASE_INFO[0],
                             host=DATABASE_INFO[3],
                             port=DATABASE_INFO[4])
 
+
 CURRENT_USER = None
 def LoginUser(user):
     global CURRENT_USER

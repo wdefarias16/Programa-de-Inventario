@@ -653,6 +653,73 @@ class Inventory:
             return None
     # ---------------------------------------------------------------------------------------
     # ---------------------------------------------------------------------------------------
+    def SaveFactura(self, factura_data):
+        """
+        Guarda la factura en la base de datos
+        factura_data = {
+            'numero_factura': str,
+            'cliente_codigo': str,
+            'fecha': str,
+            'total_dolares': float,
+            'total_bolivares': float,
+            'productos': [
+                {'codigo': str, 'cantidad': int, 'precio_unitario': float, 
+                 'subtotal_dolares': float, 'subtotal_bolivares': float}
+            ]
+        }
+        """
+        try:
+            with self.conn.cursor() as cur:
+                # Insertar cabecera de factura
+                cur.execute("""
+                    INSERT INTO facturas (numero_factura, cliente_codigo, fecha, total_dolares, total_bolivares)
+                    VALUES (%s, %s, %s, %s, %s) RETURNING id;
+                """, (factura_data['numero_factura'], factura_data['cliente_codigo'], 
+                      factura_data['fecha'], factura_data['total_dolares'], 
+                      factura_data['total_bolivares']))
+                
+                factura_id = cur.fetchone()[0]
+                
+                # Insertar detalles de factura
+                for producto in factura_data['productos']:
+                    cur.execute("""
+                        INSERT INTO detalle_factura 
+                        (factura_id, producto_codigo, cantidad, precio_unitario, subtotal_dolares, subtotal_bolivares)
+                        VALUES (%s, %s, %s, %s, %s, %s);
+                    """, (factura_id, producto['codigo'], producto['cantidad'],
+                          producto['precio_unitario'], producto['subtotal_dolares'],
+                          producto['subtotal_bolivares']))
+                
+                self.conn.commit()
+                return True
+                
+        except Exception as e:
+            self.conn.rollback()
+            print(f"Error guardando factura: {str(e)}")
+            return False
+    # ---------------------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------------------
+    def GetNextFacturaNumber(self):
+        """
+        Obtiene el próximo número de factura basado en el último guardado
+        """
+        try:
+            with self.conn.cursor() as cur:
+                cur.execute("""
+                    SELECT numero_factura FROM facturas 
+                    ORDER BY id DESC LIMIT 1;
+                """)
+                result = cur.fetchone()
+                if result:
+                    last_number = result[0]
+                    # Asumiendo formato FACT-001, FACT-002, etc.
+                    number = int(last_number.split('-')[1]) + 1
+                    return f"FACT-{number:03d}"
+                else:
+                    return "FACT-001"
+        except Exception as e:
+            print(f"Error obteniendo número de factura: {str(e)}")
+            return "FACT-001"
 # UPDATE DATA - UPDATE DATA - UPDATE DATA - UPDATE DATA - UPDATE DATA - UPDATE DATA - UPDATE DATA - 
 # UPDATE DATA - UPDATE DATA - UPDATE DATA - UPDATE DATA - UPDATE DATA - UPDATE DATA - UPDATE DATA - 
 # UPDATE DATA - UPDATE DATA - UPDATE DATA - UPDATE DATA - UPDATE DATA - UPDATE DATA - UPDATE DATA - 
