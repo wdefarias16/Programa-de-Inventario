@@ -1198,6 +1198,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
             self.proveedor_entry.focus()
             return
 
+        self.lista_productos = []
         # 1) Bloquear UI
         self.ModoVisualizacion(False)
 

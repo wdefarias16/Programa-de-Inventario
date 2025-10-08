@@ -36,19 +36,56 @@ class FacturacionProg(ctk.CTkFrame):
         title_label.place(relx=0.5,rely=0.5,anchor='center')
     # -----------------------------------------------------------------------------------------------
     # -----------------------------------------------------------------------------------------------
-# PRODUCTS FRAME - PRODUCTS FRAME - PRODUCTS FRAME - PRODUCTS FRAME - PRODUCTS FRAME -  
-# PRODUCTS FRAME - PRODUCTS FRAME - PRODUCTS FRAME - PRODUCTS FRAME - PRODUCTS FRAME -  
-# PRODUCTS FRAME - PRODUCTS FRAME - PRODUCTS FRAME - PRODUCTS FRAME - PRODUCTS FRAME -  
-# PRODUCTS FRAME - PRODUCTS FRAME - PRODUCTS FRAME - PRODUCTS FRAME - PRODUCTS FRAME -  
+# INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - 
+# INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - 
+# INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - 
+# INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - 
         # FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - 
         # FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - 
-        product_frame = ctk.CTkFrame(self,
+        info_frame = ctk.CTkFrame(self,
                         fg_color=APP_COLOR['main'],
                         corner_radius=0)
-        product_frame.place(relx=0.75,y=69.5,relwidth=0.25,relheight=1,anchor='nw')
+        info_frame.place(relx=0.75,y=69.5,relwidth=0.25,relheight=1,anchor='nw')
+        # DOLLAR RATE - DOLLAR RATE - DOLLAR RATE - DOLLAR RATE - DOLLAR RATE - 
+        # DOLLAR RATE - DOLLAR RATE - DOLLAR RATE - DOLLAR RATE - DOLLAR RATE -
+        # LABEL TITLE
+        dolar_rate_title_label = ctk.CTkLabel(info_frame,
+                        text='Tasa del dolar',
+                        font=FONT['subtitle_bold'],
+                        text_color=APP_COLOR['white_m'])
+        dolar_rate_title_label.place(relx=0.5,rely=0.05,anchor='center')
+        # LABEL RATE
+        dolar_rate_label = ctk.CTkLabel(info_frame,
+                        text=f'$ {self.DOLAR}',
+                        height=60,
+                        corner_radius=5,
+                        font=FONT['text_big'],
+                        text_color=APP_COLOR['gray'],
+                        fg_color=APP_COLOR['white_m'])
+        dolar_rate_label.place(relx=0.5,rely=0.12,relwidth=0.90,anchor='center')
+        # SEPARATOR
+        separator = ctk.CTkFrame(info_frame,
+                        height=5,
+                        fg_color=APP_COLOR['white_m'],
+                        corner_radius=10)
+        separator.place(relx=0.5,rely=0.18,relwidth=0.90,anchor='center')
+        # PAY - PAY - PAY - PAY - PAY - PAY - PAY - PAY - PAY - PAY - PAY - 
+        # PAY - PAY - PAY - PAY - PAY - PAY - PAY - PAY - PAY - PAY - PAY - 
+        pay_btn = ctk.CTkButton(info_frame,
+                        text='Pagar',
+                        height=30,
+                        font=FONT['text_big'],
+                        text_color=APP_COLOR['white'],
+                        fg_color=APP_COLOR['green_m'],
+                        hover_color=APP_COLOR['green_s'],
+                        command=self.ProductsHelp)
+        pay_btn.place(relx=0.5,rely=0.80,relwidth=0.90,anchor='center')
+        # --------------------------------------------------------------------
+        # --------------------------------------------------------------------
     # --------------------------------------------------------------------------
     # --------------------------------------------------------------------------
-
+    # --------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 # MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - 
 # MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - 
 # MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - 
@@ -72,7 +109,8 @@ class FacturacionProg(ctk.CTkFrame):
                 self.GoBack_CB()
         # --------------------------------------------------------------------
         # --------------------------------------------------------------------
-        # FRAME
+        # FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - 
+        # FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - 
         main_frame = ctk.CTkFrame(self,
                         fg_color=APP_COLOR['white_m'],
                         corner_radius=0)
@@ -270,21 +308,21 @@ class FacturacionProg(ctk.CTkFrame):
         self.btn_goback.place(relx=0,y=0,anchor='nw')
         # CANCEL FACT
         self.btn_cancel_fact = ctk.CTkButton(main_frame,
-                            text="",
-                            image=ICONS['cancel'],
-                            width=10,
-                            fg_color=APP_COLOR['red_m'],
-                            hover_color=APP_COLOR['red_s'],
-                            command=self.CancelFact)
+                        text="",
+                        image=ICONS['cancel'],
+                        width=10,
+                        fg_color=APP_COLOR['red_m'],
+                        hover_color=APP_COLOR['red_s'],
+                        command=self.CancelFact)
         self.btn_cancel_fact.place(relx=0.08,rely=0.65,anchor='nw')
         # DEL PRODUCT
         self.btn_del_product = ctk.CTkButton(main_frame,
-                            text="",
-                            image=ICONS['trash'],
-                            width=10,
-                            fg_color=APP_COLOR['red_m'],
-                            hover_color=APP_COLOR['red_s'],
-                            command=self.DeleteSelectedProduct)
+                        text="",
+                        image=ICONS['trash'],
+                        width=10,
+                        fg_color=APP_COLOR['red_m'],
+                        hover_color=APP_COLOR['red_s'],
+                        command=self.DeleteSelectedProduct)
         self.btn_del_product.place(relx=0.15,rely=0.65,anchor='nw')
 # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
 # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
@@ -689,8 +727,8 @@ class FacturacionProg(ctk.CTkFrame):
                 values=(producto['nombre'],
                         qty,
                         f'$ {producto['precio1']}',
-                        f'Bs. {format(float(self.DOLAR * float(producto['precio1'])),',.2f')}',
-                        f'$ {format(producto['precio1'],',.2f')}'))
+                        f'Bs. {format(float(self.DOLAR * float(producto['precio1'])*qty),',.2f')}',
+                        f'$ {format(producto['precio1'] * qty,',.2f')}'))
             self.product_list.append(str(codigo).strip())
 
             # CLEAR ENTRY
@@ -789,9 +827,7 @@ class FacturacionProg(ctk.CTkFrame):
 # DELETE PRODUCT - DELETE PRODUCT - DELETE PRODUCT - DELETE PRODUCT - DELETE PRODUCT - 
     # DELETE A PRODUCT ON THE LIST
     def DeleteSelectedProduct(self):
-        """
-        Elimina un producto seleccionado del treeview y revierte su stock
-        """
+        """Elimina un producto seleccionado del treeview y revierte su stock"""
         selected = self.treeview_main.selection()
         if not selected:
             messagebox.showinfo("Seleccionar", "Seleccione un producto para eliminar")
@@ -818,26 +854,23 @@ class FacturacionProg(ctk.CTkFrame):
                 if codigo in self.product_list:
                     self.product_list.remove(codigo)
                 self.treeview_main.delete(item)
+                self.product_code_entry_var.set('')
+                self.product_qty_entry_var.set('')
                 self.UpdateTotal()
                 messagebox.showinfo("Éxito", "Producto eliminado correctamente")
             else:
                 messagebox.showerror("Error", "No se pudo revertir el stock")
-
         except Exception as e:
             messagebox.showerror("Error", f"Error al eliminar producto: {str(e)}")
     # -------------------------------------------------------------------------------------------------
     # -------------------------------------------------------------------------------------------------
     def ClearInterface(self):
-        """
-        Limpia toda la interfaz de facturación
-        """
+        """Limpia toda la interfaz de facturación"""
         # Limpiar treeview
         for item in self.treeview_main.get_children():
             self.treeview_main.delete(item)
-        
         # Limpiar lista de productos
         self.product_list.clear()
-        
         # Limpiar campos de cliente
         self.cod_client_entry_var.set('')
         self.name_client_entry_var.set('')
@@ -845,11 +878,9 @@ class FacturacionProg(ctk.CTkFrame):
         self.fiscal_client_entry_var.set('')
         self.mail_client_entry_var.set('')
         self.address_client_entry_var.set('')
-        
         # Limpiar campos de producto
         self.product_code_entry_var.set('')
-        
-        
+        self.product_qty_entry_var.set('')
         # Actualizar totales a cero
         self.UpdateTotal()
     # -------------------------------------------------------------------------------------------------
