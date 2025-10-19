@@ -16,7 +16,8 @@ class CargaProductosProg(ctk.CTkFrame):
         self.validatenum = self.register(self.ValidateNum)
         self.treeview_active = False
         self.modprecios_btn_active = False
-        self.current_photo = 'Recursos/Imagenes/Productos/Default.png'
+        self.default_image = 'Recursos/Imagenes/Productos/Default.png'
+        self.current_photo = self.default_image
         self.inventario = INVENTARIO.GetCodigos()
     # TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - 
     # TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - 
@@ -489,7 +490,8 @@ class CargaProductosProg(ctk.CTkFrame):
             self.precio3_label.configure(text=f'Precio 3: {porcentajes['porcentaje3']}%')
             self.ubi2_entry.unbind("<Return>")
             self.ubi2_entry.bind("<Return>",lambda event:self.ModificarProducto())
-            self.GetImage(producto['image'])
+            self.current_photo = producto['image']
+            self.GetImage(self.current_photo)
         # BLOQUEO DE ENTRADAS Y BOTONES
             self.mod_codi = self.codigo_entry.get()
             self.guardar_btn.configure(state='disabled',fg_color=APP_COLOR['sec'])
@@ -555,7 +557,7 @@ class CargaProductosProg(ctk.CTkFrame):
             self.ubi2_entry.bind("<Return>",lambda event:self.AgregarProducto())
             self.codigo_entry.focus()
             self.image_label.configure(image=self.default_image)
-            self.current_photo = 'Recursos/Imagenes/Productos/Default.png'
+            self.current_photo = self.default_image
 # MODIFICAR PRECIOS - MODIFICAR PRECIOS - MODIFICAR PRECIOS - MODIFICAR PRECIOS - MODIFICAR PRECIOS - MODIFICAR PRECIOS - MODIFICAR PRECIOS - 
     def ModificarPrecios(self):
         self.precio1_entry.focus()
@@ -629,6 +631,8 @@ class CargaProductosProg(ctk.CTkFrame):
         self.ubi2_entry.unbind("<Return>")
         self.ubi2_entry.bind("<Return>",lambda event:self.AgregarProducto())
         self.codigo_entry.focus()
+        self.image_label.configure(image=self.default_image)
+        self.current_photo = self.default_image
 # PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - 
 # PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - 
 # PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - 
@@ -744,11 +748,14 @@ class CargaProductosProg(ctk.CTkFrame):
                                     hover_color=APP_COLOR['sec'])
         list_inactive_btn.place(relx=0.36,rely=0.18,anchor='w')
     # CERRAR
+        def CloseHelp():
+            self.treeview_active = False
+            help_frame.destroy()
         cerrar_btn = ctk.CTkButton(prog_frame,
                                     text='',
                                     width=30,
                                     image=ICONS['cancel'],
-                                    command=help_frame.destroy,
+                                    command=CloseHelp,
                                     fg_color=APP_COLOR['red_m'],
                                     hover_color=APP_COLOR['red_s'])
         cerrar_btn.place(relx=0.95,rely=0.05,anchor='ne')
