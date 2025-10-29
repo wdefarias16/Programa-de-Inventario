@@ -798,24 +798,43 @@ class FacturacionProg(ctk.CTkFrame):
         # ----------------------------------------------------------------------------------------------
         # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS -
         # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS -
+        # TOTAL LABEL - TOTAL LABEL - TOTAL LABEL - TOTAL LABEL - TOTAL LABEL -
+        total_label = ctk.CTkLabel(prog_frame,
+                        text='Total a pagar:',
+                        font=FONT['subtitle_bold'],
+                        text_color=APP_COLOR['gray'])
+        total_label.place(relx=0.6,rely=0.1,anchor='w')
         # TOTAL BOLIVARES LABEL - TOTAL BOLIVARES LABEL - TOTAL BOLIVARES LABEL -
         total_bs_label = ctk.CTkLabel(prog_frame,
-                        text=f'Total a pagar en Bolívares: Bs. {format(self.total_BOLIVAR,",.2f")}',
-                        font=FONT['text_big2'],
+                        text=f'Bs. {format(self.total_BOLIVAR,",.2f")}',
+                        font=FONT['text_big'],
                         text_color=APP_COLOR['black_m'])
-        total_bs_label.place(relx=0.5,rely=0.2,anchor='center')
+        total_bs_label.place(relx=0.6,rely=0.2,anchor='w')
         # TOTAL DOLARES LABEL - TOTAL DOLARES LABEL - TOTAL DOLARES LABEL -
         total_dolar_label = ctk.CTkLabel(prog_frame,
-                        text=f'Total a pagar en Dólares: $ {format(self.total_DOLAR,",.2f")}',
-                        font=FONT['text_big'],
+                        text=f'$ {format(self.total_DOLAR,",.2f")}',
+                        font=FONT['text_big2'],
                         text_color=APP_COLOR['green_s'])
-        total_dolar_label.place(relx=0.6,rely=0.35,anchor='center')
-
+        total_dolar_label.place(relx=0.6,rely=0.3,anchor='w')
+        # COBRO LABEL - COBRO LABEL - COBRO LABEL - COBRO LABEL - COBRO LABEL -
+        cobro_label = ctk.CTkLabel(prog_frame,
+                        text='Monto recibido:',
+                        font=FONT['subtitle_bold'],
+                        text_color=APP_COLOR['gray'])
+        cobro_label.place(relx=0.2,rely=0.1,anchor='w')
         # ----------------------------------------------------------------------------------------------
         # ----------------------------------------------------------------------------------------------
         # ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES -
         # ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES -
-
+        # ENTRADA DE COBRO - ENTRADA DE COBRO - ENTRADA DE COBRO - ENTRADA DE COBRO -
+        cobro_entry_var = tk.StringVar()
+        cobro_entry = ctk.CTkEntry(prog_frame,
+                        textvariable=cobro_entry_var,
+                        width=200,
+                        height=80,
+                        fg_color=APP_COLOR['gray'],
+                        border_color=APP_COLOR['gray'])
+        cobro_entry.place(relx=0.2,rely=0.3,anchor='w')
         # ----------------------------------------------------------------------------------------------
         # ----------------------------------------------------------------------------------------------
         # BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS -
