@@ -57,6 +57,14 @@ cuentas_xc_icon=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_cuenta
                                     dark_image=Image.open(r"Recursos\Iconos\btn_cuentasPC_dark.png"))
 pdutilidad_icon=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_PDUtilidad_light.png"), size=(30,30),
                                     dark_image=Image.open(r"Recursos\Iconos\btn_PDUtilidad_dark.png"))
+dolar_icon=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_dolar_light.png"), size=(30,30),
+                                    dark_image=Image.open(r"Recursos\Iconos\btn_dolar_dark.png"))
+pagomovil_icon=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_pagom_light.png"), size=(30,30),
+                                    dark_image=Image.open(r"Recursos\Iconos\btn_pagom_dark.png"))
+tarjetadd_icon=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_tdd_light.png"), size=(30,30),
+                                    dark_image=Image.open(r"Recursos\Iconos\btn_tdd_dark.png"))
+tarjetadc_icon=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_tdc_light.png"), size=(30,30),
+                                    dark_image=Image.open(r"Recursos\Iconos\btn_tdc_dark.png"))
 
 
 ICONS = {
@@ -71,4 +79,8 @@ ICONS = {
     'cxp':cuentas_xp_icon,
     'cxc':cuentas_xc_icon,
     'proutil':pdutilidad_icon,
+    'dolar':dolar_icon,
+    'pagomovil':pagomovil_icon,
+    'tdd':tarjetadd_icon,
+    'tdc':tarjetadc_icon,
 }

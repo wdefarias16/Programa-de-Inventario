@@ -104,7 +104,6 @@ class FacturacionProg(ctk.CTkFrame):
                     'Hay productos en la factura. ¿Desea cancelar la factura y volver atrás?')
                 if respuesta:
                     self.CancelFact()
-                    self.GoBack_CB()
             else:
                 self.GoBack_CB()
         # --------------------------------------------------------------------
@@ -751,65 +750,17 @@ class FacturacionProg(ctk.CTkFrame):
             """Genera un número de factura único basado en timestamp"""
             timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
             return f"FACT-{timestamp}"
+        # -----------------------------------------------------------------------
+        # -----------------------------------------------------------------------
         # PROCESS PAYMENT - PROCESS PAYMENT - PROCESS PAYMENT - PROCESS PAYMENT -
         # PROCESS PAYMENT - PROCESS PAYMENT - PROCESS PAYMENT - PROCESS PAYMENT -
         def ProcessPayment():
-            monto_dolar = cash_received_dolar_var.get()
-            monto_bs = cash_received_bs_var.get()
-            cliente = self.cod_client_entry_var.get()
-            # VALIDAR QUE SEAN NUMEROS
-            try:
-                monto_dolar = float(monto_dolar) if monto_dolar else 0.0
-                monto_bs = float(monto_bs) if monto_bs else 0.0
-            except ValueError:
-                messagebox.showerror('Error', 'Verifica que los montos ingresados sean correctos.')
-                return
-            # CALCULAR MONTO TOTAL PAGADO EN DOLARES
-            total_pagado_dolar = monto_dolar + (monto_bs / self.DOLAR)
-            # VALIDAR QUE EL MONTO PAGADO SEA SUFICIENTE
-            if total_pagado_dolar < self.total_DOLAR:
-                # SI NO ES SUFICIENTE, REBAJAR EL MONTO PAGADO Y ACTUALIZAR EL LABEL DEL FALANTE
-                faltante = self.total_DOLAR - total_pagado_dolar
-                self.total_to_pay_dolar_value.configure(text=f'$ {format(faltante,",.2f")}')
-                self.total_to_pay_bs_value.configure(text=f'Bs. {format(faltante * self.DOLAR,",.2f")}')
-                self.total_paid_value.configure(text=f'$ {format(total_pagado_dolar,",.2f")}')
-                self.total_paid_bs_value.configure(text=f'Bs. {format(total_pagado_dolar * self.DOLAR,",.2f")}')
-                return
-            # CALCULAR CAMBIO
-            cambio_dolar = total_pagado_dolar - self.total_DOLAR
-            cambio_bs = cambio_dolar * self.DOLAR
-            # GENERAR NUMERO DE FACTURA
-            numero_factura = GenerateInvoiceNumber()
-            # GUARDAR FACTURA EN LA BASE DE DATOS
-            fecha_hora = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            factura = {
-                'numero': numero_factura,
-                'cliente': cliente,
-                'fecha_hora': fecha_hora,
-                'total_dolar': self.total_DOLAR,
-                'total_bs': self.total_BOLIVAR,
-                'productos': [],
-            }
-            for item in self.treeview_main.get_children():
-                values = self.treeview_main.item(item)
-                producto = {
-                    'codigo': values['text'],
-                    'cantidad': values['values'][1],
-                    'precio_unidad': values['values'][2],
-                    'precio_dolar': values['values'][4],
-                    'precio_bs': values['values'][3]
-                }
-                factura['productos'].append(producto)
-            INVENTARIO.SaveFactura(factura)
-            # IMPRIMIR FACTURA
-            self.ImprimirFactura(factura)
-            # CERRAR VENTANA DE COBRO
-            cashout_frame.destroy()
+            pass
         # ----------------------------------------------------------------
         # ----------------------------------------------------------------
         # SI NO HAY PRODUCTOS, NO DEJA COBRAR
         if self.product_list == []:
-            messagebox.showerror('Error','No hay productos en la factura.')
+            messagebox.showerror('Error','No hay productos cargados.')
             return
         # CREATE THE WINDOW - CREATE THE WINDOW - CREATE THE WINDOW - CREATE THE WINDOW -
         # CREATE THE WINDOW - CREATE THE WINDOW - CREATE THE WINDOW - CREATE THE WINDOW -
@@ -847,94 +798,72 @@ class FacturacionProg(ctk.CTkFrame):
         # ----------------------------------------------------------------------------------------------
         # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS -
         # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS -
-        # TOTAL A PAGAR EN DOLARES
-        total_to_pay_dolar_label = ctk.CTkLabel(prog_frame,
-                        text='Total a pagar en $',
-                        font=FONT['text_light'],
-                        text_color=APP_COLOR['gray'])
-        total_to_pay_dolar_label.place(relx=0.1,rely=0.2,anchor='w')
-        self.total_to_pay_dolar_value = ctk.CTkLabel(prog_frame,
-                        text=f'$ {format(self.total_DOLAR,",.2f")}',
-                        font=FONT['text_big'],
+        # TOTAL BOLIVARES LABEL - TOTAL BOLIVARES LABEL - TOTAL BOLIVARES LABEL -
+        total_bs_label = ctk.CTkLabel(prog_frame,
+                        text=f'Total a pagar en Bolívares: Bs. {format(self.total_BOLIVAR,",.2f")}',
+                        font=FONT['text_big2'],
                         text_color=APP_COLOR['black_m'])
-        self.total_to_pay_dolar_value.place(relx=0.1,rely=0.3,anchor='w')
-        # TOTAL A PAGAR EN BOLIVARES
-        total_to_pay_bs_label = ctk.CTkLabel(prog_frame,
-                        text='Total a pagar en Bs.',
-                        font=FONT['text_light'],
-                        text_color=APP_COLOR['gray'])
-        total_to_pay_bs_label.place(relx=0.1,rely=0.5,anchor='w')
-        self.total_to_pay_bs_value = ctk.CTkLabel(prog_frame,
-                        text=f'Bs. {format(self.total_BOLIVAR,",.2f")}',
+        total_bs_label.place(relx=0.5,rely=0.2,anchor='center')
+        # TOTAL DOLARES LABEL - TOTAL DOLARES LABEL - TOTAL DOLARES LABEL -
+        total_dolar_label = ctk.CTkLabel(prog_frame,
+                        text=f'Total a pagar en Dólares: $ {format(self.total_DOLAR,",.2f")}',
                         font=FONT['text_big'],
-                        text_color=APP_COLOR['black_m'])
-        self.total_to_pay_bs_value.place(relx=0.1,rely=0.6,anchor='w')
-        # ----------------------------------------------------------------------------------------------
-        # ----------------------------------------------------------------------------------------------
-        # TOTAL PAGADO EN DOLARES
-        total_paid_label = ctk.CTkLabel(prog_frame,
-                        text='Total pagado en $',
-                        font=FONT['text_light'],
-                        text_color=APP_COLOR['gray'])
-        total_paid_label.place(relx=0.1,rely=0.8,anchor='w')
-        self.total_paid_value = ctk.CTkLabel(prog_frame,
-                        text=f'$ 0.00',
-                        font=FONT['text_big'],
-                        text_color=APP_COLOR['black_m'])
-        self.total_paid_value.place(relx=0.1,rely=0.9,anchor='w')
-        # TOTAL PAGADO EN BOLIVARES
-        total_paid_bs_label = ctk.CTkLabel(prog_frame,
-                        text='Total pagado en Bs.',
-                        font=FONT['text_light'],
-                        text_color=APP_COLOR['gray'])
-        total_paid_bs_label.place(relx=0.35,rely=0.8,anchor='w')
-        self.total_paid_bs_value = ctk.CTkLabel(prog_frame,
-                        text=f'Bs. 0.00',
-                        font=FONT['text_big'],
-                        text_color=APP_COLOR['black_m'])
-        self.total_paid_bs_value.place(relx=0.35,rely=0.9,anchor='w')
-        # ----------------------------------------------------------------------------------------------
-        # ----------------------------------------------------------------------------------------------
-        # EFECTIVO RECIBIDO EN DOLARES
-        cash_received_dolar_label = ctk.CTkLabel(prog_frame,
-                        text='Efectivo recibido en $',
-                        font=FONT['text_light'],
-                        text_color=APP_COLOR['gray'])
-        cash_received_dolar_label.place(relx=0.6,rely=0.2,anchor='w')
-        # EFECTIVO RECIBIDO EN BOLIVARES
-        cash_received_bs_label = ctk.CTkLabel(prog_frame,
-                        text='Efectivo recibido en Bs.',
-                        font=FONT['text_light'],
-                        text_color=APP_COLOR['gray'])
-        cash_received_bs_label.place(relx=0.6,rely=0.5,anchor='w')
+                        text_color=APP_COLOR['green_s'])
+        total_dolar_label.place(relx=0.6,rely=0.35,anchor='center')
+
         # ----------------------------------------------------------------------------------------------
         # ----------------------------------------------------------------------------------------------
         # ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES -
         # ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES -
-        # EFECTIVO RECIBIDO EN DOLARES
-        cash_received_dolar_var = tk.StringVar()
-        cash_received_dolar_entry = ctk.CTkEntry(prog_frame,
-                        width=200,
-                        textvariable=cash_received_dolar_var,
-                        fg_color=APP_COLOR['white'],
-                        border_color=APP_COLOR['gray'])
-        cash_received_dolar_entry.place(relx=0.6,rely=0.3,anchor='w')
-        cash_received_dolar_entry.focus()
-        cash_received_dolar_entry.bind("<Return>",lambda event:ProcessPayment())
-        # EFECTIVO RECIBIDO EN BOLIVARES
-        cash_received_bs_var = tk.StringVar()
-        cash_received_bs_entry = ctk.CTkEntry(prog_frame,
-                        width=200,
-                        textvariable=cash_received_bs_var,
-                        fg_color=APP_COLOR['white'],
-                        border_color=APP_COLOR['gray'])
-        cash_received_bs_entry.place(relx=0.6,rely=0.6,anchor='w')
-        cash_received_bs_entry.bind("<Return>",lambda event:ProcessPayment())
-                                        
+
         # ----------------------------------------------------------------------------------------------
         # ----------------------------------------------------------------------------------------------
         # BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS -
         # BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS -
+        # BOTONES DE METODOS DE PAGO - BOTONES DE METODOS DE PAGO - BOTONES DE METODOS DE PAGO -
+        # BOTONES DE METODOS DE PAGO - BOTONES DE METODOS DE PAGO - BOTONES DE METODOS DE PAGO -
+        # EFECTIVO DOLAR - EFECTIVO DOLAR -  EFECTIVO DOLAR -  EFECTIVO DOLAR -  EFECTIVO DOLAR -
+        efectivo_dolar_btn = ctk.CTkButton(prog_frame,
+                        text='',
+                        width=50,
+                        height=50,
+                        image=ICONS['dolar'],
+                        anchor='center',
+                        fg_color=APP_COLOR['main'],
+                        hover_color=APP_COLOR['sec'])
+        efectivo_dolar_btn.place(relx=0.05,rely=0.1,anchor='w')
+        # PAGO MOVIL - PAGO MOVIL - PAGO MOVIL - PAGO MOVIL - PAGO MOVIL - PAGO MOVIL -
+        pago_movil_btn = ctk.CTkButton(prog_frame,
+                        text='',
+                        width=50,
+                        height=50,
+                        image=ICONS['pagomovil'],
+                        anchor='center',
+                        fg_color=APP_COLOR['main'],
+                        hover_color=APP_COLOR['sec'])
+        pago_movil_btn.place(relx=0.05,rely=0.25,anchor='w')
+        # TARJETA DE DEBITO - TARJETA DE DEBITO - TARJETA DE DEBITO - TARJETA DE DEBITO -
+        tarjeta_debito_btn = ctk.CTkButton(prog_frame,
+                        text='',
+                        width=50,
+                        height=50,
+                        image=ICONS['tdd'],
+                        anchor='center',
+                        fg_color=APP_COLOR['main'],
+                        hover_color=APP_COLOR['sec'])
+        tarjeta_debito_btn.place(relx=0.05,rely=0.40,anchor='w')
+        # TARJETA DE CREDITO - TARJETA DE CREDITO - TARJETA DE CREDITO - TARJETA DE CREDITO -
+        tarjeta_credito_btn = ctk.CTkButton(prog_frame,
+                        text='',
+                        width=50,
+                        height=50,
+                        image=ICONS['tdc'],
+                        anchor='center',
+                        fg_color=APP_COLOR['main'],
+                        hover_color=APP_COLOR['sec'])
+        tarjeta_credito_btn.place(relx=0.05,rely=0.55,anchor='w')
+        # ----------------------------------------------------------------------------------------------
+        # ----------------------------------------------------------------------------------------------
         # CLOSE WINDOW
         close_btn = ctk.CTkButton(prog_frame,
                         text='',
@@ -1032,6 +961,7 @@ class FacturacionProg(ctk.CTkFrame):
                 # Limpiar interfaz
                 self.ClearInterface()
                 messagebox.showinfo("Éxito", "Factura cancelada y stock revertido correctamente")
+                self.GoBack_CB()
             else:
                 messagebox.showerror("Error", "No se pudo revertir el stock. Contacte al administrador.")
         
