@@ -1,6 +1,5 @@
 import customtkinter as ctk
 from PIL import Image
-
 FONT = {
     'title_bold': ('Roboto Bold',25),
     'title_light': ('Roboto light',25),
@@ -13,9 +12,7 @@ FONT = {
     'text_big': ('Roboto Bold',40),
     'text_big2': ('Roboto Bold',30),
 }
-
 APPEARANCE_MODE = 'light'
-
 APP_COLOR = {
     'main':'#1c9bac',
     'sec':'#166c78',
@@ -29,10 +26,6 @@ APP_COLOR = {
     'red_m':'#D8171D',
     'red_s':'#810005',
 }
-
-
-
-
 # ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - 
 # ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - 
 cancel_icon = ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_cerrar_light.png"), size=(30,30),
@@ -65,8 +58,6 @@ tarjetadd_icon=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_tdd_lig
                                     dark_image=Image.open(r"Recursos\Iconos\btn_tdd_dark.png"))
 tarjetadc_icon=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_tdc_light.png"), size=(30,30),
                                     dark_image=Image.open(r"Recursos\Iconos\btn_tdc_dark.png"))
-
-
 ICONS = {
     'cancel':cancel_icon,
     'search':search_icon,

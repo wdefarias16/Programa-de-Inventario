@@ -42,64 +42,64 @@ class CargaDolar(ctk.CTkFrame):
         # LABELS - LABELS - LABELS - LABELS - LABELS - 
         # LOG
         self.log_label = ctk.CTkLabel(self,
-                                    text='Nota',
-                                    text_color=APP_COLOR['white'],
-                                    font=FONT['text'],
-                                    height=30,
-                                    corner_radius=10,
-                                    fg_color=APP_COLOR['gray'])
+                text='Nota',
+                text_color=APP_COLOR['white'],
+                font=FONT['text'],
+                height=30,
+                corner_radius=10,
+                fg_color=APP_COLOR['gray'])
         self.log_label.place(relx=0.5,rely=0.85,relwidth=0.70,anchor='n')
         # FECHA
         self.fecha_label = ctk.CTkLabel(self,
-                                    text='',
-                                    text_color=APP_COLOR['white'],
-                                    font=FONT['subtitle_bold'],
-                                    width=120,
-                                    height=45,
-                                    corner_radius=2,
-                                    fg_color=APP_COLOR['sec'])
+                text='',
+                text_color=APP_COLOR['white'],
+                font=FONT['subtitle_bold'],
+                width=120,
+                height=45,
+                corner_radius=2,
+                fg_color=APP_COLOR['sec'])
         self.fecha_label.place(relx=0.10,rely=0.25,anchor='n')
         # FECHA LABEL
         fecha_text_label = ctk.CTkLabel(self,
-                                    text='Fecha',
-                                    text_color=APP_COLOR['gray'],
-                                    font=FONT['text'],
-                                    width=60,
-                                    height=25)
+                text='Fecha',
+                text_color=APP_COLOR['gray'],
+                font=FONT['text'],
+                width=60,
+                height=25)
         fecha_text_label.place(relx=0.10,rely=0.21,anchor='n')
         # HORA
         self.hora_label = ctk.CTkLabel(self,
-                                    text='',
-                                    text_color=APP_COLOR['white'],
-                                    font=FONT['subtitle_bold'],
-                                    width=120,
-                                    height=45,
-                                    corner_radius=2,
-                                    fg_color=APP_COLOR['sec'])
+                text='',
+                text_color=APP_COLOR['white'],
+                font=FONT['subtitle_bold'],
+                width=120,
+                height=45,
+                corner_radius=2,
+                fg_color=APP_COLOR['sec'])
         self.hora_label.place(relx=0.90,rely=0.25,anchor='n')
         # HORA LABEL
         hora_text_label = ctk.CTkLabel(self,
-                                    text='Hora',
-                                    text_color=APP_COLOR['gray'],
-                                    font=FONT['text'],
-                                    width=60,
-                                    height=25)
+                text='Hora',
+                text_color=APP_COLOR['gray'],
+                font=FONT['text'],
+                width=60,
+                height=25)
         hora_text_label.place(relx=0.90,rely=0.21,anchor='n')
         # DOLAR
         self.dolar_label = ctk.CTkLabel(self,
-                                    text=f'Bs. {self.DOLAR}',
-                                    text_color=APP_COLOR['gray'],
-                                    font=FONT['subtitle_bold'],
-                                    width=120,
-                                    height=45)
+                text=f'Bs. {self.DOLAR}',
+                text_color=APP_COLOR['gray'],
+                font=FONT['subtitle_bold'],
+                width=120,
+                height=45)
         self.dolar_label.place(relx=0.50,rely=0.15,anchor='n')
         # VALOR ACTUAL
         valor_actual_label = ctk.CTkLabel(self,
-                                    text='Valor actual',
-                                    text_color=APP_COLOR['gray'],
-                                    font=FONT['text'],
-                                    width=120,
-                                    height=45)
+                text='Valor actual',
+                text_color=APP_COLOR['gray'],
+                font=FONT['text'],
+                width=120,
+                height=45)
         valor_actual_label.place(relx=0.50,rely=0.20,anchor='n')
         # ACTUALIZAR FECHA Y HORA ACTUALES
         self.GetDate()
@@ -107,42 +107,42 @@ class CargaDolar(ctk.CTkFrame):
         # BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - 
         # ACTUALIZAR DOLAR
         self.update_dolar_btn = ctk.CTkButton(self,
-                                    text='Actualizar',
-                                    command = self.UpdateDolarWindow,
-                                    font=FONT['text'],
-                                    fg_color=APP_COLOR['main'],
-                                    hover_color=APP_COLOR['sec'],
-                                    width=80,
-                                    height=25,
-                                    corner_radius=2)
+                text='Actualizar',
+                command = self.UpdateDolarWindow,
+                font=FONT['text'],
+                fg_color=APP_COLOR['main'],
+                hover_color=APP_COLOR['sec'],
+                width=80,
+                height=25,
+                corner_radius=2)
         self.update_dolar_btn.place(relx=0.50,rely=0.30,anchor='n')
         # VOLVER ATRAS
         self.goback_btn = ctk.CTkButton(self,
-                                     text='Volver atrás',
-                                     command=self.GoBack_CB,
-                                     width=40,
-                                     fg_color=APP_COLOR['gray'],
-                                     hover_color=APP_COLOR['sec'])
+                text='Volver atrás',
+                command=self.GoBack_CB,
+                width=40,
+                fg_color=APP_COLOR['gray'],
+                hover_color=APP_COLOR['sec'])
         self.goback_btn.place(relx=0.01,rely=0.11,anchor='nw')
         # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
         # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
         # CONFIGURACION VISUAL DEL TV
         style = ttk.Style()
         style.configure(
-            'Custom.Treeview',
-            background = APP_COLOR['white_m'],
-            foreground = APP_COLOR['black_m'],
-            rowheight = 40,
-            font = FONT['text'],
-            fieldbackground = APP_COLOR['white_m'])
+                'Custom.Treeview',
+                background = APP_COLOR['white_m'],
+                foreground = APP_COLOR['black_m'],
+                rowheight = 40,
+                font = FONT['text'],
+                fieldbackground = APP_COLOR['white_m'])
         style.configure(
-            'Custom.Treeview.Heading',
-            background = APP_COLOR['black_m'],
-            foreground = APP_COLOR['black_m'],
-            font = FONT['text_light'])
+                'Custom.Treeview.Heading',
+                background = APP_COLOR['black_m'],
+                foreground = APP_COLOR['black_m'],
+                font = FONT['text_light'])
         self.treeview_main = ttk.Treeview(self,
-                                    style='Custom.Treeview',
-                                    columns=('Hora','Valor'))
+                style='Custom.Treeview',
+                columns=('Hora','Valor'))
         self.treeview_main.place(relx=0.5,y=480,relwidth=0.70,height=320,anchor='n')
         # DESCRIPCION
         self.treeview_main.heading('#0',text='Fecha')
