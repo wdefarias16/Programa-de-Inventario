@@ -6,6 +6,9 @@ from PIL import Image, ImageOps
 from DB_InventarioProductos import*
 from DatabaseManager import INVENTARIO, LINE_MANAGER, PROV_MANAGER
 from style import FONT, APP_COLOR, ICONS
+# HELP FUNCS
+from Help_Funcs_Products import Products_Help_Window
+from Help_Funcs_LinesGroups import Lines_Help_Window
 
 # PROGRAMA DE CARGA DE PRODUCTOS
 class CargaProductosProg(ctk.CTkFrame):
@@ -19,6 +22,7 @@ class CargaProductosProg(ctk.CTkFrame):
         self.default_image = 'Recursos/Imagenes/Productos/Default.png'
         self.current_photo = self.default_image
         self.inventario = INVENTARIO.GetCodigos()
+        self.PRODUCT = {}
     # TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - 
     # TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - TITULO - 
         # FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - 
@@ -236,7 +240,7 @@ class CargaProductosProg(ctk.CTkFrame):
                                      width=10,
                                      fg_color=APP_COLOR['main'],
                                      hover_color=APP_COLOR['sec'],
-                                     command=lambda: self.BusquedaProducto() if not self.treeview_active else None)
+                                     command = self.Products_Help_Window_CB)
         self.busqueda_btn.grid(row=2,column=5,sticky='nsw',padx=5,pady=5)
         # CANCELAR - CANCELAR - CANCELAR - CANCELAR - CANCELAR - CANCELAR - CANCELAR - 
         self.cancelar_btn = ctk.CTkButton(self.entry_frame,
@@ -249,7 +253,7 @@ class CargaProductosProg(ctk.CTkFrame):
         # BUSCAR LINEA - BUSCAR LINEA - BUSCAR LINEA - BUSCAR LINEA - BUSCAR LINEA - 
         self.find_line_btn = ctk.CTkButton(self.entry_frame,
                                      text='Líneas',
-                                     command=self.LineHelp,
+                                     command=self.Lines_Help_Window_CB,
                                      fg_color=APP_COLOR['main'],
                                      hover_color=APP_COLOR['sec'])
         self.find_line_btn.grid(row=3,column=5,columnspan=1,sticky='nswe',padx=5,pady=5)
@@ -633,286 +637,34 @@ class CargaProductosProg(ctk.CTkFrame):
         self.codigo_entry.focus()
         self.image_label.configure(image=self.default_image)
         self.current_photo = self.default_image
-# PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - 
-# PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - 
-# PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - 
-# PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW -  
-    def BusquedaProducto(self):
-        # LISTA TOD0 EL INVENTARIO EN EL TREEVIEW DE PRODUCTOS
-        # LISTA TOD0 EL INVENTARIO EN EL TREEVIEW DE PRODUCTOS
-        def ListInventory():
-            self.search_bar_var.set('')
-            inventario = INVENTARIO.GetInventory()
-            for item in self.treeview.get_children():
-                    self.treeview.delete(item)
-            for producto in inventario.values():
-                self.treeview.insert("",'end',
-                                     text=producto['codigo'],
-                                     values=(producto['linea'],
-                                             producto['grupo'],
-                                             producto['proveedor'],
-                                             producto['nombre'],
-                                             f'${producto['costo']}'))
-        # ----------------------------------------------------------------
-        # ----------------------------------------------------------------
-        # LISTA PRODUCTOS INACTIVOS - LISTA PRODUCTOS INACTIVOS - 
-        # LISTA PRODUCTOS INACTIVOS - LISTA PRODUCTOS INACTIVOS - 
-        def ListInactives():
-            self.search_bar_var.set('')
-            inventario = INVENTARIO.GetInactives()
-            for item in self.treeview.get_children():
-                    self.treeview.delete(item)
-            for producto in inventario.values():
-                self.treeview.insert("",'end',
-                                     text=producto['codigo'],
-                                     values=(producto['linea'],
-                                             producto['grupo'],
-                                             producto['proveedor'],
-                                             producto['nombre'],
-                                             f'${producto['costo']}'))
-        # ----------------------------------------------------------------
-        # ----------------------------------------------------------------
-        # SELECIONAR PRODUCTO EN EL TREEVIEW
-        def ClickTreeview(event):
-            item_id = self.treeview.selection()
-            info = self.treeview.item(item_id)
-            self.search_bar_var.set(info['text'])
-            if info['text'] in self.inventario:
-                self.BuscarProducto()
-            help_frame.destroy()
-    # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
-    # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
-    # FRAME DEL TREEVIEW
-        self.treeview_active = True
-        help_frame = ctk.CTkToplevel(self,
-                                   fg_color=APP_COLOR['white_m'])
-        help_frame.geometry('900x450')
-        help_frame.title('Busqueda de productos')
-        help_frame.protocol("WM_DELETE_WINDOW", lambda: None)
-        help_frame.transient(self)
-    # TITLE FRAME
-        title_frame = ctk.CTkFrame(help_frame,
-                        fg_color=APP_COLOR['sec'],
-                        height=50,
-                        corner_radius=0)
-        title_frame.place(relx=0.5,rely=0,relwidth=1,relheight=0.10,anchor='n')
-        # TITLE LABEL - TITLE LABEL - TITLE LABEL
-        title_label = ctk.CTkLabel(title_frame,
-                        text='Búsqueda de productos',
-                        bg_color='transparent',
-                        text_color=APP_COLOR['white_m'],
-                        font=FONT['text'])
-        title_label.pack(expand=True,fill='x',pady=5)
-    # PROG FRAME - PROG FRAME - PROG FRAME - PROG FRAME - PROG FRAME - 
-        prog_frame = ctk.CTkFrame(help_frame,
-                        fg_color=APP_COLOR['white_m'],
-                        height=50,
-                        corner_radius=0)
-        prog_frame.place(relx=0.5,rely=0.10,relwidth=1,relheight=0.90,anchor='n')
-    # BARRA DE BUSQUEDA
-        # LABEL
-        label_sb = ctk.CTkLabel(prog_frame,
-                             text='Busqueda por nombre',
-                             bg_color='transparent',
-                             text_color=APP_COLOR['gray'],
-                             font=FONT['text_light'])
-        label_sb.place(relx=0.05,rely=0.08,anchor='nw')
-        # ENTRY
-        self.search_bar_var = tk.StringVar()
-        self.search_bar = ctk.CTkEntry(prog_frame,
-                                  width=200,
-                                  textvariable=self.search_bar_var)
-        self.search_bar.place(relx=0.05,rely=0.18,anchor='w')
-        self.search_bar.bind("<Return>",lambda event:self.BuscarProductoNombre())
-        self.search_bar.bind("<Control-BackSpace>", lambda event: ListInventory())
-        self.search_bar.after(100,lambda:self.search_bar.focus())
-    # BOTONES TREEVIEW - BOTONES TREEVIEW - BOTONES TREEVIEW - BOTONES TREEVIEW - 
-    # LIST
-        list_btn = ctk.CTkButton(prog_frame,
-                                    text='',
-                                    width=30,
-                                    height=10,
-                                    image=ICONS['refresh'],
-                                    command=ListInventory,
-                                    fg_color=APP_COLOR['main'],
-                                    hover_color=APP_COLOR['sec'])
-        list_btn.place(relx=0.30,rely=0.18,anchor='w')
-    # LIST INACTIVE
-        list_inactive_btn = ctk.CTkButton(prog_frame,
-                                    text='',
-                                    width=30,
-                                    height=10,
-                                    image=ICONS['cancel'],
-                                    command=ListInactives,
-                                    fg_color=APP_COLOR['main'],
-                                    hover_color=APP_COLOR['sec'])
-        list_inactive_btn.place(relx=0.36,rely=0.18,anchor='w')
-    # CERRAR
-        def CloseHelp():
-            self.treeview_active = False
-            help_frame.destroy()
-        cerrar_btn = ctk.CTkButton(prog_frame,
-                                    text='',
-                                    width=30,
-                                    image=ICONS['cancel'],
-                                    command=CloseHelp,
-                                    fg_color=APP_COLOR['red_m'],
-                                    hover_color=APP_COLOR['red_s'])
-        cerrar_btn.place(relx=0.95,rely=0.05,anchor='ne')
-    # TREEVIEW
-        self.treeview = ttk.Treeview(prog_frame,
-                                style='Custom.Treeview',
-                                columns=('Linea','Grupo','Proveedor','Nombre','Costo'))
-        self.treeview.place(relx=0.5,rely=0.3,relwidth=0.90,relheight=0.60,anchor='n')
-        # EVENTO DE SELECCIONAR PRODUCTO
-        self.treeview.bind("<<TreeviewSelect>>",ClickTreeview)
-    # CODIGO
-        self.treeview.heading('#0',text='Codigo')
-        self.treeview.column('#0',width=50,anchor='center')
-    # LINEA
-        self.treeview.heading('Linea',text='Linea')
-        self.treeview.column('Linea',width=50,anchor='center')
-    # GRUPO
-        self.treeview.heading('Grupo',text='Grupo')
-        self.treeview.column('Grupo',width=50,anchor='center')
-    # PROVEEDOR
-        self.treeview.heading('Proveedor',text='Proveedor')
-        self.treeview.column('Proveedor',width=50,anchor='center')
-    # NOMBRE
-        self.treeview.heading('Nombre',text='Nombre')
-        self.treeview.column('Nombre',width=150,anchor='center')
-    # COSTO
-        self.treeview.heading('Costo',text='Costo')
-        self.treeview.column('Costo',width=100,anchor='center')
-    # CONFIGURACION VISUAL DEL TV
-        style = ttk.Style()
-        style.configure(
-            'Custom.Treeview',
-            background = APP_COLOR['white_m'],
-            foreground = APP_COLOR['black_m'],
-            rowheight = 30,
-            font = FONT['text_small'],
-            fieldbackground = APP_COLOR['white_m'])
-        style.configure(
-            'Custom.Treeview.Heading',
-            background = APP_COLOR['black_m'],
-            foreground = APP_COLOR['black_m'],
-            font = FONT['text_light'])
-    # SCROLLBAR DEL TV
-        scrollbar = ctk.CTkScrollbar(prog_frame,
-                                     orientation='vertical',
-                                     command=self.treeview.yview)
-        #scrollbar.grid(row=3,column=15,sticky='wns',pady=5,rowspan=7)
-        self.treeview.configure(yscrollcommand=scrollbar.set)
-    # LISTAR TODOS LOS PRODUCTOS CARGADOS AL INICIO DEL PROGRAMA
-        ListInventory()
-    # --------------------------------------------------------------------------------
-    # --------------------------------------------------------------------------------
-# LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - 
-# LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - 
-# LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - 
-# LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - 
-# FRAME DEL TREEVIEW
-    def LineHelp(self):
-        self.line_help_frame = ctk.CTkToplevel(self,fg_color=APP_COLOR['white_m'])
-        self.line_help_frame.geometry('600x400')
-        self.line_help_frame.title('Ayuda de lineas')
-        self.line_help_frame.transient(self)
-    # GRID SETUP
-        for rows in range(10):
-            self.line_help_frame.rowconfigure(rows, weight=1,uniform='row')
-        for columns in range(10):
-            self.line_help_frame.columnconfigure(columns,weight=1,uniform='column')
-    # TITULO
-        title_frame = ctk.CTkFrame(self.line_help_frame,corner_radius=0,fg_color=APP_COLOR['sec'])
-        title_frame.grid(row=0,column=0,columnspan=10,sticky='nswe')
-        title = ctk.CTkLabel(title_frame,
-                             text='Ayuda de líneas',
-                             bg_color='transparent',
-                             text_color=APP_COLOR['white_m'],
-                             height=50,
-                             font=FONT['text'])
-        title.pack(pady=10)   
-    # BARRA DE BUSQUEDA
-        self.search_line_bar_var = tk.StringVar()
-        self.search_line_bar = ctk.CTkEntry(self.line_help_frame,
-                                       width=200,
-                                       textvariable=self.search_line_bar_var)
-        self.search_line_bar.grid(row=1,column=0,columnspan=2,sticky='we',padx=5,pady=5)
-        self.search_line_bar.after(100,lambda:self.search_line_bar.focus())
-        self.search_line_bar.bind("<Return>",lambda event:self.SearchLine())
-        self.search_line_bar.bind("<Control-BackSpace>", lambda event: self.ListLines())
-    # BOTONES TREEVIEW
-        # BUSCAR
-        search_btn = ctk.CTkButton(self.line_help_frame,
-                                   text='Buscar',
-                                   command=self.SearchLine,
-                                   fg_color=APP_COLOR['main'],
-                                   hover_color=APP_COLOR['sec'])
-        search_btn.grid(row=1,column=2,columnspan=2,sticky='w',padx=5,pady=5)  
-        # CANCELAR
-        cancel_btn = ctk.CTkButton(self.line_help_frame,
-                                   text='Cancelar',
-                                   command=self.ListLines,
-                                   fg_color=APP_COLOR['red_m'],
-                                   hover_color=APP_COLOR['red_s'])
-        cancel_btn.grid(row=1,column=7,columnspan=2,sticky='w',padx=5,pady=5)
-    # TREEVIEW
-        self.line_help_treeview = ttk.Treeview(self.line_help_frame,
-                                     style='Custom.Treeview',
-                                     columns=('Linea'))
-        self.line_help_treeview.grid(row=2,column=0,sticky='nswe',padx=10,pady=10,rowspan=8,columnspan=9)
-        # EVENTO DE SELECCIONAR PRODUCTO
-        self.line_help_treeview.bind("<<TreeviewSelect>>",self.SelectLine)
-        # CODIGO
-        self.line_help_treeview.heading('#0',text='Codigo')
-        self.line_help_treeview.column('#0',width=25,anchor='center')
-        # LINEA
-        self.line_help_treeview.heading('Linea',text='Linea')
-        self.line_help_treeview.column('Linea',width=100,anchor='center')
-
-    # SCROLLBAR DEL TV
-        scrollbar = ctk.CTkScrollbar(self.line_help_frame,
-                                     orientation='vertical',
-                                     command=self.line_help_treeview.yview)
-        scrollbar.grid(row=2,column=9,sticky='nws',pady=5,rowspan=8)
-        self.line_help_treeview.configure(yscrollcommand=scrollbar.set)
-    # LISTAR TODOS LOS PRODUCTOS CARGADOS AL INICIO DEL PROGRAMA
-        self.ListLines()
-# BUSCAR LINEAS POR NOMBRE
-    def SearchLine(self):
-        for item in self.line_help_treeview.get_children():
-            self.line_help_treeview.delete(item)
-        search = self.search_line_bar_var.get().lower()
-        outcome = LINE_MANAGER.SearchLineByName(search)
-        for line in outcome:
-            self.line_help_treeview.insert("", 'end',
-                                 text=line['codigo'],
-                                 values=(line['linea']))
-# LISTAR LINEAS
-    def ListLines(self):
-        self.search_line_bar.focus()
-        self.search_line_bar_var.set('')
-        lines = LINE_MANAGER.GetLineNames()
-        for item in self.line_help_treeview.get_children():
-                self.line_help_treeview.delete(item)
-        for i, line in enumerate(lines):
-            tag = "Even.Treeview" if i % 2 == 0 else "Odd.Treeview"  # Alternar tags
-            self.line_help_treeview.insert("", 'end',
-                                       text=line.split(' - ')[0].strip(),
-                                       values=(line.split(' - ')[1].strip(),),
-                                       tags=(tag,))  # Asignar el tag a la fila
-
-        # Configurar colores para los tags
-        self.line_help_treeview.tag_configure('Odd.Treeview', background="#ffffff")
-        self.line_help_treeview.tag_configure('Even.Treeview', background="#eaeaea")
-# SELECCIONAR UNA LINEA Y AGREGARLA AL CAMPO DE LINEA
-    def SelectLine(self,event):
-        item_id = self.line_help_treeview.selection()
-        info = self.line_help_treeview.item(item_id)
-        self.line_var.set(f'{info['text']} - {info['values'][0]}')
-        self.grupo_entry.focus()
-        self.line_help_frame.destroy()
+    # ---------------------------------------------------------------
+    # FILL ENTRIES - FILL ENTRIES - FILL ENTRIES - FILL ENTRIES - 
+    # ---------------------------------------------------------------
+    def Fill_Entry_Fields(self,product_data):
+        pass
+# -------------------------------------------------------------------
+# HELP WINDOWS - HELP WINDOWS - HELP WINDOWS - HELP WINDOWS - 
+# -------------------------------------------------------------------
+    # ---------------------------------------------------------------
+    # PRODUCT HELP WINDOW - PRODUCT HELP WINDOW - PRODUCT HELP WINDOW
+    # ---------------------------------------------------------------
+    def Products_Help_Window_CB(self):
+        self.PRODUCT = Products_Help_Window(self)
+        if not self.PRODUCT:
+            return
+        product_data = self.PRODUCT
+        self.Fill_Entry_Fields(product_data)
+    # ---------------------------------------------------------------
+    # LINES HELP WINDOW - LINES HELP WINDOW - LINES HELP WINDOW - 
+    # ---------------------------------------------------------------
+    def Lines_Help_Window_CB(self):
+        LINE = Lines_Help_Window(self)
+        if not LINE:
+            return
+        self.line_var.set(LINE)
+    # ---------------------------------------------------------------
+    # SEARCH LINE BY CODE - SEARCH LINE BY CODE
+    # ---------------------------------------------------------------
     def GetLineByCode(self):
         line_search = self.line_var.get().strip()
         try:
@@ -929,12 +681,6 @@ class CargaProductosProg(ctk.CTkFrame):
             messagebox.showerror("Base de datos", f"Error al buscar línea: {line_search}")
             self.line_var.set('')
             return
-# LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - 
-# LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - 
-# LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - 
-# LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - 
-
-
 # GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - 
 # GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - 
 # GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - 
@@ -1253,6 +999,3 @@ class CargaProductosProg(ctk.CTkFrame):
 
         photo = ctk.CTkImage(light_image=img, size=(int(w/2),int(h/2)))
         self.image_label.configure(image=photo)
-
-
-
