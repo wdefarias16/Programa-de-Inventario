@@ -269,7 +269,12 @@ class LineasGrupos:
             with self.conn.cursor() as cur:
                 cur.execute("SELECT codigo,nombre FROM lineas WHERE codigo = %s", (linea,))
                 row = cur.fetchone()
-            return row
+                codigo, nombre = row
+                linea_data = {
+                    "codigo":codigo,
+                    "nombre":nombre,
+                }
+            return linea_data
         except Exception as e:
             messagebox.showerror("Base de datos", f"Error al buscar línea: {str(e)}")
             return
@@ -281,7 +286,15 @@ class LineasGrupos:
                 cur.execute("""SELECT codigo, nombre, porcentaje1, porcentaje2, porcentaje3 FROM grupos
                             WHERE linea = %s AND codigo = %s""", (linea,grupo))
                 row = cur.fetchone()
-            return row
+                codigo,nombre,precio1,precio2,precio3 = row
+                group_data = {
+                    'codigo':codigo,
+                    'nombre':nombre,
+                    'precio1':precio1,
+                    'precio2':precio2,
+                    'precio3':precio3,
+                }
+            return group_data
         except Exception as e:
             messagebox.showerror("Base de datos", f"Error al buscar grupo: {str(e)}")
             return

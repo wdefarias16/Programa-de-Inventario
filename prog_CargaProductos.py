@@ -8,7 +8,7 @@ from DatabaseManager import INVENTARIO, LINE_MANAGER, PROV_MANAGER
 from style import FONT, APP_COLOR, ICONS
 # HELP FUNCS
 from Help_Funcs_Products import Products_Help_Window
-from Help_Funcs_LinesGroups import Lines_Help_Window
+from Help_Funcs_LinesGroups import Lines_Help_Window, Groups_Help_Window
 
 # PROGRAMA DE CARGA DE PRODUCTOS
 class CargaProductosProg(ctk.CTkFrame):
@@ -70,19 +70,19 @@ class CargaProductosProg(ctk.CTkFrame):
         self.linea_entry = ctk.CTkEntry(self.entry_frame,
                                    textvariable=self.line_var)
         self.linea_entry.grid(row=3,column=3,columnspan=2,sticky='nswe',pady=5)
-        self.linea_entry.bind("<Return>",lambda event:self.GetLineByCode())
+        self.linea_entry.bind("<Return>",lambda event:self.Get_Line_By_Code())
         # GRUPO - GRUPO - GRUPO - GRUPO - GRUPO - GRUPO - GRUPO - GRUPO - 
         self.grupo_var = tk.StringVar()
         self.grupo_entry = ctk.CTkEntry(self.entry_frame,
                                    textvariable=self.grupo_var)
         self.grupo_entry.grid(row=4,column=3,columnspan=2,sticky='nswe',pady=5)
-        self.grupo_entry.bind("<Return>",lambda event:self.GetGroupByCode())
+        self.grupo_entry.bind("<Return>",lambda event:self.Get_Group_By_Code())
         # PROVEEDOR - PROVEEDOR - PROVEEDOR - PROVEEDOR - PROVEEDOR - PROVEEDOR - 
         self.prove_var = tk.StringVar()
         self.prove_entry = ctk.CTkEntry(self.entry_frame,
                                    textvariable=self.prove_var)
         self.prove_entry.grid(row=5,column=3,columnspan=2,sticky='nswe',pady=5)
-        self.prove_entry.bind("<Return>",lambda event:self.GetProvByCode())
+        self.prove_entry.bind("<Return>",lambda event:self.Get_Prov_By_Code())
         # NOMBRE - NOMBRE - NOMBRE - NOMBRE - NOMBRE - NOMBRE - NOMBRE - NOMBRE - 
         self.nombre_var = tk.StringVar()
         self.nombre_entry = ctk.CTkEntry(self.entry_frame,
@@ -260,7 +260,7 @@ class CargaProductosProg(ctk.CTkFrame):
         # BUSCAR GRUPO - BUSCAR GRUPO - BUSCAR GRUPO - BUSCAR GRUPO - BUSCAR GRUPO - 
         self.find_group_btn = ctk.CTkButton(self.entry_frame,
                                      text='Grupos',
-                                     command=self.GroupHelp,
+                                     command=self.Groups_Help_Window_CB,
                                      fg_color=APP_COLOR['main'],
                                      hover_color=APP_COLOR['sec'])
         self.find_group_btn.grid(row=4,column=5,columnspan=1,sticky='nswe',padx=5,pady=5)
@@ -478,8 +478,8 @@ class CargaProductosProg(ctk.CTkFrame):
             group = LINE_MANAGER.GetGroup(producto['linea'],producto['grupo'])
             prov = PROV_MANAGER.GetProv(producto['proveedor'])
             self.codigo_var.set(producto['codigo'])
-            self.line_var.set(f'{line[0]} - {line[1]}')
-            self.grupo_var.set(f'{group[0]} - {group[1]}')
+            self.line_var.set(f'{line['codigo']} - {line['nombre']}')
+            self.grupo_var.set(f'{group['codigo']} - {group['nombre']}')
             self.prove_var.set(f'{prov['codigo']} - {prov['nombre']}')
             self.nombre_var.set(producto['nombre'])
             self.costo_var.set(producto['costo'])
@@ -641,7 +641,17 @@ class CargaProductosProg(ctk.CTkFrame):
     # FILL ENTRIES - FILL ENTRIES - FILL ENTRIES - FILL ENTRIES - 
     # ---------------------------------------------------------------
     def Fill_Entry_Fields(self,product_data):
-        pass
+        self.codigo_var.set(product_data['codigo'])
+        self.line_var.set(product_data['linea'])
+        self.grupo_var.set(product_data['grupo'])
+        self.prove_var.set(product_data['proveedor'])
+        self.nombre_var.set(product_data['nombre'])
+        self.costo_var.set(product_data['costo'])
+        self.ubi1_var.set(product_data['ubicacion1'])
+        self.ubi2_var.set(product_data['ubicacion2'])
+        self.precio1_var.set(product_data['precio1'])
+        self.precio2_var.set(product_data['precio2'])
+        self.precio3_var.set(product_data['precio3'])
 # -------------------------------------------------------------------
 # HELP WINDOWS - HELP WINDOWS - HELP WINDOWS - HELP WINDOWS - 
 # -------------------------------------------------------------------
@@ -665,7 +675,7 @@ class CargaProductosProg(ctk.CTkFrame):
     # ---------------------------------------------------------------
     # SEARCH LINE BY CODE - SEARCH LINE BY CODE
     # ---------------------------------------------------------------
-    def GetLineByCode(self):
+    def Get_Line_By_Code(self):
         line_search = self.line_var.get().strip()
         try:
             line_search = int(line_search)
@@ -675,130 +685,28 @@ class CargaProductosProg(ctk.CTkFrame):
             return
         line = LINE_MANAGER.GetLine(line_search)
         if line:
-            self.line_var.set(f'{line[0]} - {line[1]}')
+            self.line_var.set(f'{line['codigo']} - {line['nombre']}')
             self.grupo_entry.focus()
         else:
             messagebox.showerror("Base de datos", f"Error al buscar línea: {line_search}")
             self.line_var.set('')
             return
-# GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - 
-# GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - 
-# GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - 
-# GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - 
-    def GroupHelp(self):
+    # ---------------------------------------------------------------
+    # GROUP HELP WINDOW - GROUP HELP WINDOW - GROUP HELP WINDOW - 
+    # ---------------------------------------------------------------
+    def Groups_Help_Window_CB(self):
         try:
-            self.current_line = int(self.line_var.get().split(' - ')[0].strip())
-            if not LINE_MANAGER.CheckLine(self.current_line):
-                messagebox.showerror('Error','Seleccione una línea válida.')
-                return
-            self.help_frame = ctk.CTkToplevel(self,fg_color=APP_COLOR['white_m'])
-            self.help_frame.geometry('600x400')
-            self.help_frame.title('Ayuda de Grupos')
-            self.help_frame.transient(self)
-        # GRID SETUP
-            for rows in range(10):
-                self.help_frame.rowconfigure(rows, weight=1,uniform='row')
-            for columns in range(10):
-                self.help_frame.columnconfigure(columns,weight=1,uniform='column')
-        # TITULO
-            title_frame = ctk.CTkFrame(self.help_frame,corner_radius=0,fg_color=APP_COLOR['sec'])
-            title_frame.grid(row=0,column=0,columnspan=10,sticky='nswe')
-            title = ctk.CTkLabel(title_frame,
-                                 text='Ayuda de Grupos',
-                                 bg_color='transparent',
-                                 text_color=APP_COLOR['white_m'],
-                                 height=50,
-                                 font=FONT['text'])
-            title.pack(pady=10)   
-        # BARRA DE BUSQUEDA
-            self.search_help_bar_var = tk.StringVar()
-            self.search_help_bar = ctk.CTkEntry(self.help_frame,
-                                           width=200,
-                                           textvariable=self.search_help_bar_var)
-            self.search_help_bar.grid(row=1,column=0,columnspan=2,sticky='we',padx=5,pady=5)
-            self.search_help_bar.after(100,lambda:self.search_help_bar.focus())
-            self.search_help_bar.bind("<Return>",lambda event:self.SearchGroup())
-            self.search_help_bar.bind("<Control-BackSpace>", lambda event: self.ListGroups())
-        # BOTONES TREEVIEW
-            # BUSCAR
-            search_btn = ctk.CTkButton(self.help_frame,
-                                       text='Buscar',
-                                       command=self.SearchGroup,
-                                       fg_color=APP_COLOR['main'],
-                                       hover_color=APP_COLOR['sec'])
-            search_btn.grid(row=1,column=2,columnspan=2,sticky='w',padx=5,pady=5)  
-            # CANCELAR
-            cancel_btn = ctk.CTkButton(self.help_frame,
-                                       text='Cancelar',
-                                       command=self.ListGroups,
-                                       fg_color=APP_COLOR['red_m'],
-                                       hover_color=APP_COLOR['red_s'])
-            cancel_btn.grid(row=1,column=7,columnspan=2,sticky='w',padx=5,pady=5)
-        # TREEVIEW
-            self.help_treeview = ttk.Treeview(self.help_frame,
-                                         style='Custom.Treeview',
-                                         columns=('Linea','Grupo'))
-            self.help_treeview.grid(row=2,column=0,sticky='nswe',padx=10,pady=10,rowspan=8,columnspan=9)
-            # EVENTO DE SELECCIONAR PRODUCTO
-            self.help_treeview.bind("<<TreeviewSelect>>",self.SelectGroup)
-            # CODIGO
-            self.help_treeview.heading('#0',text='Código')
-            self.help_treeview.column('#0',width=25,anchor='center')
-            # LINEA
-            self.help_treeview.heading('Linea',text='Línea')
-            self.help_treeview.column('Linea',width=100,anchor='center')
-            # GRUPO
-            self.help_treeview.heading('Grupo',text='Grupo')
-            self.help_treeview.column('Grupo',width=100,anchor='center')
-
-        # SCROLLBAR DEL TV
-            scrollbar = ctk.CTkScrollbar(self.help_frame,
-                                         orientation='vertical',
-                                         command=self.help_treeview.yview)
-            scrollbar.grid(row=2,column=9,sticky='nws',pady=5,rowspan=8)
-            self.help_treeview.configure(yscrollcommand=scrollbar.set)
-        # LISTAR LOS PROVEEDORES
-            self.ListGroups()
-        except ValueError:
-            messagebox.showerror('Error','Seleccione una línea válida.')
-        
-# BUSCAR PROVEEDORES POR NOMBRE
-    def SearchGroup(self):
-        for item in self.help_treeview.get_children():
-            self.help_treeview.delete(item)
-        search = self.search_help_bar_var.get().lower()
-        outcome = LINE_MANAGER.SearchGroupByName(search,line=self.current_line)
-        for group in outcome:
-            self.help_treeview.insert("", 'end',
-                                 text=group['codigo'],
-                                 values=(group['linea'],
-                                         group['grupo']))
-# LISTAR PROVEEDORES
-    def ListGroups(self):
-        self.search_help_bar.focus()
-        self.search_help_bar_var.set('')
-        lines = LINE_MANAGER.GetGroupNames(self.current_line)
-        for item in self.help_treeview.get_children():
-                self.help_treeview.delete(item)
-        for i, line in enumerate(lines):
-            tag = "Even.Treeview" if i % 2 == 0 else "Odd.Treeview"  # Alternar tags
-            self.help_treeview.insert("", 'end',
-                                       text=line.split(' - ')[0].strip(),
-                                       values=(self.current_line,
-                                                line.split(' - ')[1].strip()),
-                                       tags=(tag,))
-        self.help_treeview.tag_configure('Odd.Treeview', background="#ffffff")
-        self.help_treeview.tag_configure('Even.Treeview', background="#eaeaea")
-# SELECCIONAR UN PROVEEDOR Y AGREGARLO AL CAMPO DE PROVEEEDOR
-    def SelectGroup(self,event):
-        item_id = self.help_treeview.selection()
-        info = self.help_treeview.item(item_id)
-        self.grupo_var.set(f'{info['text']} - {info['values'][1]}')
-        self.help_frame.destroy()
-# BUSCAR UN GRUPO EN LA ENTRADA
-    def GetGroupByCode(self):
+            linea_id = int(self.line_var.get().split(' - ')[0])
+        except:
+            messagebox.showerror('Base de datos.','Seleccione una línea válida.')
+            return
+        GROUP = Groups_Help_Window(self,linea_id)
+        self.grupo_var.set(f'{GROUP['codigo']} - {GROUP['nombre']}')
+    # ---------------------------------------------------------------
+    # SEARCH GROUP BY CODE - SEARCH GROUP BY CODE
+    # ---------------------------------------------------------------
+    def Get_Group_By_Code(self):
         line_search = self.line_var.get().split(' - ')[0].strip()
-
         if line_search:
             line = LINE_MANAGER.GetLine(int(line_search))
             if not line:
@@ -808,125 +716,19 @@ class CargaProductosProg(ctk.CTkFrame):
             messagebox.showerror("Error", f"Seleccione una linea válida.")
             return
         group_search = self.grupo_var.get()
-        group_code = str(str(line[0]) + '.' + group_search)
+        group_code = str(str(line['codigo']) + '.' + group_search)
         group = LINE_MANAGER.GetGroup(line_search,group_code)
         if group:
-            self.grupo_var.set(f'{group[0]} - {group[1]}')
+            self.grupo_var.set(f'{group['codigo']} - {group['nombre']}')
             self.prove_entry.focus()
         else:
             messagebox.showerror("Base de datos", f"No se encontro el grupo {group_search}")
             self.grupo_var.set('')
             return
-# GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - 
-# GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - 
-# GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - 
-# GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - GROUP HELP - 
-
-
-# PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - 
-# PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - 
-# PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - 
-# PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - 
-    def ProvHelp(self):
-        self.help_frame = ctk.CTkToplevel(self,fg_color=APP_COLOR['white_m'])
-        self.help_frame.geometry('600x400')
-        self.help_frame.title('Ayuda de Proveedores')
-        self.help_frame.transient(self)
-    # GRID SETUP
-        for rows in range(10):
-            self.help_frame.rowconfigure(rows, weight=1,uniform='row')
-        for columns in range(10):
-            self.help_frame.columnconfigure(columns,weight=1,uniform='column')
-    # TITULO
-        title_frame = ctk.CTkFrame(self.help_frame,corner_radius=0,fg_color=APP_COLOR['sec'])
-        title_frame.grid(row=0,column=0,columnspan=10,sticky='nswe')
-        title = ctk.CTkLabel(title_frame,
-                             text='Ayuda de Proveedores',
-                             bg_color='transparent',
-                             text_color=APP_COLOR['white_m'],
-                             height=50,
-                             font=FONT['text'])
-        title.pack(pady=10)   
-    # BARRA DE BUSQUEDA
-        self.search_help_bar_var = tk.StringVar()
-        self.search_help_bar = ctk.CTkEntry(self.help_frame,
-                                       width=200,
-                                       textvariable=self.search_help_bar_var)
-        self.search_help_bar.grid(row=1,column=0,columnspan=2,sticky='we',padx=5,pady=5)
-        self.search_help_bar.after(100,lambda:self.search_help_bar.focus())
-        self.search_help_bar.bind("<Return>",lambda event:self.SearchProv())
-        self.search_help_bar.bind("<Control-BackSpace>", lambda event: self.ListProvs())
-    # BOTONES TREEVIEW
-        # BUSCAR
-        search_btn = ctk.CTkButton(self.help_frame,
-                                   text='Buscar',
-                                   command=self.SearchLine,
-                                   fg_color=APP_COLOR['main'],
-                                   hover_color=APP_COLOR['sec'])
-        search_btn.grid(row=1,column=2,columnspan=2,sticky='w',padx=5,pady=5)  
-        # CANCELAR
-        cancel_btn = ctk.CTkButton(self.help_frame,
-                                   text='Cancelar',
-                                   command=self.ListLines,
-                                   fg_color=APP_COLOR['red_m'],
-                                   hover_color=APP_COLOR['red_s'])
-        cancel_btn.grid(row=1,column=7,columnspan=2,sticky='w',padx=5,pady=5)
-    # TREEVIEW
-        self.help_treeview = ttk.Treeview(self.help_frame,
-                                     style='Custom.Treeview',
-                                     columns=('Proveedor'))
-        self.help_treeview.grid(row=2,column=0,sticky='nswe',padx=10,pady=10,rowspan=8,columnspan=9)
-        # EVENTO DE SELECCIONAR PRODUCTO
-        self.help_treeview.bind("<<TreeviewSelect>>",self.SelectProv)
-        # CODIGO
-        self.help_treeview.heading('#0',text='Código')
-        self.help_treeview.column('#0',width=25,anchor='center')
-        # PROVEEDOR
-        self.help_treeview.heading('Proveedor',text='Proveedor')
-        self.help_treeview.column('Proveedor',width=100,anchor='center')
-
-    # SCROLLBAR DEL TV
-        scrollbar = ctk.CTkScrollbar(self.help_frame,
-                                     orientation='vertical',
-                                     command=self.help_treeview.yview)
-        scrollbar.grid(row=2,column=9,sticky='nws',pady=5,rowspan=8)
-        self.help_treeview.configure(yscrollcommand=scrollbar.set)
-    # LISTAR LOS PROVEEDORES
-        self.ListProvs()
-# BUSCAR PROVEEDORES POR NOMBRE
-    def SearchProv(self):
-        for item in self.help_treeview.get_children():
-            self.help_treeview.delete(item)
-        search = self.search_help_bar_var.get().lower()
-        outcome = PROV_MANAGER.SearchProvByName(search)
-        for prov in outcome:
-            self.help_treeview.insert("", 'end',
-                                 text=prov['codigo'],
-                                 values=(prov['nombre']))
-# LISTAR PROVEEDORES
-    def ListProvs(self):
-        self.search_help_bar.focus()
-        self.search_help_bar_var.set('')
-        lines = PROV_MANAGER.GetProvNames()
-        for item in self.help_treeview.get_children():
-                self.help_treeview.delete(item)
-        for i, line in enumerate(lines):
-            tag = "Even.Treeview" if i % 2 == 0 else "Odd.Treeview"  # Alternar tags
-            self.help_treeview.insert("", 'end',
-                                       text=line.split(' - ')[0].strip(),
-                                       values=(line.split(' - ')[1].strip(),),
-                                       tags=(tag,))
-        self.help_treeview.tag_configure('Odd.Treeview', background="#ffffff")
-        self.help_treeview.tag_configure('Even.Treeview', background="#eaeaea")
-# SELECCIONAR UN PROVEEDOR Y AGREGARLO AL CAMPO DE PROVEEEDOR
-    def SelectProv(self,event):
-        item_id = self.help_treeview.selection()
-        info = self.help_treeview.item(item_id)
-        self.prove_var.set(f'{info['text']} - {info['values'][0]}')
-        self.nombre_entry.focus()
-        self.help_frame.destroy()
-# BUSCAR UN GRUPO EN LA ENTRADA        
-    def GetProvByCode(self):
+    # ---------------------------------------------------------------
+    # SEARCH PROV BY CODE - SEARCH PROV BY CODE - SEARCH PROV BY CODE
+    # ---------------------------------------------------------------        
+    def Get_Prov_By_Code(self):
             prov_search = self.prove_var.get().strip()
             try:
                 prov_search = int(prov_search)
@@ -942,10 +744,7 @@ class CargaProductosProg(ctk.CTkFrame):
                 self.prove_var.set('')
                 return
             
-# PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - 
-# PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - 
-# PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - 
-# PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - PROV HELP - 
+
     def ValidateNum(self,text):
         text = text.replace(".", "", 1)
         if text == '':

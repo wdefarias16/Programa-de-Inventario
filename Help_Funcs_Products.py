@@ -51,6 +51,21 @@ def Products_Help_Window(self):
         info = self.treeview.item(item_id)
         product_id = info['text']
         self.PRODUCTO = INVENTARIO.GetProducto(product_id)
+        # OBTENER LINEA - GRUPO - PROVEEDOR
+        # LINEA
+        line_id = self.PRODUCTO['linea']
+        linea = LINE_MANAGER.GetLine(line_id)
+        # GRUPO
+        grupo_id = self.PRODUCTO['grupo']
+        grupo = LINE_MANAGER.GetGroup(line_id,grupo_id)
+        # PROVEEDOR
+        proveedor_id = self.PRODUCTO['proveedor']
+        proveedor = PROV_MANAGER.GetProv(proveedor_id)
+        # AGREGAR LOS DATOS AL PRODUCTO
+        self.PRODUCTO['linea'] = f'{linea['codigo']} - {linea['nombre']}'
+        self.PRODUCTO['grupo'] = f'{grupo['codigo']} - {grupo['nombre']}'
+        self.PRODUCTO['proveedor'] = f'{proveedor['codigo']} - {proveedor['nombre']}'
+        # CERRAR LA VENTANA
         help_frame.destroy()
     # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
     # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
