@@ -6,7 +6,7 @@ from tkinter import ttk
 import tkinter as tk
 import customtkinter as ctk
  
-def ProvHelp(self):
+def Prov_Help_Window(self):
     self.help_frame = ctk.CTkToplevel(self,fg_color=APP_COLOR['white_m'])
     self.help_frame.geometry('600x400')
     self.help_frame.title('Ayuda de Proveedores')

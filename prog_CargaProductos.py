@@ -9,6 +9,7 @@ from style import FONT, APP_COLOR, ICONS
 # HELP FUNCS
 from Help_Funcs_Products import Products_Help_Window
 from Help_Funcs_LinesGroups import Lines_Help_Window, Groups_Help_Window
+from Help_Funcs_Provs import Prov_Help_Window
 
 # PROGRAMA DE CARGA DE PRODUCTOS
 class CargaProductosProg(ctk.CTkFrame):
@@ -267,7 +268,7 @@ class CargaProductosProg(ctk.CTkFrame):
         # BUSCAR PROVEEDOR - BUSCAR PROVEEDOR - BUSCAR PROVEEDOR - BUSCAR PROVEEDOR - 
         self.find_prov_btn = ctk.CTkButton(self.entry_frame,
                                      text='Proveedores',
-                                     command=self.ProvHelp,
+                                     command=self.Prov_Help_Window_CB,
                                      fg_color=APP_COLOR['main'],
                                      hover_color=APP_COLOR['sec'])
         self.find_prov_btn.grid(row=5,column=5,columnspan=1,sticky='nswe',padx=5,pady=5)
@@ -725,6 +726,11 @@ class CargaProductosProg(ctk.CTkFrame):
             messagebox.showerror("Base de datos", f"No se encontro el grupo {group_search}")
             self.grupo_var.set('')
             return
+    # ---------------------------------------------------------------
+    # GROUP HELP WINDOW - GROUP HELP WINDOW - GROUP HELP WINDOW - 
+    # ---------------------------------------------------------------
+    def Prov_Help_Window_CB(self):
+        pass
     # ---------------------------------------------------------------
     # SEARCH PROV BY CODE - SEARCH PROV BY CODE - SEARCH PROV BY CODE
     # ---------------------------------------------------------------        
