@@ -46,13 +46,26 @@ class LineasGruposProg(ctk.CTkFrame):
                 hover_color=APP_COLOR['main'],
                 command=lambda: self.GoBack_CB())
         self.go_back_btn.place(relx=0.1,rely=0.5,anchor='center')
+        # ------------------------------------------------------------------------
+        "Iniciar la configuracion inicial"
+        self.SetInicio()
+# ------------------------------------------------------------------------
+# FUNCION PARA ESTABLECER LA CONFIGURACION INICIAL
+# ------------------------------------------------------------------------
+    def SetInicio(self):
+    # ---------------------------------------------------------------------
+    # FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME
+    # ---------------------------------------------------------------------
+        self.main_frame = ctk.CTkFrame(self,fg_color=APP_COLOR['white_m'])
+        self.main_frame.place(relx=0.5,rely=0.1,relwidth=1,relheight=1,anchor='n')
+
     # ---------------------------------------------------------------------
     # ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS -
     # ---------------------------------------------------------------------
         # CODIGO
         validarlinea = self.register(self.ValidarCodigoLinea)  
         self.codigo_entry_var = tk.StringVar()
-        self.codigo_linea_entry = ctk.CTkEntry(self,
+        self.codigo_linea_entry = ctk.CTkEntry(self.main_frame,
                                          validate = 'key',
                                          validatecommand = (validarlinea,'%P'),
                                          textvariable=self.codigo_entry_var,
@@ -66,9 +79,10 @@ class LineasGruposProg(ctk.CTkFrame):
         self.codigo_linea_entry.focus()
         # NOMBRE - DESCRIPCION
         self.nombre_entry_var = tk.StringVar()
-        self.nombre_entry = ctk.CTkEntry(self,
+        self.nombre_entry = ctk.CTkEntry(self.main_frame,
                                          textvariable=self.nombre_entry_var,
-                                         fg_color=APP_COLOR['white'])
+                                         fg_color=APP_COLOR['light_gray'],
+                                         border_color=APP_COLOR['light_gray'])
         self.nombre_entry.place(relx=0.4,rely=0.25,relwidth=0.2,anchor='w')
         self.nombre_entry.bind("<Return>", lambda event: self.AgregarLinea())
         self.nombre_entry.bind("<Control-Return>", lambda event: self.ModoAgregarGrupo())
@@ -77,17 +91,17 @@ class LineasGruposProg(ctk.CTkFrame):
     # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS
     # ---------------------------------------------------------------------
         # TITULO LINEAS
-        self.titulo_line = ctk.CTkLabel(self,
+        self.titulo_line = ctk.CTkLabel(self.main_frame,
                                         text='Cargar una línea',
                                         font=FONT['text_light'])
         self.titulo_line.place(relx=0.4,rely=0.15,anchor='w')
         # CODIGO
-        codigo_label = ctk.CTkLabel(self,
+        codigo_label = ctk.CTkLabel(self.main_frame,
                                     text='Código de línea',
                                     font=FONT['text_light'])
         codigo_label.place(relx=0.39,rely=0.2,anchor='e')
         # NOMBRE - DESCRIPCION
-        descrip_label = ctk.CTkLabel(self,
+        descrip_label = ctk.CTkLabel(self.main_frame,
                                     text='Descripción',
                                     font=FONT['text_light'])
         descrip_label.place(relx=0.39,rely=0.25,anchor='e')
@@ -95,24 +109,24 @@ class LineasGruposProg(ctk.CTkFrame):
     # BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES -
     # ---------------------------------------------------------------------
         # LINE HELP BUTTON
-        self.find_line_btn = ctk.CTkButton(self,
+        self.find_line_btn = ctk.CTkButton(self.main_frame,
                                      text='',
                                      image=ICONS['search'],
                                      width=30,
                                      height=30,
                                      command=self.LineHelp,
-                                     fg_color=APP_COLOR['main'],
-                                     hover_color=APP_COLOR['sec'])
+                                     fg_color=APP_COLOR['black_m'],
+                                     hover_color=APP_COLOR['black'])
         self.find_line_btn.place(relx=0.46,rely=0.2,anchor='w')
         # AGREGAR
-        self.add_btn = ctk.CTkButton(self,
+        self.add_btn = ctk.CTkButton(self.main_frame,
                                      text='Agregar',
                                      command=self.AgregarLinea,
                                      fg_color=APP_COLOR['main'],
                                      hover_color=APP_COLOR['sec'])
         self.add_btn.place(relx=0.4,rely=0.30,relwidth=0.095,anchor='w')
         # ELIMINAR
-        self.del_btn = ctk.CTkButton(self,
+        self.del_btn = ctk.CTkButton(self.main_frame,
                                      text='Eliminar',
                                      command=self.EliminarLinea,
                                      state='disabled',
@@ -130,7 +144,9 @@ class LineasGruposProg(ctk.CTkFrame):
         nombre = self.nombre_entry.get()
         if codigo == '' or nombre == '':
             messagebox.showerror('Error','Debe rellenar los campos')
-        else:
+            return
+        answer = messagebox.showinfo('Líneas y grupos',f'¿Está seguro que desea agregar la línea {nombre}?')
+        if answer:
             if LINE_MANAGER.Add_Line(codigo,nombre):
                 self.Restablecer()
     # ---------------------------------------------------------------------
@@ -234,10 +250,8 @@ class LineasGruposProg(ctk.CTkFrame):
         self.modo_agregar_grupo_activo = True
         self.addgrupo_btn.destroy()
         # TITULO CARGA GRUPO
-        self.titulo_grupo_label = ctk.CTkLabel(self,
-                                    text='Carga de grupo',
-                                    font=FONT['text_light'])
         self.titulo_grupo_label.place(relx=0.4,rely=0.4,anchor='w')
+        self.titulo_grupo_label.configure(text='Cargar un grupo')
     # ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - 
         # ENTRADA CODIGO GRUPO
         validargrupo = self.register(self.ValidarCodigoGrupo)
@@ -246,7 +260,8 @@ class LineasGruposProg(ctk.CTkFrame):
                                         validate = 'key',
                                         validatecommand = (validargrupo,'%P'),
                                         textvariable=self.codigo_grupo_entry_var,
-                                        fg_color=APP_COLOR['white'])
+                                        fg_color=APP_COLOR['light_gray'],
+                                        border_color=APP_COLOR['light_gray'])
         self.codigo_grupo_entry.place(relx=0.4,rely=0.45,relwidth=0.05,anchor='w')
         self.codigo_grupo_entry.bind("<Return>", lambda event: self.GetGroupByCode())
         self.codigo_grupo_entry.bind("<Control-Alt-BackSpace>",lambda event: self.Restablecer())
@@ -256,9 +271,10 @@ class LineasGruposProg(ctk.CTkFrame):
         self.codigo_grupo_entry.focus()
         # ENTRADA DESCRIPCION
         self.grupo_entry_var = tk.StringVar()
-        self.grupo_entry = ctk.CTkEntry(self,
+        self.grupo_entry = ctk.CTkEntry(self.main_frame,
                                          textvariable=self.grupo_entry_var,
-                                         fg_color=APP_COLOR['white'])
+                                         fg_color=APP_COLOR['light_gray'],
+                                         border_color=APP_COLOR['light_gray'])
         self.grupo_entry.place(relx=0.4,rely=0.50,relwidth=0.2,anchor='w')
         self.grupo_entry.bind("<Return>",lambda event: self.PorV1_entry.focus())
         self.grupo_entry.bind("<Control-Alt-BackSpace>",lambda event: self.Restablecer())
@@ -266,73 +282,76 @@ class LineasGruposProg(ctk.CTkFrame):
         # PORCENTAJE 1
         validar_pctj = self.register(self.ValidarPorcentajes)
         self.PorV1_entry_var = tk.StringVar()
-        self.PorV1_entry = ctk.CTkEntry(self,
+        self.PorV1_entry = ctk.CTkEntry(self.main_frame,
                                          validate = 'key',
                                          validatecommand = (validar_pctj,'%P'),
                                          textvariable=self.PorV1_entry_var,
-                                         fg_color=APP_COLOR['white'])
+                                         fg_color=APP_COLOR['light_gray'],
+                                         border_color=APP_COLOR['light_gray'])
         self.PorV1_entry.place(relx=0.4,rely=0.55,relwidth=0.05,anchor='w')
         self.PorV1_entry.bind("<Return>",lambda event: self.PorV2_entry.focus())
         self.PorV1_entry.bind("<Control-Alt-BackSpace>",lambda event: self.Restablecer())
         self.PorV1_entry.bind("<Control-BackSpace>",lambda event: self.LimpiarGrupo())
         # PORCENTAJE 2
         self.PorV2_entry_var = tk.StringVar()
-        self.PorV2_entry = ctk.CTkEntry(self,
+        self.PorV2_entry = ctk.CTkEntry(self.main_frame,
                                          validate = 'key',
                                          validatecommand = (validar_pctj,'%P'),
                                          textvariable=self.PorV2_entry_var,
-                                         fg_color=APP_COLOR['white'])
+                                         fg_color=APP_COLOR['light_gray'],
+                                         border_color=APP_COLOR['light_gray'])
         self.PorV2_entry.place(relx=0.4,rely=0.6,relwidth=0.05,anchor='w')
         self.PorV2_entry.bind("<Return>",lambda event: self.PorV3_entry.focus())
         self.PorV2_entry.bind("<Control-Alt-BackSpace>",lambda event: self.Restablecer())
         self.PorV2_entry.bind("<Control-BackSpace>",lambda event: self.LimpiarGrupo())
         # PORCENTAJE 3
         self.PorV3_entry_var = tk.StringVar()
-        self.PorV3_entry = ctk.CTkEntry(self,
+        self.PorV3_entry = ctk.CTkEntry(self.main_frame,
                                          validate = 'key',
                                          validatecommand = (validar_pctj,'%P'),
                                          textvariable=self.PorV3_entry_var,
-                                         fg_color=APP_COLOR['white'])
+                                         fg_color=APP_COLOR['light_gray'],
+                                         border_color=APP_COLOR['light_gray'])
         self.PorV3_entry.place(relx=0.4,rely=0.65,relwidth=0.05,anchor='w')
         self.PorV3_entry.bind("<Return>",lambda event: self.AgregarGrupo())
         self.PorV3_entry.bind("<Control-Alt-BackSpace>",lambda event: self.Restablecer())
         self.PorV3_entry.bind("<Control-BackSpace>",lambda event: self.LimpiarGrupo())
-    # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
+        # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
         # CODIGO
-        self.codigoGrupo_label = ctk.CTkLabel(self,
+        self.codigoGrupo_label = ctk.CTkLabel(self.main_frame,
                                     text='Código de grupo',
                                     font=FONT['text_light'])
         self.codigoGrupo_label.place(relx=0.39,rely=0.45,anchor='e')
         # DESCRIPCION
-        self.nombreGrupo_label = ctk.CTkLabel(self,
+        self.nombreGrupo_label = ctk.CTkLabel(self.main_frame,
                                     text='Descripción',
                                     font=FONT['text_light'])
         self.nombreGrupo_label.place(relx=0.39,rely=0.5,anchor='e')
         # PDV1
-        self.pdv1_label = ctk.CTkLabel(self,
+        self.pdv1_label = ctk.CTkLabel(self.main_frame,
                                     text='% Porcentaje de venta 1',
                                     font=FONT['text_light'])
         self.pdv1_label.place(relx=0.39,rely=0.55,anchor='e')
         # PDV2
-        self.pdv2_label = ctk.CTkLabel(self,
+        self.pdv2_label = ctk.CTkLabel(self.main_frame,
                                     text='% Porcentaje de venta 2',
                                     font=FONT['text_light'])
         self.pdv2_label.place(relx=0.39,rely=0.6,anchor='e')
         # PDV3
-        self.pdv3_label = ctk.CTkLabel(self,
+        self.pdv3_label = ctk.CTkLabel(self.main_frame,
                                     text='% Porcentaje de venta 3',
                                     font=FONT['text_light'])
         self.pdv3_label.place(relx=0.39,rely=0.65,anchor='e')
-    # BOTONES
+        # BOTONES
         # GROUP HELP BUTTON - GROUP HELP BUTTON - GROUP HELP BUTTON - GROUP HELP BUTTON -  
-        self.find_group_btn = ctk.CTkButton(self,
+        self.find_group_btn = ctk.CTkButton(self.main_frame,
                                      text='Grupos',
                                      command=self.GroupHelp,
                                      fg_color=APP_COLOR['main'],
                                      hover_color=APP_COLOR['sec'])
         self.find_group_btn.place(relx=0.46,rely=0.45,relwidth=0.05,anchor='w')
         # BOTON AGREGAR
-        self.agregar_grupo_btn = ctk.CTkButton(self,
+        self.agregar_grupo_btn = ctk.CTkButton(self.main_frame,
                                      text='Agregar',
                                      command=self.AgregarGrupo,
                                      state='enabled',
@@ -340,7 +359,7 @@ class LineasGruposProg(ctk.CTkFrame):
                                      hover_color=APP_COLOR['sec'])
         self.agregar_grupo_btn.place(relx=0.4,rely=0.70,relwidth=0.095,anchor='w')
         # BOTON ELIMINAR
-        self.eliminar_grupo_btn = ctk.CTkButton(self,
+        self.eliminar_grupo_btn = ctk.CTkButton(self.main_frame,
                                      text='Eliminar',
                                      command=self.EliminarGrupo,
                                      state='disabled',
@@ -349,7 +368,7 @@ class LineasGruposProg(ctk.CTkFrame):
         self.eliminar_grupo_btn.place(relx=0.6,rely=0.70,relwidth=0.095,anchor='e')
         # BOTON CANCELAR
         self.cancel_grupo_btn_active = True
-        self.cancel_grupo_btn = ctk.CTkButton(self,
+        self.cancel_grupo_btn = ctk.CTkButton(self.main_frame,
                                      text='Refresh',
                                      width=30,
                                      height=30,
@@ -359,37 +378,48 @@ class LineasGruposProg(ctk.CTkFrame):
                                      hover_color=APP_COLOR['red_s'])
         self.cancel_grupo_btn.place(relx=0.46,rely=0.45,relwidth=0.05,anchor='w')
         
-# MODO EDICION LINEA
-    def ModoEdicion(self):
+    # ---------------------------------------------------------------------
+    # MODO EDICION LINEA - MODO EDICION LINEA - MODO EDICION LINEA - 
+    # ---------------------------------------------------------------------
+    def Modo_Edicion_lineas(self):
         "Boton 'agregar' pasa a llamarse 'modificar'"
         self.add_btn.configure(text='Modificar',command=self.ModificarLinea)
         self.del_btn.configure(state='disabled',fg_color=APP_COLOR['red_s'])
         self.codigo_linea_entry.configure(state='disabled',)
-        # BOTON AGREGAR GRUPO
+        "Boton y label agregar grupo"
+        self.titulo_grupo_label = ctk.CTkLabel(self.main_frame,
+                                    text='Agregar un grupo',
+                                    font=FONT['text_light'])
+        self.titulo_grupo_label.place(relx=0.43,rely=0.4,anchor='w')
+        self.nombre_entry.unbind("<Return>")
+        self.nombre_entry.bind("<Return>",lambda event:self.ModificarLinea())
+        "Evitar que el boton grupo active la funcion varias veces"
         if  self.addgrupo_btn_active == False:
             self.addgrupo_btn = ctk.CTkButton(self.main_frame,
-                                         text='Agregar-Modificar grupo',
+                                         text='+',
+                                         width=30,
+                                         height=30,
                                          command=self.ModoAgregarGrupo,
                                          state='enabled',
                                          fg_color=APP_COLOR['main'],
                                          hover_color=APP_COLOR['sec'])
-            self.addgrupo_btn.grid(row=1,column=3,sticky='we',padx=5,pady=5)
+            self.addgrupo_btn.place(relx=0.4,rely=0.4,anchor='w')
             self.addgrupo_btn_active = True
-        self.nombre_entry.unbind("<Return>")
-        self.nombre_entry.bind("<Return>",lambda event:self.ModificarLinea())
-        # BOTON CANCELAR
+        "Crear boton refrescar para volver a la configuracion inicial"
         self.cancel_btn = ctk.CTkButton(self.main_frame,
-                                     text='Cancelar',
+                                     text='',
+                                     image=ICONS['refresh'],
+                                     width=30,
+                                     height=30,
                                      command=self.Restablecer,
                                      state='enabled',
-                                     fg_color=APP_COLOR['red_m'],
-                                     hover_color=APP_COLOR['red_s'])
-        self.cancel_btn.grid(row=1,column=4,sticky='we',padx=5,pady=5)
-        self.add_btn.configure(state='disabled',fg_color=APP_COLOR['sec'])
-        self.mod_btn.configure(state='enabled',fg_color=APP_COLOR['main'])
+                                     fg_color=APP_COLOR['main'],
+                                     hover_color=APP_COLOR['sec'])
+        self.cancel_btn.place(relx=0.50,rely=0.2,anchor='w')
+        "Bloqueo y configuracion de botones"
         self.del_btn.configure(state='enabled',fg_color=APP_COLOR['red_m'])
-        self.find_line_btn.configure(state='disabled',fg_color=APP_COLOR['sec'])
-        self.codigo_linea_entry.configure(state='disabled',fg_color=APP_COLOR['gray'])
+        self.codigo_linea_entry.configure(state='disabled',fg_color=APP_COLOR['gray'],
+                                     border_color=APP_COLOR['gray'])
 # MODO EDICION GRUPO
     def ModoEdicionGrupo(self):
         self.PorV3_entry.unbind("<Return>")
@@ -439,30 +469,12 @@ class LineasGruposProg(ctk.CTkFrame):
         self.agregar_grupo_btn.destroy()
         self.modificar_grupo_btn.destroy()
         self.eliminar_grupo_btn.destroy()
-        self.mod_btn.configure(state='enabled',fg_color=APP_COLOR['main'])
         self.del_btn.configure(state='enabled',fg_color=APP_COLOR['red_m'])
 # RESTABLECER LOS CAMPOS
     def Restablecer(self):
-        self.nombre_entry.unbind("<Return>")
-        self.nombre_entry.bind("<Return>",lambda event:self.AgregarLinea())
-        if self.modo_agregar_grupo_activo == True:
-            self.RestablecerGrupo()
-            self.modo_agregar_grupo_activo = False
-        if self.cancel_grupo_btn_active == True:
-            self.cancel_grupo_btn.destroy()
-            self.cancel_grupo_btn_active = False
-        if self.addgrupo_btn_active == True:
-            self.addgrupo_btn.destroy()
-            self.addgrupo_btn_active = False
-        self.cancel_btn.destroy()
-        self.codigo_entry_var.set('')
-        self.nombre_entry_var.set('')
-        self.add_btn.configure(state='enabled',fg_color=APP_COLOR['main'])
-        self.mod_btn.configure(state='disabled',fg_color=APP_COLOR['sec'])
-        self.del_btn.configure(state='disabled',fg_color=APP_COLOR['red_s'])
-        self.find_line_btn.configure(state='enabled',fg_color=APP_COLOR['main'])
-        self.codigo_linea_entry.configure(state='normal',fg_color=APP_COLOR['white'])
-        self.codigo_linea_entry.focus()
+        self.main_frame.destroy()
+        self.addgrupo_btn_active = False
+        self.SetInicio()
 # LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - 
 # LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - 
 # LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - LINE HELP - 
@@ -580,7 +592,7 @@ class LineasGruposProg(ctk.CTkFrame):
         info = self.line_help_treeview.item(item_id)
         self.codigo_entry_var.set(info['text'])
         self.nombre_entry_var.set(info['values'][0])
-        self.ModoEdicion()
+        self.Modo_Edicion_lineas()
         self.line_help_frame.destroy()
         self.nombre_entry.after(100,self.nombre_entry.focus())
     def GetLineByCode(self):
@@ -596,7 +608,7 @@ class LineasGruposProg(ctk.CTkFrame):
             self.nombre_entry.focus()
             return
         line = LINE_MANAGER.GetLine(line_search)
-        self.ModoEdicion()
+        self.Modo_Edicion_lineas()
         self.nombre_entry_var.set(line['nombre'])
         self.nombre_entry.after(100,self.nombre_entry.focus())
 
