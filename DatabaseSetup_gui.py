@@ -146,6 +146,14 @@ class DatabaseManagerApp(ctk.CTk):
                             log TEXT,
                             hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                         )""",
+                        # Tabla del dolar
+                        """CREATE TABLE paralelo (
+                            codigo SERIAL PRIMARY KEY,
+                            fecha DATE NOT NULL,
+                            tasa DECIMAL(12, 4) NOT NULL,
+                            log TEXT,
+                            hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                        )""",
                         # Tabla proveedores
                         """CREATE TABLE IF NOT EXISTS proveedores (
                             codigo SERIAL PRIMARY KEY,

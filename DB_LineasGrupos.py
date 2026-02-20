@@ -418,22 +418,9 @@ class LineasGrupos:
                 if cur.fetchone():
                     return True
                 else:
-                    messagebox.showerror('Error de Línea', f'El código {codigo} no pertenece a ninguna línea cargada.')
                     return False
         except Exception as e:
             messagebox.showerror("Base de datos", f"Error al chequear la línea: {str(e)}")
-            return False
-    def CheckLineNM(self, codigo):
-        try:
-            with self.conn.cursor() as cur:
-                cur.execute("SELECT 1 FROM lineas WHERE codigo = %s;", (codigo,))
-                if cur.fetchone():
-                    return True
-                else:
-                    print(f'El código {codigo} no pertenece a ninguna línea cargada.')
-                    return False
-        except Exception as e:
-            print(f"Error al chequear la línea: {str(e)}")
             return False
     # CHEQUEA SI UN GRUPO PERTENECE A LA LÍNEA - CHEQUEA SI UN GRUPO PERTENECE A LA LÍNEA -
     # CHEQUEA SI UN GRUPO PERTENECE A LA LÍNEA - CHEQUEA SI UN GRUPO PERTENECE A LA LÍNEA -

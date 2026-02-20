@@ -6,6 +6,7 @@ FONT = {
     'subtitle_bold': ('Roboto Bold',20),
     'subtitle_light': ('Roboto light',20),
     'text': ('Roboto',15),
+    'text_bold': ('Roboto Bold',15),
     'text_small': ('Roboto',12),
     'text_light': ('Roboto light',15),
     'text_light_small': ('Roboto light',12),
@@ -21,6 +22,7 @@ APP_COLOR = {
     'white':'#ffffff',
     'black':'#000000',
     'gray':'#5d5d5d',
+    'light_gray':"#b9b9b9",
     'green_m':'#31C74A',
     'green_s':'#1A832B',
     'red_m':'#D8171D',
@@ -41,6 +43,8 @@ lock_icon=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_lock_light.p
 exit_icon=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_exit_light.png"), size=(30,30),
                                     dark_image=Image.open(r"Recursos\Iconos\btn_exit_dark.png"))
 inv_icon=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_inventario_light.png"), size=(30,30),
+                                    dark_image=Image.open(r"Recursos\Iconos\btn_inventario_dark.png"))
+home_icon=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_inventario_light.png"), size=(30,30),
                                     dark_image=Image.open(r"Recursos\Iconos\btn_inventario_dark.png"))
 fact_icon=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_fact_light.png"), size=(30,30),
                                     dark_image=Image.open(r"Recursos\Iconos\btn_fact_dark.png"))
@@ -66,6 +70,7 @@ ICONS = {
     'lock':lock_icon,
     'exit':exit_icon,
     'inventory':inv_icon,
+    'home':home_icon,
     'fact':fact_icon,
     'cxp':cuentas_xp_icon,
     'cxc':cuentas_xc_icon,

@@ -1,10 +1,11 @@
 import tkinter as tk
 import customtkinter as ctk
+import datetime
 from tkinter import ttk, messagebox
 from style import FONT, ICONS, APP_COLOR
 from DatabaseManager import*
+from Help_Funcs_Products import Products_Help_Window
 from PIL import Image, ImageTk
-import datetime
 
 class FacturacionProg(ctk.CTkFrame):
     def __init__(self, parent, GoBack_CB):
@@ -14,34 +15,34 @@ class FacturacionProg(ctk.CTkFrame):
         self.GoBack_CB = GoBack_CB
         self.inventory_codes = INVENTARIO.GetCodigos()
         self.product_list = []
-        self.DOLAR = INVENTARIO.GetLastDolarValue()
+        self.DOLAR = ACCOUNTING_MANAGER.GetLastDolarValue()
     # -----------------------------------------------------------------------------------------------
+    # TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - 
     # -----------------------------------------------------------------------------------------------
-# TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - 
-# TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - 
-# TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - 
-# TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - 
         # FRAME
         title_frame = ctk.CTkFrame(self,
-                        height=70,
                         fg_color=APP_COLOR['sec'],
-                        corner_radius=0)
-        title_frame.place(relx=0.5,rely=0,relwidth=1,anchor='n')
-        # LABEL
+                        corner_radius=0,)
+        title_frame.place(relx=0.5,rely=0,relwidth=1,relheight=0.1,anchor='n')
         title_label = ctk.CTkLabel(title_frame,
                         text='Facturación',
-                        bg_color='transparent',
                         text_color=APP_COLOR['white_m'],
-                        font=FONT['title_light'])
+                        font=FONT['title_bold'])
         title_label.place(relx=0.5,rely=0.5,anchor='center')
-    # -----------------------------------------------------------------------------------------------
-    # -----------------------------------------------------------------------------------------------
-# INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - 
-# INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - 
-# INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - 
-# INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - 
+        home_btn = ctk.CTkButton(title_frame,
+                        image=ICONS['home'],
+                        text='',
+                        width=30,
+                        height=30,
+                        fg_color=APP_COLOR['gray'],
+                        hover_color=APP_COLOR['black_m'])
+        home_btn.place(relx=0.05,rely=0.5,anchor='center')
+    # ---------------------------------------------------------------
+    # INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME 
+    # ---------------------------------------------------------------
+        # -----------------------------------------------------------
         # FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - 
-        # FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - 
+        # -----------------------------------------------------------
         info_frame = ctk.CTkFrame(self,
                         fg_color=APP_COLOR['main'],
                         corner_radius=0)
@@ -80,23 +81,13 @@ class FacturacionProg(ctk.CTkFrame):
                         hover_color=APP_COLOR['green_s'],
                         command=self.CobrarFactura)
         cashout_btn.place(relx=0.5,rely=0.80,relwidth=0.90,anchor='center')
-        # --------------------------------------------------------------------
-        # --------------------------------------------------------------------
-    # --------------------------------------------------------------------------
-    # --------------------------------------------------------------------------
-    # --------------------------------------------------------------------------
-    # --------------------------------------------------------------------------
-# MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - 
-# MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - 
-# MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - 
-# MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - 
+    # ---------------------------------------------------------------
+    # MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME 
+    # ---------------------------------------------------------------
         # FUNCTIONS
         def ClickLista(event):
             pass
-        # --------------------------------------------------------------------
-        # --------------------------------------------------------------------
         # GO BACK
-        # Reemplazar la función GoBack existente
         def GoBack():
             if self.product_list:
                 respuesta = messagebox.askyesno(
@@ -106,18 +97,15 @@ class FacturacionProg(ctk.CTkFrame):
                     self.CancelFact()
             else:
                 self.GoBack_CB()
-        # --------------------------------------------------------------------
-        # --------------------------------------------------------------------
-        # FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - 
+        # ---------------------------------------------------------------
         # FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - 
         main_frame = ctk.CTkFrame(self,
                         fg_color=APP_COLOR['white_m'],
                         corner_radius=0)
         main_frame.place(relx=0,y=69.5,relwidth=0.75,relheight=1,anchor='nw')
-# ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS - 
-# ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS -
-# ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS -
-# ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS -
+        # ---------------------------------------------------------------
+        # ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS - 
+        # ---------------------------------------------------------------
         # CODIGO DE CLIENTE 
         self.cod_client_entry_var = tk.StringVar()
         self.cod_client_entry = ctk.CTkEntry(main_frame,
@@ -128,101 +116,20 @@ class FacturacionProg(ctk.CTkFrame):
                         fg_color = APP_COLOR['white'])
         self.cod_client_entry.place(x=70,y=70,anchor='nw')
         self.cod_client_entry.bind("<Return>",lambda event:self.SearchClient())
-        # NOMBRE
-        self.name_client_entry_var = tk.StringVar()
-        self.name_client_entry = ctk.CTkEntry(main_frame,
-                        width=150,
-                        height=30,
-                        textvariable = self.name_client_entry_var,
-                        border_width = 0,
-                        fg_color = APP_COLOR['white'])
-        self.name_client_entry.place(x=70,y=130,anchor='nw')
-        # TELEFONO
-        self.phone_client_entry_var = tk.StringVar()
-        self.phone_client_entry = ctk.CTkEntry(main_frame,
-                        width=150,
-                        height=30,
-                        textvariable = self.phone_client_entry_var,
-                        border_width = 0,
-                        fg_color = APP_COLOR['white'])
-        self.phone_client_entry.place(x=70,y=190,anchor='nw')
-        # ID FISCAL
-        self.fiscal_client_entry_var = tk.StringVar()
-        self.fiscal_client_entry = ctk.CTkEntry(main_frame,
-                        width=150,
-                        height=30,
-                        textvariable = self.fiscal_client_entry_var,
-                        border_width = 0,
-                        fg_color = APP_COLOR['white'])
-        self.fiscal_client_entry.place(x=155,y=70,anchor='nw')
-        # MAIL
-        self.mail_client_entry_var = tk.StringVar()
-        self.mail_client_entry = ctk.CTkEntry(main_frame,
-                        width=150,
-                        height=30,
-                        textvariable = self.mail_client_entry_var,
-                        border_width = 0,
-                        fg_color = APP_COLOR['white'])
-        self.mail_client_entry.place(x=235,y=130,anchor='nw')
-        # DIRECCION
-        self.address_client_entry_var = tk.StringVar()
-        self.address_client_entry = ctk.CTkEntry(main_frame,
-                        width=150,
-                        height=30,
-                        textvariable = self.address_client_entry_var,
-                        border_width = 0,
-                        fg_color = APP_COLOR['white'])
-        self.address_client_entry.place(x=235,y=190,anchor='nw')
-    # --------------------------------------------------------------------------
-    # --------------------------------------------------------------------------
-# LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
-# LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
-# LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
-# LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
-    # CLIENT DATA - CLIENT DATA - CLIENT DATA - CLIENT DATA - CLIENT DATA - 
-    # CLIENT DATA - CLIENT DATA - CLIENT DATA - CLIENT DATA - CLIENT DATA - 
+        # ---------------------------------------------------------------
+        # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS 
+        # ---------------------------------------------------------------
+        # CLIENT DATA - CLIENT DATA - CLIENT DATA - CLIENT DATA -
+        # ---------------------------------------------------------------
         # CODIGO
         cod_label = ctk.CTkLabel(main_frame,
                         text='Código',
                         text_color=APP_COLOR['gray'],
                         font=FONT['text'])
         cod_label.place(x=70,y=40,anchor='nw')
-        # NOMBRE
-        name_label = ctk.CTkLabel(main_frame,
-                        text='Nombre',
-                        text_color=APP_COLOR['gray'],
-                        font=FONT['text'])
-        name_label.place(x=70,y=100,anchor='nw')
-        # PHONE
-        phone_label = ctk.CTkLabel(main_frame,
-                        text='Teléfono',
-                        text_color=APP_COLOR['gray'],
-                        font=FONT['text'])
-        phone_label.place(x=70,y=160,anchor='nw')
-        # ID FISCAL
-        fiscal_label = ctk.CTkLabel(main_frame,
-                        text='Cédula/RIF',
-                        text_color=APP_COLOR['gray'],
-                        font=FONT['text'])
-        fiscal_label.place(x=155,y=40,anchor='nw')
-        # MAIL
-        mail_label = ctk.CTkLabel(main_frame,
-                        text='Correo',
-                        text_color=APP_COLOR['gray'],
-                        font=FONT['text'])
-        mail_label.place(x=235,y=100,anchor='nw')
-        # DIRECION
-        address_label = ctk.CTkLabel(main_frame,
-                        text='Dirección',
-                        text_color=APP_COLOR['gray'],
-                        font=FONT['text'])
-        address_label.place(x=235,y=160,anchor='nw')
-    # --------------------------------------------------------------------------
-    # --------------------------------------------------------------------------
-# ENTRIES PRODUCT DATA - ENTRIES PRODUCT DATA - ENTRIES PRODUCT DATA - ENTRIES PRODUCT DATA - 
-# ENTRIES PRODUCT DATA - ENTRIES PRODUCT DATA - ENTRIES PRODUCT DATA - ENTRIES PRODUCT DATA -
-# ENTRIES PRODUCT DATA - ENTRIES PRODUCT DATA - ENTRIES PRODUCT DATA - ENTRIES PRODUCT DATA -
-# ENTRIES PRODUCT DATA - ENTRIES PRODUCT DATA - ENTRIES PRODUCT DATA - ENTRIES PRODUCT DATA -
+        # ---------------------------------------------------------------
+        # ENTRIES PRODUCT DATA - ENTRIES PRODUCT DATA -
+        # ---------------------------------------------------------------
         # CODIGO DE PRODUCTO
         self.product_code_entry_var = tk.StringVar()
         self.product_code_entry = ctk.CTkEntry(main_frame,
@@ -242,12 +149,9 @@ class FacturacionProg(ctk.CTkFrame):
                         border_width = 0,
                         fg_color = APP_COLOR['white'])
         self.product_qty_entry.place(relx=0.78,y=190,anchor='nw')
-    # --------------------------------------------------------------------------
-    # --------------------------------------------------------------------------
-# LABELS PRODUCT DATA - LABELS PRODUCT DATA - LABELS PRODUCT DATA - LABELS PRODUCT DATA -
-# LABELS PRODUCT DATA - LABELS PRODUCT DATA - LABELS PRODUCT DATA - LABELS PRODUCT DATA -
-# LABELS PRODUCT DATA - LABELS PRODUCT DATA - LABELS PRODUCT DATA - LABELS PRODUCT DATA -
-# LABELS PRODUCT DATA - LABELS PRODUCT DATA - LABELS PRODUCT DATA - LABELS PRODUCT DATA -
+        # ---------------------------------------------------------------
+        # LABELS PRODUCT DATA - LABELS PRODUCT DATA - LABELS PRODUCT DATA
+        # ---------------------------------------------------------------
         # CODIGO DE PRODUCTO
         product_code_label = ctk.CTkLabel(main_frame,
                         text='Producto',
@@ -260,8 +164,9 @@ class FacturacionProg(ctk.CTkFrame):
                         text_color=APP_COLOR['gray'],
                         font=FONT['text'])
         product_qty_label.place(relx=0.78,y=160,anchor='nw')
-    # TOTAL FACT - TOTAL FACT - TOTAL FACT - TOTAL FACT - TOTAL FACT - TOTAL FACT - TOTAL FACT - 
-    # TOTAL FACT - TOTAL FACT - TOTAL FACT - TOTAL FACT - TOTAL FACT - TOTAL FACT - TOTAL FACT - 
+        # ---------------------------------------------------------------
+        # TOTAL FACT - TOTAL FACT - TOTAL FACT - TOTAL FACT - TOTAL FACT
+        # ---------------------------------------------------------------
         # TOTAL DOLARES
         self.total_fact_dolar_label = ctk.CTkLabel(main_frame,
                         text='$ 000.00',
@@ -282,12 +187,9 @@ class FacturacionProg(ctk.CTkFrame):
                         text_color=APP_COLOR['white'],
                         fg_color=APP_COLOR['green_m'])
         self.total_fact_bs_label.place(relx=0.925,rely=0.80,anchor='e')
-    # --------------------------------------------------------------------------
-    # --------------------------------------------------------------------------
-# BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - 
-# BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - 
-# BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - 
-# BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - 
+        # ---------------------------------------------------------------
+        # BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES -
+        # ---------------------------------------------------------------
         # ADD PRODUCT
         self.btn_add_product = ctk.CTkButton(main_frame,
                         text="+",
@@ -295,7 +197,7 @@ class FacturacionProg(ctk.CTkFrame):
                         height=30,
                         fg_color=APP_COLOR['main'],
                         hover_color=APP_COLOR['sec'],
-                        command=self.ProductsHelp)
+                        command=self.Products_Help_Window_CB)
         self.btn_add_product.place(relx=0.87,y=190,anchor='nw')
         # GO BACK
         self.btn_goback = ctk.CTkButton(main_frame,
@@ -323,10 +225,9 @@ class FacturacionProg(ctk.CTkFrame):
                         hover_color=APP_COLOR['red_s'],
                         command=self.DeleteSelectedProduct)
         self.btn_del_product.place(relx=0.15,rely=0.65,anchor='nw')
-# TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
-# TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
-# TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
-# TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
+        # ---------------------------------------------------------------
+        # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW
+        # ---------------------------------------------------------------
         # CONFIGURACION VISUAL DEL TV
         style = ttk.Style()
         style.configure(
@@ -374,24 +275,28 @@ class FacturacionProg(ctk.CTkFrame):
                                      command=self.treeview_main.yview)
         scrollbar.place(relx=0.94,rely=0.34,anchor='n')
         self.treeview_main.configure(yscrollcommand=scrollbar.set)
-    # -----------------------------------------------------------------------------------------------
-    # -----------------------------------------------------------------------------------------------
-    # FOOTER BAR - FOOTER BAR - FOOTER BAR - FOOTER BAR - FOOTER BAR - FOOTER BAR - FOOTER BAR - 
-    # FOOTER BAR - FOOTER BAR - FOOTER BAR - FOOTER BAR - FOOTER BAR - FOOTER BAR - FOOTER BAR - 
+        # ---------------------------------------------------------------
+        # FOOTER BAR - FOOTER BAR - FOOTER BAR - FOOTER BAR - FOOTER BAR
+        # ---------------------------------------------------------------
         # FRAME
         footer_frame = ctk.CTkFrame(self,
                                     height=30,
                                     fg_color=APP_COLOR['sec'],
                                     corner_radius=0)
         footer_frame.place(relx=0.5,rely=1,relwidth=1,anchor='s')
-    # -----------------------------------------------------------------------------------------------
-    # -----------------------------------------------------------------------------------------------
-# FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - 
-# FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - 
-# FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - 
-# FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - 
-# AYUDA DE PRODUCTOS - AYUDA DE PRODUCTOS - AYUDA DE PRODUCTOS - AYUDA DE PRODUCTOS
-# AYUDA DE PRODUCTOS - AYUDA DE PRODUCTOS - AYUDA DE PRODUCTOS - AYUDA DE PRODUCTOS
+    # -------------------------------------------------------------------
+    # FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - FUNCTIONS - 
+    # -------------------------------------------------------------------
+        # ---------------------------------------------------------------
+        # AYUDA DE PRODUCTOS - AYUDA DE PRODUCTOS - AYUDA DE PRODUCTOS - 
+        # ---------------------------------------------------------------
+    def Products_Help_Window_CB(self):
+        producto = Products_Help_Window(self)
+        print(producto)
+
+    def Fill_Entry_Fields(self,producto):
+        pass
+
     def ProductsHelp(self):
         # LIST INVENTORY IN TREEVIEW - LIST INVENTORY IN TREEVIEW - LIST INVENTORY IN TREEVIEW -
         # LIST INVENTORY IN TREEVIEW - LIST INVENTORY IN TREEVIEW - LIST INVENTORY IN TREEVIEW -
@@ -504,7 +409,7 @@ class FacturacionProg(ctk.CTkFrame):
                         self.product_code_entry_var.set('')
                         self.product_code_entry.focus()
                         # SUBTRACT IN STOCK
-                        INVENTARIO.SellProduct(codigo,qty)
+                        ACCOUNTING_MANAGER.SellProduct(codigo,qty)
                         help_frame.destroy()
                         return
             if codigo not in self.inventory_codes:
@@ -537,7 +442,7 @@ class FacturacionProg(ctk.CTkFrame):
                         f'Bs. {precio_bs_format}',
                         f'$ {precio_dolar_format}'))
             self.product_list.append(str(codigo).strip())
-            INVENTARIO.SellProduct(codigo,qty)
+            ACCOUNTING_MANAGER.SellProduct(codigo,qty)
             # CERRAR EL PRODUCT HELP FRAME
             help_frame.destroy()
             self.UpdateTotal()
@@ -693,7 +598,7 @@ class FacturacionProg(ctk.CTkFrame):
                 return
 
             # Intentar vender el producto
-            if not INVENTARIO.SellProduct(codigo, qty):
+            if not ACCOUNTING_MANAGER.SellProduct(codigo, qty):
                 messagebox.showerror('Error', 'No se pudo procesar la venta. Intente nuevamente.')
                 self.product_code_entry_var.set('')
                 self.product_code_entry.focus()
@@ -1048,4 +953,3 @@ class FacturacionProg(ctk.CTkFrame):
         self.UpdateTotal()
 # -------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------
-

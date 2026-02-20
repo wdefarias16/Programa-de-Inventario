@@ -5,7 +5,7 @@ from prog_AjustesInventario import*
 from prog_CargaProductos import*
 from prog_CargaLineasGrupos import*
 from prog_CargaProveedores import*
-from prog_CargaDolar import*
+from prog_CargaDolar import CargaDolar
 from prog_Facturacion import*
 from prog_GestionDeUsuarios import*
 from Menu_Inventario import*
