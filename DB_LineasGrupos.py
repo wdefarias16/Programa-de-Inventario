@@ -296,8 +296,7 @@ class LineasGrupos:
                 }
             return group_data
         except Exception as e:
-            messagebox.showerror("Base de datos", f"Error al buscar grupo: {str(e)}")
-            return
+            return None
     # RETORNA LOS NOMBRES DE LÍNEA EN FORMATO (CÓDIGO - NOMBRE)
     # RETORNA LOS NOMBRES DE LÍNEA EN FORMATO (CÓDIGO - NOMBRE)
     def GetLineNames(self):

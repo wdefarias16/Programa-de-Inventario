@@ -1,9 +1,4 @@
-from DatabaseManager import INVENTARIO
+from DatabaseManager import LINE_MANAGER
 
-code = '96350161'
-user = INVENTARIO.SellProduct(code,9)
-
-if user:
-    print("Venta realizada con éxito")
-else:
-    print("Error en la venta")
+grupo = LINE_MANAGER.GetGroup(1,'1.1')
+print(grupo)
