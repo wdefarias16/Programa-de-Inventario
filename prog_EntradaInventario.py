@@ -2,7 +2,7 @@ import customtkinter as ctk
 from tkcalendar import Calendar
 import tkinter as tk
 from tkinter import ttk, messagebox
-from DatabaseManager import INVENTARIO, PROV_MANAGER
+from DatabaseManager import INVENTARIO, PROV_MANAGER, ACCOUNTING_MANAGER
 from style import FONT, APP_COLOR, ICONS
 import os
 from reportlab.lib.pagesizes import LETTER
@@ -1162,7 +1162,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
 
         # 3) Llamada a BD
         try:
-            INVENTARIO.GuardarEntradaInventario(
+            ACCOUNTING_MANAGER.GuardarEntradaInventario(
                 num_factura=num_fact,
                 proveedor=prov_code,
                 fecha=fecha,
@@ -1193,7 +1193,7 @@ class EntradasInventarioProg(ctk.CTkFrame):
         num_fact = self.num_pedido_var.get().strip()
         if not num_fact:
             return
-        data = INVENTARIO.ObtenerEntrada(num_fact)
+        data = ACCOUNTING_MANAGER.ObtenerEntrada(num_fact)
         if not data:
             self.proveedor_entry.focus()
             return

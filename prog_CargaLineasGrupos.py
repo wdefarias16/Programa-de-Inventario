@@ -63,7 +63,6 @@ class LineasGruposProg(ctk.CTkFrame):
     # ---------------------------------------------------------------------
         self.main_frame = ctk.CTkFrame(self,fg_color=APP_COLOR['white_m'])
         self.main_frame.place(relx=0.5,rely=0.1,relwidth=1,relheight=1,anchor='n')
-
     # ---------------------------------------------------------------------
     # ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS - ENTRADAS -
     # ---------------------------------------------------------------------
