@@ -40,21 +40,21 @@ class CargaProductosProg(ctk.CTkFrame):
         home_btn = ctk.CTkButton(title_frame,
                         image=ICONS['home'],
                         text='',
-                        width=30,
-                        height=30,
-                        fg_color=APP_COLOR['gray'],
-                        hover_color=APP_COLOR['black_m'])
+                        width=40,
+                        height=40,
+                        fg_color=APP_COLOR['black_m'],
+                        hover_color=APP_COLOR['black'])
         home_btn.place(relx=0.05,rely=0.5,anchor='center')
         # GO BACK BUTTON - GO BACK BUTTON - GO BACK BUTTON - GO BACK BUTTON - GO BACK BUTTON -
         self.go_back_btn = ctk.CTkButton(title_frame,
                 text='',
-                image=ICONS['home'],
-                width=30,
-                height=30,
+                image=ICONS['back'],
+                width=40,
+                height=40,
                 text_color=APP_COLOR['black_m'],
                 font=FONT['text_small'],
-                fg_color=APP_COLOR['gray'],
-                hover_color=APP_COLOR['main'],
+                fg_color=APP_COLOR['black_m'],
+                hover_color=APP_COLOR['black'],
                 command=lambda: self.GoBack_CB())
         self.go_back_btn.place(relx=0.1,rely=0.5,anchor='center')
         # --------------------------------------------------------------------------------

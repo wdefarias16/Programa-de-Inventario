@@ -32,11 +32,23 @@ class FacturacionProg(ctk.CTkFrame):
         home_btn = ctk.CTkButton(title_frame,
                         image=ICONS['home'],
                         text='',
-                        width=30,
-                        height=30,
-                        fg_color=APP_COLOR['gray'],
-                        hover_color=APP_COLOR['black_m'])
+                        width=40,
+                        height=40,
+                        fg_color=APP_COLOR['black_m'],
+                        hover_color=APP_COLOR['black'])
         home_btn.place(relx=0.05,rely=0.5,anchor='center')
+        # GO BACK BUTTON - GO BACK BUTTON - GO BACK BUTTON - GO BACK BUTTON - GO BACK BUTTON -
+        self.go_back_btn = ctk.CTkButton(title_frame,
+                text='',
+                image=ICONS['back'],
+                width=40,
+                height=40,
+                text_color=APP_COLOR['black_m'],
+                font=FONT['text_small'],
+                fg_color=APP_COLOR['black_m'],
+                hover_color=APP_COLOR['black'],
+                command=lambda: self.GoBack())
+        self.go_back_btn.place(relx=0.1,rely=0.5,anchor='center')
     # ---------------------------------------------------------------
     # INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME - INFO FRAME 
     # ---------------------------------------------------------------
@@ -87,16 +99,7 @@ class FacturacionProg(ctk.CTkFrame):
         # FUNCTIONS
         def ClickLista(event):
             pass
-        # GO BACK
-        def GoBack():
-            if self.product_list:
-                respuesta = messagebox.askyesno(
-                    '¡Atención!',
-                    'Hay productos en la factura. ¿Desea cancelar la factura y volver atrás?')
-                if respuesta:
-                    self.CancelFact()
-            else:
-                self.GoBack_CB()
+        
         # ---------------------------------------------------------------
         # FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - 
         main_frame = ctk.CTkFrame(self,
@@ -199,14 +202,7 @@ class FacturacionProg(ctk.CTkFrame):
                         hover_color=APP_COLOR['sec'],
                         command=self.Products_Help_Window_CB)
         self.btn_add_product.place(relx=0.87,y=190,anchor='nw')
-        # GO BACK
-        self.btn_goback = ctk.CTkButton(main_frame,
-                        text="Volver atrás",
-                        corner_radius=0,
-                        fg_color=APP_COLOR['gray'],
-                        hover_color=APP_COLOR['sec'],
-                        command=GoBack)
-        self.btn_goback.place(relx=0,y=0,anchor='nw')
+
         # CANCEL FACT
         self.btn_cancel_fact = ctk.CTkButton(main_frame,
                         text="",
@@ -291,288 +287,65 @@ class FacturacionProg(ctk.CTkFrame):
         # AYUDA DE PRODUCTOS - AYUDA DE PRODUCTOS - AYUDA DE PRODUCTOS - 
         # ---------------------------------------------------------------
     def Products_Help_Window_CB(self):
-        producto = Products_Help_Window(self)
-        print(producto)
+        self.SELECTED_PRODUCT = Products_Help_Window(self)
+        if self.SELECTED_PRODUCT is None:
+            return
+        print(self.SELECTED_PRODUCT)
+        qty = int(self.product_qty_entry_var.get())
+        if not qty:
+            qty = 0
+        
+        self.product_list.append(self.SELECTED_PRODUCT['codigo'])
+        self.Load_In_Treeview(self.SELECTED_PRODUCT,qty)
+
 
     def Fill_Entry_Fields(self,producto):
         pass
 
-    def ProductsHelp(self):
-        # LIST INVENTORY IN TREEVIEW - LIST INVENTORY IN TREEVIEW - LIST INVENTORY IN TREEVIEW -
-        # LIST INVENTORY IN TREEVIEW - LIST INVENTORY IN TREEVIEW - LIST INVENTORY IN TREEVIEW -
-        def ListInventory():
-            self.qty_entry_var.set('')
-            self.search_bar_entry.after(100,
-                lambda:  self.search_bar_entry.configure(state='normal',
-                fg_color=APP_COLOR['white'],border_color=APP_COLOR['white']))
-            self.search_bar_entry_var.set('')
-            self.search_bar_entry.after(100,self.search_bar_entry.focus())
-            inventario = INVENTARIO.GetInventory()
-            for item in self.product_tv.get_children():
-                    self.product_tv.delete(item) 
-            for i, producto in enumerate(inventario.values()):
-                color = '#eaeaea' if i % 2 == 0 else '#ffffff'
-                tag_name = f'row{i}'
-                self.product_tv.insert(
-                    "", 'end',
-                    text=producto['codigo'],
-                    values=(producto['nombre'],f'${producto['precio1']}' ,producto['existencia']),
-                    tags=(tag_name,))
-                self.product_tv.tag_configure(tag_name, background=color)
-        # ------------------------------------------------------------------------------------------------        
-        # ------------------------------------------------------------------------------------------------        
-        # SEARCH A PRODUCT BY NAME - SEARCH A PRODUCT BY NAME - SEARCH A PRODUCT BY NAME - 
-        # SEARCH A PRODUCT BY NAME - SEARCH A PRODUCT BY NAME - SEARCH A PRODUCT BY NAME - 
-        def SearchProductName():
-            for item in self.product_tv.get_children():
-                self.product_tv.delete(item)
-            busqueda = self.search_bar_entry_var.get().lower()
-            resultados = INVENTARIO.BuscarNombres(busqueda)
-            for i, producto in enumerate(resultados):
-                color = '#eaeaea' if i % 2 == 0 else '#ffffff'
-                tag_name = f'search_row{i}'
-                self.product_tv.insert(
-                    "", 'end',
-                    text=producto['codigo'],
-                    values=(producto['nombre'], producto['existencia']),
-                    tags=(tag_name,)
-                )
-                self.product_tv.tag_configure(tag_name, background=color)
-        # -------------------------------------------------------------------------------------------------
-        # -------------------------------------------------------------------------------------------------
-        # SELECT A PRODUCT WHEN CLICK ON TREEVIEW - SELECT A PRODUCT WHEN CLICK ON TREEVIEW - 
-        # SELECT A PRODUCT WHEN CLICK ON TREEVIEW - SELECT A PRODUCT WHEN CLICK ON TREEVIEW - 
-        def ClickTreeview(event):
-            item_id = self.product_tv.selection()
-            info = self.product_tv.item(item_id)
-            codigo = info['text']
-            self.search_bar_entry_var.set(codigo)
-            self.search_bar_entry.configure(state='disabled',
-                                            fg_color=APP_COLOR['gray'],
-                                            border_color=APP_COLOR['gray'])
-            self.qty_entry.configure(state='normal',
-                                     fg_color=APP_COLOR['white'],
-                                     border_color=APP_COLOR['white'])
-            self.qty_entry.focus_set()
-        # -------------------------------------------------------------------------------------------------
-    # CANCEL TREEVIEW SELECTION - CANCEL TREEVIEW SELECTION - CANCEL TREEVIEW SELECTION -
-    # CANCEL TREEVIEW SELECTION - CANCEL TREEVIEW SELECTION - CANCEL TREEVIEW SELECTION -
-        def RefreshSelection():
-            self.qty_entry_var.set('')
-            self.qty_entry.configure(state='disabled',
-                                     fg_color=APP_COLOR['gray'],
-                                     border_color=APP_COLOR['gray'])
-            self.search_bar_entry_var.set('')
-            self.search_bar_entry.configure(state='normal',
-                                            fg_color=APP_COLOR['white'],
-                                            border_color=APP_COLOR['white'])
-            self.search_bar_entry.focus()
-            ListInventory()
-        # -------------------------------------------------------------------------------------------------
-        # -------------------------------------------------------------------------------------------------
-        # ADD PRODUCT TO MAIN TREEVIEW - ADD PRODUCT TO MAIN TREEVIEW -
-        # ADD PRODUCT TO MAIN TREEVIEW - ADD PRODUCT TO MAIN TREEVIEW -
-        def AddProduct():
-            # GET CURRENT PRODUCT CODE
-            codigo = self.search_bar_entry_var.get()
-            # GET PRODUCT DATA
-            producto = INVENTARIO.GetProducto(codigo)
-            # GET ADJUSTMENT
-            qty = self.qty_entry_var.get()
-            try:
-                qty = int(qty)
-            except ValueError:
-                messagebox.showerror('Error', 'Verifica que el campo "Cantidad" este correcto.')
-                self.qty_entry.focus()
-                return
-            if qty > producto['existencia']:
-                messagebox.showerror('Error', 'La cantidad supera la existencia.')
-                self.qty_entry_var.set('')
-                return
-            
-            # IF THE PRODUCT IS ALREADY IN THE LIST, IT ADDS THE QTY
-            if codigo in self.product_list:
-                for item in self.treeview_main.get_children():
-                    values = self.treeview_main.item(item)
-                    if values['text'] == codigo:
-                        name = values['values'][0]
-                        current_qty = values['values'][1]
-                        cost = values['values'][2].split(' ')[1].strip()
-                        cost = float(cost)
-                        new_qty = int(current_qty) + qty
-                        cost_bs = new_qty * self.DOLAR
-                        cost_dolar = new_qty * cost
-                        self.treeview_main.item(item, values=(name,new_qty,f'$ {cost}',f'Bs. {cost_bs:,.2f}',f'$ {cost_dolar:,.2f}'))
-                        # RECALCULATE TOTAL
-                        self.UpdateTotal()
-                        # CLEAN ENTRIES
-                        self.product_code_entry_var.set('')
-                        self.product_code_entry.focus()
-                        # SUBTRACT IN STOCK
-                        ACCOUNTING_MANAGER.SellProduct(codigo,qty)
-                        help_frame.destroy()
-                        return
-            if codigo not in self.inventory_codes:
-                messagebox.showerror('Error', f'Producto con código {codigo} no se encuentra en la base de datos.')
-                return
-            
-            
-            # -----------------------------------------------------
-            # -----------------------------------------------------
-            # PRECIO POR UNIDAD EN DOLARES CON FORMATO '000,000.00'
-            precio_unidad = "{:,.2f}".format(producto['precio1'])
-            # -----------------------------------------------------
-            # PRECIO FINAL EN DOLARES
-            precio_dolar = float(producto['precio1']) * qty
-            # FORMATO AL PRECIO FINAL EN DOLARES
-            precio_dolar_format = "{:,.2f}".format(precio_dolar)
-            # -----------------------------------------------------
-            # PRECIO FINAL EN BOLIVARES
-            precio_bs = float(self.DOLAR * precio_dolar)
-            # FORMATO AL PRECIO FINAL EN BOLIVARES
-            precio_bs_format = "{:,.2f}".format(precio_bs)
-            # -----------------------------------------------------
-            # -----------------------------------------------------
-            # INSERT PRODUCT IN MAIN TREEVIEW
-            self.treeview_main.insert("", 'end',
-                text=producto['codigo'],
-                values=(producto['nombre'],
-                        qty,
-                        f'$ {precio_unidad}',
-                        f'Bs. {precio_bs_format}',
-                        f'$ {precio_dolar_format}'))
-            self.product_list.append(str(codigo).strip())
-            ACCOUNTING_MANAGER.SellProduct(codigo,qty)
-            # CERRAR EL PRODUCT HELP FRAME
-            help_frame.destroy()
-            self.UpdateTotal()
-        # -------------------------------------------------------------------------------------------------
-        # -------------------------------------------------------------------------------------------------
-        # CREATE THE WINDOW - CREATE THE WINDOW - CREATE THE WINDOW - CREATE THE WINDOW -
-        # CREATE THE WINDOW - CREATE THE WINDOW - CREATE THE WINDOW - CREATE THE WINDOW -
-        # CREATE THE WINDOW - CREATE THE WINDOW - CREATE THE WINDOW - CREATE THE WINDOW -
-        # CREATE THE WINDOW - CREATE THE WINDOW - CREATE THE WINDOW - CREATE THE WINDOW -
-        help_frame = ctk.CTkToplevel(self,fg_color=APP_COLOR['white_m'])
-        help_frame.title('Busqueda de productos')
-        help_frame.geometry('800x450')
-        help_frame.protocol("WM_DELETE_WINDOW", lambda: None)
-        help_frame.transient(self)
-        help_frame.grab_set()
-        # TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE -
-        # TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE -
-        # TITLE FRAME
-        title_frame = ctk.CTkFrame(help_frame,
-                        fg_color=APP_COLOR['sec'],
-                        height=50,
-                        corner_radius=0)
-        title_frame.pack(expand=False,fill='x')
-        # TITLE LABEL - TITLE LABEL - TITLE LABEL
-        title_label = ctk.CTkLabel(title_frame,
-                        text='Búsqueda de productos',
-                        bg_color='transparent',
-                        text_color=APP_COLOR['white_m'],
-                        font=FONT['text'])
-        title_label.pack(expand=True,fill='x',pady=5)
-        # PROG FRAME - PROG FRAME - PROG FRAME - PROG FRAME - 
-        # PROG FRAME - PROG FRAME - PROG FRAME - PROG FRAME - 
-        prog_frame = ctk.CTkFrame(help_frame,
-                        fg_color=APP_COLOR['white_m'],
-                        height=50,
-                        corner_radius=0)
-        prog_frame.pack(expand=True,fill='both')
-        # PROG FRAME GRID SETUP
-        ROWS, COLUMNS = 12,10
-        for rows in range(ROWS):
-            prog_frame.rowconfigure(rows,weight=1,uniform='rows')
-        for columns in range(COLUMNS):
-            prog_frame.columnconfigure(columns,weight=1,uniform='rows')
-        # ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - ENTRYS - 
-        # SEARCH BAR
-        self.search_bar_entry_var = tk.StringVar()
-        self.search_bar_entry = ctk.CTkEntry(prog_frame,
-                        textvariable=self.search_bar_entry_var,
-                        fg_color=APP_COLOR['gray'],
-                        border_color=APP_COLOR['gray'])
-        self.search_bar_entry.grid(row=2,column=1,columnspan=2,sticky='we')
-        self.search_bar_entry.bind("<Return>",lambda event:SearchProductName())
-        self.search_bar_entry.bind("<Control-BackSpace>",lambda event:RefreshSelection())
-        # QUANTITY
-        self.qty_entry_var = tk.StringVar()
-        self.qty_entry = ctk.CTkEntry(prog_frame,
-                        state='disabled',
-                        textvariable=self.qty_entry_var,
-                        fg_color=APP_COLOR['gray'],
-                        border_color=APP_COLOR['gray'])
-        self.qty_entry.grid(row=2,column=6,sticky='we')
-        self.qty_entry.bind("<Control-BackSpace>",lambda event:RefreshSelection())
-        self.qty_entry.bind("<Return>",lambda event:AddProduct())
-        # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - 
-        # SEARCH BAR
-        search_bar_label = ctk.CTkLabel(prog_frame,
-                        text='Búsqueda por nombre',
-                        font=FONT['text_light'],
-                        text_color=APP_COLOR['gray'])
-        search_bar_label.grid(row=1,column=1,columnspan=2,sticky='w')
-        # QUANTITY
-        qty_label = ctk.CTkLabel(prog_frame,
-                        text='Cantidad',
-                        font=FONT['text_light'],
-                        text_color=APP_COLOR['gray'])
-        qty_label.grid(row=1,column=6,columnspan=2,sticky='w')
-        # BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - 
-        # CLOSE WINDOW
-        close_btn = ctk.CTkButton(prog_frame,
-                        text='',
-                        image=ICONS['cancel'],
-                        command=lambda:help_frame.destroy(),
-                        fg_color=APP_COLOR['red_m'],
-                        hover_color=APP_COLOR['red_s'])
-        close_btn.grid(row=0,column=COLUMNS-1,sticky='we',padx=10,pady=10)
-        # SEARCH
-        search_btn = ctk.CTkButton(prog_frame,
-                        text='',
-                        image=ICONS['search'],
-                        command=SearchProductName,
-                        fg_color=APP_COLOR['main'],
-                        hover_color=APP_COLOR['sec'])
-        search_btn.grid(row=2,column=3,sticky='w',padx=5)
-        # REFRESH OR CANCEL SELECTION
-        cancel_slct_btn = ctk.CTkButton(prog_frame,
-                        text='',
-                        image=ICONS['refresh'],
-                        command=RefreshSelection,
-                        fg_color=APP_COLOR['main'],
-                        hover_color=APP_COLOR['sec'])
-        cancel_slct_btn.grid(row=2,column=4,sticky='w')
-        # ACCEPT
-        accept_btn = ctk.CTkButton(prog_frame,
-                        text='Aceptar',
-                        command=AddProduct,
-                        fg_color=APP_COLOR['main'],
-                        hover_color=APP_COLOR['sec'])
-        accept_btn.grid(row=2,column=7,sticky='w',padx=5)
-        # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
-        # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
-        # TREVIEW
-        self.product_tv = ttk.Treeview(prog_frame,
-                        style='Custom.Treeview',
-                        columns = ('Descripcion','Precio','Existencia'))
-        self.product_tv.grid(row=4,column=1,rowspan=6,columnspan=COLUMNS-2,sticky='nswe')
-        self.product_tv.bind("<<TreeviewSelect>>",ClickTreeview)
-        # CODIGO
-        self.product_tv.heading('#0',text='Cod',anchor='w')
-        self.product_tv.column('#0',width=200,anchor='w',minwidth=20, stretch=False)
-        # DESCRIPCION
-        self.product_tv.heading('Descripcion',text='Descripción',anchor='w')
-        self.product_tv.column('Descripcion',width=500,anchor='w',minwidth=50,stretch=True)
-        # PRECIO
-        self.product_tv.heading('Precio',text='Precio',anchor='w')
-        self.product_tv.column('Precio',width=130,anchor='w',minwidth=15, stretch=False)
-        # EXISTENCIA
-        self.product_tv.heading('Existencia',text='Existencia',anchor='w')
-        self.product_tv.column('Existencia',width=130,anchor='w',minwidth=15, stretch=False)
-        # LIST INVENTORY WHEN OPENING THE HELP WINDOW
-        ListInventory()
+    def Load_In_Treeview(self,product_data,qty):
+        costo = float(product_data['precio1'])
+        total_dol = costo * qty
+        total_bs = total_dol * self.DOLAR
+        self.treeview_main.insert('','end',
+                                  text = product_data['codigo'],
+                                  values=(product_data['nombre'],
+                                          qty,
+                                          product_data['precio1'],
+                                          f'Bs. {total_bs:.2f}',
+                                          f'$ {total_dol:.2f}'))
+
+        'Descripcion','Cantidad','Unidad', 'Bolivares','Dolares'
+
+
+
+
+
+        # AÑADIR SOLO CANTIDAD SI EL PRODUCTO YA ESTA EN EL TREEVIEW
+        if qty == 0:
+            if product_data['codigo'] in self.product_list:
+                    for item in self.treeview_main.get_children():
+                        values = self.treeview_main.item(item)
+                        if values['text'] == product_data['codigo']:
+                            name = values['values'][0]
+                            current_qty = values['values'][1]
+                            cost = values['values'][2].split(' ')[1].strip()
+                            cost = float(cost)
+                            new_qty = int(current_qty) + qty
+                            cost_bs = new_qty * self.DOLAR
+                            cost_dolar = new_qty * cost
+                            self.treeview_main.item(item, 
+                                values=(name,new_qty,f'$ {cost}',
+                                        f'Bs. {cost_bs:,.2f}',f'$ {cost_dolar:,.2f}'))
+                            # RECALCULATE TOTAL
+                            #self.UpdateTotal()
+                            ## CLEAN ENTRIES
+                            #self.product_code_entry_var.set('')
+                            #self.product_qty_entry_var.set('')
+                            #self.product_code_entry.focus()
+                            #return
+
+
+
 # ----------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------
 # SEARCH PRODUCT BY CODE - SEARCH PRODUCT BY CODE - SEARCH PRODUCT BY CODE -
@@ -953,3 +726,13 @@ class FacturacionProg(ctk.CTkFrame):
         self.UpdateTotal()
 # -------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------
+    # GO BACK
+    def GoBack(self):
+        if self.product_list:
+            respuesta = messagebox.askyesno(
+                '¡Atención!',
+                'Hay productos en la factura. ¿Desea cancelar la factura y volver atrás?')
+            if respuesta:
+                self.CancelFact()
+        else:
+            self.GoBack_CB()

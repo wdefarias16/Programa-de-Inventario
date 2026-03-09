@@ -30,6 +30,8 @@ APP_COLOR = {
 }
 # ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - 
 # ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - ICONOS - 
+back_icon = ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_back_light.png"), size=(30,30),
+                                    dark_image=Image.open(r"Recursos\Iconos\btn_back_dark.png"))
 cancel_icon = ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_cerrar_light.png"), size=(30,30),
                                     dark_image=Image.open(r"Recursos\Iconos\btn_cerrar_dark.png"))
 search_icon = ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_search_light.png"), size=(30,30),
@@ -44,8 +46,8 @@ exit_icon=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_exit_light.p
                                     dark_image=Image.open(r"Recursos\Iconos\btn_exit_dark.png"))
 inv_icon=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_inventario_light.png"), size=(30,30),
                                     dark_image=Image.open(r"Recursos\Iconos\btn_inventario_dark.png"))
-home_icon=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_inventario_light.png"), size=(30,30),
-                                    dark_image=Image.open(r"Recursos\Iconos\btn_inventario_dark.png"))
+home_icon=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_inicio_light.png"), size=(30,30),
+                                    dark_image=Image.open(r"Recursos\Iconos\btn_inicio_dark.png"))
 fact_icon=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_fact_light.png"), size=(30,30),
                                     dark_image=Image.open(r"Recursos\Iconos\btn_fact_dark.png"))
 cuentas_xp_icon=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_cuentas_light.png"), size=(30,30),
@@ -79,4 +81,5 @@ ICONS = {
     'pagomovil':pagomovil_icon,
     'tdd':tarjetadd_icon,
     'tdc':tarjetadc_icon,
+    'back':back_icon,
 }
