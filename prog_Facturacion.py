@@ -141,7 +141,7 @@ class FacturacionProg(ctk.CTkFrame):
                         textvariable = self.product_code_entry_var,
                         border_width = 0,
                         fg_color = APP_COLOR['white'])
-        self.product_code_entry.place(relx=0.60,y=190,anchor='nw')
+        self.product_code_entry.place(relx=0.60,rely=0.27,anchor='nw')
         self.product_code_entry.bind("<Return>",lambda event:self.SearchProductByCode())
         # CANTIDAD DE PRODUCTO
         self.product_qty_entry_var = tk.StringVar()
@@ -151,7 +151,7 @@ class FacturacionProg(ctk.CTkFrame):
                         textvariable = self.product_qty_entry_var,
                         border_width = 0,
                         fg_color = APP_COLOR['white'])
-        self.product_qty_entry.place(relx=0.78,y=190,anchor='nw')
+        self.product_qty_entry.place(relx=0.78,rely=0.27,anchor='nw')
         # ---------------------------------------------------------------
         # LABELS PRODUCT DATA - LABELS PRODUCT DATA - LABELS PRODUCT DATA
         # ---------------------------------------------------------------
@@ -160,13 +160,13 @@ class FacturacionProg(ctk.CTkFrame):
                         text='Producto',
                         text_color=APP_COLOR['gray'],
                         font=FONT['text'])
-        product_code_label.place(relx=0.60,y=160,anchor='nw')
+        product_code_label.place(relx=0.60,rely=0.22,anchor='nw')
         # CANTIDAD DE PRODUCTO
         product_qty_label = ctk.CTkLabel(main_frame,
                         text='Cantidad',
                         text_color=APP_COLOR['gray'],
                         font=FONT['text'])
-        product_qty_label.place(relx=0.78,y=160,anchor='nw')
+        product_qty_label.place(relx=0.78,rely=0.22,anchor='nw')
         # ---------------------------------------------------------------
         # TOTAL FACT - TOTAL FACT - TOTAL FACT - TOTAL FACT - TOTAL FACT
         # ---------------------------------------------------------------
@@ -290,11 +290,15 @@ class FacturacionProg(ctk.CTkFrame):
         self.SELECTED_PRODUCT = Products_Help_Window(self)
         if self.SELECTED_PRODUCT is None:
             return
-        print(self.SELECTED_PRODUCT)
-        qty = int(self.product_qty_entry_var.get())
-        if not qty:
-            qty = 0
-        
+        "Obtener la cantidad"
+        try:
+            qty = int(self.product_qty_entry_var.get())
+        except Exception:
+            qty = 1
+        "Verificar y ajustar existencia"
+        if not ACCOUNTING_MANAGER.SellProduct(self.SELECTED_PRODUCT['codigo'], qty):
+            return
+        "Agregar producto a la lista y treeview"
         self.product_list.append(self.SELECTED_PRODUCT['codigo'])
         self.Load_In_Treeview(self.SELECTED_PRODUCT,qty)
 
@@ -314,7 +318,6 @@ class FacturacionProg(ctk.CTkFrame):
                                           f'Bs. {total_bs:.2f}',
                                           f'$ {total_dol:.2f}'))
 
-        'Descripcion','Cantidad','Unidad', 'Bolivares','Dolares'
 
 
 

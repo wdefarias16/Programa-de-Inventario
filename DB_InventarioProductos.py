@@ -303,7 +303,7 @@ class Inventory:
     # ---------------------------------------------------------------------------------------
     # SEARCH NY NAME - SEARCH NY NAME - SEARCH NY NAME - SEARCH NY NAME - SEARCH NY NAME - 
     # SEARCH NY NAME - SEARCH NY NAME - SEARCH NY NAME - SEARCH NY NAME - SEARCH NY NAME - 
-    def BuscarNombres(self, busqueda):
+    def Search_By_Name(self, busqueda):
         # SEARCH PRODUCTS BY NAME USING A STRIGN
         try: 
             with self.conn.cursor() as cur:

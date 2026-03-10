@@ -19,14 +19,36 @@ def Products_Help_Window(self):
         inventario = INVENTARIO.GetInventory()
         for item in self.treeview.get_children():
                 self.treeview.delete(item)
-        for producto in inventario.values():
+        for i, producto in enumerate(inventario.values()):
+            tag = "Even.Treeview" if i % 2 == 0 else "Odd.Treeview"
             self.treeview.insert("",'end',
                                  text=producto['codigo'],
-                                 values=(producto['linea'],
-                                         producto['grupo'],
-                                         producto['proveedor'],
-                                         producto['nombre'],
-                                         f'${producto['costo']}'))
+                                 values=(producto['nombre'],
+                                         f'${producto['costo']}',
+                                         producto['existencia']),
+                                         tags=(tag,))
+        self.treeview.tag_configure('Odd.Treeview', background = '#D2D2D2')
+        self.treeview.tag_configure('Even.Treeview', background = '#eaeaea')
+    # ----------------------------------------------------------------
+    # BUSQUEDA PRODUCTOS POR NOMBRE - BUSQUEDA PRODUCTOS POR NOMBRE -  
+    # ----------------------------------------------------------------
+    def Search_By_Name():
+        consulta = self.search_bar_var.get()
+        busqueda = INVENTARIO.Search_By_Name(consulta)
+        for item in self.treeview.get_children():
+                self.treeview.delete(item)
+        if not busqueda:
+             return
+        for i, producto in enumerate(busqueda):
+            tag = "Even.Treeview" if i % 2 == 0 else "Odd.Treeview"
+            self.treeview.insert("",'end',
+                                 text=producto['codigo'],
+                                 values=(producto['nombre'],
+                                         f'${producto['costo']}',
+                                         producto['existencia']),
+                                         tags=(tag,))
+        self.treeview.tag_configure('Odd.Treeview', background = '#D2D2D2')
+        self.treeview.tag_configure('Even.Treeview', background = '#eaeaea')
     # ----------------------------------------------------------------
     # LISTA PRODUCTOS INACTIVOS - LISTA PRODUCTOS INACTIVOS - 
     # ----------------------------------------------------------------
@@ -35,14 +57,16 @@ def Products_Help_Window(self):
         inventario = INVENTARIO.GetInactives()
         for item in self.treeview.get_children():
                 self.treeview.delete(item)
-        for producto in inventario.values():
+        for i, producto in enumerate(inventario.values()):
+            tag = "Even.Treeview" if i % 2 == 0 else "Odd.Treeview"
             self.treeview.insert("",'end',
                                  text=producto['codigo'],
-                                 values=(producto['linea'],
-                                         producto['grupo'],
-                                         producto['proveedor'],
-                                         producto['nombre'],
-                                         f'${producto['costo']}'))
+                                 values=(producto['nombre'],
+                                         f'${producto['costo']}',
+                                         producto['existencia']),
+                                 tags=(tag,))
+        self.treeview.tag_configure('Odd.Treeview', background="#D2D2D2")
+        self.treeview.tag_configure('Even.Treeview', background="#eaeaea")
     # ----------------------------------------------------------------
     # ----------------------------------------------------------------
     # SELECIONAR PRODUCTO EN EL TREEVIEW
@@ -107,9 +131,11 @@ def Products_Help_Window(self):
     self.search_bar_var = tk.StringVar()
     self.search_bar = ctk.CTkEntry(prog_frame,
                               width=200,
+                              fg_color=APP_COLOR['light_gray'],
+                              border_color=APP_COLOR['light_gray'],
                               textvariable=self.search_bar_var)
     self.search_bar.place(relx=0.05,rely=0.18,anchor='w')
-    self.search_bar.bind("<Return>",lambda event:self.BuscarProductoNombre())
+    self.search_bar.bind("<Return>",lambda event: Search_By_Name())
     self.search_bar.bind("<Control-BackSpace>", lambda event: ListInventory())
     self.search_bar.after(100,lambda:self.search_bar.focus())
     # BOTONES TREEVIEW - BOTONES TREEVIEW - BOTONES TREEVIEW - BOTONES TREEVIEW - 
@@ -147,41 +173,36 @@ def Products_Help_Window(self):
     # TREEVIEW
     self.treeview = ttk.Treeview(prog_frame,
                             style='Custom.Treeview',
-                            columns=('Linea','Grupo','Proveedor','Nombre','Costo'))
+                            columns=('Nombre','Costo','Cantidad'))
     self.treeview.place(relx=0.5,rely=0.3,relwidth=0.90,relheight=0.60,anchor='n')
     # EVENTO DE SELECCIONAR PRODUCTO
     self.treeview.bind("<<TreeviewSelect>>",ClickTreeview)
     # CODIGO
     self.treeview.heading('#0',text='Codigo')
     self.treeview.column('#0',width=50,anchor='center')
-    # LINEA
-    self.treeview.heading('Linea',text='Linea')
-    self.treeview.column('Linea',width=50,anchor='center')
-    # GRUPO
-    self.treeview.heading('Grupo',text='Grupo')
-    self.treeview.column('Grupo',width=50,anchor='center')
-    # PROVEEDOR
-    self.treeview.heading('Proveedor',text='Proveedor')
-    self.treeview.column('Proveedor',width=50,anchor='center')
     # NOMBRE
     self.treeview.heading('Nombre',text='Nombre')
     self.treeview.column('Nombre',width=150,anchor='center')
     # COSTO
     self.treeview.heading('Costo',text='Costo')
     self.treeview.column('Costo',width=100,anchor='center')
+    # CANTIDAD
+    self.treeview.heading('Cantidad',text='Cantidad')
+    self.treeview.column('Cantidad',width=100,anchor='center')
     # CONFIGURACION VISUAL DEL TV
     style = ttk.Style()
+    style.theme_use("alt")
     style.configure(
         'Custom.Treeview',
         background = APP_COLOR['white_m'],
         foreground = APP_COLOR['black_m'],
-        rowheight = 30,
-        font = FONT['text_small'],
-        fieldbackground = APP_COLOR['white_m'])
+        rowheight = 45,
+        font = FONT['text'],
+        fieldbackground = APP_COLOR['white'])
     style.configure(
         'Custom.Treeview.Heading',
         background = APP_COLOR['black_m'],
-        foreground = APP_COLOR['black_m'],
+        foreground = APP_COLOR['white_m'],
         font = FONT['text_light'])
     # SCROLLBAR DEL TV
     scrollbar = ctk.CTkScrollbar(prog_frame,

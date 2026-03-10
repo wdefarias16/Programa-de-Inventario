@@ -26,7 +26,7 @@ class App(ctk.CTk):
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
         self.geometry(f"{screen_width}x{screen_height}+0+0")
-        self.protocol("WM_DELETE_WINDOW", lambda: None)
+        #self.protocol("WM_DELETE_WINDOW", lambda: None)
         self.dashboard_activo = False
         self.current_prog_name = 0
     # ATAJOS
