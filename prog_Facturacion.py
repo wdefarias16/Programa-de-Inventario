@@ -96,43 +96,38 @@ class FacturacionProg(ctk.CTkFrame):
     # ---------------------------------------------------------------
     # MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME - MAIN FRAME 
     # ---------------------------------------------------------------
-        # FUNCTIONS
-        def ClickLista(event):
-            pass
-        
         # ---------------------------------------------------------------
         # FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - 
         main_frame = ctk.CTkFrame(self,
                         fg_color=APP_COLOR['white_m'],
                         corner_radius=0)
         main_frame.place(relx=0,y=69.5,relwidth=0.75,relheight=1,anchor='nw')
+    # -------------------------------------------------------------------
+    # CUSTOMER DATA - CUSTOMER DATA - CUSTOMER DATA - CUSTOMER DATA - CUS
+    # -------------------------------------------------------------------
         # ---------------------------------------------------------------
-        # ENTRIES CLIENTS - ENTRIES CLIENTS - ENTRIES CLIENTS - 
+        # ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENT
         # ---------------------------------------------------------------
-        # CODIGO DE CLIENTE 
-        self.cod_client_entry_var = tk.StringVar()
-        self.cod_client_entry = ctk.CTkEntry(main_frame,
-                        width=70,
-                        height=30,
-                        textvariable = self.cod_client_entry_var,
+        # CEDULA DE CLIENTE 
+        self.cedula_client_entry_var = tk.StringVar()
+        self.cedula_client_entry = ctk.CTkEntry(main_frame,
+                        textvariable = self.cedula_client_entry_var,
                         border_width = 0,
                         fg_color = APP_COLOR['white'])
-        self.cod_client_entry.place(x=70,y=70,anchor='nw')
-        self.cod_client_entry.bind("<Return>",lambda event:self.SearchClient())
+        self.cedula_client_entry.place(relx=0.075,rely=0.2,relwidth=0.2,anchor='nw')
+        self.cedula_client_entry.bind("<Return>",lambda event:self.SearchClient())
         # ---------------------------------------------------------------
         # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS 
         # ---------------------------------------------------------------
-        # CLIENT DATA - CLIENT DATA - CLIENT DATA - CLIENT DATA -
-        # ---------------------------------------------------------------
-        # CODIGO
+        # CODIGO DE CLIENTE
         cod_label = ctk.CTkLabel(main_frame,
-                        text='Código',
+                        text='Cliente',
                         text_color=APP_COLOR['gray'],
                         font=FONT['text'])
-        cod_label.place(x=70,y=40,anchor='nw')
-        # ---------------------------------------------------------------
-        # ENTRIES PRODUCT DATA - ENTRIES PRODUCT DATA -
-        # ---------------------------------------------------------------
+        cod_label.place(relx=0.075,rely=0.15,anchor='nw')
+    # -------------------------------------------------------------------
+    # ENTRIES PRODUCT DATA - ENTRIES PRODUCT DATA -
+    # -------------------------------------------------------------------
         # CODIGO DE PRODUCTO
         self.product_code_entry_var = tk.StringVar()
         self.product_code_entry = ctk.CTkEntry(main_frame,
@@ -202,7 +197,6 @@ class FacturacionProg(ctk.CTkFrame):
                         hover_color=APP_COLOR['sec'],
                         command=self.Products_Help_Window_CB)
         self.btn_add_product.place(relx=0.87,y=190,anchor='nw')
-
         # CANCEL FACT
         self.btn_cancel_fact = ctk.CTkButton(main_frame,
                         text="",
@@ -226,25 +220,26 @@ class FacturacionProg(ctk.CTkFrame):
         # ---------------------------------------------------------------
         # CONFIGURACION VISUAL DEL TV
         style = ttk.Style()
+        style.theme_use("alt")
         style.configure(
             'Custom.Treeview',
             background = APP_COLOR['white_m'],
             foreground = APP_COLOR['black_m'],
             rowheight = 40,
             font = FONT['text'],
-            fieldbackground = APP_COLOR['white_m'])
+            fieldbackground = APP_COLOR['white'])
         style.configure(
             'Custom.Treeview.Heading',
             background = APP_COLOR['black_m'],
-            foreground = APP_COLOR['black_m'],
-            font = FONT['text_light'])
+            foreground = APP_COLOR['white_m'],
+            font = FONT['text'])
 
         self.treeview_main = ttk.Treeview(main_frame,
                                     style='Custom.Treeview',
                                     columns=('Descripcion','Cantidad','Unidad',
                                              'Bolivares','Dolares'))
-        self.treeview_main.place(relx=0.5,rely=0.34,relwidth=0.85,height=300,anchor='n')
-        self.treeview_main.bind("<<TreeviewSelect>>",ClickLista)
+        self.treeview_main.place(relx=0.5,rely=0.34,relwidth=0.85,relheight=0.3,anchor='n')
+        self.treeview_main.bind("<<TreeviewSelect>>",self.ClickLista)
         # CODIGO
         self.treeview_main.heading('#0',text='Cod.',anchor='w')
         self.treeview_main.column('#0', width=120, anchor='w', stretch=False)
@@ -288,7 +283,7 @@ class FacturacionProg(ctk.CTkFrame):
         # ---------------------------------------------------------------
     def Products_Help_Window_CB(self):
         self.SELECTED_PRODUCT = Products_Help_Window(self)
-        if self.SELECTED_PRODUCT is None:
+        if not self.SELECTED_PRODUCT:
             return
         "Obtener la cantidad"
         try:
@@ -298,8 +293,7 @@ class FacturacionProg(ctk.CTkFrame):
         "Verificar y ajustar existencia"
         if not ACCOUNTING_MANAGER.SellProduct(self.SELECTED_PRODUCT['codigo'], qty):
             return
-        "Agregar producto a la lista y treeview"
-        self.product_list.append(self.SELECTED_PRODUCT['codigo'])
+        "Agregar producto a treeview"
         self.Load_In_Treeview(self.SELECTED_PRODUCT,qty)
 
 
@@ -307,6 +301,30 @@ class FacturacionProg(ctk.CTkFrame):
         pass
 
     def Load_In_Treeview(self,product_data,qty):
+        #ADD QTY IF PRODUCT ALREADY IN LIST
+        if product_data['codigo'] in self.product_list:
+            for item in self.treeview_main.get_children():
+                values = self.treeview_main.item(item)
+                print(values)
+                if values['text'] == product_data['codigo']:
+                    name = values['values'][0]
+                    current_qty = values['values'][1]
+                    cost = values['values'][2].split(' ')[1].strip()
+                    cost = float(cost)
+                    new_qty = int(current_qty) + qty
+                    cost_bs = new_qty * self.DOLAR
+                    cost_dolar = new_qty * cost
+                    self.treeview_main.item(item, 
+                        values=(name,new_qty,f'$ {cost}',
+                                f'Bs. {cost_bs:,.2f}',f'$ {cost_dolar:,.2f}'))
+            #RECALCULATE TOTAL
+            self.UpdateTotal()
+            # CLEAN ENTRIES
+            self.product_code_entry_var.set('')
+            self.product_qty_entry_var.set('')
+            self.product_code_entry.focus()
+            return
+        # ELSE ADD THE PRODUCT
         costo = float(product_data['precio1'])
         total_dol = costo * qty
         total_bs = total_dol * self.DOLAR
@@ -314,44 +332,18 @@ class FacturacionProg(ctk.CTkFrame):
                                   text = product_data['codigo'],
                                   values=(product_data['nombre'],
                                           qty,
-                                          product_data['precio1'],
+                                          f'$ {product_data['precio1']}',
                                           f'Bs. {total_bs:.2f}',
                                           f'$ {total_dol:.2f}'))
-
-
-
-
-
-
-        # AÑADIR SOLO CANTIDAD SI EL PRODUCTO YA ESTA EN EL TREEVIEW
-        if qty == 0:
-            if product_data['codigo'] in self.product_list:
-                    for item in self.treeview_main.get_children():
-                        values = self.treeview_main.item(item)
-                        if values['text'] == product_data['codigo']:
-                            name = values['values'][0]
-                            current_qty = values['values'][1]
-                            cost = values['values'][2].split(' ')[1].strip()
-                            cost = float(cost)
-                            new_qty = int(current_qty) + qty
-                            cost_bs = new_qty * self.DOLAR
-                            cost_dolar = new_qty * cost
-                            self.treeview_main.item(item, 
-                                values=(name,new_qty,f'$ {cost}',
-                                        f'Bs. {cost_bs:,.2f}',f'$ {cost_dolar:,.2f}'))
-                            # RECALCULATE TOTAL
-                            #self.UpdateTotal()
-                            ## CLEAN ENTRIES
-                            #self.product_code_entry_var.set('')
-                            #self.product_qty_entry_var.set('')
-                            #self.product_code_entry.focus()
-                            #return
-
-
+        self.product_list.append(product_data['codigo'])
+        #RECALCULATE TOTAL
+        self.UpdateTotal()
+        # CLEAN ENTRIES
+        self.product_code_entry_var.set('')
+        self.product_qty_entry_var.set('')
+        self.product_code_entry.focus()
 
 # ----------------------------------------------------------------------------------------------
-# ----------------------------------------------------------------------------------------------
-# SEARCH PRODUCT BY CODE - SEARCH PRODUCT BY CODE - SEARCH PRODUCT BY CODE -
 # SEARCH PRODUCT BY CODE - SEARCH PRODUCT BY CODE - SEARCH PRODUCT BY CODE -
     def SearchProductByCode(self):
         # GET DATA
@@ -375,41 +367,11 @@ class FacturacionProg(ctk.CTkFrame):
 
             # Intentar vender el producto
             if not ACCOUNTING_MANAGER.SellProduct(codigo, qty):
-                messagebox.showerror('Error', 'No se pudo procesar la venta. Intente nuevamente.')
                 self.product_code_entry_var.set('')
                 self.product_code_entry.focus()
                 return
             
-            # IF THE PRODUCT IS ALREADY IN THE LIST, IT ADDS ONE MORE TO QTY
-            if codigo in self.product_list:
-                for item in self.treeview_main.get_children():
-                    values = self.treeview_main.item(item)
-                    if values['text'] == codigo:
-                        name = values['values'][0]
-                        current_qty = values['values'][1]
-                        cost = values['values'][2].split(' ')[1].strip()
-                        cost = float(cost)
-                        new_qty = int(current_qty) + qty
-                        cost_bs = new_qty * self.DOLAR
-                        cost_dolar = new_qty * cost
-                        self.treeview_main.item(item, values=(name,new_qty,f'$ {cost}',f'Bs. {cost_bs:,.2f}',f'$ {cost_dolar:,.2f}'))
-                        # RECALCULATE TOTAL
-                        self.UpdateTotal()
-                        # CLEAN ENTRIES
-                        self.product_code_entry_var.set('')
-                        self.product_qty_entry_var.set('')
-                        self.product_code_entry.focus()
-                        return
-
-            # Resto del código igual...
-            self.treeview_main.insert("", 'end',
-                text=producto['codigo'],
-                values=(producto['nombre'],
-                        qty,
-                        f'$ {producto['precio1']}',
-                        f'Bs. {format(float(self.DOLAR * float(producto['precio1'])*qty),',.2f')}',
-                        f'$ {format(producto['precio1'] * qty,',.2f')}'))
-            self.product_list.append(str(codigo).strip())
+            self.Load_In_Treeview(producto,qty)
 
             # CLEAR ENTRY
             self.product_code_entry_var.set('')
@@ -609,13 +571,13 @@ class FacturacionProg(ctk.CTkFrame):
 # SEARCH CLIENT - SEARCH CLIENT - SEARCH CLIENT - SEARCH CLIENT - SEARCH CLIENT - SEARCH CLIENT - 
 # SEARCH CLIENT - SEARCH CLIENT - SEARCH CLIENT - SEARCH CLIENT - SEARCH CLIENT - SEARCH CLIENT - 
     def SearchClient(self):
-        code = self.cod_client_entry_var.get().strip()
+        code = self.cedula_client_entry_var.get().strip()
         try:
             code = int(code)
         except ValueError:
             messagebox.showerror('Error','Ingrese un codigo de cliente valido')
-            self.cod_client_entry_var.set('')
-            self.cod_client_entry.focus()
+            self.cedula_client_entry_var.set('')
+            self.cedula_client_entry.focus()
             return
         client_data = CLIENT_MANAGER.GetClientByCode(code)
         self.name_client_entry_var.set(client_data['nombre'])
@@ -657,7 +619,7 @@ class FacturacionProg(ctk.CTkFrame):
                 productos_a_revertir.append((codigo, cantidad))
             
             # Llamar a la función de la base de datos
-            if INVENTARIO.ReturnProducts(productos_a_revertir):
+            if ACCOUNTING_MANAGER.ReturnProducts(productos_a_revertir):
                 # Limpiar interfaz
                 self.ClearInterface()
                 messagebox.showinfo("Éxito", "Factura cancelada y stock revertido correctamente")
@@ -693,7 +655,7 @@ class FacturacionProg(ctk.CTkFrame):
 
         try:
             # Revertir stock
-            if INVENTARIO.ReturnProducts([(codigo, cantidad)]):
+            if ACCOUNTING_MANAGER.ReturnProducts([(codigo, cantidad)]):
                 # Eliminar de la lista y treeview
                 if codigo in self.product_list:
                     self.product_list.remove(codigo)
@@ -708,25 +670,7 @@ class FacturacionProg(ctk.CTkFrame):
             messagebox.showerror("Error", f"Error al eliminar producto: {str(e)}")
 # -------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------
-    def ClearInterface(self):
-        """Limpia toda la interfaz de facturación"""
-        # Limpiar treeview
-        for item in self.treeview_main.get_children():
-            self.treeview_main.delete(item)
-        # Limpiar lista de productos
-        self.product_list.clear()
-        # Limpiar campos de cliente
-        self.cod_client_entry_var.set('')
-        self.name_client_entry_var.set('')
-        self.phone_client_entry_var.set('')
-        self.fiscal_client_entry_var.set('')
-        self.mail_client_entry_var.set('')
-        self.address_client_entry_var.set('')
-        # Limpiar campos de producto
-        self.product_code_entry_var.set('')
-        self.product_qty_entry_var.set('')
-        # Actualizar totales a cero
-        self.UpdateTotal()
+    
 # -------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------
     # GO BACK
@@ -739,3 +683,6 @@ class FacturacionProg(ctk.CTkFrame):
                 self.CancelFact()
         else:
             self.GoBack_CB()
+
+    def ClickLista(self):
+        pass
