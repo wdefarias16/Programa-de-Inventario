@@ -5,6 +5,7 @@ from tkinter import ttk, messagebox
 from style import FONT, ICONS, APP_COLOR
 from DatabaseManager import*
 from Help_Funcs_Products import Products_Help_Window
+from Help_Funcs_Customer import Add_Customer_Window
 from PIL import Image, ImageTk
 
 class FacturacionProg(ctk.CTkFrame):
@@ -121,10 +122,28 @@ class FacturacionProg(ctk.CTkFrame):
         # ---------------------------------------------------------------
         # CODIGO DE CLIENTE
         cod_label = ctk.CTkLabel(main_frame,
-                        text='Cliente',
+                        text='Cedula cliente',
                         text_color=APP_COLOR['gray'],
                         font=FONT['text'])
         cod_label.place(relx=0.075,rely=0.15,anchor='nw')
+        # Nombre del cliente
+        self.nombre_cliente_label = ctk.CTkLabel(main_frame,
+                        text='Cliente: ',
+                        text_color=APP_COLOR['gray'],
+                        font=FONT['text'])
+        self.nombre_cliente_label.place(relx=0.075,rely=0.25,anchor='nw')
+        # ---------------------------------------------------------------
+        # BOTONES - 
+        # ---------------------------------------------------------------
+        search_customer_btn = ctk.CTkButton(main_frame,
+                                text='',
+                                width=30,
+                                height=30,
+                                image=ICONS['search'],
+                                command=self.Add_Customer_Window_CB,
+                                fg_color=APP_COLOR['main'],
+                                hover_color=APP_COLOR['sec'])
+        search_customer_btn.place(relx=0.30,rely=0.18,anchor='w')
     # -------------------------------------------------------------------
     # ENTRIES PRODUCT DATA - ENTRIES PRODUCT DATA -
     # -------------------------------------------------------------------
@@ -309,11 +328,10 @@ class FacturacionProg(ctk.CTkFrame):
                 if values['text'] == product_data['codigo']:
                     name = values['values'][0]
                     current_qty = values['values'][1]
-                    cost = values['values'][2].split(' ')[1].strip()
-                    cost = float(cost)
+                    cost = float(values['values'][2].split(' ')[1].strip())
                     new_qty = int(current_qty) + qty
-                    cost_bs = new_qty * self.DOLAR
                     cost_dolar = new_qty * cost
+                    cost_bs = cost_dolar * self.DOLAR
                     self.treeview_main.item(item, 
                         values=(name,new_qty,f'$ {cost}',
                                 f'Bs. {cost_bs:,.2f}',f'$ {cost_dolar:,.2f}'))
@@ -580,11 +598,12 @@ class FacturacionProg(ctk.CTkFrame):
             self.cedula_client_entry.focus()
             return
         client_data = CLIENT_MANAGER.GetClientByCode(code)
-        self.name_client_entry_var.set(client_data['nombre'])
-        self.fiscal_client_entry_var.set(client_data['id_fiscal'])
-        self.phone_client_entry_var.set(client_data['telefono'] or '')
-        self.address_client_entry_var.set(client_data['direccion1'] or '')
-        self.mail_client_entry_var.set(client_data['email'] or '')
+        
+    def Add_Customer_Window_CB(self):
+        self.CUSTOMER = Add_Customer_Window(self)
+        if not self.CUSTOMER:
+            return
+        self.cedula_client_entry_var.set(self.CUSTOMER['id_fiscal'])
 # -------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------
 
@@ -684,5 +703,5 @@ class FacturacionProg(ctk.CTkFrame):
         else:
             self.GoBack_CB()
 
-    def ClickLista(self):
+    def ClickLista(self,event):
         pass
