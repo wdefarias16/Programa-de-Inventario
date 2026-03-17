@@ -5,8 +5,8 @@ from DB_Usuarios import Users
 from DB_Clientes import Clientes
 from DB_Contabilidad import AccountingDB
 
-DATABASE_INFO = ['AppDatabase','postgres','admin1234','localhost','5432']
-CLIENT_INFO = ['Mercaduo C.A.']
+DATABASE_INFO = ['AppDatabase','postgres','admin1234','192.168.31.250','5432']
+CLIENT_INFO = ['Motorlub']
 
 INVENTARIO = Inventory(dbname=DATABASE_INFO[0],
                             user=DATABASE_INFO[1],
@@ -51,3 +51,7 @@ def LoginUser(user):
     CURRENT_USER = user['usuario']
 def GetCurrentUser():
     return CURRENT_USER
+
+
+PHONE_CODES = ['0414','0424','0412','0422','0416','0426']
+

@@ -69,28 +69,25 @@ class Clientes:
 
     # AGREGAR NUEVO CLIENTE - AGREGAR NUEVO CLIENTE - AGREGAR NUEVO CLIENTE -
     # AGREGAR NUEVO CLIENTE - AGREGAR NUEVO CLIENTE - AGREGAR NUEVO CLIENTE -
-    def AddClient(self, nombre, id_fiscal, telefono="", direccion1="", direccion2="", 
-                 ciudad="", email="", activo=True):
+    def AddClient(self, customer_data):
         """
-        Agrega un nuevo cliente a la base de datos.
-        
+        Agrega un nuevo cliente a la base de datos a partir de un diccionario.
+
         Args:
-            nombre (str): Nombre completo del cliente
-            id_fiscal (str): Identificación fiscal (RUC, Cédula, etc.)
-            telefono (str): Número de teléfono
-            direccion1 (str): Dirección principal
-            direccion2 (str): Dirección secundaria (opcional)
-            ciudad (str): Ciudad
-            email (str): Correo electrónico
-            activo (bool): Estado del cliente (activo/inactivo)
+            customer_data (dict): Diccionario con las llaves: 
+            'id_fiscal', 'name', 'phone', 'address1', 'address2', 'Ciudad', 'mail'
         """
         try:
-            # Validaciones básicas
-            if not nombre or not id_fiscal:
-                raise ValueError("El nombre y la identificación fiscal son obligatorios.")
-            
-            if len(id_fiscal) < 3:
-                raise ValueError("La identificación fiscal debe tener al menos 3 caracteres.")
+            # Extraer valores del diccionario para facilitar la lectura
+            # Usamos .get() con valores por defecto para evitar errores de llave inexistente
+            nombre = customer_data.get('name').strip()
+            id_fiscal = customer_data.get('id_fiscal').strip()
+            telefono = customer_data.get('phone', '')
+            direccion1 = customer_data.get('address1', '')
+            direccion2 = customer_data.get('address2', '')
+            ciudad = customer_data.get('Ciudad', '')
+            email = customer_data.get('mail', '')
+            activo = True  # Mantenemos el estado activo por defecto
 
             with self.conn.cursor() as cur:
                 # Verificar si el cliente ya existe usando id_fiscal
@@ -104,13 +101,14 @@ class Clientes:
                                         direccion2, ciudad, email, activo)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
                 """, (nombre, id_fiscal, telefono, direccion1, direccion2, ciudad, email, activo))
-                
+
                 self.conn.commit()
                 messagebox.showinfo("Éxito", "Cliente agregado correctamente.")
                 return True
-                
+
         except Exception as e:
-            self.conn.rollback()
+            if hasattr(self, 'conn'):
+                self.conn.rollback()
             messagebox.showerror("Error", f"Error al agregar el cliente: {e}")
             return False
 
@@ -401,6 +399,49 @@ class Clientes:
             messagebox.showerror("Error", f"Error en la búsqueda: {e}")
             
         return clients
+    
+    # BUSCAR CLIENTE POR CÓDIGO O ID FISCAL
+    def Search_Customer_By_IdOrFiscal(self, search_value):
+        """
+        Busca un cliente que coincida exactamente con el código (ID) o con la identificación fiscal.
+        
+        Args:
+            search_value (str/int): El código numérico o la cadena de identificación fiscal.
+            
+        Returns:
+            dict: Información del cliente o None si no se encuentra coincidencia.
+        """
+        try:
+            with self.conn.cursor() as cur:
+                # La consulta busca coincidencia en 'codigo' O en 'id_fiscal'
+                # Usamos CAST en SQL para comparar el código (que es SERIAL/INT) con el valor de búsqueda
+                cur.execute("""
+                    SELECT codigo, nombre, id_fiscal, telefono, direccion1, 
+                           direccion2, ciudad, email, activo
+                    FROM clientes 
+                    WHERE CAST(codigo AS TEXT) = %s OR id_fiscal = %s;
+                """, (str(search_value), str(search_value)))
+                
+                row = cur.fetchone()
+                if row:
+                    client_data = {
+                        'codigo': row[0],
+                        'nombre': row[1],
+                        'id_fiscal': row[2],
+                        'telefono': row[3],
+                        'direccion1': row[4],
+                        'direccion2': row[5],
+                        'ciudad': row[6],
+                        'email': row[7],
+                        'activo': row[8]
+                    }
+                    return client_data
+                else:
+                    return None
+                    
+        except Exception as e:
+            messagebox.showerror("Error", f"Error al buscar cliente por ID/Fiscal: {e}")
+            return None
 
     # -----------------------------------------------------------------------------------------------
     # -----------------------------------------------------------------------------------------------
@@ -455,35 +496,7 @@ class Clientes:
 
     # VALIDAR DATOS DEL CLIENTE - VALIDAR DATOS DEL CLIENTE - VALIDAR DATOS DEL CLIENTE -
     # VALIDAR DATOS DEL CLIENTE - VALIDAR DATOS DEL CLIENTE - VALIDAR DATOS DEL CLIENTE -
-    def ValidateClientData(self, nombre, id_fiscal, email=""):
-        """
-        Valida los datos básicos de un cliente antes de insertar o actualizar.
-        
-        Args:
-            nombre (str): Nombre del cliente
-            id_fiscal (str): Identificación fiscal
-            email (str): Correo electrónico (opcional)
-            
-        Returns:
-            tuple: (bool, str) - (True/False, mensaje de error)
-        """
-        try:
-            # Validar nombre
-            if not nombre or len(nombre.strip()) < 2:
-                return False, "El nombre debe tener al menos 2 caracteres."
-            
-            # Validar identificación fiscal
-            if not id_fiscal or len(id_fiscal.strip()) < 3:
-                return False, "La identificación fiscal debe tener al menos 3 caracteres."
-            
-            # Validar email si se proporciona
-            if email and '@' not in email:
-                return False, "El formato del correo electrónico no es válido."
-            
-            return True, "Datos válidos."
-            
-        except Exception as e:
-            return False, f"Error en validación: {e}"
+
 
     # -----------------------------------------------------------------------------------------------
     # -----------------------------------------------------------------------------------------------

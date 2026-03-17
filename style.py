@@ -22,6 +22,7 @@ APP_COLOR = {
     'white':'#ffffff',
     'black':'#000000',
     'gray':'#5d5d5d',
+    'gray_s':"#3d3d3d",
     'light_gray':"#b9b9b9",
     'green_m':'#31C74A',
     'green_s':'#1A832B',

@@ -5,8 +5,15 @@ from tkinter import ttk, messagebox
 from style import FONT, ICONS, APP_COLOR
 from DatabaseManager import*
 from Help_Funcs_Products import Products_Help_Window
-from Help_Funcs_Customer import Add_Customer_Window
+from Help_Funcs_Customer import Add_Customer_Window,Customer_Help_Window
 from PIL import Image, ImageTk
+
+import os
+from reportlab.lib.pagesizes import LETTER
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, HRFlowable
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib import colors
+from reportlab.lib.units import inch
 
 class FacturacionProg(ctk.CTkFrame):
     def __init__(self, parent, GoBack_CB):
@@ -17,6 +24,9 @@ class FacturacionProg(ctk.CTkFrame):
         self.inventory_codes = INVENTARIO.GetCodigos()
         self.product_list = []
         self.DOLAR = ACCOUNTING_MANAGER.GetLastDolarValue()
+        
+        self.NRO_FACTURA = None
+        self.CUSTOMER = None
     # -----------------------------------------------------------------------------------------------
     # TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - 
     # -----------------------------------------------------------------------------------------------
@@ -115,7 +125,7 @@ class FacturacionProg(ctk.CTkFrame):
                         textvariable = self.cedula_client_entry_var,
                         border_width = 0,
                         fg_color = APP_COLOR['white'])
-        self.cedula_client_entry.place(relx=0.075,rely=0.2,relwidth=0.2,anchor='nw')
+        self.cedula_client_entry.place(relx=0.075,rely=0.2,relwidth=0.2,anchor='w')
         self.cedula_client_entry.bind("<Return>",lambda event:self.SearchClient())
         # ---------------------------------------------------------------
         # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS 
@@ -125,25 +135,34 @@ class FacturacionProg(ctk.CTkFrame):
                         text='Cedula cliente',
                         text_color=APP_COLOR['gray'],
                         font=FONT['text'])
-        cod_label.place(relx=0.075,rely=0.15,anchor='nw')
+        cod_label.place(relx=0.075,rely=0.15,anchor='w')
         # Nombre del cliente
         self.nombre_cliente_label = ctk.CTkLabel(main_frame,
                         text='Cliente: ',
                         text_color=APP_COLOR['gray'],
                         font=FONT['text'])
-        self.nombre_cliente_label.place(relx=0.075,rely=0.25,anchor='nw')
+        self.nombre_cliente_label.place(relx=0.075,rely=0.25,anchor='w')
         # ---------------------------------------------------------------
         # BOTONES - 
         # ---------------------------------------------------------------
+        add_customer_btn = ctk.CTkButton(main_frame,
+                                text='+',
+                                width=40,
+                                height=40,
+                                command=self.Add_Customer_Window_CB,
+                                fg_color=APP_COLOR['black_m'],
+                                hover_color=APP_COLOR['black'])
+        add_customer_btn.place(relx=0.3,rely=0.2,anchor='w')
+
         search_customer_btn = ctk.CTkButton(main_frame,
                                 text='',
-                                width=30,
-                                height=30,
+                                width=40,
+                                height=40,
                                 image=ICONS['search'],
                                 command=self.Add_Customer_Window_CB,
-                                fg_color=APP_COLOR['main'],
-                                hover_color=APP_COLOR['sec'])
-        search_customer_btn.place(relx=0.30,rely=0.18,anchor='w')
+                                fg_color=APP_COLOR['black_m'],
+                                hover_color=APP_COLOR['black'])
+        search_customer_btn.place(relx=0.35,rely=0.2,anchor='w')
     # -------------------------------------------------------------------
     # ENTRIES PRODUCT DATA - ENTRIES PRODUCT DATA -
     # -------------------------------------------------------------------
@@ -198,11 +217,11 @@ class FacturacionProg(ctk.CTkFrame):
         self.total_fact_bs_label = ctk.CTkLabel(main_frame,
                         text='Bs. 000.00',
                         width=180,
-                        height=60,
+                        height=45,
                         corner_radius=10,
-                        font=FONT['text_big2'],
+                        font=FONT['subtitle_bold'],
                         text_color=APP_COLOR['white'],
-                        fg_color=APP_COLOR['green_m'])
+                        fg_color=APP_COLOR['gray_s'])
         self.total_fact_bs_label.place(relx=0.925,rely=0.80,anchor='e')
         # ---------------------------------------------------------------
         # BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES -
@@ -406,168 +425,104 @@ class FacturacionProg(ctk.CTkFrame):
 # CASHOUT - CASHOUT - CASHOUT - CASHOUT - CASHOUT - CASHOUT - CASHOUT - CASHOUT - CASHOUT - 
 # CASHOUT - CASHOUT - CASHOUT - CASHOUT - CASHOUT - CASHOUT - CASHOUT - CASHOUT - CASHOUT - 
     def CobrarFactura(self):
-        # GENERAR NUMERO DE FACTURA
-        def GenerateInvoiceNumber():
-            """Genera un número de factura único basado en timestamp"""
-            timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-            return f"FACT-{timestamp}"
-        # -----------------------------------------------------------------------
-        # -----------------------------------------------------------------------
-        # PROCESS PAYMENT - PROCESS PAYMENT - PROCESS PAYMENT - PROCESS PAYMENT -
-        # PROCESS PAYMENT - PROCESS PAYMENT - PROCESS PAYMENT - PROCESS PAYMENT -
-        def ProcessPayment():
-            pass
-        # ----------------------------------------------------------------
-        # ----------------------------------------------------------------
-        # SI NO HAY PRODUCTOS, NO DEJA COBRAR
-        if self.product_list == []:
-            messagebox.showerror('Error','No hay productos cargados.')
+        # 1. Validaciones iniciales
+        if not self.product_list:
+            messagebox.showerror('Error', 'No hay productos cargados.')
             return
-        # CREATE THE WINDOW - CREATE THE WINDOW - CREATE THE WINDOW - CREATE THE WINDOW -
-        # CREATE THE WINDOW - CREATE THE WINDOW - CREATE THE WINDOW - CREATE THE WINDOW -
-        # CREATE THE WINDOW - CREATE THE WINDOW - CREATE THE WINDOW - CREATE THE WINDOW -
-        # CREATE THE WINDOW - CREATE THE WINDOW - CREATE THE WINDOW - CREATE THE WINDOW -
-        cashout_frame = ctk.CTkToplevel(self,fg_color=APP_COLOR['white_m'])
-        cashout_frame.title('Cobrar factura')
-        cashout_frame.geometry('800x450')
-        cashout_frame.protocol("WM_DELETE_WINDOW", lambda: None)
-        cashout_frame.transient(self)
-        cashout_frame.grab_set()
-        # TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE -
-        # TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE -
-        # TITLE FRAME
-        title_frame = ctk.CTkFrame(cashout_frame,
-                        fg_color=APP_COLOR['sec'],
-                        height=50,
-                        corner_radius=0)
-        title_frame.place(relx=0,rely=0,relwidth=1,relheight=0.1)
-        # TITLE LABEL - TITLE LABEL - TITLE LABEL
-        title_label = ctk.CTkLabel(title_frame,
-                        text='Cobrar factura',
-                        bg_color='transparent',
-                        text_color=APP_COLOR['white_m'],
-                        font=FONT['text'])
-        title_label.pack(expand=True,fill='x',pady=5)
-        # PROG FRAME - PROG FRAME - PROG FRAME - PROG FRAME - 
-        # PROG FRAME - PROG FRAME - PROG FRAME - PROG FRAME - 
-        prog_frame = ctk.CTkFrame(cashout_frame,
-                        fg_color=APP_COLOR['white_m'],
-                        height=50,
-                        corner_radius=0)
-        prog_frame.place(relx=0,rely=0.1,relwidth=1,relheight=0.9)
-        # ----------------------------------------------------------------------------------------------
-        # ----------------------------------------------------------------------------------------------
-        # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS -
-        # LABELS - LABELS - LABELS - LABELS - LABELS - LABELS - LABELS -
-        # TOTAL LABEL - TOTAL LABEL - TOTAL LABEL - TOTAL LABEL - TOTAL LABEL -
-        total_label = ctk.CTkLabel(prog_frame,
-                        text='Total a pagar:',
-                        font=FONT['subtitle_bold'],
-                        text_color=APP_COLOR['gray'])
-        total_label.place(relx=0.6,rely=0.1,anchor='w')
-        # TOTAL BOLIVARES LABEL - TOTAL BOLIVARES LABEL - TOTAL BOLIVARES LABEL -
-        total_bs_label = ctk.CTkLabel(prog_frame,
-                        text=f'Bs. {format(self.total_BOLIVAR,",.2f")}',
-                        font=FONT['text_big'],
-                        text_color=APP_COLOR['black_m'])
-        total_bs_label.place(relx=0.6,rely=0.2,anchor='w')
-        # TOTAL DOLARES LABEL - TOTAL DOLARES LABEL - TOTAL DOLARES LABEL -
-        total_dolar_label = ctk.CTkLabel(prog_frame,
-                        text=f'$ {format(self.total_DOLAR,",.2f")}',
-                        font=FONT['text_big2'],
-                        text_color=APP_COLOR['green_s'])
-        total_dolar_label.place(relx=0.6,rely=0.3,anchor='w')
-        # COBRO LABEL - COBRO LABEL - COBRO LABEL - COBRO LABEL - COBRO LABEL -
-        cobro_label = ctk.CTkLabel(prog_frame,
-                        text='Monto recibido:',
-                        font=FONT['subtitle_bold'],
-                        text_color=APP_COLOR['gray'])
-        cobro_label.place(relx=0.2,rely=0.1,anchor='w')
-        # ----------------------------------------------------------------------------------------------
-        # ----------------------------------------------------------------------------------------------
-        # ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES -
-        # ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES - ENTRIES -
-        # ENTRADA DE COBRO - ENTRADA DE COBRO - ENTRADA DE COBRO - ENTRADA DE COBRO -
-        cobro_entry_var = tk.StringVar()
-        cobro_entry = ctk.CTkEntry(prog_frame,
-                        textvariable=cobro_entry_var,
-                        width=200,
-                        height=80,
-                        fg_color=APP_COLOR['gray'],
-                        border_color=APP_COLOR['gray'])
-        cobro_entry.place(relx=0.2,rely=0.3,anchor='w')
-        # ----------------------------------------------------------------------------------------------
-        # ----------------------------------------------------------------------------------------------
-        # BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS -
-        # BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS - BUTTONS -
-        # BOTONES DE METODOS DE PAGO - BOTONES DE METODOS DE PAGO - BOTONES DE METODOS DE PAGO -
-        # BOTONES DE METODOS DE PAGO - BOTONES DE METODOS DE PAGO - BOTONES DE METODOS DE PAGO -
-        # EFECTIVO DOLAR - EFECTIVO DOLAR -  EFECTIVO DOLAR -  EFECTIVO DOLAR -  EFECTIVO DOLAR -
-        efectivo_dolar_btn = ctk.CTkButton(prog_frame,
-                        text='',
-                        width=50,
-                        height=50,
-                        image=ICONS['dolar'],
-                        anchor='center',
-                        fg_color=APP_COLOR['main'],
-                        hover_color=APP_COLOR['sec'])
-        efectivo_dolar_btn.place(relx=0.05,rely=0.1,anchor='w')
-        # PAGO MOVIL - PAGO MOVIL - PAGO MOVIL - PAGO MOVIL - PAGO MOVIL - PAGO MOVIL -
-        pago_movil_btn = ctk.CTkButton(prog_frame,
-                        text='',
-                        width=50,
-                        height=50,
-                        image=ICONS['pagomovil'],
-                        anchor='center',
-                        fg_color=APP_COLOR['main'],
-                        hover_color=APP_COLOR['sec'])
-        pago_movil_btn.place(relx=0.05,rely=0.25,anchor='w')
-        # TARJETA DE DEBITO - TARJETA DE DEBITO - TARJETA DE DEBITO - TARJETA DE DEBITO -
-        tarjeta_debito_btn = ctk.CTkButton(prog_frame,
-                        text='',
-                        width=50,
-                        height=50,
-                        image=ICONS['tdd'],
-                        anchor='center',
-                        fg_color=APP_COLOR['main'],
-                        hover_color=APP_COLOR['sec'])
-        tarjeta_debito_btn.place(relx=0.05,rely=0.40,anchor='w')
-        # TARJETA DE CREDITO - TARJETA DE CREDITO - TARJETA DE CREDITO - TARJETA DE CREDITO -
-        tarjeta_credito_btn = ctk.CTkButton(prog_frame,
-                        text='',
-                        width=50,
-                        height=50,
-                        image=ICONS['tdc'],
-                        anchor='center',
-                        fg_color=APP_COLOR['main'],
-                        hover_color=APP_COLOR['sec'])
-        tarjeta_credito_btn.place(relx=0.05,rely=0.55,anchor='w')
-        # ----------------------------------------------------------------------------------------------
-        # ----------------------------------------------------------------------------------------------
-        # CLOSE WINDOW
-        close_btn = ctk.CTkButton(prog_frame,
-                        text='',
-                        width=10,
-                        image=ICONS['cancel'],
-                        command=lambda:cashout_frame.destroy(),
-                        fg_color=APP_COLOR['red_m'],
-                        hover_color=APP_COLOR['red_s'])
-        close_btn.place(relx=0.95,rely=0.02,anchor='ne')
-        # PROCESS PAYMENT
-        process_payment_btn = ctk.CTkButton(prog_frame,
-                        text='Procesar pago',
-                        width=200,
-                        command=ProcessPayment,
-                        fg_color=APP_COLOR['main'],
-                        hover_color=APP_COLOR['sec'])
-        process_payment_btn.place(relx=0.6,rely=0.8,anchor='w')
 
-        # ----------------------------------------------------------------------------------------------
-        # ----------------------------------------------------------------------------------------------
-# ----------------------------------------------------------------------------------------------
-# ----------------------------------------------------------------------------------------------
+        if not self.CUSTOMER:
+            messagebox.showerror('¡Atención!','Debe cargar un cliente para la factura.')
+            return
+
+        confirmar = messagebox.askyesno("Confirmar Pago", "¿Desea proceder con el cobro y guardar la factura?")
+        if not confirmar:
+            return
+
+        try:
+            # 2. Generar número de factura (Obtenido de la DB)
+            self.NRO_FACTURA = ACCOUNTING_MANAGER.GetNextFacturaNumber()
+            fecha_actual = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+            # 3. Preparar datos para la base de datos y el PDF
+            productos_para_db = []
+            lista_para_pdf = []
+            
+            for item in self.treeview_main.get_children():
+                info = self.treeview_main.item(item)
+                codigo = info['text']
+                descripcion = info['values'][0]
+                cantidad = int(info['values'][1])
+                
+                # Limpiamos los símbolos de moneda y comas para convertirlos a float
+                precio_u = float(info['values'][2].replace('$ ', '').replace(',', ''))
+                sub_bs = float(info['values'][3].replace('Bs. ', '').replace(',', ''))
+                sub_dol = float(info['values'][4].replace('$ ', '').replace(',', ''))
+
+                # Diccionario para SaveFactura
+                productos_para_db.append({
+                    'codigo': codigo,
+                    'cantidad': cantidad,
+                    'precio_unitario': precio_u,
+                    'subtotal_dolares': sub_dol,
+                    'subtotal_bolivares': sub_bs
+                })
+
+                # Diccionario para GenerateInvoicePDF (mantiene el formato visual)
+                lista_para_pdf.append({
+                    'codigo': codigo,
+                    'descripcion': descripcion,
+                    'cantidad': cantidad,
+                    'precio_u': info['values'][2],
+                    'sub_bs': info['values'][3],
+                    'sub_dol': info['values'][4]
+                })
+
+            # 4. Estructura completa para ACCOUNTING_MANAGER.SaveFactura
+            factura_data_db = {
+                'numero_factura': self.NRO_FACTURA,
+                'cliente_codigo': self.CUSTOMER['id_fiscal'],
+                'fecha': fecha_actual,
+                'total_dolares': self.total_DOLAR,
+                'total_bolivares': self.total_BOLIVAR,
+                'productos': productos_para_db
+            }
+
+            # 5. GUARDAR EN BASE DE DATOS
+            if ACCOUNTING_MANAGER.SaveFactura(factura_data_db):
+                # 6. Si el guardado fue exitoso, generar el PDF
+                totales = {'dolar': self.total_DOLAR, 'bolivar': self.total_BOLIVAR}
+                ruta_pdf = self.GenerateInvoicePDF(self.CUSTOMER, lista_para_pdf, totales, self.NRO_FACTURA)
+
+                messagebox.showinfo("Éxito", f"Factura {self.NRO_FACTURA} guardada y generada con éxito.")
+                
+                # Abrir el PDF
+                os.startfile(ruta_pdf)
+                
+                # Limpiar la interfaz
+                self.ClearInterface()
+            else:
+                messagebox.showerror("Error", "No se pudo guardar la factura en la base de datos. La operación fue cancelada.")
+
+        except Exception as e:
+            messagebox.showerror("Error de Cobro", f"No se pudo procesar la factura: {str(e)}")
+
+    def ClearInterface(self):
+        """Limpia todos los campos para una nueva transacción"""
+        self.treeview_main.delete(*self.treeview_main.get_children())
+        self.product_list = []
+        self.total_DOLAR = 0
+        self.total_BOLIVAR = 0
+        self.cedula_client_entry.configure(state='normal')
+        self.cedula_client_entry_var.set('')
+        self.nombre_cliente_label.configure(text='Cliente: ')
+        self.product_code_entry_var.set('')
+        self.product_qty_entry_var.set('')
+        self.UpdateTotal()
+        if hasattr(self, 'CUSTOMER'):
+            del self.CUSTOMER
+# -------------------------------------------------------------------------------
 # UPDATE TOTAL - UPDATE TOTAL - UPDATE TOTAL - UPDATE TOTAL - UPDATE TOTAL - 
-# UPDATE TOTAL - UPDATE TOTAL - UPDATE TOTAL - UPDATE TOTAL - UPDATE TOTAL - 
+# -------------------------------------------------------------------------------
     def UpdateTotal(self):
         self.total_DOLAR = 0
         self.total_BOLIVAR = 0
@@ -589,16 +544,13 @@ class FacturacionProg(ctk.CTkFrame):
 # SEARCH CLIENT - SEARCH CLIENT - SEARCH CLIENT - SEARCH CLIENT - SEARCH CLIENT - SEARCH CLIENT - 
 # SEARCH CLIENT - SEARCH CLIENT - SEARCH CLIENT - SEARCH CLIENT - SEARCH CLIENT - SEARCH CLIENT - 
     def SearchClient(self):
-        code = self.cedula_client_entry_var.get().strip()
-        try:
-            code = int(code)
-        except ValueError:
-            messagebox.showerror('Error','Ingrese un codigo de cliente valido')
-            self.cedula_client_entry_var.set('')
-            self.cedula_client_entry.focus()
-            return
-        client_data = CLIENT_MANAGER.GetClientByCode(code)
-        
+        search = self.cedula_client_entry_var.get().strip()
+        self.CUSTOMER = CLIENT_MANAGER.Search_Customer_By_IdOrFiscal(search)
+        if self.CUSTOMER:
+            self.nombre_cliente_label.configure(text=f'Cliente: {self.CUSTOMER['nombre']}')
+            self.cedula_client_entry.configure(fg_color=APP_COLOR['gray'],
+                                               border_color = APP_COLOR['gray'],state='disabled')
+            
     def Add_Customer_Window_CB(self):
         self.CUSTOMER = Add_Customer_Window(self)
         if not self.CUSTOMER:
@@ -705,3 +657,107 @@ class FacturacionProg(ctk.CTkFrame):
 
     def ClickLista(self,event):
         pass
+
+    # GENERAR NUMERO DE FACTURA
+
+    
+
+
+    def GenerateInvoicePDF(self, customer_info, products, totals, invoice_num):
+        # Crear carpeta de facturas si no existe
+        if not os.path.exists("facturas"):
+            os.makedirs("facturas")
+
+        
+        filename = os.path.join("facturas", f"{invoice_num}.pdf")
+        doc = SimpleDocTemplate(filename, pagesize=LETTER)
+        styles = getSampleStyleSheet()
+        story = []
+
+        # Estilos personalizados
+        title_style = ParagraphStyle('TitleStyle', parent=styles['Heading1'], alignment=1, fontSize=18, spaceAfter=10)
+        header_style = ParagraphStyle('HeaderStyle', parent=styles['Normal'], fontSize=10, leading=12)
+        
+        # 1. ENCABEZADO Y TÍTULO
+        fecha_hora = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        story.append(Paragraph("FACTURA", title_style))
+        story.append(Spacer(1, 0.2*inch))
+        
+        # 2. INFORMACIÓN DE LA FACTURA Y CLIENTE
+        # Extraer nombre del label si CUSTOMER no está definido
+
+        cliente_nombre = customer_info.get('nombre')
+        cliente_id = customer_info.get('id_fiscal')
+        
+        info_data = [
+            [f'{CLIENT_INFO[0]}'],
+            [f"Nro. Factura: {invoice_num}", f"Fecha: {fecha_hora}"],
+            [f"Cliente: {cliente_nombre} - R.I.F / Cédula: {cliente_id}"],
+        ]
+        
+        info_table = Table(info_data, colWidths=[3.5*inch, 3.5*inch])
+        info_table.setStyle(TableStyle([
+            ('FONTNAME', (0,0), (-1,-1), 'Helvetica-Bold'),
+            ('FONTSIZE', (0,0), (-1,-1), 10),
+            ('ALIGN', (0,0), (0,-1), 'LEFT'),
+            ('ALIGN', (1,0), (1,-1), 'RIGHT'),
+        ]))
+        story.append(info_table)
+        story.append(Spacer(1, 0.3*inch))
+
+        # 3. TABLA DE PRODUCTOS
+        # Cabecera de la tabla
+        table_data = [['Cod.', 'Descripción', 'Cant.', 'P. Unit $', 'Subtotal $', 'Subtotal Bs.']]
+        
+        for p in products:
+            table_data.append([
+                p['codigo'],
+                p['descripcion'],
+                p['cantidad'],
+                p['precio_u'],
+                p['sub_dol'],
+                p['sub_bs']
+            ])
+
+        # Crear tabla
+        product_table = Table(table_data, colWidths=[0.8*inch, 2.5*inch, 0.6*inch, 1.1*inch, 1.1*inch, 1.4*inch])
+        product_table.setStyle(TableStyle([
+            ('BACKGROUND', (0,0), (-1,0), colors.black),
+            ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke),
+            ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+            ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0,0), (-1,-1), 8),
+            ('BOTTOMPADDING', (0,0), (-1,0), 12),
+            ('BACKGROUND', (0,1), (-1,-1), colors.white),
+            ('GRID', (0,0), (-1,-1), 0.5, colors.grey),
+            ('ALIGN', (1,0), (1,-1), 'LEFT'), # Descripción a la izquierda
+        ]))
+        story.append(product_table)
+        story.append(Spacer(1, 0.2*inch))
+
+        # 4. TOTALES
+        # Cálculo de IVA (16%)
+        subtotal_gral = totals['dolar']
+        # iva_dol = subtotal_gral * 0.16
+        # total_con_iva_dol = subtotal_gral + iva_dol
+        total_bs = totals['dolar'] * self.DOLAR
+
+        totals_data = [
+            ["", "", "SUBTOTAL:", f"$ {subtotal_gral:,.2f}"],
+            #["", "", "I.V.A (16%):", f"$ {iva_dol:,.2f}"],
+            ["", "", "TOTAL REF:", f"$ {subtotal_gral:,.2f}"],
+            ["", "", "TOTAL BS:", f"Bs. {total_bs:,.2f}"]
+        ]
+        
+        totals_table = Table(totals_data, colWidths=[1*inch, 3*inch, 1.5*inch, 2*inch])
+        totals_table.setStyle(TableStyle([
+            ('FONTNAME', (2,0), (2,-1), 'Helvetica-Bold'),
+            ('ALIGN', (3,0), (3,-1), 'RIGHT'),
+            ('FONTSIZE', (2,2), (3,3), 12), # Resaltar el total
+            ('TEXTCOLOR', (2,3), (3,3), colors.darkgreen),
+        ]))
+        story.append(totals_table)
+
+        # Generar PDF
+        doc.build(story)
+        return filename
