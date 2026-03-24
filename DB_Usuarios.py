@@ -11,7 +11,6 @@ class Users:
         self.port = port
         self.conn = None
         self.connect_db()
-
     # CONECTARSE A LA BASE DE DATOS
     def connect_db(self):
         try:
@@ -20,18 +19,17 @@ class Users:
                 user=self.dbuser,
                 password=self.dbpassword,
                 host=self.host,
-                port=self.port
-            )
+                port=self.port)
         except Exception as e:
             messagebox.showerror("Base de datos", f"Error al conectarse a la base de datos: {e}")
     # CREAR USUARIO ADMINISTRADOR - CREAR USUARIO ADMINISTRADOR - CREAR USUARIO ADMINISTRADOR -
     # CREAR USUARIO ADMINISTRADOR - CREAR USUARIO ADMINISTRADOR - CREAR USUARIO ADMINISTRADOR -
     def CreateAdminUser(self):
-        default_nombre = "William De Farias"
+        default_nombre = "Administrador"
         default_usuario = "a"
         default_password = "a"
         default_opcode = "0000"
-        default_correo = "admin@example.com"
+        default_correo = "admin@gmail.com"
         default_rol = 1                 
         try:
             with self.conn.cursor() as cur:
@@ -43,7 +41,7 @@ class Users:
                         INSERT INTO usuarios (nombre,usuario,clave,clave_nohash,opcode,correo,rol,estado)
                         VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
                     """, (default_nombre, default_usuario, hashed_password,
-                          default_password, default_opcode, default_correo, default_rol, False))
+                          default_password, default_opcode, default_correo, default_rol, True))
                     self.conn.commit()
         except Exception as e:
             self.conn.rollback()
@@ -81,26 +79,41 @@ class Users:
 # CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD - CRUD -
     # AGREGA UN NUEVO USUARIO - AGREGA UN NUEVO USUARIO - AGREGA UN NUEVO USUARIO - 
     # AGREGA UN NUEVO USUARIO - AGREGA UN NUEVO USUARIO - AGREGA UN NUEVO USUARIO - 
-    def AddUser(self, nombre,usuario, password,cod_op,correo,rol, estado=False):
+    def AddUser(self, user_data):
+        """
+        Expects user_data = {
+            'nombre': '...', 'usuario': '...', 'password': '...', 
+            'opcode': '...', 'correo': '...', 'rol': '...', 'estado': False
+        }
+        """
         try:
+            # Set a default for 'estado' if it's missing from the dict
+            estado = user_data.get('estado', False)
             with self.conn.cursor() as cur:
-                # Verificar si el usuario ya existe usando la columna "usuario"
-                cur.execute("SELECT 1 FROM usuarios WHERE usuario = %s;", (usuario,))
+                # Check if user exists
+                cur.execute("SELECT 1 FROM usuarios WHERE usuario = %s;", (user_data['usuario'],))
                 if cur.fetchone():
                     raise ValueError("El usuario ya existe.")
-                hashed_password = self.HashPassword(password)
+                hashed_password = self.HashPassword(user_data['password'])
                 cur.execute("""
-                    INSERT INTO usuarios (nombre,usuario,clave,clave_nohash,opcode,correo,rol,estado)
+                    INSERT INTO usuarios (nombre, usuario, clave, clave_nohash, opcode, correo, rol, estado)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
-                """, (nombre, usuario, hashed_password, password, cod_op, correo, rol, estado))
+                """, (
+                    user_data['nombre'], 
+                    user_data['usuario'], 
+                    hashed_password, 
+                    user_data['password'], 
+                    user_data['opcode'], 
+                    user_data['correo'], 
+                    user_data['rol'], 
+                    estado))
                 self.conn.commit()
                 messagebox.showinfo("Info", "El usuario se ha agregado correctamente.")
-                return True
+                return
         except Exception as e:
             self.conn.rollback()
             messagebox.showerror("Base de datos", f"Error al agregar el usuario: {e}")
-            return False
-    
+            return
     # BORRAR USUARIO - BORRAR USUARIO - BORRAR USUARIO - BORRAR USUARIO - BORRAR USUARIO -
     # BORRAR USUARIO - BORRAR USUARIO - BORRAR USUARIO - BORRAR USUARIO - BORRAR USUARIO -
     def DeleteUser(self, codigo):
@@ -118,35 +131,47 @@ class Users:
             return False
     # ACTUALIZAR USUARIO - ACTUALIZAR USUARIO - ACTUALIZAR USUARIO - ACTUALIZAR USUARIO -
     # ACTUALIZAR USUARIO - ACTUALIZAR USUARIO - ACTUALIZAR USUARIO - ACTUALIZAR USUARIO -
-    def UpdateUser(self, codigo, nombre, usuario, correo, opcode, rol, estado = False, password = None):
+    def UpdateUser(self,user_data):
         try:
             with self.conn.cursor() as cur:
-                # SI VIENE CONTRASEÑA, SE ACTUALIZA, SI NO, SE DEJA IGUAL
-                if password:
-                    hashed_password = self.HashPassword(password)
+                # Check if user exists
+                cur.execute("SELECT 1 FROM usuarios WHERE usuario = %s;", (user_data['usuario'],))
+                if cur.fetchone() is None:
+                    raise ValueError("El usuario no existe.")
+                if 'password' in user_data and user_data['password']:
+                    hashed_password = self.HashPassword(user_data['password'])
                     cur.execute("""
                         UPDATE usuarios
-                        SET nombre = %s, usuario = %s, clave = %s, clave_nohash = %s,
-                            correo = %s, opcode = %s, rol = %s, estado = %s
-                        WHERE codigo = %s;
-                    """, (nombre, usuario, hashed_password, password, correo, opcode, rol, estado, codigo))
-                # SI NO VIENE CONTRASEÑA, NO SE ACTUALIZA
+                        SET nombre = %s, clave = %s, clave_nohash = %s, opcode = %s, correo = %s, rol = %s, estado = %s
+                        WHERE usuario = %s;
+                    """, (
+                        user_data['nombre'],
+                        hashed_password,
+                        user_data['password'],
+                        user_data['opcode'],
+                        user_data['correo'],
+                        user_data['rol'],
+                        user_data['estado'],
+                        user_data['usuario']))
                 else:
                     cur.execute("""
                         UPDATE usuarios
-                        SET nombre = %s, usuario = %s,
-                            correo = %s, opcode = %s, rol = %s, estado = %s
-                        WHERE codigo = %s;
-                    """, (nombre, usuario, correo, opcode, rol, estado, codigo))
-                if cur.rowcount == 0:
-                    raise ValueError("El usuario no existe.")
+                        SET nombre = %s, opcode = %s, correo = %s, rol = %s, estado = %s
+                        WHERE usuario = %s;
+                    """, (
+                        user_data['nombre'],
+                        user_data['opcode'],
+                        user_data['correo'],
+                        user_data['rol'],
+                        user_data['estado'],
+                        user_data['usuario']))
                 self.conn.commit()
                 messagebox.showinfo("Info", "El usuario se ha actualizado correctamente.")
-                return True
+                return
         except Exception as e:
             self.conn.rollback()
             messagebox.showerror("Base de datos", f"Error al actualizar el usuario: {e}")
-            return False
+            return
     # -----------------------------------------------------------------------------------------------
     # -----------------------------------------------------------------------------------------------
 # OBTENCION DE DATOS - OBTENCION DE DATOS - OBTENCION DE DATOS - OBTENCION DE DATOS -
@@ -208,7 +233,7 @@ class Users:
     def ChangeUserStatus(self, usuario, estado):
         try:
             with self.conn.cursor() as cur:
-                cur.execute("UPDATE usuarios SET estado = %s WHERE usuario = %s;", (estado, usuario))
+                cur.execute("UPDATE usuarios SET activo = %s WHERE usuario = %s;", (estado, usuario))
                 if cur.rowcount == 0:
                     raise ValueError("El usuario no existe.")
                 self.conn.commit()

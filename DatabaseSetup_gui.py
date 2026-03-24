@@ -138,6 +138,29 @@ class DatabaseManagerApp(ctk.CTk):
                                   host=DB_HOST, port=DB_PORT) as conn:
                 with conn.cursor() as cursor:
                     statements = [
+                        # tabla roles
+                        """CREATE TABLE IF NOT EXISTS roles (
+                            codigo SERIAL PRIMARY KEY,
+                            rol VARCHAR(50) UNIQUE NOT NULL
+                        )""",
+                        # Insertar roles
+                        """INSERT INTO roles (rol) 
+                           VALUES ('Administrador'), ('Supervisor'), ('Gerente'), ('Recepcionista'), ('NC')
+                           ON CONFLICT DO NOTHING""",
+                        # Tabla usuarios - RESTRICT para evitar usuarios sin rol -
+                        """CREATE TABLE IF NOT EXISTS usuarios (
+                            codigo SERIAL PRIMARY KEY,
+                            nombre VARCHAR(100) NOT NULL,
+                            usuario VARCHAR(100) UNIQUE NOT NULL,
+                            clave VARCHAR(255) NOT NULL,
+                            clave_nohash VARCHAR(255) NOT NULL,
+                            opcode VARCHAR(10) NOT NULL,
+                            correo VARCHAR(255) UNIQUE,
+                            rol INT NOT NULL,
+                            estado BOOLEAN DEFAULT FALSE,
+                            activo BOOLEAN DEFAULT TRUE,
+                            FOREIGN KEY (rol) REFERENCES roles(codigo) ON DELETE RESTRICT
+                        )""",
                         # Tabla del dolar
                         """CREATE TABLE dolar (
                             codigo SERIAL PRIMARY KEY,
@@ -201,29 +224,6 @@ class DatabaseManagerApp(ctk.CTk):
                             precio3 NUMERIC(10,2),
                             existencia INT DEFAULT 0,
                             image TEXT,
-                            activo BOOLEAN DEFAULT TRUE
-                        )""",
-                        # Tabla roles
-                        """CREATE TABLE IF NOT EXISTS roles (
-                            codigo SERIAL PRIMARY KEY,
-                            rol VARCHAR(50) UNIQUE NOT NULL
-                        )""",
-                        # Insertar roles
-                        """INSERT INTO roles (rol) 
-                           VALUES ('Administrador'), ('Supervisor'), ('Gerente'), ('Vendedor')
-                           ON CONFLICT DO NOTHING""",
-                        # Tabla usuarios - RESTRICT para evitar usuarios sin rol
-                        """CREATE TABLE IF NOT EXISTS usuarios (
-                            codigo SERIAL PRIMARY KEY,
-                            nombre VARCHAR(100) NOT NULL,
-                            usuario VARCHAR(100) UNIQUE NOT NULL,
-                            clave VARCHAR(255) NOT NULL,
-                            clave_nohash VARCHAR(255) NOT NULL,
-                            opcode VARCHAR(10) NOT NULL,
-                            correo VARCHAR(255) UNIQUE,
-                            rol INT NOT NULL,
-                            estado BOOLEAN DEFAULT FALSE,
-                            FOREIGN KEY (rol) REFERENCES roles(codigo) ON DELETE RESTRICT,
                             activo BOOLEAN DEFAULT TRUE
                         )""",
                         # TABLA CLIENTES

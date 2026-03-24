@@ -17,18 +17,40 @@ class CargaDolar(ctk.CTkFrame):
         self.DOLAR = ACCOUNTING_MANAGER.GetLastDolarValue()
         self.PARALELO = ACCOUNTING_MANAGER.GetLastDolarParaleloValue()
         
-        # -------------------------------------------------------------------------------
-        # PROGRAM TITLE - PROGRAM TITLE - PROGRAM TITLE - PROGRAM TITLE - PROGRAM TITLE -
-        # -------------------------------------------------------------------------------
-        self.title_frame = ctk.CTkFrame(self,
-                        fg_color=APP_COLOR['main'],
+        # ---------------------------------------------------------------------
+    # TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE - TITLE
+    # ---------------------------------------------------------------------
+        # FRAME
+        title_frame = ctk.CTkFrame(self,
+                        fg_color=APP_COLOR['sec'],
                         corner_radius=0,)
-        self.title_frame.place(relx=0.5,rely=0,relwidth=1,relheight=0.1,anchor='n')
-        self.title_label = ctk.CTkLabel(self.title_frame,
+        title_frame.place(relx=0.5,rely=0,relwidth=1,relheight=0.1,anchor='n')
+        title_label = ctk.CTkLabel(title_frame,
                         text='Carga del dólar',
-                        text_color=APP_COLOR['black_m'],
-                        font=FONT['subtitle_bold'])
-        self.title_label.place(relx=0.5,rely=0.5,anchor='center')
+                        text_color=APP_COLOR['white_m'],
+                        font=FONT['title_bold'])
+        title_label.place(relx=0.5,rely=0.5,anchor='center')
+        home_btn = ctk.CTkButton(title_frame,
+                        image=ICONS['home'],
+                        text='',
+                        width=30,
+                        height=30,
+                        fg_color=APP_COLOR['black_m'],
+                        hover_color=APP_COLOR['black'])
+        home_btn.place(relx=0.05,rely=0.5,anchor='center')
+        # GO BACK BUTTON - GO BACK BUTTON - GO BACK BUTTON - GO BACK BUTTON - GO BACK BUTTON -
+        self.go_back_btn = ctk.CTkButton(title_frame,
+                text='',
+                image=ICONS['back'],
+                width=30,
+                height=30,
+                text_color=APP_COLOR['black_m'],
+                font=FONT['text_small'],
+                fg_color=APP_COLOR['black_m'],
+                hover_color=APP_COLOR['black'],
+                command=lambda: self.GoBack_CB())
+        self.go_back_btn.place(relx=0.1,rely=0.5,anchor='center')
+        # ------------------------------------------------------------------------
         # -----------------------------------------------------------------------------
         # BARRA INFERIOR - BARRA INFERIOR - BARRA INFERIOR - BARRA INFERIOR - BARRA INFERIOR - BARRA INFERIOR
         # -----------------------------------------------------------------------------
@@ -145,15 +167,6 @@ class CargaDolar(ctk.CTkFrame):
                                     height=25,
                                     corner_radius=2)
         self.list_paralelo_btn.place(relx=0.23,rely=0.40,anchor='w')
-        # GO BACK BUTTON
-        self.go_back_btn = ctk.CTkButton(self,
-                        text='Volver',
-                        text_color=APP_COLOR['black_m'],
-                        font=FONT['text_small'],
-                        fg_color=APP_COLOR['gray'],
-                        hover_color=APP_COLOR['main'],
-                        command=lambda: self.GoBack_CB())
-        self.go_back_btn.place(relx=0, rely=0.1, relwidth=0.1, relheight=0.05, anchor='nw')
         # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
         # TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - TREEVIEW - 
         # CONFIGURACION VISUAL DEL TV
@@ -252,13 +265,13 @@ class CargaDolar(ctk.CTkFrame):
         dolar_window.transient(self)
         dolar_window.grab_set()
         dolar_frame = ctk.CTkFrame(dolar_window,
-                                corner_radius=0)
+                                corner_radius=0,fg_color=APP_COLOR['white_m'])
         dolar_frame.place(relx=0,rely=0,relheight=1,relwidth=1,anchor='nw')
         # LABELS - LABELS - LABELS - 
         # NUEVO VALOR
         nuevo_valor_label = ctk.CTkLabel(dolar_frame,
                                 text='Nuevo valor',
-                                text_color=APP_COLOR['main'],
+                                text_color=APP_COLOR['gray'],
                                 anchor='w',
                                 font=FONT['title_bold'])
         nuevo_valor_label.place(relx=0.1,rely=0.2,anchor='nw')
@@ -278,8 +291,8 @@ class CargaDolar(ctk.CTkFrame):
                                 validate = 'key',
                                 validatecommand = (self.validate,'%P'),
                                 textvariable=nuevo_valor_entry_var,
-                                fg_color=APP_COLOR['white_m'],
-                                border_color=APP_COLOR['gray'],
+                                fg_color=APP_COLOR['light_gray'],
+                                border_color=APP_COLOR['light_gray'],
                                 text_color=APP_COLOR['black_m'])
         nuevo_valor_entry.place(relx=0.40,rely=0.20,anchor='nw')
         nuevo_valor_entry.bind("<Return>",lambda event: UpdateDolar())
@@ -287,7 +300,8 @@ class CargaDolar(ctk.CTkFrame):
         # LOG
         log = ctk.CTkTextbox(dolar_frame,
                                 height=80,
-                                fg_color=APP_COLOR['white'],
+                                fg_color=APP_COLOR['light_gray'],
+                                border_color=APP_COLOR['light_gray'],
                                 text_color=APP_COLOR['black_m'])
         log.place(relx=0.5,rely=0.5,anchor='n',relwidth=0.80)
         # BUTTONS - BUTTONS - BUTTONS - 
@@ -330,13 +344,13 @@ class CargaDolar(ctk.CTkFrame):
         dolar_window.transient(self)
         dolar_window.grab_set()
         dolar_frame = ctk.CTkFrame(dolar_window,
-                                corner_radius=0)
+                                corner_radius=0,fg_color=APP_COLOR['white_m'])
         dolar_frame.place(relx=0,rely=0,relheight=1,relwidth=1,anchor='nw')
         # LABELS - LABELS - LABELS - 
         # NUEVO VALOR
         nuevo_valor_label = ctk.CTkLabel(dolar_frame,
                                 text='Nuevo valor',
-                                text_color=APP_COLOR['main'],
+                                text_color=APP_COLOR['gray'],
                                 anchor='w',
                                 font=FONT['title_bold'])
         nuevo_valor_label.place(relx=0.1,rely=0.2,anchor='nw')
@@ -356,8 +370,8 @@ class CargaDolar(ctk.CTkFrame):
                                 validate = 'key',
                                 validatecommand = (self.validate,'%P'),
                                 textvariable=nuevo_valor_entry_var,
-                                fg_color=APP_COLOR['white_m'],
-                                border_color=APP_COLOR['gray'],
+                                fg_color=APP_COLOR['light_gray'],
+                                border_color=APP_COLOR['light_gray'],
                                 text_color=APP_COLOR['black_m'])
         nuevo_valor_entry.place(relx=0.40,rely=0.20,anchor='nw')
         nuevo_valor_entry.bind("<Return>",lambda event: UpdateDolar())
@@ -365,7 +379,8 @@ class CargaDolar(ctk.CTkFrame):
         # LOG
         log = ctk.CTkTextbox(dolar_frame,
                                 height=80,
-                                fg_color=APP_COLOR['white'],
+                                fg_color=APP_COLOR['light_gray'],
+                                border_color=APP_COLOR['light_gray'],
                                 text_color=APP_COLOR['black_m'])
         log.place(relx=0.5,rely=0.5,anchor='n',relwidth=0.80)
         # BUTTONS - BUTTONS - BUTTONS - 

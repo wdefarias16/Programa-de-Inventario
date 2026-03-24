@@ -297,7 +297,6 @@ class Inventory:
                 }
                 return producto
         except Exception as e:
-            messagebox.showerror('Error', f"Error obteniendo el inventario: {str(e)}")
             return None
     # ---------------------------------------------------------------------------------------
     # ---------------------------------------------------------------------------------------

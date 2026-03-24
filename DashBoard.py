@@ -8,7 +8,7 @@ from DatabaseManager import*
 from Menu_Inventario import*
 from Menu_CuentasPorPagar import*
 import datetime
-from style import FONT, ICONS, APP_COLOR
+from style import *
 from DatabaseManager import GetCurrentUser
 
 class DashBoardMenu(ctk.CTkFrame):
@@ -27,136 +27,135 @@ class DashBoardMenu(ctk.CTkFrame):
         self.Facturacion_CB = Facturacion_CB
         self.CuentasPorPagar_CB = CuentasPorPagar_CB
         self.ProgramasDeUtilidad_CB = ProgramasDeUtilidad_CB
-        self.ResizeImage()
-    # MAIN FRAME GRID SETUP
-        for rows in range(21):
-            self.rowconfigure(rows, weight=1, uniform='row')
-        for columns in range(21):
-            self.columnconfigure(columns, weight=1, uniform='column')
+    
 # BARRA INFERIOR - BARRA INFERIOR - BARRA INFERIOR - BARRA INFERIOR - BARRA INFERIOR - BARRA INFERIOR
 # BARRA INFERIOR - BARRA INFERIOR - BARRA INFERIOR - BARRA INFERIOR - BARRA INFERIOR - BARRA INFERIOR
         self.inf_bar_frame = ctk.CTkFrame(self,
                                           corner_radius=0,
-                                          fg_color=APP_COLOR['sec'])
-        self.inf_bar_frame.grid(row=20,column=0,columnspan=21,sticky='nsew')
+                                          fg_color=APP_COLOR['main'])
+        self.inf_bar_frame.place(relx=0.5,rely=0.95,relwidth=1,relheight=0.05,anchor='n')
         user = GetCurrentUser()
         self.barra_inf_label = ctk.CTkLabel(self.inf_bar_frame,
-                                            fg_color=APP_COLOR['sec'],
-                                            text_color=APP_COLOR['white_m'],
-                                            text=f'Programa de gestion | {user}')
+                                            text=f'Winventory v1.0 Beta | {user}',
+                                            font=FONT['text'],
+                                            fg_color=APP_COLOR['main'],
+                                            text_color=APP_COLOR['sec'])
         self.barra_inf_label.pack(side='left',padx=20)
     # RELOJ
         self.date_time = ctk.CTkLabel(self.inf_bar_frame,
                                       text='',
-                                      text_color=APP_COLOR['white_m'],
-                                      font=FONT['text_light'],
+                                      text_color=APP_COLOR['sec'],
+                                      font=FONT['text'],
                                       height=10,
                                       )
         self.date_time.pack(side='right',pady=5,padx=10)
         self.Date_Time()
-# FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - FRAMES - 
-# INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - 
-    # PANEL LATERAL - PANEL LATERAL - PANEL LATERAL - PANEL LATERAL - PANEL LATERAL - PANEL LATERAL - 
-    # CREA EL FRAME DONDE ESTARAN LOS BOTONES DEL DASHBOARD
-        self.buttons_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLOR['main'])
-        self.buttons_frame.grid(row=0,rowspan=20,column=0,columnspan=2,sticky='nsew')
-        for rows in range(12):
-            self.buttons_frame.rowconfigure(rows,weight=1,uniform='row')
-        for columns in range(2):
-            self.buttons_frame.columnconfigure(columns,weight=1,uniform='column')
-        # BOTON INVENTARIO - BOTON INVENTARIO - BOTON INVENTARIO - BOTON INVENTARIO - BOTON INVENTARIO - BOTON INVENTARIO
+    # -----------------------------------------------------------------------
+    # PANEL LATERAL - PANEL LATERAL - PANEL LATERAL - PANEL LATERAL - PANEL L
+    # -----------------------------------------------------------------------
+        # FRAME
+        self.buttons_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLOR['sec'])
+        self.buttons_frame.place(relx=0,rely=0,relwidth=0.20,relheight=0.95,anchor='nw')
+
+        self.logo = LogoLabel(self.buttons_frame, version=1, ancho_deseado=120, fg_color=APP_COLOR['sec'])
+        self.logo.place(relx=0.5,rely=0.05,relwidth=0.8,anchor='n')
+
+        # -------------------------------------------------------------------
+        # BOTON INVENTARIO - BOTON INVENTARIO - BOTON INVENTARIO - BOTON INVE
+        # -------------------------------------------------------------------
         invt_btn = ctk.CTkButton(self.buttons_frame,
                                      text='Inventario',
+                                     text_color=APP_COLOR['white_m'],
                                      font=FONT['text'],
-                                     fg_color=APP_COLOR['main'],
-                                     hover_color=APP_COLOR['sec'],
+                                     fg_color=APP_COLOR['sec'],
+                                     hover_color=APP_COLOR['sec_s'],
                                      image=ICONS['inventory'],
-                                     corner_radius=10,
+                                     corner_radius=5,
                                      compound='left',
                                      anchor='w',
                                      command=self.Inventario_CB)
-        invt_btn.grid(row=0,column=0,columnspan=2,sticky='nswe',padx=15)
-        # BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION
+        invt_btn.place(relx=0.5,rely=0.25,relwidth=0.9,relheight=0.08,anchor='n')
+        # -------------------------------------------------------------------
+        # BOTON FACTURACION - BOTON FACTURACION - BOTON FACTURACION - BOTON F
+        # -------------------------------------------------------------------
         fact_btn = ctk.CTkButton(self.buttons_frame,
-                                     text='Facturacion',
+                                     text='Facturación',
+                                     text_color=APP_COLOR['white_m'],
                                      font=FONT['text'],
-                                     fg_color=APP_COLOR['main'],
-                                     hover_color=APP_COLOR['sec'],
+                                     fg_color=APP_COLOR['sec'],
+                                     hover_color=APP_COLOR['sec_s'],
                                      image=ICONS['fact'],
-                                     corner_radius=10,
+                                     corner_radius=5,
                                      compound='left',
                                      anchor='w',
                                      command=self.Facturacion_CB)
-        fact_btn.grid(row=1,column=0,columnspan=2,sticky='nswe',padx=15)
-        # BOTON CUENTAS POR PAGAR - BOTON CUENTAS POR PAGAR - BOTON CUENTAS POR PAGAR - BOTON CUENTAS POR PAGAR - BOTON CUENTAS POR PAGAR - 
+        fact_btn.place(relx=0.5,rely=0.33,relwidth=0.9,relheight=0.08,anchor='n')
+        # -------------------------------------------------------------------
+        # BOTON CUENTAS POR PAGAR - BOTON CUENTAS POR PAGAR - BOTON CUENTAS P
+        # -------------------------------------------------------------------
         cuentas_xp_btn = ctk.CTkButton(self.buttons_frame,
                                      text='Cuentas por pagar',
+                                     text_color=APP_COLOR['white_m'],
                                      font=FONT['text'],
-                                     fg_color=APP_COLOR['main'],
-                                     hover_color=APP_COLOR['sec'],
+                                     fg_color=APP_COLOR['sec'],
+                                     hover_color=APP_COLOR['sec_s'],
                                      image=ICONS['cxp'],
-                                     corner_radius=10,
+                                     corner_radius=5,
                                      compound='left',
                                      anchor='w',
                                      command=self.CuentasPorPagar_CB)
-        cuentas_xp_btn.grid(row=2,column=0,columnspan=2,sticky='nswe',padx=15)
-        # BOTON CUENTAS POR COBRAR - BOTON CUENTAS POR COBRAR - BOTON CUENTAS POR COBRAR - BOTON CUENTAS POR COBRAR - 
+        cuentas_xp_btn.place(relx=0.5,rely=0.41,relwidth=0.9,relheight=0.08,anchor='n')
+        # -------------------------------------------------------------------
+        # BOTON CUENTAS POR COBRAR - BOTON CUENTAS POR COBRAR - BOTON CUENTAS
+        # -------------------------------------------------------------------
         cuentas_xc_btn = ctk.CTkButton(self.buttons_frame,
                                      text='Cuentas por cobrar',
+                                     text_color=APP_COLOR['white_m'],
                                      font=FONT['text'],
-                                     fg_color=APP_COLOR['main'],
-                                     hover_color=APP_COLOR['sec'],
+                                     fg_color=APP_COLOR['sec'],
+                                     hover_color=APP_COLOR['sec_s'],
                                      image=ICONS['cxc'],
-                                     corner_radius=10,
+                                     corner_radius=5,
                                      compound='left',
                                      anchor='w',
                                      command=lambda: self.SwitchFrame(self.CuentasXCFrame))
-        cuentas_xc_btn.grid(row=3,column=0,columnspan=2,sticky='nswe',padx=15)
-        # BOTON PROGRAMAS DE UTILIDAD - BOTON PROGRAMAS DE UTILIDAD - BOTON PROGRAMAS DE UTILIDAD - BOTON PROGRAMAS DE UTILIDAD -  
+        cuentas_xc_btn.place(relx=0.5,rely=0.49,relwidth=0.9,relheight=0.08,anchor='n')
+        # -------------------------------------------------------------------
+        # BOTON PROGRAMAS DE UTILIDAD - BOTON PROGRAMAS DE UTILIDAD - BOTON P
+        # -------------------------------------------------------------------
         pdutilidad_btn = ctk.CTkButton(self.buttons_frame,
-                                     text='Programas de utilidad',
+                                     text='Prgs. de utilidad',
+                                     text_color=APP_COLOR['white_m'],
                                      font=FONT['text'],
-                                     fg_color=APP_COLOR['main'],
-                                     hover_color=APP_COLOR['sec'],
+                                     fg_color=APP_COLOR['sec'],
+                                     hover_color=APP_COLOR['sec_s'],
                                      image=ICONS['proutil'],
-                                     corner_radius=10,
+                                     corner_radius=5,
                                      compound='left',
                                      anchor='w',
                                      command= self.ProgramasDeUtilidad_CB)
-        pdutilidad_btn.grid(row=4,column=0,columnspan=2,sticky='nswe',padx=15)
+        pdutilidad_btn.place(relx=0.5,rely=0.57,relwidth=0.9,relheight=0.08,anchor='n')
         # BOTON DE BLOQUEAR O CERRAR SESION -  BOTON DE BLOQUEAR O CERRAR SESION - BOTON DE BLOQUEAR O CERRAR SESION
-        lockscreen_btn=ctk.CTkButton(self.buttons_frame,
-                                     text='',
-                                     image=ICONS['lock'],
-                                     corner_radius=10,
-                                     fg_color=APP_COLOR['main'],
-                                     hover_color=APP_COLOR['sec'],
-                                     command=lambda: self.lockscreen_callback()
-                                     )
-        lockscreen_btn.grid(row=11,column=0,columnspan=1,sticky='nswe',pady=10,padx=5)
-        # BOTON SALIR - BOTON SALIR - BOTON SALIR - BOTON SALIR - BOTON SALIR - BOTON SALIR - BOTON SALIR - 
-        exit_btn=ctk.CTkButton(self.buttons_frame,
-                                     text='',
-                                     image=ICONS['exit'],
-                                     corner_radius=10,
-                                     fg_color=APP_COLOR['main'],
-                                     hover_color=APP_COLOR['sec'],
-                                     command=self.exit
-                                     )
-        exit_btn.grid(row=11,column=1,columnspan=1,sticky='nswe',pady=10,padx=5)
-    # INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - INICIO - 
-        title_frame = ctk.CTkFrame(self,corner_radius=0,fg_color=APP_COLOR['white_m'])
-        title_frame.grid(row=0,rowspan=20,column=2,columnspan=19,sticky='nsew')
-        for rows in range(20):
-            title_frame.rowconfigure(rows, weight=1, uniform='row')
-        for columns in range(20):
-            title_frame.columnconfigure(columns, weight=1, uniform='column')
+        #lockscreen_btn=ctk.CTkButton(self.buttons_frame,
+        #                             text='',
+        #                             image=ICONS['lock'],
+        #                             corner_radius=10,
+        #                             fg_color=APP_COLOR['main'],
+        #                             hover_color=APP_COLOR['sec'],
+        #                             command=lambda: self.lockscreen_callback()
+        #                             )
+        #lockscreen_btn.grid(row=11,column=0,columnspan=1,sticky='nswe',pady=10,padx=5)
+        ## BOTON SALIR - BOTON SALIR - BOTON SALIR - BOTON SALIR - BOTON SALIR - BOTON SALIR - BOTON SALIR - 
+        #exit_btn=ctk.CTkButton(self.buttons_frame,
+        #                             text='',
+        #                             image=ICONS['exit'],
+        #                             corner_radius=10,
+        #                             fg_color=APP_COLOR['main'],
+        #                             hover_color=APP_COLOR['sec'],
+        #                             command=self.exit
+        #                             )
+        #exit_btn.grid(row=11,column=1,columnspan=1,sticky='nswe',pady=10,padx=5)
 
-        imagen_logo = Image.open(r"Recursos\Cliente\logo_cliente_resized.png")
-        imagen_logo_ctk = ctk.CTkImage(imagen_logo,size=(200,32))
-
-        head = ctk.CTkLabel(title_frame, image=imagen_logo_ctk, text="",fg_color=APP_COLOR['white_m'])
-        head.grid(row=8,column=0,rowspan=2,columnspan=20,sticky='nsew')
 
         
 # FUNCION DAR FECHA Y HORA
@@ -164,11 +163,3 @@ class DashBoardMenu(ctk.CTkFrame):
         hora = datetime.datetime.now()
         self.date_time.configure(text=hora.strftime("%d-%m-%Y  |  %H:%M:%S"))
         self.after(1000,self.Date_Time)
-
-    def ResizeImage(self):
-        imagen = Image.open(r"Recursos\Cliente\logo_cliente.png")
-        width = 200
-        ratio = imagen.height / imagen.width
-        height = int(width * ratio)
-        resized = imagen.resize((width,height))
-        resized.save(r"Recursos\Cliente\logo_cliente_resized.png")

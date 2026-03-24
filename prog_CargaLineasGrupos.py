@@ -42,7 +42,7 @@ class LineasGruposProg(ctk.CTkFrame):
         # GO BACK BUTTON - GO BACK BUTTON - GO BACK BUTTON - GO BACK BUTTON - GO BACK BUTTON -
         self.go_back_btn = ctk.CTkButton(title_frame,
                 text='',
-                image=ICONS['home'],
+                image=ICONS['back'],
                 width=30,
                 height=30,
                 text_color=APP_COLOR['black_m'],

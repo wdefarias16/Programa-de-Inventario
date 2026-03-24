@@ -24,7 +24,7 @@ def Products_Help_Window(self):
             self.treeview.insert("",'end',
                                  text=producto['codigo'],
                                  values=(producto['nombre'],
-                                         f'${producto['precio1']}',
+                                         f"${ACCOUNTING_MANAGER.Get_Precio_BCV(producto['precio3'])}",
                                          producto['existencia']),
                                          tags=(tag,))
         self.treeview.tag_configure('Odd.Treeview', background = '#D2D2D2')
@@ -44,7 +44,7 @@ def Products_Help_Window(self):
             self.treeview.insert("",'end',
                                  text=producto['codigo'],
                                  values=(producto['nombre'],
-                                         f'${producto['precio1']}',
+                                         f"${ACCOUNTING_MANAGER.Get_Precio_BCV(producto['precio3'])}",
                                          producto['existencia']),
                                          tags=(tag,))
         self.treeview.tag_configure('Odd.Treeview', background = '#D2D2D2')
@@ -62,7 +62,7 @@ def Products_Help_Window(self):
             self.treeview.insert("",'end',
                                  text=producto['codigo'],
                                  values=(producto['nombre'],
-                                         f'${producto['precio1']}',
+                                         f"${ACCOUNTING_MANAGER.Get_Precio_BCV(producto['precio3'])}",
                                          producto['existencia']),
                                  tags=(tag,))
         self.treeview.tag_configure('Odd.Treeview', background="#D2D2D2")

@@ -4,7 +4,7 @@ import os
 from tkinter import ttk, filedialog
 from PIL import Image, ImageOps
 from DB_InventarioProductos import*
-from DatabaseManager import INVENTARIO, LINE_MANAGER, PROV_MANAGER
+from DatabaseManager import INVENTARIO, LINE_MANAGER, PROV_MANAGER, ACCOUNTING_MANAGER
 from style import FONT, APP_COLOR, ICONS
 # HELP FUNCS
 from Help_Funcs_Products import Products_Help_Window
@@ -245,6 +245,7 @@ class CargaProductosProg(ctk.CTkFrame):
                                     font=FONT['text_light'],
                                     text_color=APP_COLOR['gray'])
         self.precio3_label.place(relx=0.518,rely=0.74,anchor='w')
+        
         # -------------------------------------------------------------------------------- 
         # BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTONES - BOTO
         # -------------------------------------------------------------------------------- 
@@ -526,6 +527,28 @@ class CargaProductosProg(ctk.CTkFrame):
         self.precio1_var.set(product_data['precio1'])
         self.precio2_var.set(product_data['precio2'])
         self.precio3_var.set(product_data['precio3'])
+
+        
+        precio_bcv = ACCOUNTING_MANAGER.Get_Precio_BCV(float(product_data['precio3']))
+
+        # PRECIO BCV LABEL
+        precio_label = ctk.CTkLabel(self.entry_frame,
+                                    text='Precio bcv',
+                                    font=FONT['text_light'],
+                                    text_color=APP_COLOR['gray'])
+        precio_label.place(relx=0.7,rely=0.8,anchor='w')
+        # PRECIO BCV  CON MONTO
+        precio_bcv_var = ctk.StringVar()
+        precio_bcv_var.set(f'${precio_bcv}')
+        precio_bcv_label = ctk.CTkEntry(self.entry_frame,
+                                    fg_color=APP_COLOR['main'],
+                                    state='disabled',
+                                    border_color=APP_COLOR['main'],
+                                    textvariable=precio_bcv_var,
+                                    font=FONT['title_bold'],
+                                    text_color=APP_COLOR['sec'])
+        precio_bcv_label.place(relx=0.76,rely=0.8,relwidth=0.12,relheight=0.08,anchor='w')
+
         self.GetImage(product_data['image'])
 # -------------------------------------------------------------------
 # HELP WINDOWS - HELP WINDOWS - HELP WINDOWS - HELP WINDOWS - 

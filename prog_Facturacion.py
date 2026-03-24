@@ -67,7 +67,7 @@ class FacturacionProg(ctk.CTkFrame):
         # FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - FRAME - 
         # -----------------------------------------------------------
         info_frame = ctk.CTkFrame(self,
-                        fg_color=APP_COLOR['main'],
+                        fg_color=APP_COLOR['sec_s'],
                         corner_radius=0)
         info_frame.place(relx=0.75,y=69.5,relwidth=0.25,relheight=1,anchor='nw')
         # DOLLAR RATE - DOLLAR RATE - DOLLAR RATE - DOLLAR RATE - DOLLAR RATE - 
@@ -362,14 +362,14 @@ class FacturacionProg(ctk.CTkFrame):
             self.product_code_entry.focus()
             return
         # ELSE ADD THE PRODUCT
-        costo = float(product_data['precio1'])
+        costo = float(ACCOUNTING_MANAGER.Get_Precio_BCV(float(product_data['precio3'])))
         total_dol = costo * qty
         total_bs = total_dol * self.DOLAR
         self.treeview_main.insert('','end',
                                   text = product_data['codigo'],
                                   values=(product_data['nombre'],
                                           qty,
-                                          f'$ {product_data['precio1']}',
+                                          f'$ {costo}',
                                           f'Bs. {total_bs:.2f}',
                                           f'$ {total_dol:.2f}'))
         self.product_list.append(product_data['codigo'])

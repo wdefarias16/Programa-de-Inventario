@@ -22,7 +22,7 @@ from tkinter import messagebox
 class App(ctk.CTk):
     def __init__(self):
         super().__init__()
-        self.title('Sistema')
+        self.title('Winventory v0.1 Beta')
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
         self.geometry(f"{screen_width}x{screen_height}+0+0")
@@ -36,7 +36,7 @@ class App(ctk.CTk):
         # ATAJO VOLVER AL DASHBOARD
         self.winfo_toplevel().bind("<F4>", self.F4_Pressed)
     # INICIAR EN EL FRAME DE LOGIN
-        self.login_frame = LoginFrame(self, success_callback=self.LoginSuccess)
+        self.login_frame = Login(self, success_callback=self.LoginSuccess, exit_callback=self.Salir)
         self.login_frame.pack(expand=True,fill='both')
     # INICIALIZAR EL PROGRAMA ACTIVO COMO NONE
         self.current_prog = None
@@ -60,7 +60,7 @@ class App(ctk.CTk):
             return
         self.dashboard.destroy()
         self.dashboard_activo = False
-        self.login_frame = LoginFrame(self, success_callback=self.LoginSuccess)
+        self.login_frame = Login(self, success_callback=self.LoginSuccess, exit_callback=self.Salir)
         self.login_frame.pack(expand=True,fill='both')
 # -------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------

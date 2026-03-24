@@ -727,6 +727,12 @@ class AccountingDB:
             messagebox.showerror("Error", f"No se pudo obtener los últimos valores: {str(e)}")
             return []
 
+    def Get_Precio_BCV(self,monto):
+        dolar_paralelo = float(self.GetLastDolarParaleloValue())
+        dolar_bcv = float(self.GetLastDolarValue())
+        monto_float = float(monto)
+        resultado = (monto_float * dolar_paralelo) / dolar_bcv
+        return f"{resultado:,.2f}"
 
     def __del__(self):
         """Cierra la conexión a la base de datos cuando el objeto se destruye."""

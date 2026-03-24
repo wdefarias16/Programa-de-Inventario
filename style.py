@@ -1,4 +1,5 @@
 import customtkinter as ctk
+import os
 from PIL import Image
 FONT = {
     'title_bold': ('Roboto Bold',25),
@@ -15,8 +16,10 @@ FONT = {
 }
 APPEARANCE_MODE = 'light'
 APP_COLOR = {
-    'main':'#1c9bac',
-    'sec':'#166c78',
+    'main':"#a2ff00",
+    'main_s':"#87d400",
+    'sec':"#0d5e1c",
+    'sec_s':"#0a5418",
     'white_m':'#eaeaea',
     'black_m':'#1d1d1d',
     'white':'#ffffff',
@@ -45,6 +48,8 @@ lock_icon=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_lock_light.p
                                     dark_image=Image.open(r"Recursos\Iconos\btn_lock_dark.png"))
 exit_icon=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_exit_light.png"), size=(30,30),
                                     dark_image=Image.open(r"Recursos\Iconos\btn_exit_dark.png"))
+eye_icon=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_eye_light.png"), size=(30,30),
+                                    dark_image=Image.open(r"Recursos\Iconos\btn_eye_dark.png"))
 inv_icon=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_inventario_light.png"), size=(30,30),
                                     dark_image=Image.open(r"Recursos\Iconos\btn_inventario_dark.png"))
 home_icon=ctk.CTkImage(light_image=Image.open(r"Recursos\Iconos\btn_inicio_light.png"), size=(30,30),
@@ -72,6 +77,7 @@ ICONS = {
     'trash':trash_icon,
     'lock':lock_icon,
     'exit':exit_icon,
+    'eye':eye_icon,
     'inventory':inv_icon,
     'home':home_icon,
     'fact':fact_icon,
@@ -84,3 +90,39 @@ ICONS = {
     'tdc':tarjetadc_icon,
     'back':back_icon,
 }
+
+
+
+
+
+class LogoLabel(ctk.CTkLabel):
+    def __init__(self,parent,version,ancho_deseado=200,**kwargs):
+        rutas_logos = {
+            '1': os.path.join("Recursos", "Cliente", "logo_cliente.png"),
+            '2': os.path.join("Recursos", "Cliente", "logo_cliente_v2.png"),
+            '3': os.path.join("Recursos", "Cliente", "logo_cliente_v3.png"),
+            '4': os.path.join("Recursos", "Cliente", "logo_cliente_v4.png"),
+            '5': os.path.join("Recursos", "Cliente", "logo_cliente_v5.png")}
+        
+        versiones = [1,2,3,4,5]
+        for v in versiones:
+            if v == version:
+                ruta_logo = rutas_logos[str(v)]
+            else:
+                ruta_logo = os.path.join("Recursos", "Cliente", "logo_cliente.png")
+        try:
+            img_original = Image.open(ruta_logo)
+            ratio = img_original.height / img_original.width
+            alto_proporcional = int(ancho_deseado * ratio)
+
+            self.logo_image = ctk.CTkImage(
+                light_image=img_original,
+                dark_image=img_original,
+                size=(ancho_deseado,alto_proporcional)
+            )
+
+            super().__init__(parent, image=self.logo_image, text="", **kwargs)
+
+        except Exception as e:
+            print(f"Error cargando el logo: {e}")
+            super().__init__(parent, text="LOGO NO ENCONTRADO", **kwargs)
