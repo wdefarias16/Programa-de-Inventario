@@ -19,6 +19,7 @@ APP_COLOR = {
     'main':"#a2ff00",
     'main_s':"#87d400",
     'sec':"#0d5e1c",
+    'sec_mid':"#0a4a16",
     'sec_s':"#0a5418",
     'white_m':'#eaeaea',
     'black_m':'#1d1d1d',
